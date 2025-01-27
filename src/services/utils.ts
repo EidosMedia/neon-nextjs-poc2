@@ -1,6 +1,21 @@
 import { NextRequest } from 'next/server';
 import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
+declare global {
+  // eslint-disable-next-line no-var
+  var connection: NeonConnection;
+}
+
+type Site = {
+  root: {
+    hostname: string;
+  };
+  apiHostnames: {
+    liveHostname: string;
+    previewHostname: string;
+  };
+};
+
 export const getAPIHostname = async (
   request: NextRequest,
   viewStatus?: string | null
@@ -19,8 +34,8 @@ export const getAPIHostname = async (
 
   const sites = await sitesResp.json();
 
-  const siteFound = sites.find((site: any) =>
-    site.root.hostname.match(request.headers.get('x-forwarded-host'))
+  const siteFound = sites.find((site: Site) =>
+    site.root.hostname.match(request.headers.get('x-forwarded-host') || '')
   );
 
   if (viewStatus === 'PREVIEW') {
@@ -35,11 +50,7 @@ export const getConnection = () => {
     throw new Error('BASE_NEON_FE_URL not specified in any .env file');
   }
 
-  if (!globalThis.connection)
-    globalThis.connection = new NeonConnection(
-      process.env.BASE_NEON_FE_URL,
-      ''
-    );
+  if (!globalThis.connection) globalThis.connection = new NeonConnection();
 
   return globalThis.connection;
 };

@@ -2,9 +2,16 @@ import { revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
 import { redirect, notFound } from 'next/navigation';
 
-export default async function Page({ params }: { params: { slug: string[] } }) {
-  const hostname = headers().get('x-neon-backend-url');
-  const slug = params.slug || [];
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}) {
+  const currentHeaders = await headers();
+
+  console.log('currentHeaders', currentHeaders);
+  const hostname = currentHeaders.get('x-neon-backend-url');
+  const slug = (await params).slug || [];
 
   console.log(
     'url',
@@ -21,9 +28,6 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
       redirect: 'manual',
     }
   );
-
-  console.log('global.connection', globalThis.connection);
-  console.log('global.test', globalThis.test);
 
   // handle 404 not found
   if (pageData.status === 404) {
