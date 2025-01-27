@@ -22,16 +22,15 @@ export const getAPIHostname = async (
 ) => {
   const protocol = request.headers.get('x-forwarded-protocol') || 'http';
 
-  // calling its own host to use caching mechanism
-  const builtUrl = `${protocol}://${request.headers.get(
-    'x-forwarded-host'
-  )}/api/sites`;
+  const sitesResp = await fetch(
+    `${process.env.BASE_NEON_FE_URL}/api/sites/live` || '',
+    {
+      // cache: 'no-cache',
+      next: { tags: ['sites'] },
+    }
+  );
 
-  const sitesResp = await fetch(builtUrl, {
-    // cache: 'no-cache',
-    next: { tags: ['sites'] },
-  });
-
+  // console.log('sitesResp', sitesResp);
   const sites = await sitesResp.json();
 
   const siteFound = sites.find((site: Site) =>

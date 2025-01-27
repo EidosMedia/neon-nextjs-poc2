@@ -17,6 +17,8 @@ export async function middleware(request: NextRequest) {
 
   const apiHostname = await getAPIHostname(request, getViewStatus(viewStatus));
 
+  console.log('request: ' + request);
+
   // Passing the apiHostname resolved as header to the app router
   const headers = new Headers(request.headers);
   headers.set('x-neon-backend-url', apiHostname);

@@ -9,7 +9,6 @@ export default async function Page({
 }) {
   const currentHeaders = await headers();
 
-  console.log('currentHeaders', currentHeaders);
   const hostname = currentHeaders.get('x-neon-backend-url');
   const slug = (await params).slug || [];
 
