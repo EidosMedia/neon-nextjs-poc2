@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { NeonConnection } from '@/NeonConnection/NeonConnection';
+import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 export const getAPIHostname = async (
   request: NextRequest,

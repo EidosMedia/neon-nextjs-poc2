@@ -1,11 +1,11 @@
-import { getConnection } from './services/utils';
+import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 export async function register() {
   // get the version from Neon, check if the version is compatible. Check the beginning for version compatibility start with NEON-{YEAR}.{MONTH}.
   // Compatible versions should be put in the code
   // fetch the sites to populate fetch
   // if there is connection error or something about one of the above tasks throw an error and NextJS will not start.
-  // Object.assign(globalThis, { connection: getConnection(), test: 'test' });
+  Object.assign(globalThis, { connection: NeonConnection, test: 'test' });
 }
 
 // if a site not found the cache should be invalidated
