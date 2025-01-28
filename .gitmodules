@@ -1,3 +1,0 @@
-[submodule "src/neon-frontoffice-ts-sdk"]
-	path = src/neon-frontoffice-ts-sdk
-	url = https://github.com/EidosMedia/neon-frontoffice-ts-sdk.git
