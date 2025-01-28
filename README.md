@@ -1,4 +1,10 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js headless app with Neon example
+
+## The idea behind the example
+
+The project uses [Next.js](https://nextjs.org), and shows how it is possible to integrate it with Eidosmedia NEON headless APIs.
+
+WARNING: this code is not meant to be used in production! Many implementations are done "quick & dirty": the goal is NOT to provide Next.js or React development best practices - the goal is only to illustrate how to interact with Neon APIs.
 
 ## Getting Started
 
@@ -28,9 +34,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
