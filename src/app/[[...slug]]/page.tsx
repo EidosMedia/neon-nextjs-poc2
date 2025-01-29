@@ -1,6 +1,8 @@
-import { revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
-import { redirect, notFound } from 'next/navigation';
+import { redirect, notFound, unauthorized } from 'next/navigation';
+import Section from '../_pages/section';
+import Landing from '../_pages/landing';
+import Article from '../_pages/article';
 
 export default async function Page({
   params,
@@ -11,13 +13,6 @@ export default async function Page({
 
   const hostname = currentHeaders.get('x-neon-backend-url');
   const slug = (await params).slug || [];
-
-  console.log(
-    'url',
-    `${hostname}/${slug.join('/')}${
-      !slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'
-    }`
-  );
 
   const pageData = await fetch(
     `${hostname}/${slug.join('/')}${
@@ -30,29 +25,42 @@ export default async function Page({
 
   // handle 404 not found
   if (pageData.status === 404) {
-    console.log('pre calling revalidate');
-    revalidateTag('sites');
     notFound();
   }
 
-  if (pageData.status === 401) {
-    console.log('Unauthorized');
-    // revalidateTag('sites');
-    notFound();
+  // handle 401 and 403 unauthorized
+  if (pageData.status === 401 || pageData.status === 403) {
+    unauthorized();
   }
 
-  // handle redirect status
+  // handle redirection
   if (pageData.status > 300 && pageData.status < 400) {
-    console.log('newLocation', pageData.headers.get('Location'));
     const newLocation = pageData.headers.get('Location') as string;
     redirect(newLocation);
   }
 
   const pageDataJSON = await pageData.json();
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Page data: {JSON.stringify(pageDataJSON)}
-    </main>
-  );
+  switch (pageDataJSON.model?.data?.sys?.baseType) {
+    case 'webpage':
+      return <Landing data={pageDataJSON} />;
+
+    case 'sectionwebpage':
+      return <Section data={pageDataJSON} />;
+
+    case 'homewebpage':
+      return <Landing data={pageDataJSON} />;
+
+    case 'section':
+      return <Section data={pageDataJSON} />;
+
+    case 'site':
+      return <Landing data={pageDataJSON} />;
+
+    // case 'liveblog':
+    //   return <LiveblogPage pageDataJSON={pageDataJSON} />;
+
+    default:
+      return <Article data={pageDataJSON} />;
+  }
 }

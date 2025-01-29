@@ -5,7 +5,25 @@ export async function register() {
   // Compatible versions should be put in the code
   // fetch the sites to populate fetch
   // if there is connection error or something about one of the above tasks throw an error and NextJS will not start.
-  Object.assign(globalThis, { connection: NeonConnection, test: 'test' });
+
+  if (!process.env.BASE_NEON_FE_URL) {
+    throw new Error('BASE_NEON_FE_URL not specified in any .env file');
+  }
+
+  if (!process.env.NEON_FRONTOFFICE_SERVICE_KEY) {
+    console.warn('NEON_FRONTOFFICE_SERVICE_KEY not specified in any .env file');
+  }
+
+  const connection = new NeonConnection({
+    neonFeUrl: process.env.BASE_NEON_FE_URL,
+    frontOfficeServiceKey: process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+  });
+
+  await connection.getSitesList();
+
+  Object.assign(globalThis, {
+    connection,
+  });
 }
 
 // if a site not found the cache should be invalidated

@@ -6,42 +6,31 @@ declare global {
   var connection: NeonConnection;
 }
 
-type Site = {
-  root: {
-    hostname: string;
-  };
-  apiHostnames: {
-    liveHostname: string;
-    previewHostname: string;
-  };
-};
-
 export const getAPIHostname = async (
   request: NextRequest,
   viewStatus?: string | null
 ) => {
   const protocol = request.headers.get('x-forwarded-protocol') || 'http';
 
-  const sitesResp = await fetch(
-    `${process.env.BASE_NEON_FE_URL}/api/sites/live` || '',
-    {
-      // cache: 'no-cache',
-      next: { tags: ['sites'] },
-    }
-  );
+  const forwardedHostname = request.headers.get('x-forwarded-host');
 
-  // console.log('sitesResp', sitesResp);
-  const sites = await sitesResp.json();
-
-  const siteFound = sites.find((site: Site) =>
-    site.root.hostname.match(request.headers.get('x-forwarded-host') || '')
-  );
-
-  if (viewStatus === 'PREVIEW') {
-    return `${protocol}://${siteFound?.apiHostnames.previewHostname}`;
+  if (forwardedHostname === null) {
+    throw new Error('x-forwarded-host header not found');
   }
 
-  return `${protocol}://${siteFound?.apiHostnames.liveHostname}`;
+  const siteFound = await connection.getSiteByHostname(
+    `${protocol}://${forwardedHostname}`
+  );
+
+  if (!siteFound) {
+    throw new Error('Site not found');
+  }
+
+  if (viewStatus === 'PREVIEW') {
+    return `${protocol}://${siteFound.apiHostnames.previewHostname}`;
+  }
+
+  return `${protocol}://${siteFound.apiHostnames.liveHostname}`;
 };
 
 export const getConnection = () => {
@@ -49,7 +38,11 @@ export const getConnection = () => {
     throw new Error('BASE_NEON_FE_URL not specified in any .env file');
   }
 
-  if (!globalThis.connection) globalThis.connection = new NeonConnection();
+  if (!globalThis.connection)
+    globalThis.connection = new NeonConnection({
+      neonFeUrl: process.env.BASE_NEON_FE_URL,
+      frontOfficeServiceKey: process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+    });
 
   return globalThis.connection;
 };

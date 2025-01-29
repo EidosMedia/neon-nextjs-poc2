@@ -17,15 +17,19 @@ export async function middleware(request: NextRequest) {
 
   const apiHostname = await getAPIHostname(request, getViewStatus(viewStatus));
 
-  console.log('request: ' + request);
-
   // Passing the apiHostname resolved as header to the app router
   const headers = new Headers(request.headers);
+
   headers.set('x-neon-backend-url', apiHostname);
+  headers.set('x-neon-pathname', request.nextUrl.pathname);
+
+  if (request.nextUrl.pathname.includes('resources')) {
+    return NextResponse.rewrite(apiHostname + request.nextUrl.pathname);
+  }
 
   return NextResponse.next({ headers });
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$|.*\\.jpg$).*)'],
+  matcher: ['/((?!api|_next/static|_next/image).*)'],
 };
