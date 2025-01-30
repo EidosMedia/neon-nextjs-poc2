@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getAPIHostname } from './services/utils';
+import { getAPIHostnameConfig } from './services/utils';
 
 const getViewStatus = (searchParam: string | null) => {
   switch (searchParam) {
@@ -13,9 +13,7 @@ const getViewStatus = (searchParam: string | null) => {
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  const viewStatus = request.nextUrl.searchParams.get('v');
-
-  const apiHostname = await getAPIHostname(request, getViewStatus(viewStatus));
+  const { apiHostname } = await getAPIHostnameConfig(request);
 
   // Passing the apiHostname resolved as header to the app router
   const headers = new Headers(request.headers);
@@ -23,7 +21,7 @@ export async function middleware(request: NextRequest) {
   headers.set('x-neon-backend-url', apiHostname);
   headers.set('x-neon-pathname', request.nextUrl.pathname);
 
-  if (request.nextUrl.pathname.includes('resources')) {
+  if (request.nextUrl.pathname.startsWith('/resources')) {
     return NextResponse.rewrite(apiHostname + request.nextUrl.pathname);
   }
 

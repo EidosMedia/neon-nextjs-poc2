@@ -6,10 +6,7 @@ declare global {
   var connection: NeonConnection;
 }
 
-export const getAPIHostname = async (
-  request: NextRequest,
-  viewStatus?: string | null
-) => {
+export const getAPIHostnameConfig = async (request: NextRequest) => {
   const protocol = request.headers.get('x-forwarded-protocol') || 'http';
 
   const forwardedHostname = request.headers.get('x-forwarded-host');
@@ -18,31 +15,10 @@ export const getAPIHostname = async (
     throw new Error('x-forwarded-host header not found');
   }
 
-  const siteFound = await connection.getSiteByHostname(
+  const apiHostnameConfig = await connection.resolveApiHostname(
     `${protocol}://${forwardedHostname}`
   );
 
-  if (!siteFound) {
-    throw new Error('Site not found');
-  }
-
-  if (viewStatus === 'PREVIEW') {
-    return `${protocol}://${siteFound.apiHostnames.previewHostname}`;
-  }
-
-  return `${protocol}://${siteFound.apiHostnames.liveHostname}`;
-};
-
-export const getConnection = () => {
-  if (!process.env.BASE_NEON_FE_URL) {
-    throw new Error('BASE_NEON_FE_URL not specified in any .env file');
-  }
-
-  if (!globalThis.connection)
-    globalThis.connection = new NeonConnection({
-      neonFeUrl: process.env.BASE_NEON_FE_URL,
-      frontOfficeServiceKey: process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
-    });
-
-  return globalThis.connection;
+  apiHostnameConfig.apiHostname = `${protocol}://${apiHostnameConfig.apiHostname}`;
+  return apiHostnameConfig;
 };
