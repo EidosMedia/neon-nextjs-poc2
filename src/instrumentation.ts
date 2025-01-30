@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
 // import { logger } from './lib/logger';
 

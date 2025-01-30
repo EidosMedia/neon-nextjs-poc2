@@ -2,15 +2,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getAPIHostnameConfig } from './services/utils';
 
-const getViewStatus = (searchParam: string | null) => {
-  switch (searchParam) {
-    case 'p':
-      return 'PREVIEW';
-    default:
-      return null;
-  }
-};
-
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   const { apiHostname } = await getAPIHostnameConfig(request);
