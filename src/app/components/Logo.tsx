@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 
 type SiteLogoProps = {
-  data: PageData;
+  data: PageData<BaseModel>;
   size?: 'small' | 'medium' | 'large';
 };
 

@@ -1,10 +1,14 @@
 import Link from 'next/link';
 import Logo from './Logo';
-import { PageData, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import {
+  BaseModel,
+  PageData,
+  SiteNode,
+} from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
 import { headers } from 'next/headers';
 
-export default async function Navbar({ data }: { data: PageData }) {
+export default async function Navbar({ data }: { data: PageData<BaseModel> }) {
   const site = await connection.getSiteByName(data.siteNode.name);
 
   if (!site) {

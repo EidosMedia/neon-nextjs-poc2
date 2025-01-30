@@ -1,9 +1,9 @@
+import { PageModel } from '@/types/models';
+import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from '../components/Navbar';
 
-import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-
 type PageProps = {
-  data: PageData;
+  data: PageData<PageModel>;
 };
 
 const Landing: React.FC<PageProps> = ({ data }) => {
