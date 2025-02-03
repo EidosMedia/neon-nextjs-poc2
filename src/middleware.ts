@@ -13,7 +13,10 @@ export async function middleware(request: NextRequest) {
   headers.set('x-neon-pathname', request.nextUrl.pathname);
 
   if (request.nextUrl.pathname.startsWith('/resources')) {
-    return NextResponse.rewrite(apiHostname + request.nextUrl.pathname);
+    // need to reconstruct the full path after the domain
+    return NextResponse.rewrite(
+      `${apiHostname}${request.nextUrl.pathname}?${request.nextUrl.searchParams}`
+    );
   }
 
   return NextResponse.next({ headers });

@@ -86,3 +86,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+h2 {
+  @apply text-primary text-4xl;
+}
+
+h6 {
+  @apply text-gray-400 text-xl;
+}
