@@ -20,6 +20,9 @@ pnpm dev
 bun dev
 ```
 
+## Setup
+After download of the project it will be necessary to create the .env file (or copy the .env.example and rename it).
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
