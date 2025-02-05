@@ -1,9 +1,10 @@
-import { PageData, PageDataModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { WebpageModel } from '@/types/models';
 import Navbar from '../components/Navbar';
 import { getDwxLinkedObjects } from '../../services/utils';
 
 type PageProps = {
-    data: PageData<PageDataModel>;
+    data: PageData<WebpageModel>;
 };
 
 const Webpage: React.FC<PageProps> = async ({ data }) => {
