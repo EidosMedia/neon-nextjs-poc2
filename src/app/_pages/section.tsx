@@ -1,6 +1,5 @@
-import { PageModel } from '@/types/models/PageModel';
 import Navbar from '../components/Navbar';
-import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PageData, PageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 type PageProps = {
   data: PageData<PageModel>;

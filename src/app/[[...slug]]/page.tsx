@@ -3,21 +3,25 @@ import { redirect, notFound, unauthorized } from 'next/navigation';
 import Section from '../_pages/section';
 import Landing from '../_pages/landing';
 import Article from '../_pages/article';
+import Webpage from '../_pages/webpage';
 
 export default async function Page({
   params,
+  searchParams
 }: {
   params: Promise<{ slug: string[] }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const currentHeaders = await headers();
 
   const hostname = currentHeaders.get('x-neon-backend-url');
   const slug = (await params).slug || [];
+  const id = (await searchParams)?.id;
 
   const pageData = await fetch(
     `${hostname}/${slug.join('/')}${
       !slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'
-    }`,
+    }${id !== undefined ? id ? `${id}` : '' : ''}`,
     {
       redirect: 'manual',
     }
@@ -43,7 +47,7 @@ export default async function Page({
 
   switch (pageDataJSON.model?.data?.sys?.baseType) {
     case 'webpage':
-      return <Landing data={pageDataJSON} />;
+      return <Webpage data={pageDataJSON} />;
 
     case 'sectionwebpage':
       return <Section data={pageDataJSON} />;
