@@ -63,7 +63,7 @@ export const renderContent = (content: ContentElement): ReactNode => {
       console.log('web-image-group', content);
       return (
         <Figure
-          key={content.attributes.id || JSON.stringify(content)}
+          key={content.attributes.id || new Date().toDateString()}
           data={content}
           alt="/public/file.svg"
         />
@@ -71,7 +71,7 @@ export const renderContent = (content: ContentElement): ReactNode => {
     default:
       return (
         <div
-          key={content.attributes.id || JSON.stringify(content)}
+          key={content.attributes.id || new Date().toDateString()}
           {...buildAttributes(content)}
         >
           {content.elements.map((elem) => renderContent(elem))}
