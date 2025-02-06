@@ -19,3 +19,7 @@ interface Link {
     resourceUrl: string;
     dataType: string;
   } & BaseModel;
+
+  export type WebpageNodeModel = {
+    mainPicture?: string;
+  } & BaseModel;
