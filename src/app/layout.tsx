@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { WebVitals } from './components/web-vitals';
-
+import { WebVitals } from './components/utilities/WebVitals';
 import './globals.css';
+import { ReloadListener } from './components/utilities/ReloadListener';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,6 +20,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <WebVitals />
+        <ReloadListener />
 
         {children}
       </body>
