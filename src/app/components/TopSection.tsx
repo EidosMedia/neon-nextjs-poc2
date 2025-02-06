@@ -16,12 +16,12 @@ const TopSection: React.FC<CardProps> = ({ linkedObjecttop }) => {
         <div className="p-4 bg-gray-100 rounded-lg shadow-md">
           <a href={linkedObjecttop.link}>
             <img
-                alt="News thumbnail"
+                alt="/static/img/nothumb.jpeg"
                 width={550}
                 height={287}
                 decoding="async"
                 className="w-full h-auto"
-                src={linkedObjecttop.imageUrl || "/static/img/nothumb.jpeg"}
+                src={linkedObjecttop.imageUrl}
             />
             <div className="p-4">
               <h6 className="text-lg font-semibold text-gray-900">
