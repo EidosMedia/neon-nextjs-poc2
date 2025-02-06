@@ -1,3 +1,3 @@
 export * from './ArticleModel';
-export * from './PageModel';
+export * from './WebpageModel';
 export * from './LiveblogModel';

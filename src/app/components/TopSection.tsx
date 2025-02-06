@@ -6,10 +6,11 @@ type CardProps = {
     title: string;
     imageUrl: string;
     link: string;
+    summary: string;
   };
 };
 
-const Card: React.FC<CardProps> = ({ linkedObjecttop }) => {
+const TopSection: React.FC<CardProps> = ({ linkedObjecttop }) => {
   return (
       <div key={linkedObjecttop.id} className="p-4">
         <div className="p-4 bg-gray-100 rounded-lg shadow-md">
@@ -26,7 +27,7 @@ const Card: React.FC<CardProps> = ({ linkedObjecttop }) => {
               <h6 className="text-lg font-semibold text-gray-900">
                 {linkedObjecttop.title}
               </h6>
-              <p className="text-base text-gray-700">Sample story by cfg by code</p>
+              <p className="text-base text-gray-700">{linkedObjecttop.summary}</p>
             </div>
           </a>
         </div>
@@ -34,4 +35,4 @@ const Card: React.FC<CardProps> = ({ linkedObjecttop }) => {
   );
 };
 
-export default Card;
+export default TopSection;

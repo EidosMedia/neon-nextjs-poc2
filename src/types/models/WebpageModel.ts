@@ -1,21 +1,8 @@
 
 import { BaseModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
-interface Link {
-    targetId: string;
-  }
+//This is the type definition for the web page model, place here the additional types you need for your project
+
+export type WebpageModel = {
   
-  interface PageLink {
-    [key: string]: Link[];
-  }
-  
-  interface Links {
-    pagelink: PageLink;
-  };
-  
-  export type WebpageModel = {
-    attributes: Record<string, unknown>;
-    links: Links;
-    resourceUrl: string;
-    dataType: string;
-  } & BaseModel;
+} & BaseModel;

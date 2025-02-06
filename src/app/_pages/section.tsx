@@ -1,8 +1,9 @@
-import Navbar from '../components/Navbar';
-import { PageData, PageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { WebpageModel } from "@/types/models/WebpageModel";
+import Navbar from "../components/Navbar";
+import { PageData } from "@eidosmedia/neon-frontoffice-ts-sdk";
 
 type PageProps = {
-  data: PageData<PageModel>;
+  data: PageData<WebpageModel>;
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
