@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import TopSection from "../components/TopSection";
 import BannerSection from "../components/BannerSection";
 import ListSection from "../components/ListSection";
+import FooterSection from "../components/FooterSection";
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -16,6 +17,7 @@ const Webpage: React.FC<PageProps> = async ({ data }) => {
       <BannerSection data={data} />
       <TopSection data={data} />
       <ListSection data={data} />
+      <FooterSection data={data} />
     </div>
   );
 };

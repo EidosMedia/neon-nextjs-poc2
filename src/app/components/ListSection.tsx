@@ -7,7 +7,7 @@ type ListSectionProps = {
 
 const ListSection: React.FC<ListSectionProps> = async ({ data }) => {
   const linkedObjects = await connection.getDwxLinkedObjects(data, "list");
-  console.log(linkedObjects);
+
   return (
     <>
       {linkedObjects.map((linkedObject: any, index: number) => (
