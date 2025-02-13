@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
-
 declare global {
   // eslint-disable-next-line no-var
   var connection: NeonConnection;
