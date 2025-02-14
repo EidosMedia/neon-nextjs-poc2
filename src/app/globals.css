@@ -94,3 +94,34 @@ h2 {
 h6 {
   @apply text-gray-400 text-xl;
 }
+
+/* Style for webpages */
+
+.banner-container {
+  @apply w-full overflow-hidden;
+}
+
+.scroll-content {
+  @apply inline-flex whitespace-nowrap;
+  animation: scroll 20s linear infinite;
+}
+
+.banner-item {
+  @apply flex items-center px-4 py-2 mx-4 rounded-md;
+  /* If you want a fixed width, uncomment the next line */
+  /* min-width: 200px; */
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(500%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Optional: Pause animation on hover */
+.scroll-content:hover {
+  animation-play-state: paused;
+}
