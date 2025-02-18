@@ -3,6 +3,8 @@ import { WebpageModel } from "@eidosmedia/neon-frontoffice-ts-sdk";
 import Navbar from "../components/Navbar";
 import ArticleWebpage from "../components/ArticleWebpage";
 import ArticleBanner from "../components/ArticleBanner";
+import WebpageFooter from "../components/WebpageFooter";
+import React from "react";
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -42,7 +44,7 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
       </div>
 
       <footer className="bg-gray-800 text-white p-4 rounded-b-lg mt-4">
-        <p className="text-center">Website Footer</p>
+          <WebpageFooter data={data} />
       </footer>
     </div>
   );
