@@ -3,7 +3,6 @@ import { redirect, notFound, unauthorized } from "next/navigation";
 import Section from "../_pages/Section";
 import Landing from "../_pages/Landing";
 import Article from "../_pages/Article";
-import Webpage from "../_pages/Webpage";
 import WebpageColumnsLayout from "../_pages/WebpageColumnsLayout";
 
 export default async function Page({
