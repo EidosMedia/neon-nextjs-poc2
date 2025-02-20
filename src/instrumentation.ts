@@ -25,31 +25,9 @@ export async function register() {
     frontOfficeServiceKey: process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
   });
 
-  // try {
-  //   await connection.getLiveSitesList();
-  //   logger.info('Sites list fetched successfully');
-  // } catch (err) {
-  //   console.error('Failed to fetch sites list', err);
-  //   throw err;
-  // }
+  await connection.startup();
 
   Object.assign(globalThis, {
     connection,
   });
 }
-
-// if a site not found the cache should be invalidated
-// keep the latest sites list in the globalThis object as fallback
-
-// Those properties should be passed to the client
-
-// cache-control:
-// max-age=360000, s-maxage=360000
-// etag:
-// "Cobalt-1551134078"
-
-// last-modified:
-// Mon, 02 Sep 2024 09:58:37 GMT
-
-// neon-frontoffice-ts
-// develop
