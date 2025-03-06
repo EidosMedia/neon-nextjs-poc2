@@ -2,6 +2,7 @@
 import { NeonConnection, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import React, { useEffect, useState } from 'react';
 import Switch from '../base/Switch';
+import ViewStatus from './ViewStatus';
 
 interface User {
   name: string;
@@ -9,8 +10,7 @@ interface User {
 }
 
 interface LoggedUserBarProps {
-  data: SiteNode;
-  onLogout: () => void;
+  data: any;
 }
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
@@ -18,6 +18,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const [switch1Enabled, setSwitch1Enabled] = useState(false);
   const [switch2Enabled, setSwitch2Enabled] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  console.log('data', data);
 
   const checkLoggedUser = async () => {
     const userFromBackend = await (await fetch('/api/users')).json();
@@ -44,12 +45,12 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   //   return null;
   // }
 
+  console.log('data.siteData.viewStatus', data.siteData.viewStatus);
+
   return (
     <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between ">
       <div className="flex items-center">
-        <div className="flex items-center justify-center bg-gray-500 text-white p-5">
-          PREVIEW
-        </div>
+        <ViewStatus data={data} />
         <Switch
           label="Inspect items"
           checked={switch1Enabled}
