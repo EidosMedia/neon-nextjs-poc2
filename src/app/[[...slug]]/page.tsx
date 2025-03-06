@@ -1,9 +1,10 @@
-import { headers } from "next/headers";
-import { redirect, notFound, unauthorized } from "next/navigation";
-import Section from "../_pages/Section";
-import Landing from "../_pages/Landing";
-import Article from "../_pages/Article";
-import WebpageColumnsLayout from "../_pages/WebpageColumnsLayout";
+import { headers } from 'next/headers';
+import { redirect, notFound, unauthorized } from 'next/navigation';
+import Section from '../_pages/Section';
+import Landing from '../_pages/Landing';
+import Article from '../_pages/Article';
+import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
+import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 
 export default async function Page({
   params,
@@ -14,16 +15,16 @@ export default async function Page({
 }) {
   const currentHeaders = await headers();
 
-  const hostname = currentHeaders.get("x-neon-backend-url");
+  const hostname = currentHeaders.get('x-neon-backend-url');
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
 
   const pageData = await fetch(
-    `${hostname}/${slug.join("/")}${
-      !slug.length || slug[slug.length - 1].endsWith(".html") ? "" : "/"
-    }${id !== undefined ? (id ? `${id}` : "") : ""}`,
+    `${hostname}/${slug.join('/')}${
+      !slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'
+    }${id !== undefined ? (id ? `${id}` : '') : ''}`,
     {
-      redirect: "manual",
+      redirect: 'manual',
     }
   );
 
@@ -39,32 +40,41 @@ export default async function Page({
 
   // handle redirection
   if (pageData.status > 300 && pageData.status < 400) {
-    const newLocation = pageData.headers.get("Location") as string;
+    const newLocation = pageData.headers.get('Location') as string;
     redirect(newLocation);
   }
 
   const pageDataJSON = await pageData.json();
 
-  switch (pageDataJSON.model?.data?.sys?.baseType) {
-    case "webpage":
-      return <WebpageColumnsLayout data={pageDataJSON} />;
+  const resolvePage = () => {
+    switch (pageDataJSON.model?.data?.sys?.baseType) {
+      case 'webpage':
+        return <WebpageColumnsLayout data={pageDataJSON} />;
 
-    case "sectionwebpage":
-      return <Section data={pageDataJSON} />;
+      case 'sectionwebpage':
+        return <Section data={pageDataJSON} />;
 
-    case "homewebpage":
-      return <Landing data={pageDataJSON} />;
+      case 'homewebpage':
+        return <Landing data={pageDataJSON} />;
 
-    case "section":
-      return <Section data={pageDataJSON} />;
+      case 'section':
+        return <Section data={pageDataJSON} />;
 
-    case "site":
-      return <Landing data={pageDataJSON} />;
+      case 'site':
+        return <Landing data={pageDataJSON} />;
 
-    // case 'liveblog':
-    //   return <LiveblogPage pageDataJSON={pageDataJSON} />;
+      // case 'liveblog':
+      //   return <LiveblogPage pageDataJSON={pageDataJSON} />;
 
-    default:
-      return <Article data={pageDataJSON} />;
-  }
+      default:
+        return <Article data={pageDataJSON} />;
+    }
+  };
+
+  return (
+    <>
+      <LoggedUserBar data={pageDataJSON}></LoggedUserBar>
+      {resolvePage()}
+    </>
+  );
 }

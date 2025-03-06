@@ -23,41 +23,59 @@ export async function middleware(request: NextRequest) {
     const viewStatus = 'PREVIEW';
 
     if (previewToken && contentId && siteName) {
-        const authorizationResponse = await connection.previewAuthorization(contentId, siteName, viewStatus, previewToken);
+      const authorizationResponse = await connection.previewAuthorization(
+        contentId,
+        siteName,
+        viewStatus,
+        previewToken
+      );
 
-        if (authorizationResponse.status !== 204) {
-            return NextResponse.json({ error: 'Internal Server Error' }, { status: authorizationResponse.status });
-        }
-
-        const cookie = authorizationResponse.headers.getSetCookie()[0];
-
-        const cookieObject = parseCookie(cookie);
-
-        const domainValue = (headers.get('x-forwarded-host') || '/').replace(':3000', '');
-        
-        const cookieValue = cookieObject.empreviewtoken;
-        const cookieOptions: ResponseCookie = {
-            path: '/',
-            maxAge: 1200,
-            httpOnly: true,
-            name: 'emauth',
-            value: cookieValue,
-            sameSite: process.env.DEV_MODE === 'false' ? 'none' : false,
-            secure: process.env.DEV_MODE === 'false',
-            domain: domainValue
-        };
-
-        const response =  NextResponse.next({ headers });
-        response.cookies.set('emauth', '', cookieOptions);
-
-        return response;
+      if (authorizationResponse.status !== 204) {
+        return NextResponse.json(
+          { error: 'Internal Server Error' },
+          { status: authorizationResponse.status }
+        );
       }
+
+      const cookie = authorizationResponse.headers.getSetCookie()[0];
+
+      const cookieObject = parseCookie(cookie);
+
+      const domainValue = (headers.get('x-forwarded-host') || '/').replace(
+        ':3000',
+        ''
+      );
+
+      const cookieValue = cookieObject.empreviewtoken;
+      const cookieOptions: ResponseCookie = {
+        path: '/',
+        maxAge: 1200,
+        httpOnly: true,
+        name: 'emauth',
+        value: cookieValue,
+        sameSite: process.env.DEV_MODE === 'false' ? 'none' : false,
+        secure: process.env.DEV_MODE === 'false',
+        domain: domainValue,
+      };
+
+      const response = NextResponse.next({ headers });
+      response.cookies.set('emauth', '', cookieOptions);
+
+      return response;
+    }
   }
 
   if (request.nextUrl.pathname.startsWith('/resources')) {
     // need to reconstruct the full path after the domain
     return NextResponse.rewrite(
       `${apiHostname}${request.nextUrl.pathname}?${request.nextUrl.searchParams}`
+    );
+  }
+
+  if (request.nextUrl.pathname.match('/whoami')) {
+    // need to reconstruct the full path after the domain
+    return NextResponse.rewrite(
+      `${process.env.BASE_NEON_FE_URL}/directory/sessions/whoami`
     );
   }
 
@@ -72,9 +90,9 @@ const parseCookie = (cookieString: string): Record<string, string> => {
   const cookieArray = cookieString.split(';');
   const cookieObject: Record<string, string> = {};
 
-  cookieArray.forEach(cookie => {
-      const cookiePair = cookie.split('=');
-      cookieObject[cookiePair[0]] = cookiePair[1];
+  cookieArray.forEach((cookie) => {
+    const cookiePair = cookie.split('=');
+    cookieObject[cookiePair[0]] = cookiePair[1];
   });
 
   return cookieObject;
