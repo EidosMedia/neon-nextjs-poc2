@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
         path: '/',
         maxAge: 1200,
         httpOnly: true,
-        name: 'emauth',
+        name: 'previewtoken',
         value: cookieValue,
         sameSite: process.env.DEV_MODE === 'false' ? 'none' : false,
         secure: process.env.DEV_MODE === 'false',
@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
       };
 
       const response = NextResponse.next({ headers });
-      response.cookies.set('emauth', '', cookieOptions);
+      response.cookies.set('previewtoken', '', cookieOptions);
 
       return response;
     }
@@ -69,13 +69,6 @@ export async function middleware(request: NextRequest) {
     // need to reconstruct the full path after the domain
     return NextResponse.rewrite(
       `${apiHostname}${request.nextUrl.pathname}?${request.nextUrl.searchParams}`
-    );
-  }
-
-  if (request.nextUrl.pathname.match('/whoami')) {
-    // need to reconstruct the full path after the domain
-    return NextResponse.rewrite(
-      `${process.env.BASE_NEON_FE_URL}/directory/sessions/whoami`
     );
   }
 

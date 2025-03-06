@@ -1,6 +1,6 @@
-'use client';
-import { NeonConnection, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import React, { useEffect, useState } from 'react';
+"use client";
+import { NeonConnection, SiteNode } from "@eidosmedia/neon-frontoffice-ts-sdk";
+import React, { useEffect, useState } from "react";
 
 interface User {
   name: string;
@@ -19,8 +19,8 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const checkLoggedUser = async () => {
-    const userFromBackend = await (await fetch('/api/users')).json();
-    console.log('userFromBackend', userFromBackend);
+    const userFromBackend = await (await fetch("/api/users")).json();
+    console.log("userFromBackend", userFromBackend);
     setCurrentUser(userFromBackend);
   };
 
