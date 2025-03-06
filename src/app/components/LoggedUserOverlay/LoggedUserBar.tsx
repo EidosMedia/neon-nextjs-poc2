@@ -41,9 +41,9 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
     setSwitch2Enabled(!switch2Enabled);
   };
 
-  // if (!currentUser) {
-  //   return null;
-  // }
+  if (!currentUser) {
+    return null;
+  }
 
   console.log('data.siteData.viewStatus', data.siteData.viewStatus);
 
