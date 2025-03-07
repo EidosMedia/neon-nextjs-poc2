@@ -8,7 +8,5 @@ export async function GET(request: Request) {
     headers: { Authorization: `Bearer ${previewtoken}` },
   });
 
-  console.log('===========user', user);
-
-  return Response.json({ user })
+  return Response.json({ ...user })
 }

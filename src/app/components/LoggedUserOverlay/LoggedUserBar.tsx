@@ -18,11 +18,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
 
   const checkLoggedUser = async () => {
     const userFromBackend = await (await fetch("/api/users")).json();
-
-    setCurrentUser({
-      name: userFromBackend.user.name,
-      avatarUrl: "test",
-    });
+    setCurrentUser(userFromBackend);
   };
 
   useEffect(() => {
