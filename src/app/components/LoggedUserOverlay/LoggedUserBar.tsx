@@ -1,13 +1,9 @@
-'use client';
-import { NeonConnection, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import React, { useEffect, useState } from 'react';
-import Switch from '../base/Switch';
-import ViewStatus from './ViewStatus';
-
-interface User {
-  name: string;
-  avatarUrl: string;
-}
+"use client";
+import { NeonConnection, SiteNode } from "@eidosmedia/neon-frontoffice-ts-sdk";
+import React, { useEffect, useState } from "react";
+import Switch from "../base/Switch";
+import ViewStatus from "./ViewStatus";
+import { User } from "@eidosmedia/neon-frontoffice-ts-sdk";
 
 interface LoggedUserBarProps {
   data: any;
@@ -18,12 +14,15 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const [switch1Enabled, setSwitch1Enabled] = useState(false);
   const [switch2Enabled, setSwitch2Enabled] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  console.log('data', data);
+  console.log("data", data);
 
   const checkLoggedUser = async () => {
-    const userFromBackend = await (await fetch('/api/users')).json();
-    console.log('userFromBackend', userFromBackend);
-    setCurrentUser(userFromBackend);
+    const userFromBackend = await (await fetch("/api/users")).json();
+
+    setCurrentUser({
+      name: userFromBackend.user.name,
+      avatarUrl: "test",
+    });
   };
 
   useEffect(() => {
@@ -45,7 +44,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
     return null;
   }
 
-  console.log('data.siteData.viewStatus', data.siteData.viewStatus);
+  console.log("data.siteData.viewStatus", data.siteData.viewStatus);
 
   return (
     <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between ">
@@ -64,14 +63,14 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
       </div>
       <div className="flex items-center">
         <div className="flex items-center justify-center text-white">
-          sitename
+          sitename2
         </div>
         <a>
           <i></i>
         </a>
 
         <div className="flex rounded-full text-white p-2 cursor-pointer">
-          username
+          {currentUser.name}
         </div>
       </div>
     </div>
