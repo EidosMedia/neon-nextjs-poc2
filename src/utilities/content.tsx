@@ -49,31 +49,23 @@ export const buildAttributes = (
 };
 
 export const renderContent = (content: ContentElement): ReactNode => {
+  const key = content.attributes.id || new Date().toDateString();
+
   switch (content.nodeType) {
     case 'headline':
-      return <h2 key={content.attributes.id}>{findText(content)}</h2>;
+      return <h2 key={key}>{findText(content)}</h2>;
     case 'overhead':
-      return <h6>{findText(content)}</h6>;
+      return <h6 key={key}>{findText(content)}</h6>;
     case 'summary':
     case 'subhead':
-      return <h5>{findText(content)}</h5>;
+      return <h5 key={key}>{findText(content)}</h5>;
     case 'plainText':
-      return <p>{content.value}</p>;
+      return <p key={key}>{content.value}</p>;
     case 'inline-media-group':
-      console.log('web-image-group', content);
-      return (
-        <Figure
-          key={content.attributes.id || new Date().toDateString()}
-          data={content}
-          alt="/public/file.svg"
-        />
-      );
+      return <Figure key={key} data={content} alt="/public/file.svg" />;
     default:
       return (
-        <div
-          key={content.attributes.id || new Date().toDateString()}
-          {...buildAttributes(content)}
-        >
+        <div key={key} {...buildAttributes(content)}>
           {content.elements.map((elem) => renderContent(elem))}
         </div>
       );

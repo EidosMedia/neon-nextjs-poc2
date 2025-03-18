@@ -18,6 +18,8 @@ export const getAPIHostnameConfig = async (request: NextRequest) => {
     `${protocol}://${forwardedHostname}`
   );
 
-  apiHostnameConfig.apiHostname = `${protocol}://${apiHostnameConfig.apiHostname}`;
+  apiHostnameConfig.apiHostname = `${
+    process.env.BASE_NEON_FE_URL?.startsWith('https') ? 'https' : 'http'
+  }://${apiHostnameConfig.apiHostname}`;
   return apiHostnameConfig;
 };

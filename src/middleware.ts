@@ -67,9 +67,15 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith('/resources')) {
     // need to reconstruct the full path after the domain
-    return NextResponse.rewrite(
-      `${apiHostname}${request.nextUrl.pathname}?${request.nextUrl.searchParams}`
-    );
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.rewrite(
+        `${apiHostname}${request.nextUrl.pathname}?${request.nextUrl.searchParams}`
+      );
+    }
+    // calling internal api proxy due to self signed certificates issue
+    const url = request.nextUrl.clone();
+    url.pathname = `/api/proxy${url.pathname}`;
+    return NextResponse.rewrite(url);
   }
 
   return NextResponse.next({ headers });
