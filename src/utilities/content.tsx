@@ -49,7 +49,7 @@ export const buildAttributes = (
 };
 
 export const renderContent = (content: ContentElement): ReactNode => {
-  const key = content.attributes.id || new Date().toDateString();
+  const key = content?.attributes?.id || new Date().toDateString();
 
   switch (content.nodeType) {
     case 'headline':

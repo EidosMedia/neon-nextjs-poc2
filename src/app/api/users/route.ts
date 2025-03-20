@@ -1,12 +1,16 @@
 import { cookies } from 'next/headers';
 
 export async function GET(request: Request) {
-  const headers = request.headers;
   const cookiesFromRequest = await cookies();
-  const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
-  const user = await connection.getCurrentUserInfo({
-    headers: { Authorization: `Bearer ${previewtoken}` },
-  });
+  const previewToken = cookiesFromRequest.get('previewtoken')?.value;
 
-  return Response.json({ ...user })
+  try {
+    const user = await connection.getCurrentUserInfo({
+      headers: { Authorization: `Bearer ${previewToken}` },
+    });
+    return Response.json({ ...user });
+  } catch (error) {
+    console.log(error);
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 }

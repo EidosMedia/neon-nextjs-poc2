@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect, notFound, unauthorized } from 'next/navigation';
 import Section from '../_pages/Section';
 import Landing from '../_pages/Landing';
@@ -19,12 +19,16 @@ export default async function Page({
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
 
+  const cookiesFromRequest = await cookies();
+  const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+
   const pageData = await fetch(
     `${hostname}/${slug.join('/')}${
       !slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'
     }${id !== undefined ? (id ? `${id}` : '') : ''}`,
     {
       redirect: 'manual',
+      headers: { Authorization: `Bearer ${previewtoken}` },
     }
   );
 
@@ -73,7 +77,12 @@ export default async function Page({
 
   return (
     <>
-      <LoggedUserBar data={pageDataJSON}></LoggedUserBar>
+      <LoggedUserBar
+        data={{
+          ...pageDataJSON,
+          editUrl: `${process.env.NEON_APP_URL}/neon/app/#open/${pageDataJSON.model.data.id}`,
+        }}
+      />
       {resolvePage()}
     </>
   );

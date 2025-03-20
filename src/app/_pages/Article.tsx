@@ -10,6 +10,8 @@ type PageProps = {
 };
 
 const Article: React.FC<PageProps> = ({ data }) => {
+  console.log('data.model.data.files.content.data', data.model.data);
+
   return (
     <div className="container mx-auto">
       <Navbar data={data}></Navbar>

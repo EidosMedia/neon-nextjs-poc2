@@ -1,29 +1,20 @@
-"use client";
-import { NeonConnection, SiteNode } from "@eidosmedia/neon-frontoffice-ts-sdk";
-import React, { useEffect, useState } from "react";
-import Switch from "../base/Switch";
-import ViewStatus from "./ViewStatus";
-import { User } from "@eidosmedia/neon-frontoffice-ts-sdk";
+'use client';
+import React, { useEffect, useState } from 'react';
+import Switch from '../base/Switch';
+import ViewStatus from './ViewStatus';
+// import { cookies, headers } from 'next/headers';
+import History from './History';
+import useAuth from '@/hooks/useAuth';
+import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 interface LoggedUserBarProps {
-  data: any;
+  data: PageData<BaseModel>;
 }
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [switch1Enabled, setSwitch1Enabled] = useState(false);
   const [switch2Enabled, setSwitch2Enabled] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  console.log("data", data);
-
-  const checkLoggedUser = async () => {
-    const userFromBackend = await (await fetch("/api/users")).json();
-    setCurrentUser(userFromBackend);
-  };
-
-  useEffect(() => {
-    checkLoggedUser();
-  }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -36,11 +27,11 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
     setSwitch2Enabled(!switch2Enabled);
   };
 
-  if (!currentUser) {
+  const { data: userData } = useAuth();
+
+  if (!userData.user) {
     return null;
   }
-
-  console.log("data.siteData.viewStatus", data.siteData.viewStatus);
 
   return (
     <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between ">
@@ -57,17 +48,59 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
           onChange={toggleSwitch2}
         />
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-3">
         <div className="flex items-center justify-center text-white">
-          sitename2
+          {data.siteData?.siteName}
+        </div>
+        <a
+          href={data.editUrl}
+          target="_blank"
+          className="flex items-center justify-center text-white"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+            />
+          </svg>
+        </a>
+        <History data={data} />
+
+        <div className="relative flex items-center justify-center text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+            />
+          </svg>
+        </div>
+        <div className="flex items-center justify-center text-white gap-3">
+          <img
+            className="w-10 h-10 rounded-full"
+            src={`/api/users/picture?id=${userData?.user.id}`}
+            alt="Rounded avatar"
+          />
+          {userData?.user.alias}
         </div>
         <a>
           <i></i>
         </a>
-
-        <div className="flex rounded-full text-white p-2 cursor-pointer">
-          {currentUser.name}
-        </div>
       </div>
     </div>
   );
