@@ -10,19 +10,12 @@ type PageProps = {
 };
 
 const Article: React.FC<PageProps> = ({ data }) => {
-  console.log('data.model.data.files.content.data', data.model.data);
-
   return (
     <div className="container mx-auto">
       <Navbar data={data}></Navbar>
       <Grouphead data={data.model.data} />
       <MainImage data={data.model.data} />
-      {renderContent(
-        findElementsInContentJson(
-          ['text'],
-          data.model.data.files.content.data
-        )[0]
-      )}
+      {renderContent(findElementsInContentJson(['text'], data.model.data.files.content.data)[0])}
     </div>
   );
 };
