@@ -13,9 +13,7 @@ export const authSlices = createSlice({
 
     // Document actions
     setAuthData: (state, action) => {
-      console.log('setAuthData', action.payload);
-      state.user = action.payload.user;
-      state.session = action.payload.session;
+      state.user = action.payload;
     },
   },
 });

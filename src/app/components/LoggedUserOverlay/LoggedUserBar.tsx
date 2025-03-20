@@ -29,7 +29,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
 
   const { data: userData } = useAuth();
 
-  if (!userData.user) {
+  if (!userData.user?.name) {
     return null;
   }
 
@@ -37,26 +37,12 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
     <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between ">
       <div className="flex items-center">
         <ViewStatus data={data} />
-        <Switch
-          label="Inspect items"
-          checked={switch1Enabled}
-          onChange={toggleSwitch1}
-        />
-        <Switch
-          label="Analytics"
-          checked={switch2Enabled}
-          onChange={toggleSwitch2}
-        />
+        <Switch label="Inspect items" checked={switch1Enabled} onChange={toggleSwitch1} />
+        <Switch label="Analytics" checked={switch2Enabled} onChange={toggleSwitch2} />
       </div>
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center text-white">
-          {data.siteData?.siteName}
-        </div>
-        <a
-          href={data.editUrl}
-          target="_blank"
-          className="flex items-center justify-center text-white"
-        >
+        <div className="flex items-center justify-center text-white">{data.siteData?.siteName}</div>
+        <a href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -96,7 +82,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
             src={`/api/users/picture?id=${userData?.user.id}`}
             alt="Rounded avatar"
           />
-          {userData?.user.alias}
+          {userData?.user?.alias}
         </div>
         <a>
           <i></i>

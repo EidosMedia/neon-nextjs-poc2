@@ -1,21 +1,14 @@
-import { useEffect, useState } from 'react';
 import Clock from '../icons/clock';
 import { NodeVersion, PageNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import Close from '../icons/close';
 import useVersions from '@/hooks/useVersions';
 
-type VersionsResponse = {
-  result: NodeVersion[];
-};
-
 type UserLayerProps = {
   data: PageNode;
 };
 
 const History: React.FC<UserLayerProps> = ({ data }) => {
-  const [historyContent, setHistoryContent] = useState<NodeVersion[]>([]);
-
   const {
     data: versionsData,
     setPanelOpened,
@@ -24,14 +17,10 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     currentNode: data,
   });
 
-  console.log('panelOpened', panelOpened);
-
-  console.log('versionsData', versionsData);
-
   return (
     <>
       <a
-        onClick={() => setPanelOpened((state) => !state)}
+        onClick={() => setPanelOpened(!panelOpened)}
         className="flex items-center justify-center text-white cursor-pointer"
       >
         <Clock />
@@ -44,10 +33,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                 <Clock />
                 <span>Versions history</span>
               </span>
-              <a
-                onClick={() => setPanelOpened(false)}
-                className="cursor-pointer"
-              >
+              <a onClick={() => setPanelOpened(false)} className="cursor-pointer">
                 <Close />
               </a>
             </div>
@@ -61,9 +47,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                         {`Version ${item.major}.${item.minor}`}
                       </h3>
                     </Link>
-                    <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
-                      Missing user data
-                    </p>
+                    <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Missing user data</p>
                   </div>
                 </li>
               ))}

@@ -13,10 +13,12 @@ const useAuth = () => {
   };
 
   useEffect(() => {
-    if (!authData.user) {
+    if (!authData.name) {
       getUserFromBackend();
     }
   }, []);
+
+  console.log('authData', authData);
 
   return { data: authData };
 };
