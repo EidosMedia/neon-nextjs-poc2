@@ -1,8 +1,9 @@
 import useVersions from '@/hooks/useVersions';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 
-const ViewStatus = ({ data }) => {
+const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
   const { getVersion, getCurrentLiveVersion } = useVersions({
     currentNode: data,
   });
@@ -26,8 +27,8 @@ const ViewStatus = ({ data }) => {
       {isLive || isPreview ? (
         version
       ) : (
-        <div className="flex flex-col">
-          <span className="text-black">Version {version}</span>
+        <div className="flex flex-col justify-center items-center">
+          <span className="text-black font-semibold">Version {version}</span>
           <Link href={getCurrentLiveVersion().pubInfo.canonical}>
             <span className="text-black underline">Back to live version</span>
           </Link>

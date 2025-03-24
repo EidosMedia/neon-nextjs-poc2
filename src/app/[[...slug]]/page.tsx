@@ -1,7 +1,5 @@
 import { cookies, headers } from 'next/headers';
 import { redirect, notFound, unauthorized } from 'next/navigation';
-import Section from '../_pages/Section';
-import Landing from '../_pages/Landing';
 import Article from '../_pages/Article';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';

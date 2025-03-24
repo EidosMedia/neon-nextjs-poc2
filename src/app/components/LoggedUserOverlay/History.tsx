@@ -28,39 +28,49 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         <Clock />
       </a>
       {panelOpened && (
-        <div className="h-screen w-xs absolute text-black top-0 right-0 z-10">
-          <div className="text-black relative h-fit mt-16">
+        <div className="h-screen w-xs absolute text-black top-0 right-0 z-10 flex flex-col">
+          <div className="h-16"></div>
+          <div className="text-black relative grow-1 min-h-0 flex flex-col">
             <div className="flex items-center justify-between py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-              <span className="flex items-center gap-2 text-(--color-switch-checked-background)">
+              <span className="flex items-center gap-2 text-(--color-panel-text-header) ml-1">
                 <Clock />
                 <span>Versions history</span>
               </span>
-              <a onClick={() => setPanelOpened(false)} className="cursor-pointer">
+              <a onClick={() => setPanelOpened(false)} className="cursor-pointer mr-1">
                 <Close />
               </a>
             </div>
-            <ol className="relative border-s border-gray-200 dark:border-gray-700">
-              {versionsData.map((item: NodeVersion) => (
-                <li className="mb-10 ms-4" key={item.nodeId}>
-                  <div className="absolute w-5 h-5 bg-gray-200 rounded-full mt-2.5 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
-                  <Link href={item.pubInfo.canonical || '#'}>
+            <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0">
+              <ol className="relative border-s border-gray-200 dark:border-gray-700">
+                {versionsData.map((item: NodeVersion) => (
+                  <li className="mb-10 ms-4" key={item.nodeId}>
                     <div
                       className={clsx(
-                        'border border-gray-700 dark:border-gray-300 p-4 rounded-sm mr-4',
-                        item.pubInfo.canonical === data.model.data.url && 'bg-blue-100'
+                        'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
+                        item.pubInfo.canonical === data.model.data.url
+                          ? 'bg-(--color-panel-text-header)'
+                          : 'bg-gray-300'
                       )}
-                    >
-                      <h3 className="font-semibold text-gray-900 dark:text-white">
-                        {`Version ${item.major}.${item.minor}`}
-                      </h3>
-                      <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                        {new Date(item.pubInfo.publicationTime).toLocaleString()}
-                      </p>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ol>
+                    ></div>
+                    <Link href={item.pubInfo.canonical || '#'}>
+                      <div
+                        className={clsx(
+                          'p-4 rounded-sm mr-4 ',
+                          item.pubInfo.canonical === data.model.data.url ? 'bg-blue-100' : 'bg-white'
+                        )}
+                      >
+                        <h3 className="font-semibold text-gray-900 dark:text-white">
+                          {`Version ${item.major}.${item.minor}`}
+                        </h3>
+                        <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
+                          {new Date(item.pubInfo.publicationTime).toLocaleString()}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </div>
       )}

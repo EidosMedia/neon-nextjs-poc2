@@ -1,15 +1,10 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Switch from '../base/Switch';
 import ViewStatus from './ViewStatus';
-// import { cookies, headers } from 'next/headers';
 import History from './History';
 import useAuth from '@/hooks/useAuth';
-import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-
-interface LoggedUserBarProps {
-  data: PageData<BaseModel>;
-}
+import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

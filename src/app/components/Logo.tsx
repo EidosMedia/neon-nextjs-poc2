@@ -16,7 +16,7 @@ const SiteLogo: React.FC<SiteLogoProps> = async ({ data }) => {
 
   return (
     <Link className="flex items-center" href="/">
-      <img src={site.logoUrl || null} alt={''} style={{ height: '80px' }} />
+      <img src={site.logoUrl} alt={''} style={{ height: '80px' }} />
     </Link>
   );
 };
