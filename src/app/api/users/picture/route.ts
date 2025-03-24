@@ -6,8 +6,6 @@ export async function GET(request: NextRequest) {
   const previewToken = cookiesFromRequest.get('previewtoken')?.value;
   const userId = request.nextUrl.searchParams.get('id');
 
-  console.log('calling get user picture');
-
   return await connection.getUserAvatar({
     id: userId,
     headers: { Authorization: `Bearer ${previewToken}` },

@@ -5,6 +5,9 @@ import Landing from '../_pages/Landing';
 import Article from '../_pages/Article';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
+import SectionWebPage from '../_pages/SectionWebPage';
+import DefaultLanding from '../_pages/DefaultLanding';
+import DefaultSection from '../_pages/DefaultSection';
 
 export default async function Page({
   params,
@@ -22,10 +25,16 @@ export default async function Page({
   const cookiesFromRequest = await cookies();
   const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
 
+  console.log(
+    `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
+      id !== undefined ? (id ? `${id}` : '') : ''
+    }`
+  );
+
   const pageData = await fetch(
-    `${hostname}/${slug.join('/')}${
-      !slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'
-    }${id !== undefined ? (id ? `${id}` : '') : ''}`,
+    `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
+      id !== undefined ? (id ? `${id}` : '') : ''
+    }`,
     {
       redirect: 'manual',
       headers: { Authorization: `Bearer ${previewtoken}` },
@@ -39,7 +48,7 @@ export default async function Page({
 
   // handle 401 and 403 unauthorized
   if (pageData.status === 401 || pageData.status === 403) {
-    unauthorized();
+    notFound();
   }
 
   // handle redirection
@@ -56,16 +65,16 @@ export default async function Page({
         return <WebpageColumnsLayout data={pageDataJSON} />;
 
       case 'sectionwebpage':
-        return <Section data={pageDataJSON} />;
+        return <SectionWebPage data={pageDataJSON} />;
 
       case 'homewebpage':
-        return <Landing data={pageDataJSON} />;
+        return <DefaultLanding data={pageDataJSON} />;
 
       case 'section':
-        return <Section data={pageDataJSON} />;
+        return <DefaultSection data={pageDataJSON} />;
 
       case 'site':
-        return <Landing data={pageDataJSON} />;
+        return <DefaultLanding data={pageDataJSON} />;
 
       // case 'liveblog':
       //   return <LiveblogPage pageDataJSON={pageDataJSON} />;

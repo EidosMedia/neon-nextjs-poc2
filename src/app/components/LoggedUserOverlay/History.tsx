@@ -1,11 +1,12 @@
 import Clock from '../icons/clock';
-import { NodeVersion, PageNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { BaseModel, NodeVersion, PageData, PageNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import Close from '../icons/close';
 import useVersions from '@/hooks/useVersions';
+import clsx from 'clsx';
 
 type UserLayerProps = {
-  data: PageNode;
+  data: PageData<BaseModel>;
 };
 
 const History: React.FC<UserLayerProps> = ({ data }) => {
@@ -13,6 +14,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     data: versionsData,
     setPanelOpened,
     panelOpened,
+    getVersion,
   } = useVersions({
     currentNode: data,
   });
@@ -41,14 +43,21 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
               {versionsData.map((item: NodeVersion) => (
                 <li className="mb-10 ms-4" key={item.nodeId}>
                   <div className="absolute w-5 h-5 bg-gray-200 rounded-full mt-2.5 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
-                  <div className="border-2 border-gray-200 dark:border-gray-700 p-4 rounded-lg">
-                    <Link href={item.pubInfo.canonical || '#'}>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <Link href={item.pubInfo.canonical || '#'}>
+                    <div
+                      className={clsx(
+                        'border border-gray-700 dark:border-gray-300 p-4 rounded-sm mr-4',
+                        item.pubInfo.canonical === data.model.data.url && 'bg-blue-100'
+                      )}
+                    >
+                      <h3 className="font-semibold text-gray-900 dark:text-white">
                         {`Version ${item.major}.${item.minor}`}
                       </h3>
-                    </Link>
-                    <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Missing user data</p>
-                  </div>
+                      <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
+                        {new Date(item.pubInfo.publicationTime).toLocaleString()}
+                      </p>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ol>
