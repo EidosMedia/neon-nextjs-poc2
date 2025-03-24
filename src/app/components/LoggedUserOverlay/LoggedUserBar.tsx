@@ -5,6 +5,7 @@ import ViewStatus from './ViewStatus';
 import History from './History';
 import useAuth from '@/hooks/useAuth';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
+import VisibilityChip from './VisibilityChip';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -71,6 +72,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
             />
           </svg>
         </div>
+        <VisibilityChip data={data} />
         <div className="flex items-center justify-center text-white gap-3">
           <img
             className="w-10 h-10 rounded-full"
