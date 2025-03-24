@@ -14,7 +14,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     data: versionsData,
     setPanelOpened,
     panelOpened,
-    getVersion,
   } = useVersions({
     currentNode: data,
   });
@@ -41,15 +40,13 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
               </a>
             </div>
             <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0">
-              <ol className="relative border-s border-gray-200 dark:border-gray-700">
+              <ol className="relative border-s border-gray-300 dark:border-gray-700">
                 {versionsData.map((item: NodeVersion) => (
                   <li className="mb-10 ms-4" key={item.nodeId}>
                     <div
                       className={clsx(
                         'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
-                        item.pubInfo.canonical === data.model.data.url
-                          ? 'bg-(--color-panel-text-header)'
-                          : 'bg-gray-300'
+                        item.pubInfo.canonical === data.model.data.url ? 'bg-gray-400' : 'bg-gray-300'
                       )}
                     ></div>
                     <Link href={item.pubInfo.canonical || '#'}>
