@@ -67,7 +67,7 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith('/resources')) {
     // need to reconstruct the full path after the domain
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' && process.env.DEPLOYMENT !== 'sandbox') {
       return NextResponse.rewrite(
         `${apiHostname}${request.nextUrl.pathname}?${request.nextUrl.searchParams}`
       );
