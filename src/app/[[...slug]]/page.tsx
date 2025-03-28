@@ -35,7 +35,9 @@ export default async function Page({
     }`,
     {
       redirect: 'manual',
-      headers: { Authorization: `Bearer ${previewtoken}` },
+      headers: { Authorization: `Bearer ${previewtoken}`,
+                 'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || ''
+                },
     }
   );
 
