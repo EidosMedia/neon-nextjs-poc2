@@ -5,10 +5,14 @@ export async function GET(request: Request) {
   const previewToken = cookiesFromRequest.get('previewtoken')?.value;
 
   try {
-    const user = await connection.getCurrentUserInfo({
-      headers: { Authorization: `Bearer ${previewToken}` },
-    });
-    return Response.json({ ...user });
+    if(previewToken){
+      const user = await connection.getCurrentUserInfo({
+        headers: { Authorization: `Bearer ${previewToken}` },
+      });
+      return Response.json({ ...user });
+    } else{
+      return Response.json({});
+    }
   } catch (error) {
     console.log(error);
     return Response.json({ error: 'Internal Server Error' }, { status: 500 });

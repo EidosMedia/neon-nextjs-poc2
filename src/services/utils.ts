@@ -6,7 +6,7 @@ declare global {
 }
 
 export const getAPIHostnameConfig = async (request: NextRequest) => {
-  const protocol = request.headers.get('x-forwarded-protocol') || 'http';
+  const protocol = request.headers.get('X-Forwarded-Proto') || 'http';
 
   const forwardedHostname = request.headers.get('x-forwarded-host');
 
