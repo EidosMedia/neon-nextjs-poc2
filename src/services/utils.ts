@@ -6,7 +6,7 @@ declare global {
 }
 
 export const getAPIHostnameConfig = async (request: NextRequest) => {
-  const protocol = 'https';
+  const protocol = request.headers.get('x-forwarded-protocol') || 'http';
 
   const forwardedHostname = request.headers.get('x-forwarded-host');
 
@@ -18,8 +18,6 @@ export const getAPIHostnameConfig = async (request: NextRequest) => {
     `${protocol}://${forwardedHostname}`
   );
 
-  apiHostnameConfig.apiHostname = `${
-    process.env.BASE_NEON_FE_URL?.startsWith('https') ? 'https' : 'http'
-  }://${apiHostnameConfig.apiHostname}`;
+  apiHostnameConfig.apiHostname = `https://${apiHostnameConfig.apiHostname}`;
   return apiHostnameConfig;
 };
