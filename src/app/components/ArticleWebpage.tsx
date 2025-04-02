@@ -32,13 +32,13 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = async ({
                 />
               )}
             </div>
-            <div className="text-black text-lg font-semibold font-['Source Sans Pro SemiBold'] leading-snug">
+            <div className="text-black text-lg font-semibold font-source-sans leading-snug">
               {linkedObject.title}
             </div>
-            <div className="text-black text-xs font-normal font-['Source Sans Pro'] leading-snug">
+            <div className="text-black text-xs font-normal font-source-sans leading-snug">
               {linkedObject.summary}
             </div>
-            <div className="self-stretch text-[#5d5d5d] text-xs font-normal font-['Source Sans Pro'] leading-snug">
+            <div className="self-stretch text-[#5d5d5d] text-xs font-normal font-source-sans leading-snug">
               {linkedObject.pubInfo.publicationTime}
             </div>
           </a>
