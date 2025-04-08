@@ -31,15 +31,15 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div className="p-4 rounded-lg col-span-12 md:col-span-3">
-          <ArticleWebpage data={data} zone="top" displayMainPicture={true} />
+          <ArticleWebpage data={data} zone="main" displayMainPicture={true} />
         </div>
 
         <div className="p-4 rounded-lg col-span-12 md:col-span-6">
-          <ArticleWebpage data={data} zone="footer" displayMainPicture={true} />
+          <ArticleWebpage data={data} zone="context" displayMainPicture={true} />
         </div>
 
         <div className="p-4 rounded-lg col-span-12 md:col-span-3">
-          <ArticleWebpage data={data} zone="list" displayMainPicture={false} />
+          <ArticleWebpage data={data} zone="insight1" displayMainPicture={false} />
         </div>
       </div>
 
