@@ -57,7 +57,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                         )}
                       >
                         <h3 className="font-semibold text-gray-900 dark:text-white">
-                          {`Version ${item.major}.${item.minor}`}
+                          {`Version ${item.major}.${item.minor} - ${item.live ? 'live' : 'preview'}`}
                         </h3>
                         <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
                           {new Date(item.pubInfo.publicationTime).toLocaleString()}
