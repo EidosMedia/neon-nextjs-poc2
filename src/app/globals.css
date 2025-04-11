@@ -152,11 +152,10 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border font-source-sans;
   }
   body {
-    @apply bg-background text-foreground;
-    @apply text-sm
+    @apply bg-background text-foreground text-xs;
   }
 }
 
