@@ -10,12 +10,20 @@ const useVersions = ({ currentNode }: { currentNode: PageData<BaseModel> }) => {
 
   const loadHistory = async () => {
     try {
-      const jsonResp = await (await fetch(`/api/nodes/${currentNode.model.data.id}/versions/live`)).json();
+      const response = await fetch(`/api/nodes/${currentNode.model.data.id}/versions`);
+      const jsonResp = await response.json();
+
+      let filteredVersions : NodeVersion[];
+      if (currentNode.siteData.viewStatus === "PREVIEW") {
+        filteredVersions = jsonResp.result;
+      } else {
+        filteredVersions = jsonResp.result.filter((item:NodeVersion)=> item.live);
+      }
 
       dispatch(
         setVersions({
           id: currentNode.model.data.id,
-          versions: jsonResp.result,
+          versions: filteredVersions,
         })
       );
     } catch (error) {

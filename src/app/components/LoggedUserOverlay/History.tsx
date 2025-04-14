@@ -56,6 +56,11 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                           item.pubInfo.canonical === data.model.data.url ? 'bg-blue-100' : 'bg-white'
                         )}
                       >
+                          {item.live && (
+                              <div className="absolute top-2 right-7 text-xs font-bold text-green-600 bg-green-200 border border-green-600 rounded-full px-2 py-0.5">
+                                  LIVE
+                              </div>
+                          )}
                         <h3 className="font-semibold text-gray-900 dark:text-white">
                           {`Version ${item.major}.${item.minor}`}
                         </h3>
