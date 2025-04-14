@@ -23,21 +23,16 @@ export default async function Page({
   const cookiesFromRequest = await cookies();
   const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
 
-  console.log(
-    `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
-      id !== undefined ? (id ? `${id}` : '') : ''
-    }`
-  );
-
   const pageData = await fetch(
     `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
       id !== undefined ? (id ? `${id}` : '') : ''
     }`,
     {
       redirect: 'manual',
-      headers: { Authorization: `Bearer ${previewtoken}`,
-                 'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || ''
-                },
+      headers: {
+        Authorization: `Bearer ${previewtoken}`,
+        'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+      },
     }
   );
 
@@ -85,8 +80,10 @@ export default async function Page({
     }
   };
 
+  console.log('pageDataJSON', pageDataJSON);
+
   return (
-    <>
+    <div className="root" data-theme={pageDataJSON.siteNode.attributes.theme}>
       <LoggedUserBar
         data={{
           ...pageDataJSON,
@@ -94,6 +91,6 @@ export default async function Page({
         }}
       />
       {resolvePage()}
-    </>
+    </div>
   );
 }

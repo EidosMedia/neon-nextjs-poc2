@@ -4,6 +4,10 @@
 
 @plugin 'tailwindcss-animate';
 
+@tailwind utilities;
+
+@import "./themes/variant-a.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -204,3 +208,4 @@ h6 {
 .scroll-content:hover {
   animation-play-state: paused;
 }
+
