@@ -15,9 +15,9 @@ const useVersions = ({ currentNode }: { currentNode: PageData<BaseModel> }) => {
 
       let filteredVersions : NodeVersion[];
       if (currentNode.siteData.viewStatus === "PREVIEW") {
-        filteredVersions = jsonResp.result;
+        filteredVersions = jsonResp.result.filter((item:NodeVersion)=> item.versionTimestamp != '-1');
       } else {
-        filteredVersions = jsonResp.result.filter((item:NodeVersion)=> item.live);
+        filteredVersions = jsonResp.result.filter((item:NodeVersion)=> item.live && item.versionTimestamp != '-1');
       }
 
       dispatch(
