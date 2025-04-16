@@ -29,6 +29,10 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
     return null;
   }
 
+  if (window.name === 'neonapp-preview') {
+    return null;
+  }
+
   return (
     <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between ">
       <div className="flex items-center">
