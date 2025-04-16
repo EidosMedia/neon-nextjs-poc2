@@ -31,20 +31,14 @@ export async function middleware(request: NextRequest) {
       );
 
       if (authorizationResponse.status !== 204) {
-        return NextResponse.json(
-          { error: 'Internal Server Error' },
-          { status: authorizationResponse.status }
-        );
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: authorizationResponse.status });
       }
 
       const cookie = authorizationResponse.headers.getSetCookie()[0];
 
       const cookieObject = parseCookie(cookie);
 
-      const domainValue = (headers.get('x-forwarded-host') || '/').replace(
-        ':3000',
-        ''
-      );
+      const domainValue = (headers.get('x-forwarded-host') || '/').replace(':3000', '');
 
       const cookieValue = cookieObject.empreviewtoken;
       const cookieOptions: ResponseCookie = {
@@ -65,7 +59,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (request.nextUrl.pathname.startsWith('/resources')) {
+  if (request.nextUrl.pathname.startsWith('/resources') || request.nextUrl.pathname === '/robots.txt') {
     // calling internal api proxy
     const url = request.nextUrl.clone();
     url.pathname = `/api/proxy${url.pathname}`;
@@ -91,7 +85,7 @@ const parseCookie = (cookieString: string): Record<string, string> => {
   const cookieArray = cookieString.split(';');
   const cookieObject: Record<string, string> = {};
 
-  cookieArray.forEach((cookie) => {
+  cookieArray.forEach(cookie => {
     const cookiePair = cookie.split('=');
     cookieObject[cookiePair[0]] = cookiePair[1];
   });
