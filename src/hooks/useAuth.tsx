@@ -18,8 +18,6 @@ const useAuth = () => {
     }
   }, []);
 
-  console.log('authData', authData);
-
   return { data: authData };
 };
 

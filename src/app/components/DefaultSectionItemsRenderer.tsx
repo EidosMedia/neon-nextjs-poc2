@@ -1,20 +1,24 @@
+'use client';
 import React from 'react';
 import { BaseModel, PageData, PageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import ArticleOverlay from './base/ArticleOverlay';
+import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 
 type DefaultSectionItemsRendererProps = {
   data: PageData<BaseModel>;
 };
 
-const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = async ({ data }) => {
+const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = ({ data }) => {
   const linkedObjects = data.model.data.children ? data.model.data.children.map(item => data.model.nodes[item]) : [];
+
+  const { data: loggedUserInfo } = useLoggedUserInfo();
 
   return (
     <>
       {linkedObjects.map((linkedObject: any, index: number) => (
         <div key={linkedObject.id} className="p-4 relative group">
-          <ArticleOverlay key={linkedObject.id} id={linkedObject.id}>
+          <ArticleOverlay key={linkedObject.id} id={linkedObject.id} showOverlay={loggedUserInfo.inspectItems}>
             <Link className="no-underline" href={linkedObjects[`${index}`].url}>
               <div className="p-4 bg-gray-100 rounded-lg shadow-md">
                 <div className="flex items-center space-x-2">

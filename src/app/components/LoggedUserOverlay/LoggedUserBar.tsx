@@ -6,21 +6,28 @@ import History from './History';
 import useAuth from '@/hooks/useAuth';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 import VisibilityChip from './VisibilityChip';
+import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
+import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
+import { useDispatch } from 'react-redux';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [switch1Enabled, setSwitch1Enabled] = useState(false);
-  const [switch2Enabled, setSwitch2Enabled] = useState(false);
+  const dispatch = useDispatch();
+  const { data: loggedUserInfo } = useLoggedUserInfo();
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  const inspectItemsEnabled = loggedUserInfo.inspectItems;
+  const analyticsEnabled = loggedUserInfo.analytics;
 
-  const toggleSwitch1 = () => {
-    setSwitch1Enabled(!switch1Enabled);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
+
+  const toggleInspectItems = () => {
+    dispatch(loggedUserSlice.actions.setInspectItems(!inspectItemsEnabled));
   };
-  const toggleSwitch2 = () => {
-    setSwitch2Enabled(!switch2Enabled);
+  const toggleAnalytics = () => {
+    dispatch(loggedUserSlice.actions.setAnalytics(!analyticsEnabled));
   };
 
   const { data: userData } = useAuth();
@@ -33,8 +40,8 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
     <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between ">
       <div className="flex items-center">
         <ViewStatus data={data} />
-        <Switch label="Inspect items" checked={switch1Enabled} onChange={toggleSwitch1} />
-        <Switch label="Analytics" checked={switch2Enabled} onChange={toggleSwitch2} />
+        <Switch label="Inspect items" checked={inspectItemsEnabled} onChange={toggleInspectItems} />
+        <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} />
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center text-white">{data.siteData?.siteName}</div>
