@@ -6,6 +6,8 @@ import History from './History';
 import useAuth from '@/hooks/useAuth';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 import VisibilityChip from './VisibilityChip';
+import { isNeonAppPreview } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import Link from 'next/link';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,7 +31,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
     return null;
   }
 
-  if (window.name === 'neonapp-preview') {
+  if (isNeonAppPreview()) {
     return null;
   }
 
@@ -42,7 +44,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center text-white">{data.siteData?.siteName}</div>
-        <a href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
+        <Link href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -57,7 +59,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
               d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
             />
           </svg>
-        </a>
+        </Link>
         <History data={data} />
 
         <div className="relative flex items-center justify-center text-white">

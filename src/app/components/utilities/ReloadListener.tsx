@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 export function ReloadListener() {
   const handleMessage = (event: MessageEvent) => {
-    if (event.data === 'reload') {
+    if (event.data.type === 'reload') {
       window.location.reload();
     }
   };
