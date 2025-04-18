@@ -56,20 +56,19 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                           item.pubInfo.canonical === data.model.data.url ? 'bg-blue-100' : 'bg-white'
                         )}
                       >
-                          <div className="flex items-center justify-between">
-                              <h3 className="font-semibold text-gray-900 dark:text-white">
-                                  {`Version ${item.major}.${item.minor}`}
-                              </h3>
-                              {item.live && (
-                                  <div className="text-xs font-bold text-green-600 bg-green-200 border border-green-600 rounded-full px-2 py-0.5">
-                                      LIVE
-                                  </div>
-                              )}
-                          </div>
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-gray-900 dark:text-white">
+                            {`Version ${item.major}.${item.minor}`}
+                          </h3>
+                          {item.live && (
+                            <div className="text-xs font-bold text-green-600 bg-green-200 border border-green-600 rounded-full px-2 py-0.5">
+                              LIVE
+                            </div>
+                          )}
+                        </div>
                         <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
                           {new Date(item.pubInfo.publicationTime).toLocaleString()}
                         </p>
-
                       </div>
                     </Link>
                   </li>

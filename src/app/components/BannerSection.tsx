@@ -1,18 +1,19 @@
-import React from "react";
-import { PageData, WebpageModel } from "@eidosmedia/neon-frontoffice-ts-sdk";
+import React from 'react';
+import { PageData, WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import Link from 'next/link';
 
 type BannerSectionProps = {
   data: PageData<WebpageModel>;
 };
 
 const BannerSection: React.FC<BannerSectionProps> = async ({ data }) => {
-  const linkedObjects = await connection.getDwxLinkedObjects(data, "banner");
+  const linkedObjects = await connection.getDwxLinkedObjects(data, 'banner');
 
   return (
     <>
       {linkedObjects.map((linkedObject: any, index: number) => (
         <div key={linkedObject.id} className="p-4">
-          <a className="no-underline" href={linkedObjects[`${index}`].url}>
+          <Link className="no-underline" href={linkedObjects[`${index}`].url}>
             <div className="p-4 bg-gray-100 rounded-lg shadow-md">
               <div className="flex items-center space-x-2">
                 <svg
@@ -24,15 +25,11 @@ const BannerSection: React.FC<BannerSectionProps> = async ({ data }) => {
                 >
                   <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"></path>
                 </svg>
-                <p className="text-base font-medium text-gray-700">
-                  BREAKING NEWS
-                </p>
+                <p className="text-base font-medium text-gray-700">BREAKING NEWS</p>
               </div>
-              <h6 className="mt-2 text-lg font-semibold text-gray-900">
-                {linkedObject.title}
-              </h6>
+              <h6 className="mt-2 text-lg font-semibold text-gray-900">{linkedObject.title}</h6>
             </div>
-          </a>
+          </Link>
         </div>
       ))}
     </>
