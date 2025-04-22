@@ -36,7 +36,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   }
 
   return (
-    <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between ">
+    <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm">
       <div className="flex items-center">
         <ViewStatus data={data} />
         <Switch label="Inspect items" checked={switch1Enabled} onChange={toggleSwitch1} />

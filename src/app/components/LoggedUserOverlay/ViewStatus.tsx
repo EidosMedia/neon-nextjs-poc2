@@ -28,9 +28,9 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
         version
       ) : (
         <div className="flex flex-col justify-center items-center">
-          <span className="text-black font-semibold">Version {version}</span>
+          <span className="text-black font-semibold text-">Version {version}</span>
           <Link href={getCurrentLiveVersion().pubInfo.canonical}>
-            <span className="text-black underline">Back to live version</span>
+            <span className="text-black underline font-medium">Back to live version</span>
           </Link>
         </div>
       )}

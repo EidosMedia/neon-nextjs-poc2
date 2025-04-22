@@ -6,6 +6,7 @@ import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import SectionWebPage from '../_pages/SectionWebPage';
 import DefaultLanding from '../_pages/DefaultLanding';
 import DefaultSection from '../_pages/DefaultSection';
+import HomeWebPage from '../_pages/HomeWebPage';
 
 export default async function Page({
   params,
@@ -53,7 +54,6 @@ export default async function Page({
   }
 
   const pageDataJSON = await pageData.json();
-  console.log('pageData', pageDataJSON);
 
   const resolvePage = () => {
     switch (pageDataJSON.model?.data?.sys?.baseType) {
@@ -64,7 +64,7 @@ export default async function Page({
         return <SectionWebPage data={pageDataJSON} />;
 
       case 'homewebpage':
-        return <DefaultLanding data={pageDataJSON} />;
+        return <HomeWebPage data={pageDataJSON} />;
 
       case 'section':
         return <DefaultSection data={pageDataJSON} />;
@@ -79,8 +79,6 @@ export default async function Page({
         return <Article data={pageDataJSON} />;
     }
   };
-
-  console.log('pageDataJSON', pageDataJSON);
 
   return (
     <div className="root" data-theme={pageDataJSON.siteNode.attributes.theme}>
