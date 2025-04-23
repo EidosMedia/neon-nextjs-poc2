@@ -13,11 +13,11 @@ const useVersions = ({ currentNode }: { currentNode: PageData<BaseModel> }) => {
       const response = await fetch(`/api/nodes/${currentNode.model.data.id}/versions`);
       const jsonResp = await response.json();
 
-      let filteredVersions : NodeVersion[];
-      if (currentNode.siteData.viewStatus === "PREVIEW") {
+      let filteredVersions: NodeVersion[];
+      if (currentNode.siteData.viewStatus === 'PREVIEW') {
         filteredVersions = jsonResp.result;
       } else {
-        filteredVersions = jsonResp.result.filter((item:NodeVersion)=> item.live);
+        filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.live);
       }
 
       dispatch(

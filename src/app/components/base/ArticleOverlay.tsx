@@ -111,7 +111,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ id, showOverlay, children }) => {
       {children}
       {showOverlay && overlayData && (
         <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2.5 shadow-lg border border-gray-200 rounded-xs
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
           hidden group-hover:grid group-hover:grid-cols-2 group-hover:gap-5"
         >
           {/* POINTING ARROW */}

@@ -76,7 +76,6 @@ export async function middleware(request: NextRequest) {
     // calling internal api proxy
     const url = request.nextUrl.clone();
     url.pathname = `/api/nodes${url.pathname}`;
-    console.log('url:', url);
     return NextResponse.rewrite(url);
   }
 
