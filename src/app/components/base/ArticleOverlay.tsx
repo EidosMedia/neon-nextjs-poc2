@@ -3,6 +3,7 @@ import React, { useEffect, useState, FC } from 'react';
 
 interface OverlayProps {
   id: string;
+  showOverlay?: boolean;
   children: React.ReactNode;
 }
 interface OverlayDataObj {
@@ -68,7 +69,7 @@ export const priorityOptions = [
   },
 ];
 
-const ArticleOverlay: FC<OverlayProps> = ({ id, children }) => {
+const ArticleOverlay: FC<OverlayProps> = ({ id, showOverlay, children }) => {
   const [overlayData, setOverlayData] = useState<OverlayDataObj>();
 
   useEffect(() => {
@@ -108,14 +109,14 @@ const ArticleOverlay: FC<OverlayProps> = ({ id, children }) => {
   return (
     <>
       {children}
-      {overlayData && (
+      {showOverlay && overlayData && (
         <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2.5 shadow-lg border border-gray-200 rounded-xs
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
           hidden group-hover:grid group-hover:grid-cols-2 group-hover:gap-5"
         >
           {/* POINTING ARROW */}
           <div
-            className="w-3 h-2.5 bg-white border-l border-t border-gray-300
+            className="w-2.5 h-2.5 bg-white border-l border-t border-gray-300
             absolute top-[-5.5px] left-1/2 transform -translate-x-1/2 rotate-45"
           />
           {/* LEFT SIDE */}
