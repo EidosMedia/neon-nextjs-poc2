@@ -12,13 +12,11 @@ type DefaultSectionItemsRendererProps = {
 const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = ({ data }) => {
   const linkedObjects = data.model.data.children ? data.model.data.children.map(item => data.model.nodes[item]) : [];
 
-  const { data: loggedUserInfo } = useLoggedUserInfo();
-
   return (
     <>
       {linkedObjects.map((linkedObject: any, index: number) => (
         <div key={linkedObject.id} className="p-4 relative group">
-          <ArticleOverlay key={linkedObject.id} id={linkedObject.id} showOverlay={loggedUserInfo.inspectItems}>
+          <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus}>
             <Link className="no-underline" href={linkedObjects[`${index}`].url}>
               <div className="p-4 bg-gray-100 rounded-lg shadow-md">
                 <div className="flex items-center space-x-2">

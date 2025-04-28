@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const dispatch = useDispatch();
-  const { data: loggedUserInfo } = useLoggedUserInfo();
+  const { data: loggedUserInfo, setInspectItems } = useLoggedUserInfo();
 
   const inspectItemsEnabled = loggedUserInfo.inspectItems;
   const analyticsEnabled = loggedUserInfo.analytics;
@@ -26,7 +26,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   // };
 
   const toggleInspectItems = () => {
-    dispatch(loggedUserSlice.actions.setInspectItems(!inspectItemsEnabled));
+    setInspectItems(!inspectItemsEnabled);
   };
   const toggleAnalytics = () => {
     dispatch(loggedUserSlice.actions.setAnalytics(!analyticsEnabled));

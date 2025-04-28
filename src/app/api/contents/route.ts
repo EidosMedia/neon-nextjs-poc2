@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
     });
     return Response.json({ ...promoteContentLive });
   } catch (error) {
+    console.log('Error in DELETE request:', error);
     console.log(error);
     return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
@@ -38,7 +39,8 @@ export async function DELETE(request: NextRequest) {
     });
     return Response.json({ ...unpromoteContentLive });
   } catch (error) {
+    console.log('Error in DELETE request:', error);
     console.log(error);
-    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
+    return Response.json({ error }, { status: 500 });
   }
 }

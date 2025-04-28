@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { ArticleModel } from '@/types/models';
+import useAuth from '@/hooks/useAuth';
 
 type PromotionButtonProps = {
   data: ArticleModel;
@@ -10,6 +11,7 @@ type PromotionButtonProps = {
 const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) => {
   const [showButton, setShowButton] = useState(true);
   const isLive = viewStatus === 'LIVE';
+  const { data: authData } = useAuth();
 
   const handlePromotion = async () => {
     try {
@@ -18,7 +20,7 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
         body: JSON.stringify({ id: data.id }),
       });
       if (response.ok) {
-        setShowButton(false); // Hide the button after content promotion
+        document.location.reload();
       } else {
         console.error('Failed to fetch data');
       }
@@ -27,7 +29,10 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
     }
   };
 
+  const isUserLogged = authData.user?.name !== undefined;
+
   return (
+    isUserLogged &&
     showButton && (
       <div
         className="absolute bottom-8 right-8 p-4 bg-red-500 active:bg-red-400 rounded-lg shadow-md cursor-pointer"
