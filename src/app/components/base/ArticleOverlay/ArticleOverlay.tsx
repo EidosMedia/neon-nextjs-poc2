@@ -2,7 +2,6 @@
 import React, { useEffect, useState, FC } from 'react';
 import { SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import ArticleActions from './components/ArticleActions';
-import useAuth from '@/hooks/useAuth';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 
 interface OverlayProps {

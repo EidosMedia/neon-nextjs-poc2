@@ -22,9 +22,6 @@ export const authSlices = createSlice({
 export const { setAuthData } = authSlices.actions;
 
 // Selectors
-export const getAuthData = (state: any) => {
-  console.log('state', state);
-  return state.auth;
-}; // editorContainer.currentDocument is the id of the current document
+export const getAuthData = (state: any) => state.auth;
 
 export default authSlices.reducer;

@@ -14,19 +14,13 @@ import { useDispatch } from 'react-redux';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const dispatch = useDispatch();
-  const { data: loggedUserInfo, setInspectItems } = useLoggedUserInfo();
+  const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
   const inspectItemsEnabled = loggedUserInfo.inspectItems;
   const analyticsEnabled = loggedUserInfo.analytics;
 
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // const toggleDropdown = () => {
-  //   setIsDropdownOpen(!isDropdownOpen);
-  // };
-
   const toggleInspectItems = () => {
-    setInspectItems(!inspectItemsEnabled);
+    changeInspectItems(!inspectItemsEnabled);
   };
   const toggleAnalytics = () => {
     dispatch(loggedUserSlice.actions.setAnalytics(!analyticsEnabled));

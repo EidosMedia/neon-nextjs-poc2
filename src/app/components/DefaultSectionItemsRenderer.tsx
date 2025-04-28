@@ -3,7 +3,6 @@ import React from 'react';
 import { BaseModel, PageData, PageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import ArticleOverlay from './base/ArticleOverlay';
-import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 
 type DefaultSectionItemsRendererProps = {
   data: PageData<BaseModel>;
