@@ -1,15 +1,25 @@
 'use client';
 
-import { useSelector } from 'react-redux';
-import { getAnalytics } from '@/lib/features/loggedUserSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getAnalytics,
+  getInspectItems,
+  setInspectItems as setInspectItemsAction,
+} from '@/lib/features/loggedUserSlice';
 import { useEffect, useState } from 'react';
 
 const useLoggedUserInfo = () => {
-  const [inspectItems, setInspectItems] = useState(false);
+  const dispatch = useDispatch();
+  const inspectItems = useSelector(getInspectItems);
+
   const analyticsData = useSelector(getAnalytics);
 
+  const setInspectItems = (value: boolean) => {
+    dispatch(setInspectItemsAction(value));
+  };
+
   useEffect(() => {
-    const initialItemsData = window && window.localStorage && window.localStorage.getItem('inspectItems') === 'true';
+    const initialItemsData = localStorage.getItem('inspectItems') === 'true';
     setInspectItems(initialItemsData);
     const onChangeStorage = (event: StorageEvent) => {
       if (event.key === 'inspectItems') {
@@ -26,6 +36,7 @@ const useLoggedUserInfo = () => {
   }, []);
 
   const changeInspectItems = (value: boolean) => {
+    setInspectItems(value);
     localStorage.setItem('inspectItems', JSON.stringify(value));
   };
 
