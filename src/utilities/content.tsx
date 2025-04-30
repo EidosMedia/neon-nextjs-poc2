@@ -1,6 +1,6 @@
 import Figure from '@/app/components/contentElements/Figure';
 import { ContentElement } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { ReactNode } from 'react';
+import { JSX, ReactNode } from 'react';
 
 /**
  *
@@ -44,14 +44,16 @@ export const renderContent = (content: ContentElement): ReactNode => {
     case 'subhead':
       return <h5 key={key}>{findText(content)}</h5>;
     case 'plainText':
-      return <p key={key}>{content.value}</p>;
+      return content.value;
     case 'inline-media-group':
       return <Figure key={key} data={content} alt="/public/file.svg" />;
     default:
+      const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
+
       return (
-        <div key={key} {...buildAttributes(content)}>
+        <CustomElement key={key} {...buildAttributes(content)}>
           {content.elements.map(elem => renderContent(elem))}
-        </div>
+        </CustomElement>
       );
   }
 };
