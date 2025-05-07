@@ -161,12 +161,41 @@
   }
 }
 
-h2 {
+h1 {
   @apply text-primary text-4xl;
 }
 
 h6 {
   @apply text-gray-400 text-xl;
+}
+
+figcaption {
+  @apply text-gray-600 italic indent-4;
+}
+
+[data-type="credit"] {
+  @apply text-gray-500 italic indent-4;
+}
+
+[data-type="byline"] {
+  margin: 20px 0;
+  padding: 10px 0;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  font-size: 14px;
+  font-style: italic;
+  @apply text-gray-500 italic indent-20 border-gray-200;
+}
+
+[data-type="summary"] {
+  margin: 1rem 0 2rem;
+  font-size: 1.1rem;
+  font-weight: normal;
+  line-height: 1.5em;
+  border-left: 5px solid;
+  padding-left: 1rem;
+  color: var(--neon-darkpurple);
+  @apply border-gray-400;
 }
 
 

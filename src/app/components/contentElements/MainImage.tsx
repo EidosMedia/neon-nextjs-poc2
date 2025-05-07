@@ -1,11 +1,11 @@
 import { ArticleModel } from '@/types/models';
+import { findElementsInContentJson, renderContent } from '@/utilities/content';
 
 type MainImageProps = {
   data: ArticleModel;
 };
 
 const getMainImageUrl = (data: ArticleModel, format: string) => {
-  console.log('data', data.links?.system?.mainPicture);
   return data.links?.system.mainPicture[0].dynamicCropsResourceUrls[format];
 };
 
@@ -15,26 +15,14 @@ const MainImage: React.FC<MainImageProps> = ({ data }) => {
 
   const mainImageUrl = getMainImageUrl(data, 'Wide_large');
 
-  // let tmx = data?.pageContext?.mainPicture?.metadata.softCrops?.Wide?.tmx;
-  // if (tmx === undefined)
-  //   tmx = data?.pageContext?.mainPicture?.metadata.softCrops?.Square?.tmx;
-
-  // if (tmx !== undefined) {
-  //   let tokens = tmx.split(' ');
-  //   imageWidth = tokens[tokens.length - 2];
-  //   imageHeight = tokens[tokens.length - 1];
-  // }
-
   const render = (
     <div>
       <div>
         {mainImageUrl ? (
-          <img
-            src={mainImageUrl}
-            alt=""
-            height={imageHeight}
-            width={imageWidth}
-          />
+          <div>
+            <img src={mainImageUrl} alt="" height={imageHeight} width={imageWidth} />
+            {renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
+          </div>
         ) : (
           <p>No image available</p>
         )}

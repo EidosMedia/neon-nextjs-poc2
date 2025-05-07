@@ -37,16 +37,57 @@ export const renderContent = (content: ContentElement): ReactNode => {
 
   switch (content.nodeType) {
     case 'headline':
-      return <h2 key={key}>{findText(content)}</h2>;
+      return (
+        <h1 key={key} {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </h1>
+      );
     case 'overhead':
-      return <h6 key={key}>{findText(content)}</h6>;
-    case 'summary':
-    case 'subhead':
-      return <h5 key={key}>{findText(content)}</h5>;
+      return (
+        <h6 key={key} {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </h6>
+      );
+    case 'grouphead':
+      return (
+        <div key={key} {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </div>
+      );
+    case 'byline':
+      return (
+        <div key={key} data-type="byline" {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </div>
+      );
+    case 'text':
+      return (
+        <span key={key} {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </span>
+      );
+    case 'caption':
+      return (
+        <figcaption key={key} {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </figcaption>
+      );
+    case 'credit':
+      return (
+        <span key={key} data-type="credit" {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </span>
+      );
     case 'plainText':
       return content.value;
+    case 'summary':
+      return (
+        <div key={key} data-type="summary" {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem))}
+        </div>
+      );
     case 'inline-media-group':
-      return <Figure key={key} data={content} alt="/public/file.svg" />;
+      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} />;
     default:
       const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
 

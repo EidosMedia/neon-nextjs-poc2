@@ -12,14 +12,22 @@ type PageProps = {
 };
 
 const Article: React.FC<PageProps> = ({ data }) => {
+  const articleData = data.model.data;
+
   return (
-    <div className="container mx-auto">
+    <article className="container mx-auto">
       <Navbar data={data}></Navbar>
-      <Grouphead data={data.model.data} />
-      <MainImage data={data.model.data} />
-      {renderContent(findElementsInContentJson(['text'], data.model.data.files.content.data)[0])}
-      <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
-    </div>
+      <Grouphead data={articleData} />
+      <MainImage data={articleData} />
+      <div className="mt-5">
+        {renderContent(findElementsInContentJson(['summary'], articleData.files.content.data)[0])}
+        {renderContent(findElementsInContentJson(['byline'], articleData.files.content.data)[0])}
+      </div>
+      <div className="mt-5">
+        {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0])}
+      </div>
+      <PromotionButton data={articleData} viewStatus={data.siteData.viewStatus} />
+    </article>
   );
 };
 
