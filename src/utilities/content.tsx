@@ -1,4 +1,5 @@
 import Figure from '@/app/components/contentElements/Figure';
+import EditableContent from '@/app/components/utilities/EditableContent';
 import { ContentElement } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { JSX, ReactNode } from 'react';
 
@@ -32,26 +33,30 @@ export const buildAttributes = (node: ContentElement): Record<string, string> =>
   return Object.fromEntries(Object.entries(node.attributes).map(([key, value]) => [`data-${key}`, value]));
 };
 
-export const renderContent = (content: ContentElement): ReactNode => {
+export const renderContent = (content: ContentElement, id?: string): ReactNode => {
   const key = content?.attributes?.id || new Date().toDateString();
 
   switch (content.nodeType) {
     case 'headline':
       return (
-        <h1 key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
-        </h1>
+        <EditableContent key={key} id="headline" articleId={id}>
+          <h1 key={key} {...buildAttributes(content)}>
+            {content.elements.map(elem => renderContent(elem))}
+          </h1>
+        </EditableContent>
       );
     case 'overhead':
       return (
-        <h6 key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
-        </h6>
+        <EditableContent key={key} id="overhead" articleId={id}>
+          <h6 key={key} {...buildAttributes(content)}>
+            {content.elements.map(elem => renderContent(elem))}
+          </h6>
+        </EditableContent>
       );
     case 'grouphead':
       return (
         <div key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
+          {content.elements.map(elem => renderContent(elem, id))}
         </div>
       );
     case 'byline':
@@ -82,9 +87,11 @@ export const renderContent = (content: ContentElement): ReactNode => {
       return content.value;
     case 'summary':
       return (
-        <div key={key} data-type="summary" {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
-        </div>
+        <EditableContent key={key} id="summary" articleId={id}>
+          <div key={key} data-type="summary" {...buildAttributes(content)}>
+            {content.elements.map(elem => renderContent(elem, id))}
+          </div>
+        </EditableContent>
       );
     case 'inline-media-group':
       return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} />;
