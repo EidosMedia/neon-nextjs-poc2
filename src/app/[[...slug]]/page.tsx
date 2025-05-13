@@ -55,6 +55,8 @@ export default async function Page({
 
   const pageDataJSON = await pageData.json();
 
+  console.log('pageDataJSON', pageDataJSON);
+
   const resolvePage = () => {
     switch (pageDataJSON.model?.data?.sys?.baseType) {
       case 'webpage':
