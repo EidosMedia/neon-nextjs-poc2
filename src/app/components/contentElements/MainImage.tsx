@@ -24,7 +24,7 @@ const MainImage: React.FC<MainImageProps> = ({ data }) => {
             {renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
           </div>
         ) : (
-          <p>No image available</p>
+          <p>No main image available</p>
         )}
       </div>
     </div>
