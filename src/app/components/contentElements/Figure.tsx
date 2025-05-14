@@ -6,10 +6,16 @@ type MainImageProps = {
     alt: string;
 };
 
-const getImageUrls = (data: ContentElement, format: string): string[] => {
-    return data.elements
-        .filter((elem) => elem.attributes.crop === format && elem.dynamicCropsResourceUrls?.[format])
-        .map((elem) => elem.dynamicCropsResourceUrls![format]);
+/*const getImageUrl = (data: ContentElement, format: string) => {
+    const element = data.elements.find((elem) => elem.attributes.softCrop === format);
+    return element && element.dynamicCropsResourceUrls
+        ? element.dynamicCropsResourceUrls[format]
+        : undefined;
+};*/
+
+const getRasterElements = (data: any, softCrop: string): ContentElement[] => {
+    return findElementsInContentJson('image', data)
+        .filter((img) => img.attributes?.softCrop === softCrop);
 };
 
 const Figure: React.FC<MainImageProps> = ({data, alt}) => {
@@ -17,13 +23,13 @@ const Figure: React.FC<MainImageProps> = ({data, alt}) => {
     let imageHeight = 576;
 
     const baseUrl = "https://theglobe-test-region-a-site.neon.com";
-    const imageUrls = getImageUrls(data, 'Wide_large');
     const svgElements = findElementsInContentJson(['graphic'], data);
+    const rasterElements = getRasterElements(data, 'Wide');
 
     const images = [
-        ...imageUrls.map((url, idx) => ({
+        ...rasterElements.map((el, idx) => ({
             type: 'raster',
-            url,
+            url: el.attributes?.src,
             width: imageWidth,
             height: imageHeight,
             key: `raster-${idx}`
