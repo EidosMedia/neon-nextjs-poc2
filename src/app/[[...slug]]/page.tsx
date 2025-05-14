@@ -1,5 +1,5 @@
 import { cookies, headers } from 'next/headers';
-import { redirect, notFound, unauthorized } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
 import Article from '../_pages/Article';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
@@ -7,6 +7,7 @@ import SectionWebPage from '../_pages/SectionWebPage';
 import DefaultLanding from '../_pages/DefaultLanding';
 import DefaultSection from '../_pages/DefaultSection';
 import HomeWebPage from '../_pages/HomeWebPage';
+import Liveblog from '../_pages/Liveblog';
 
 export default async function Page({
   params,
@@ -55,7 +56,7 @@ export default async function Page({
 
   const pageDataJSON = await pageData.json();
 
-  console.log('pageDataJSON', pageDataJSON);
+  console.log('Current page model', pageDataJSON);
 
   const resolvePage = () => {
     switch (pageDataJSON.model?.data?.sys?.baseType) {
@@ -74,8 +75,8 @@ export default async function Page({
       case 'site':
         return <DefaultLanding data={pageDataJSON} />;
 
-      // case 'liveblog':
-      //   return <LiveblogPage pageDataJSON={pageDataJSON} />;
+      case 'liveblog':
+        return <Liveblog data={pageDataJSON} />;
 
       default:
         return <Article data={pageDataJSON} />;
