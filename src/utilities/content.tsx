@@ -1,7 +1,8 @@
 import Figure from '@/app/components/contentElements/Figure';
 import EditableContent from '@/app/components/utilities/EditableContent';
-import { ContentElement } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { ContentElement, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { JSX, ReactNode } from 'react';
+import { ArticleModel } from '@/types/models';
 
 /**
  *
@@ -33,13 +34,13 @@ export const buildAttributes = (node: ContentElement): Record<string, string> =>
   return Object.fromEntries(Object.entries(node.attributes).map(([key, value]) => [`data-${key}`, value]));
 };
 
-export const renderContent = (content: ContentElement, id?: string): ReactNode => {
+export const renderContent = (content: ContentElement, data?: ArticleModel): ReactNode => {
   const key = content?.attributes?.id || new Date().toDateString();
 
   switch (content.nodeType) {
     case 'headline':
       return (
-        <EditableContent key={key} id="headline" articleId={id}>
+        <EditableContent key={key} id="headline" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h1 key={key} {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem))}
           </h1>
@@ -47,7 +48,7 @@ export const renderContent = (content: ContentElement, id?: string): ReactNode =
       );
     case 'overhead':
       return (
-        <EditableContent key={key} id="overhead" articleId={id}>
+        <EditableContent key={key} id="overhead" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h6 key={key} {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem))}
           </h6>
@@ -56,7 +57,7 @@ export const renderContent = (content: ContentElement, id?: string): ReactNode =
     case 'grouphead':
       return (
         <div key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem, id))}
+          {content.elements.map(elem => renderContent(elem, data))}
         </div>
       );
     case 'byline':
@@ -87,9 +88,9 @@ export const renderContent = (content: ContentElement, id?: string): ReactNode =
       return content.value;
     case 'summary':
       return (
-        <EditableContent key={key} id="summary" articleId={id}>
+        <EditableContent key={key} id="summary" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <div key={key} data-type="summary" {...buildAttributes(content)}>
-            {content.elements.map(elem => renderContent(elem, id))}
+            {content.elements.map(elem => renderContent(elem, data))}
           </div>
         </EditableContent>
       );

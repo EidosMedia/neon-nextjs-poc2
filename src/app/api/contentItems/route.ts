@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       payload: payload,
       headers: {
         Authorization: `Bearer ${previewtoken}`,
-        'update-context-id': 'undefined'
+        'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
       },
       baseUrl: process.env.BASE_NEON_FE_URL || '',
     });

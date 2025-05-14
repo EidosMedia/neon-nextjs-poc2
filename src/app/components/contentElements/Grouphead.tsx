@@ -8,7 +8,7 @@ type GroupheadProps = {
 const Grouphead: React.FC<GroupheadProps> = ({ data }) => {
   return (
     <div className="justify-center">
-      {renderContent(findElementsInContentJson(['grouphead'], data.files.content.data)[0], data.id)}
+      {renderContent(findElementsInContentJson(['grouphead'], data.files.content.data)[0], data)}
       {/* <p>{data.description}</p> */}
     </div>
   );
