@@ -1,50 +1,59 @@
-import { ContentElement } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import {ContentElement} from '@eidosmedia/neon-frontoffice-ts-sdk';
 import {findElementsInContentJson} from "@/utilities/content";
 
 type MainImageProps = {
-  data: ContentElement;
-  alt: string;
+    data: ContentElement;
+    alt: string;
 };
 
-const getImageUrl = (data: ContentElement, format: string) => {
-  const element = data.elements.find((elem) => elem.attributes.crop === format);
-  return element && element.dynamicCropsResourceUrls
-    ? element.dynamicCropsResourceUrls[format]
-    : undefined;
+const getImageUrls = (data: ContentElement, format: string): string[] => {
+    return data.elements
+        .filter((elem) => elem.attributes.crop === format && elem.dynamicCropsResourceUrls?.[format])
+        .map((elem) => elem.dynamicCropsResourceUrls![format]);
 };
 
-const Figure: React.FC<MainImageProps> = ({ data, alt }) => {
-  let imageWidth = 1024;
-  let imageHeight = 576;
+const Figure: React.FC<MainImageProps> = ({data, alt}) => {
+    let imageWidth = 1024;
+    let imageHeight = 576;
 
-  const imageUrl = getImageUrl(data, 'Wide_large');
-  const svgImageUrl = findElementsInContentJson(['graphic'], data)[0];
-  const baseUrl = "https://theglobe-test-region-a-site.neon.com";
+    const baseUrl = "https://theglobe-test-region-a-site.neon.com";
+    const imageUrls = getImageUrls(data, 'Wide_large');
+    const svgElements = findElementsInContentJson(['graphic'], data);
 
-  const render = (
-      <div>
-        <div>
-          {imageUrl ? (
-              <img
-                  src={imageUrl}
-                  alt={alt}
-                  height={imageHeight}
-                  width={imageWidth}
-              />
-          ) : svgImageUrl?.attributes?.fileref ? (
-              <img
-                  src={`${baseUrl}${svgImageUrl.attributes.fileref}`}
-                  alt={alt}
-                  height={svgImageUrl.attributes.height}
-                  width={svgImageUrl.attributes.width}
-              />
-          ) : (
-              <p>No image available</p>
-          )}
+    const images = [
+        ...imageUrls.map((url, idx) => ({
+            type: 'raster',
+            url,
+            width: imageWidth,
+            height: imageHeight,
+            key: `raster-${idx}`
+        })),
+        ...svgElements.map((el, idx) => ({
+            type: 'svg',
+            url: `${baseUrl}${el.attributes.fileref.startsWith("/") ? "" : "/"}${el.attributes.fileref}`,
+            width: el.attributes.width,
+            height: el.attributes.height,
+            key: `svg-${idx}`
+        }))
+    ];
+
+    return (
+        <div className="image-gallery">
+            {images.length > 0 ? (
+                images.map((img) => (
+                    <img
+                        key={img.key}
+                        src={img.url}
+                        alt={alt}
+                        width={img.width}
+                        height={img.height}
+                    />
+                ))
+            ) : (
+                <p>No content images available</p>
+            )}
         </div>
-      </div>
-  );
-  return render;
+    );
 };
 
 export default Figure;

@@ -5,8 +5,9 @@ type MainImageProps = {
   data: ArticleModel;
 };
 
-const getMainImageUrl = (data: ArticleModel, format: string) => {
-  return data.links?.system.mainPicture[0].dynamicCropsResourceUrls[format];
+const getMainImageUrl = (data: ArticleModel, format: string): string | undefined => {
+  const mainPicture = data?.links?.system?.mainPicture?.[0];
+  return mainPicture?.dynamicCropsResourceUrls?.[format];
 };
 
 const MainImage: React.FC<MainImageProps> = ({ data }) => {
