@@ -1,4 +1,6 @@
 'use client';
+import { PageData } from '@/neon-frontoffice-ts-sdk/src';
+import { ArticleModel } from '@/types/models';
 import { renderContent } from '@/utilities/content';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
@@ -8,8 +10,12 @@ type LiveblogPost = {
   content: any;
 };
 
-const LiveblogPosts = ({ data }) => {
-  const lastLoadedPostId = useRef(null);
+type PageProps = {
+  data: PageData<ArticleModel>;
+};
+
+const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
+  const lastLoadedPostId = useRef<string>(null);
 
   const initialLiveblogPosts = data.model.data.children.map(postId => {
     lastLoadedPostId.current = postId;
