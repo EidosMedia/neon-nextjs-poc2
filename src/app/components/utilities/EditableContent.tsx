@@ -40,8 +40,6 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
     const currentNode = document.getElementById(id);
     const dataId = currentNode?.firstChild?.getAttribute('id');
     const content = currentNode?.firstChild?.innerHTML;
-
-    console.log('========== Content to save:', dataId);
     handleUpdateContentItem(dataId, content);
     setShowButtons(false);
     divRef.current?.blur(); // Remove focus from the div
@@ -107,21 +105,19 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
     >
       {children}
       {showButtons && (
-        <div className="absolute bottom-0 right-0 mb-2 mr-2 flex flex-row items-center space-x-2">
-          {/* X (close) icon */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 mb-2 mr-2 flex flex-row items-center space-x-2">
           <button
             type="button"
-            className="p-2 rounded hover:bg-gray-200"
+            className="p-1 rounded hover:bg-gray-200"
             onClick={handleCancel}
             aria-label="Cancel"
             tabIndex={-1}
           >
             <X className="h-5 w-5 text-gray-700" />
           </button>
-          {/* V (check) icon */}
           <button
             type="button"
-            className="p-2 rounded hover:bg-gray-200"
+            className="p-1 rounded hover:bg-gray-200"
             onClick={handleSave}
             aria-label="Save"
             tabIndex={-1}
