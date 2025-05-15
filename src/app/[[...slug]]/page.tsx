@@ -55,8 +55,11 @@ export default async function Page({
   }
 
   const pageDataJSON = await pageData.json();
-
   console.log('Current page model', pageDataJSON);
+
+  if (process.env.NODE_ENV === 'development' && pageData.status >= 500) {
+    throw new Error(pageDataJSON.model.data.trace);
+  }
 
   const resolvePage = () => {
     switch (pageDataJSON.model?.data?.sys?.baseType) {
