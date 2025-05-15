@@ -87,7 +87,7 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
         )}
     </div>
   ) : (
-    <div id={id} key={id} contentEditable>
+    <div id={id} key={id} contentEditable suppressContentEditableWarning>
       {children}
     </div>
   );

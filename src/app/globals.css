@@ -163,6 +163,7 @@
 
 h1 {
   @apply text-primary text-4xl;
+  line-height: normal;
 }
 
 h6 {

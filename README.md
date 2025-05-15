@@ -21,6 +21,7 @@ bun dev
 ```
 
 ## Setup
+
 After download of the project it will be necessary to create the .env file (or copy the .env.example and rename it).
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -37,3 +38,14 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Debugging
+
+Sometime debugging with nextjs and vscode can be difficult, if you encounter come problems (eg: breakpoints does not trigger, debugging binary code ...) follow those steps:
+
+- Stop the POC
+- Open Chrome I pointed my browser to chrome://inspect and opened the inspector
+- Click on "Configure..." button and add this url: localhost:9230
+- Restart the server using npm run dev
+- Open again the inspector in Chrome chrome://inspect
+- Open the page that you want to debug
