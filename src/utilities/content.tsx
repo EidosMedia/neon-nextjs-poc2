@@ -1,6 +1,5 @@
 import Figure from '@/app/components/contentElements/Figure';
 import { ContentElement } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Link from 'next/link';
 import { JSX, ReactNode } from 'react';
 
 /**
@@ -30,11 +29,11 @@ export const findText = (node: ContentElement): ReactNode => {
 
 export const buildAttributes = (node: ContentElement): Record<string, string> => {
   // add data- prefix to every attribute
-  return Object.fromEntries(Object.entries(node.attributes || {}).map(([key, value]) => [`${key}`, value]));
+  return Object.fromEntries(Object.entries(node.attributes).map(([key, value]) => [`data-${key}`, value]));
 };
 
 export const renderContent = (content: ContentElement): ReactNode => {
-  const key = content?.attributes?.id || new Date().toISOString() + Math.random().toString(36).substring(2, 15);
+  const key = content?.attributes?.id || new Date().toDateString();
 
   switch (content.nodeType) {
     case 'headline':
@@ -88,23 +87,13 @@ export const renderContent = (content: ContentElement): ReactNode => {
         </div>
       );
     case 'inline-media-group':
-      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} />;
-    case 'anchor':
-      return (
-        <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
-          {content.elements.map(elem => renderContent(elem))}
-        </Link>
-      );
-    case 'br':
-      return <br key={key} {...buildAttributes(content)} />;
-    case 'image':
-      return <img key={key} {...buildAttributes(content)} alt="No image available" />;
+      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Portrait" />;
     default:
       const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
 
       return (
         <CustomElement key={key} {...buildAttributes(content)}>
-          {content.elements.length > 0 && content.elements.map(elem => renderContent(elem))}
+          {content.elements.map(elem => renderContent(elem))}
         </CustomElement>
       );
   }
