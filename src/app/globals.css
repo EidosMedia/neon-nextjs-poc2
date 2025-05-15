@@ -179,6 +179,12 @@ figcaption {
   @apply text-gray-500 italic indent-4;
 }
 
+.liveblog-posts {
+  h1 {
+    @apply text-primary text-2xl
+  }
+}
+
 [data-type="byline"] {
   margin: 20px 0;
   padding: 10px 0;

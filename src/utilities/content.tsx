@@ -1,8 +1,10 @@
 import Figure from '@/app/components/contentElements/Figure';
-import EditableContent from '@/app/components/utilities/EditableContent';
 import { ContentElement, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import Link from 'next/link';
 import { JSX, ReactNode } from 'react';
 import { ArticleModel } from '@/types/models';
+import EditableContent from '@/app/components/utilities/EditableContent';
+
 
 /**
  *
@@ -31,11 +33,11 @@ export const findText = (node: ContentElement): ReactNode => {
 
 export const buildAttributes = (node: ContentElement): Record<string, string> => {
   // add data- prefix to every attribute
-  return Object.fromEntries(Object.entries(node.attributes).map(([key, value]) => [`data-${key}`, value]));
+  return Object.fromEntries(Object.entries(node.attributes || {}).map(([key, value]) => [`${key}`, value]));
 };
 
 export const renderContent = (content: ContentElement, data?: ArticleModel): ReactNode => {
-  const key = content?.attributes?.id || new Date().toDateString();
+  const key = content?.attributes?.id || new Date().toISOString() + Math.random().toString(36).substring(2, 15);
 
   switch (content.nodeType) {
     case 'headline':
@@ -96,12 +98,22 @@ export const renderContent = (content: ContentElement, data?: ArticleModel): Rea
       );
     case 'inline-media-group':
       return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} />;
+    case 'anchor':
+      return (
+        <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
+          {content.elements.map(elem => renderContent(elem))}
+        </Link>
+      );
+    case 'br':
+      return <br key={key} {...buildAttributes(content)} />;
+    case 'image':
+      return <img key={key} {...buildAttributes(content)} alt="No image available" />;
     default:
       const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
 
       return (
         <CustomElement key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
+          {content.elements.length > 0 && content.elements.map(elem => renderContent(elem))}
         </CustomElement>
       );
   }

@@ -41,15 +41,17 @@ const useVersions = ({ currentNode }: { currentNode: PageData<BaseModel> }) => {
     if (currentNode) {
       loadHistory();
     }
-  }, [currentNode]);
+  }, [currentNode.model.id]);
 
   const getVersion = (canonicalUrl: string) => {
     if (versions.length === 0) {
       return 'LIVE';
     }
-    if (currentNode.model.data.url === versions[0]?.pubInfo.canonical) {
+
+    if (currentNode.model.data.url === new URL(versions[0]?.pubInfo.canonical).pathname) {
       return 'LIVE';
     }
+
     const versionToBeProcessed = versions.find((version: NodeVersion) => version.pubInfo.canonical === canonicalUrl);
     return `${versionToBeProcessed?.major}.${versionToBeProcessed?.minor}`;
   };
