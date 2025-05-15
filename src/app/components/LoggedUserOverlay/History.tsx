@@ -1,9 +1,9 @@
-import Clock from '../icons/clock';
 import { BaseModel, NodeVersion, PageData, PageNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import Close from '../icons/close';
 import useVersions from '@/hooks/useVersions';
 import clsx from 'clsx';
+import { Clock } from 'lucide-react';
 
 type UserLayerProps = {
   data: PageData<BaseModel>;

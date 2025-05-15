@@ -17,7 +17,7 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
       return 'bg-(--color-live-background)';
     }
     if (isPreview) {
-      return 'bg-red-500';
+      return 'bg-gray-600';
     }
     return 'bg-gray-100';
   };

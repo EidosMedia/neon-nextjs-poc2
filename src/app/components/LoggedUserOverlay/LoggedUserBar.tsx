@@ -11,6 +11,7 @@ import Link from 'next/link';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
 import { useDispatch } from 'react-redux';
+import InfoTooltip from './InfoTooltip';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center text-white">{data.siteData?.siteName}</div>
+        <InfoTooltip pageData={data} />
         <Link href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -62,23 +64,6 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
           </svg>
         </Link>
         <History data={data} />
-
-        <div className="relative flex items-center justify-center text-white">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
-            />
-          </svg>
-        </div>
         <VisibilityChip data={data} />
         <div className="flex items-center justify-center text-white gap-3">
           <img
