@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
+import { X, Check } from 'lucide-react';
 
 type EditableContentProps = {
   id: string;
@@ -37,8 +38,10 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
   const handleSave = (event?: React.MouseEvent) => {
     event?.stopPropagation();
     const currentNode = document.getElementById(id);
-    const dataId = currentNode?.firstChild?.getAttribute('data-id');
+    const dataId = currentNode?.firstChild?.getAttribute('id');
     const content = currentNode?.firstChild?.innerHTML;
+
+    console.log('========== Content to save:', dataId);
     handleUpdateContentItem(dataId, content);
     setShowButtons(false);
     divRef.current?.blur(); // Remove focus from the div
@@ -104,42 +107,26 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
     >
       {children}
       {showButtons && (
-        <div className="absolute top-0 right-0 h-full flex flex-col justify-center space-y-2">
+        <div className="absolute bottom-0 right-0 mb-2 mr-2 flex flex-row items-center space-x-2">
           {/* X (close) icon */}
           <button
             type="button"
-            className="p-2 rounded hover:bg-gray-200 h-1/2"
+            className="p-2 rounded hover:bg-gray-200"
             onClick={handleCancel}
             aria-label="Cancel"
             tabIndex={-1}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-700"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="h-5 w-5 text-gray-700" />
           </button>
           {/* V (check) icon */}
           <button
             type="button"
-            className="p-2 rounded hover:bg-gray-200 h-1/2"
+            className="p-2 rounded hover:bg-gray-200"
             onClick={handleSave}
             aria-label="Save"
             tabIndex={-1}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-700"
-              fill="none"
-              viewBox="0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+            <Check className="h-5 w-5 text-gray-700" />
           </button>
         </div>
       )}
