@@ -20,11 +20,6 @@ const getSvgUrl = (data: ContentElement): string | undefined => {
     return element?.attributes.fileref;
 };
 
-/*const getRasterElements = (data: any, softCrop: string): ContentElement[] => {
-    return findElementsInContentJson('image', data)
-        .filter((img) => img.attributes?.softCrop === softCrop);
-};*/
-
 const Figure: React.FC<MainImageProps> = ({data, alt, format}) => {
     const imageUrl = getSvgUrl(data) || getRasterUrl(data, format || 'Wide');
 
