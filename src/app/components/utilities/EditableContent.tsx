@@ -37,9 +37,9 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
 
   const handleSave = (event?: React.MouseEvent) => {
     event?.stopPropagation();
-    const currentNode = document.getElementById(id);
-    const dataId = currentNode?.firstChild?.getAttribute('id');
-    const content = currentNode?.firstChild?.innerHTML;
+    const dataId = divRef.current?.firstChild?.getAttribute('id');
+    const content = divRef.current?.firstChild?.innerHTML;
+
     handleUpdateContentItem(dataId, content);
     setShowButtons(false);
     divRef.current?.blur(); // Remove focus from the div

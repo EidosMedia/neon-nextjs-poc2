@@ -5,7 +5,6 @@ import { JSX, ReactNode } from 'react';
 import { ArticleModel } from '@/types/models';
 import EditableContent from '@/app/components/utilities/EditableContent';
 
-
 /**
  *
  * @param elementNames
@@ -32,11 +31,28 @@ export const findText = (node: ContentElement): ReactNode => {
 };
 
 export const buildAttributes = (node: ContentElement): Record<string, string> => {
-  // add data- prefix to every attribute
-  return Object.fromEntries(Object.entries(node.attributes || {}).map(([key, value]) => [`${key}`, value]));
+  // replace "class" with "className" and "stroke-linecap" with "strokeLinecap"
+  return Object.fromEntries(
+    Object.entries(node.attributes || {}).map(([key, value]) => [
+      key === 'class'
+        ? 'className'
+        : key === 'stroke-linecap'
+        ? 'strokeLinecap'
+        : key === 'stroke-linejoin'
+        ? 'strokeLinejoin'
+        : key === 'stroke-width'
+        ? 'strokeWidth'
+        : key === 'tabindex'
+        ? 'tabIndex'
+        : key === 'contenteditable'
+        ? 'contentEditable'
+        : key,
+      value,
+    ])
+  );
 };
 
-export const renderContent = (content: ContentElement, data?: ArticleModel): ReactNode => {
+export const renderContent = (content: ContentElement, data?: ArticleModel, parent?: string): ReactNode => {
   const key = content?.attributes?.id || new Date().toISOString() + Math.random().toString(36).substring(2, 15);
 
   switch (content.nodeType) {
@@ -44,7 +60,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel): Rea
       return (
         <EditableContent key={key} id="headline" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h1 key={key} {...buildAttributes(content)}>
-            {content.elements.map(elem => renderContent(elem))}
+            {content.elements.map(elem => renderContent(elem, data))}
           </h1>
         </EditableContent>
       );
@@ -52,7 +68,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel): Rea
       return (
         <EditableContent key={key} id="overhead" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h6 key={key} {...buildAttributes(content)}>
-            {content.elements.map(elem => renderContent(elem))}
+            {content.elements.map(elem => renderContent(elem, data))}
           </h6>
         </EditableContent>
       );
@@ -65,27 +81,39 @@ export const renderContent = (content: ContentElement, data?: ArticleModel): Rea
     case 'byline':
       return (
         <div key={key} data-type="byline" {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
+          {content.elements.map(elem => renderContent(elem, data))}
         </div>
       );
     case 'text':
       return (
-        <span key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
+        <span id="text" key={key} {...buildAttributes(content)}>
+          {content.elements.map(elem => renderContent(elem, data, 'text'))}
         </span>
       );
     case 'caption':
       return (
         <figcaption key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
+          {content.elements.map(elem => renderContent(elem, data))}
         </figcaption>
       );
     case 'credit':
       return (
         <span key={key} data-type="credit" {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem))}
+          {content.elements.map(elem => renderContent(elem, data))}
         </span>
       );
+    case 'p':
+      if (parent === 'text') {
+        return (
+          <EditableContent key={key} id="p" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+            <p key={key} {...buildAttributes(content)}>
+              {content.elements.map(elem => renderContent(elem, data))}
+            </p>
+          </EditableContent>
+        );
+      } else {
+        return <p key={key}>{content.elements.map(elem => renderContent(elem, data))}</p>;
+      }
     case 'plainText':
       return content.value;
     case 'summary':
@@ -101,7 +129,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel): Rea
     case 'anchor':
       return (
         <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
-          {content.elements.map(elem => renderContent(elem))}
+          {content.elements.map(elem => renderContent(elem, data))}
         </Link>
       );
     case 'br':
@@ -113,7 +141,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel): Rea
 
       return (
         <CustomElement key={key} {...buildAttributes(content)}>
-          {content.elements.length > 0 && content.elements.map(elem => renderContent(elem))}
+          {content.elements.length > 0 && content.elements.map(elem => renderContent(elem, data))}
         </CustomElement>
       );
   }

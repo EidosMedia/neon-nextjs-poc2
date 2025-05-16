@@ -24,7 +24,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
         {renderContent(findElementsInContentJson(['byline'], articleData.files.content.data)[0])}
       </div>
       <div className="mt-5">
-        {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0])}
+        {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0], articleData)}
       </div>
       <PromotionButton data={articleData} viewStatus={data.siteData.viewStatus} />
     </article>
