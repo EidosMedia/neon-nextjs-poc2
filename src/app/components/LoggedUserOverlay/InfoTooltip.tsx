@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { priorityOptions } from '../base/ArticleOverlay/ArticleOverlay';
 import { Info } from 'lucide-react';
+import clsx from 'clsx';
 
 interface InfoTooltipProps {
   pageData: any;
@@ -23,16 +24,27 @@ const getPublicationDateString = (publicationTime: string) => {
 };
 
 const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [opened, setOpened] = useState(false);
   const data = pageData.model.data;
 
+  const handleOnClick = (event: SyntheticEvent) => {
+    if ((event as React.MouseEvent).metaKey || (event as React.MouseEvent).ctrlKey) {
+      window.open(`${window.location.href}?neon.outputMode=raw`, '_blank');
+      return;
+    }
+    setOpened(!opened);
+  };
+
   return (
-    <div className="relative" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <Info className="text-white cursor-pointer" />
-      {isHovered && (
+    <div className="relative">
+      <Info
+        className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
+        onClick={handleOnClick}
+      />
+      {opened && (
         <div
           className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
-            grid grid-cols-2 gap-5 w-max"
+            grid grid-cols-2 gap-5 w-max text-xs"
           style={{ maxWidth: 'calc(100vw - 20px)' }} // Ensure tooltip fits within viewport
         >
           {/* POINTING ARROW */}
@@ -44,7 +56,7 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
               <h5 className="font-semibold">ID</h5>
-              <p className="text-nowrap">{data.id}</p>
+              <p className="">{data.id}</p>
             </div>
             <div className="flex flex-col gap-1">
               <h5 className="font-semibold">Title</h5>

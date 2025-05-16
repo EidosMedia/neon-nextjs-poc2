@@ -61,7 +61,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                             {`Version ${item.major}.${item.minor}`}
                           </h3>
                           {item.live && (
-                            <div className="text-xs font-bold text-green-600 bg-green-200 border border-green-600 rounded-full px-2 py-0.5">
+                            <div className="text-xs font-bold text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5">
                               LIVE
                             </div>
                           )}

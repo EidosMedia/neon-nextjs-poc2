@@ -59,6 +59,12 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  if (urlParams.get('neon.outputMode') === 'raw' && request.cookies.get('previewtoken')) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/api/proxy${url.pathname}`;
+    return NextResponse.rewrite(url);
+  }
+
   if (request.nextUrl.pathname.startsWith('/resources') || request.nextUrl.pathname === '/robots.txt') {
     // calling internal api proxy
     const url = request.nextUrl.clone();
