@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import { X, Check } from 'lucide-react';
+import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 
-type EditableContentProps = {
+type ContentEditableProps = {
   id: string;
   articleId?: string;
   lockedBy?: lockedByInfo;
@@ -14,10 +15,11 @@ type lockedByInfo = {
   userName: string;
 };
 
-const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, lockedBy, children }) => {
+const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, lockedBy, children }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [showButtons, setShowButtons] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
+  const { data: loggedUserInfo } = useLoggedUserInfo();
 
   const handleUpdateContentItem = async (contentItemId: string, payload: string) => {
     try {
@@ -38,9 +40,9 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
   const handleSave = (event?: React.MouseEvent) => {
     event?.stopPropagation();
     const dataId = divRef.current?.firstChild?.getAttribute('id');
-    const content = divRef.current?.firstChild?.innerHTML;
+    const content2 = divRef.current?.firstChild?.innerHTML;
 
-    handleUpdateContentItem(dataId, content);
+    handleUpdateContentItem(dataId, content2);
     setShowButtons(false);
     divRef.current?.blur(); // Remove focus from the div
   };
@@ -60,8 +62,7 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
   };
 
   useEffect(() => {
-    if (!showButtons) return;
-
+    //if (!showButtons) return;
     const handleBlur = (event: FocusEvent) => {
       if (divRef.current && !divRef.current.contains(event.relatedTarget as Node)) {
         setShowButtons(false);
@@ -94,40 +95,43 @@ const EditableContent: React.FC<EditableContentProps> = ({ id, articleId, locked
       )}
     </div>
   ) : (
-    <div
-      id={id}
-      key={id}
-      ref={divRef}
-      contentEditable
-      suppressContentEditableWarning
-      onClick={() => setShowButtons(true)}
-      className="relative"
-    >
-      {children}
+    <>
+      <div
+        id={id}
+        key={id}
+        ref={divRef}
+        // Only add contentEditable and blue border if loggedUserInfo.inspectItems is true
+        contentEditable={!!loggedUserInfo?.inspectItems}
+        suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
+        onClick={() => setShowButtons(loggedUserInfo?.inspectItems)}
+        className={`relative rounded ${loggedUserInfo?.inspectItems ? 'border-1 border-blue-600' : ''}`}
+      >
+        {children}
+      </div>
       {showButtons && (
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 mb-2 mr-2 flex flex-row items-center space-x-2">
+        <div className="bg-white flex flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit">
           <button
             type="button"
             className="p-1 rounded hover:bg-gray-200"
-            onClick={handleCancel}
-            aria-label="Cancel"
-            tabIndex={-1}
-          >
-            <X className="h-5 w-5 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            className="p-1 rounded hover:bg-gray-200"
-            onClick={handleSave}
+            onMouseDown={handleSave} // Use onMouseDown instead of onClick
             aria-label="Save"
             tabIndex={-1}
           >
             <Check className="h-5 w-5 text-gray-700" />
           </button>
+          <button
+            type="button"
+            className="p-1 rounded hover:bg-gray-200"
+            onMouseDown={handleCancel} // Use onMouseDown instead of onClick
+            aria-label="Cancel"
+            tabIndex={-1}
+          >
+            <X className="h-5 w-5 text-gray-700" />
+          </button>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
-export default EditableContent;
+export default ContentEditable;
