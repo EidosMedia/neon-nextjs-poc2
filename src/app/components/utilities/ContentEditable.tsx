@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { X, Check } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
+import ReactDOMServer from 'react-dom/server';
 
 type ContentEditableProps = {
   id: string;
@@ -20,6 +21,10 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, locked
   const [showButtons, setShowButtons] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
   const { data: loggedUserInfo } = useLoggedUserInfo();
+  const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
+  const [previousContentString, setPreviousContentString] = useState<string>(
+    ReactDOMServer.renderToStaticMarkup(children)
+  );
 
   const handleUpdateContentItem = async (contentItemId: string, payload: string) => {
     try {
@@ -40,15 +45,19 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, locked
   const handleSave = (event?: React.MouseEvent) => {
     event?.stopPropagation();
     const dataId = divRef.current?.firstChild?.getAttribute('id');
-    const content2 = divRef.current?.firstChild?.innerHTML;
+    const content = divRef.current?.firstChild?.innerHTML;
 
-    handleUpdateContentItem(dataId, content2);
+    handleUpdateContentItem(dataId, content);
+    setContentString(divRef?.current?.innerHTML);
+    setPreviousContentString(divRef?.current?.innerHTML);
+
     setShowButtons(false);
     divRef.current?.blur(); // Remove focus from the div
   };
 
   const handleCancel = (event?: React.MouseEvent) => {
     event?.stopPropagation();
+    setContentString(previousContentString);
     setShowButtons(false);
     divRef.current?.blur(); // Remove focus from the div
   };
@@ -62,7 +71,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, locked
   };
 
   useEffect(() => {
-    //if (!showButtons) return;
+    if (!showButtons) return;
     const handleBlur = (event: FocusEvent) => {
       if (divRef.current && !divRef.current.contains(event.relatedTarget as Node)) {
         setShowButtons(false);
@@ -105,9 +114,8 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, locked
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
         onClick={() => setShowButtons(loggedUserInfo?.inspectItems)}
         className={`relative rounded ${loggedUserInfo?.inspectItems ? 'border-1 border-blue-600' : ''}`}
-      >
-        {children}
-      </div>
+        dangerouslySetInnerHTML={{ __html: contentString }}
+      ></div>
       {showButtons && (
         <div className="bg-white flex flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit">
           <button
