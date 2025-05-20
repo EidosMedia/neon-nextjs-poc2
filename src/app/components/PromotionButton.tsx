@@ -39,13 +39,7 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
         className="flex items-center justify-center text-white cursor-pointer"
         onClick={handlePromotion}
       >
-          {/* {isLive ? <X /> : <Rocket />} */}
-            
-          {/* <span className='flex gap-3 bg-sky-600 px-4 py-2 text-white items-center rounded-lg' >
-            Publish{isLive ? <Download /> : <Upload />}
-          </span> */}
-
-    <button className="bg-[#414ACF] text-white fit-content cursor-pointer px-4 py-2 rounded-[2px]" title={isLive ? 'Unpkublish' : 'Publish'} onClick={handlePromotion}>
+      <button className="fit-content cursor-pointer px-4 py-2 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out" title={isLive ? 'Unpkublish' : 'Publish'} onClick={handlePromotion}>
         {isLive ? 'Unpublish' : 'Publish'}
       </button>
       </div>
