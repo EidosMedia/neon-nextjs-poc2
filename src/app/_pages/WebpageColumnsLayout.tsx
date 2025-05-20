@@ -1,10 +1,10 @@
-import { PageData } from "@eidosmedia/neon-frontoffice-ts-sdk";
-import { WebpageModel } from "@eidosmedia/neon-frontoffice-ts-sdk";
-import Navbar from "../components/Navbar";
-import ArticleWebpage from "../components/ArticleWebpage";
-import ArticleBanner from "../components/ArticleBanner";
-import WebpageFooter from "../components/WebpageFooter";
-import React from "react";
+import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import Navbar from '../components/Navbar';
+import ArticleWebpage from '../components/ArticleWebpage';
+import ArticleBanner from '../components/ArticleBanner';
+import WebpageFooter from '../components/WebpageFooter';
+import React from 'react';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -31,20 +31,35 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div className="p-4 rounded-lg col-span-12 md:col-span-3">
-          <ArticleWebpage data={data} zone="main" displayMainPicture={true} />
+          <ArticleWebpage
+            data={data}
+            zone="main"
+            displayMainPicture={true}
+            linkedObjects={await connection.getDwxLinkedObjects(data, 'main')}
+          />
         </div>
 
         <div className="p-4 rounded-lg col-span-12 md:col-span-6">
-          <ArticleWebpage data={data} zone="context" displayMainPicture={true} />
+          <ArticleWebpage
+            data={data}
+            zone="context"
+            displayMainPicture={true}
+            linkedObjects={await connection.getDwxLinkedObjects(data, 'context')}
+          />
         </div>
 
         <div className="p-4 rounded-lg col-span-12 md:col-span-3">
-          <ArticleWebpage data={data} zone="insight1" displayMainPicture={false} />
+          <ArticleWebpage
+            data={data}
+            zone="insight1"
+            displayMainPicture={false}
+            linkedObjects={await connection.getDwxLinkedObjects(data, 'insight1')}
+          />
         </div>
       </div>
 
       <footer className="bg-gray-800 text-white p-4 rounded-b-lg mt-4">
-          <WebpageFooter data={data} />
+        <WebpageFooter data={data} />
       </footer>
     </div>
   );
