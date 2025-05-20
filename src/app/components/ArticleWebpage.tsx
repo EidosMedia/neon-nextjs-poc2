@@ -15,11 +15,28 @@ type ArticleWepageProps = {
 
 const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainPicture, linkedObjects }) => {
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
+  const key1 = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
+
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
   return (
     <>
       {linkedObjects.map((linkedObject: any, index: number) => {
+        var title, summary, titleId, summaryId;
+        titleId = linkedObject.attributes.contentIds.teaserTitle;
+        summaryId = linkedObject.attributes.contentIds.teaserSummary;
+
+        if (linkedObject.attributes?.teaser?.title) {
+          title = linkedObject.attributes.teaser.title;
+        } else {
+          title = linkedObject.title;
+        }
+        if (linkedObject.attributes?.teaser?.summary) {
+          summary = linkedObject.attributes.teaser.summary;
+        } else {
+          summary = linkedObject.summary;
+        }
+
         const contentBlock = (
           <>
             <div className="self-stretch leading-snug">
@@ -34,9 +51,15 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainP
               )}
             </div>
             <ContentEditable key={key} id="title" articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
-              <div className="text-black text-lg font-semibold font-source-sans leading-snug">{linkedObject.title}</div>
+              <div id={titleId} className="text-black text-lg font-semibold font-source-sans leading-snug">
+                <p>{title}</p>
+              </div>
             </ContentEditable>
-            <div className="text-black text-xs font-normal font-source-sans leading-snug">{linkedObject.summary}</div>
+            <ContentEditable key={key1} id="title" articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
+              <div id={summaryId} className="text-black text-xs font-normal font-source-sans leading-snug">
+                <p>{summary}</p>
+              </div>
+            </ContentEditable>
             <div className="self-stretch text-[#5d5d5d] text-xs font-normal font-source-sans leading-snug">
               {linkedObject.pubInfo.publicationTime}
             </div>
