@@ -118,7 +118,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
 
       <div
         ref={divButtonsRef}
-        className="bg-white flex flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
+        className="bg-white z-10 flex absolute right-0 flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
       >
         <button
           type="button"

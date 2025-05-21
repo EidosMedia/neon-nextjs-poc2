@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
 
   headers.set('x-neon-backend-url', foundsite.apiHostname);
   headers.set('x-neon-pathname', request.nextUrl.pathname);
-  headers.set('x-neon-site-name', foundsite.root.name);
+  headers.set('x-neon-site-name', foundsite.root?.name);
 
   const urlObject = request.nextUrl;
   const urlParams = new URLSearchParams(urlObject.search);
