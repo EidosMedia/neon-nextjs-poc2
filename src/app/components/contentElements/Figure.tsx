@@ -1,10 +1,9 @@
 import {ContentElement} from '@eidosmedia/neon-frontoffice-ts-sdk';
-import {findElementsInContentJson} from "@/utilities/content";
 
 type MainImageProps = {
     data: ContentElement;
     alt: string;
-    format?: string;
+    format: string;
 };
 
 const getRasterUrl = (data: ContentElement, format: string) => {
@@ -20,8 +19,19 @@ const getSvgUrl = (data: ContentElement): string | undefined => {
     return element?.attributes.fileref;
 };
 
+const getDimensionsFromUrl = (url: string): { width: number; height: number } | null => {
+    const match = url.match(/:(\d+)x(\d+):/);
+    if (match) {
+        const width = parseInt(match[1], 10);
+        const height = parseInt(match[2], 10);
+        return { width, height };
+    }
+    return null;
+}
+
 const Figure: React.FC<MainImageProps> = ({data, alt, format}) => {
-    const imageUrl = getSvgUrl(data) || getRasterUrl(data, format || 'Wide');
+    const imageUrl = getSvgUrl(data) || getRasterUrl(data, format);
+    const dimensions = imageUrl && getDimensionsFromUrl(imageUrl);
 
     return (
         <div>
@@ -30,6 +40,8 @@ const Figure: React.FC<MainImageProps> = ({data, alt, format}) => {
                     <img
                         src={imageUrl}
                         alt={alt}
+                        width={dimensions ? dimensions.width : undefined}
+                        height={dimensions ? dimensions.height : undefined}
                     />
                 ) : (
                     <p>No image available</p>
