@@ -35,12 +35,12 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
     isUserLogged &&
     showButton && (
       <div
-        className="absolute bottom-8 right-8 p-4 bg-red-500 active:bg-red-400 rounded-lg shadow-md cursor-pointer"
+        className="flex items-center justify-center text-white cursor-pointer"
         onClick={handlePromotion}
       >
-        <span className="flex items-center text-white uppercase font-semibold">
-          {isLive ? 'Unpublish' : 'Promote pending changes'}
-        </span>
+      <button className="fit-content cursor-pointer px-4 py-2 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out" title={isLive ? 'Unpkublish' : 'Publish'} onClick={handlePromotion}>
+        {isLive ? 'Unpublish' : 'Publish'}
+      </button>
       </div>
     )
   );

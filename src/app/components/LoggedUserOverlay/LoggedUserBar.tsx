@@ -11,10 +11,12 @@ import Link from 'next/link';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
 import { useDispatch } from 'react-redux';
+import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
 import { SquareArrowOutUpRight } from 'lucide-react';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
+  const articleData = data.model.data;
   const dispatch = useDispatch();
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
@@ -47,6 +49,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center text-white">{data.siteData?.siteName}</div>
+      <PromotionButton data={articleData} viewStatus={data.siteData.viewStatus} />
         <InfoTooltip pageData={data} />
         <Link href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
           <SquareArrowOutUpRight />
