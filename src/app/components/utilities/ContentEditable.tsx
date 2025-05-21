@@ -17,14 +17,24 @@ type lockedByInfo = {
 
 const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, children }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const [showButtons, setShowButtons] = useState(false);
+
   const divRef = useRef<HTMLDivElement>(null);
+  const divButtonsRef = useRef<HTMLDivElement>(null);
+
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
   const [previousContentString, setPreviousContentString] = useState<string>(
     ReactDOMServer.renderToStaticMarkup(children)
   );
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
+
+  const showDivButtons = () => {
+    divButtonsRef.current?.classList.remove('hidden');
+  };
+
+  const hideDivButtons = () => {
+    divButtonsRef.current?.classList.add('hidden');
+  };
 
   const handleUpdateContentItem = async (contentItemId: string, payload: string) => {
     try {
@@ -51,14 +61,14 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
     setContentString(divRef?.current?.innerHTML);
     setPreviousContentString(divRef?.current?.innerHTML);
 
-    setShowButtons(false);
+    hideDivButtons(); // Hide buttons after save
     divRef.current?.blur(); // Remove focus from the div
   };
 
   const handleCancel = (event?: React.MouseEvent) => {
     event?.stopPropagation();
     setContentString(previousContentString);
-    setShowButtons(false);
+    hideDivButtons(); // Hide buttons after cancel
     divRef.current?.blur(); // Remove focus from the div
   };
 
@@ -70,23 +80,12 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
     setTooltipPosition({ x: 0, y: 0 });
   };
 
-  useEffect(() => {
-    if (!showButtons) return;
-    const handleBlur = (event: FocusEvent) => {
-      if (divRef.current && !divRef.current.contains(event.relatedTarget as Node)) {
-        setShowButtons(false);
-      }
-    };
-
-    if (divRef.current) {
-      divRef.current.addEventListener('blur', handleBlur, true);
+  // Hide buttons when the contenteditable div loses focus
+  const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (divRef.current && !divRef.current.contains(event.relatedTarget as Node)) {
+      hideDivButtons();
     }
-    return () => {
-      if (divRef.current) {
-        divRef.current.removeEventListener('blur', handleBlur, true);
-      }
-    };
-  }, [showButtons]);
+  };
 
   return lockedBy ? (
     <div key={key} className="relative group" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
@@ -108,35 +107,38 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
       <div
         key={key}
         ref={divRef}
-        // Only add contentEditable and blue border if loggedUserInfo.inspectItems is true
         contentEditable={!!loggedUserInfo?.inspectItems}
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
-        onClick={() => setShowButtons(loggedUserInfo?.inspectItems)}
+        onClick={showDivButtons}
+        onBlur={handleBlur}
         className={`relative rounded ${loggedUserInfo?.inspectItems ? 'border-1 border-blue-600' : ''}`}
         dangerouslySetInnerHTML={{ __html: contentString }}
+        tabIndex={0}
       ></div>
-      {showButtons && (
-        <div className="bg-white flex flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit">
-          <button
-            type="button"
-            className="p-1 rounded hover:bg-gray-200"
-            onMouseDown={handleSave} // Use onMouseDown instead of onClick
-            aria-label="Save"
-            tabIndex={-1}
-          >
-            <Check className="h-5 w-5 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            className="p-1 rounded hover:bg-gray-200"
-            onMouseDown={handleCancel} // Use onMouseDown instead of onClick
-            aria-label="Cancel"
-            tabIndex={-1}
-          >
-            <X className="h-5 w-5 text-gray-700" />
-          </button>
-        </div>
-      )}
+
+      <div
+        ref={divButtonsRef}
+        className="bg-white flex flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
+      >
+        <button
+          type="button"
+          className="p-1 rounded hover:bg-gray-200"
+          onMouseDown={handleSave}
+          aria-label="Save"
+          tabIndex={-1}
+        >
+          <Check className="h-5 w-5 text-gray-700" />
+        </button>
+        <button
+          type="button"
+          className="p-1 rounded hover:bg-gray-200"
+          onMouseDown={handleCancel}
+          aria-label="Cancel"
+          tabIndex={-1}
+        >
+          <X className="h-5 w-5 text-gray-700" />
+        </button>
+      </div>
     </>
   );
 };
