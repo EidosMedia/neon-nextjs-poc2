@@ -163,10 +163,12 @@
 
 h1 {
   @apply text-primary text-4xl;
+  line-height: normal;
 }
 
 h6 {
   @apply text-gray-400 text-xl;
+  line-height: normal;
 }
 
 figcaption {
