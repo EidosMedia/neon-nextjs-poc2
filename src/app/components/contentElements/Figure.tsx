@@ -1,6 +1,6 @@
 import {ContentElement} from '@eidosmedia/neon-frontoffice-ts-sdk';
 
-type MainImageProps = {
+type FigureProps = {
     data: ContentElement;
     alt: string;
     format: string;
@@ -29,7 +29,7 @@ const getDimensionsFromUrl = (url: string): { width: number; height: number } | 
     return null;
 }
 
-const Figure: React.FC<MainImageProps> = ({data, alt, format}) => {
+const Figure: React.FC<FigureProps> = ({data, alt, format}) => {
     const imageUrl = getSvgUrl(data) || getRasterUrl(data, format);
     const dimensions = imageUrl && getDimensionsFromUrl(imageUrl);
 
