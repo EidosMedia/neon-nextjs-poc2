@@ -15,7 +15,7 @@ const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = 
     <>
       {linkedObjects.map((linkedObject: any, index: number) => (
         <div key={linkedObject.id} className="p-4 relative group">
-          <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus}>
+          <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus} width="max">
             <Link className="no-underline" href={linkedObjects[`${index}`].url}>
               <div className="p-4 bg-gray-100 rounded-lg shadow-md">
                 <div className="flex items-center space-x-2">
