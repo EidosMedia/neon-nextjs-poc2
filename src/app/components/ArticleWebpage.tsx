@@ -9,12 +9,11 @@ import ArticleOverlay from './base/ArticleOverlay';
 
 type ArticleWepageProps = {
   data: PageData<WebpageModel>;
-  zone: string;
   displayMainPicture: boolean;
   linkedObjects: WebpageNodeModel[];
 };
 
-const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainPicture, linkedObjects }) => {
+const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture, linkedObjects }) => {
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
   const key1 = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
   const { data: loggedUserInfo } = useLoggedUserInfo();
@@ -47,18 +46,18 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainP
                   height="200"
                   decoding="async"
                   data-nimg="1"
-                  src={linkedObject.links.system.mainPicture[0].dynamicCropsResourceUrls.Portrait_small}
+                  src={linkedObject.links?.system?.mainPicture[0].dynamicCropsResourceUrls.Portrait_small}
                   className="w-48 h-48 object-cover"
                   style={{ color: 'transparent' }}
                 />
               )}
             </div>
-            <ContentEditable key={key} id="title" articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
+            <ContentEditable key={key} articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
               <div id={titleId} className="text-black text-lg font-semibold font-source-sans leading-snug">
                 <p>{title}</p>
               </div>
             </ContentEditable>
-            <ContentEditable key={key1} id="summary" articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
+            <ContentEditable key={key1} articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
               <div id={summaryId} className="text-black text-xs font-normal font-source-sans leading-snug">
                 <p>{summary}</p>
               </div>
@@ -71,13 +70,13 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainP
         return (
           <div key={linkedObject.id} data-layer="article">
             {loggedUserInfo?.inspectItems ? (
-              contentBlock
-            ) : (
               <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus}>
-                <Link className="no-underline" href={linkedObjects[`${index}`].url}>
-                  {contentBlock}
-                </Link>
+                {contentBlock}
               </ArticleOverlay>
+            ) : (
+              <Link className="no-underline" href={linkedObjects[`${index}`].url}>
+                {contentBlock}
+              </Link>
             )}
             <br />
           </div>

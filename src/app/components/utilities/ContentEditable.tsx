@@ -5,7 +5,6 @@ import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ReactDOMServer from 'react-dom/server';
 
 type ContentEditableProps = {
-  id: string;
   articleId?: string;
   lockedBy?: lockedByInfo;
   children?: React.ReactNode;
@@ -16,7 +15,7 @@ type lockedByInfo = {
   userName: string;
 };
 
-const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, lockedBy, children }) => {
+const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, children }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [showButtons, setShowButtons] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
@@ -25,6 +24,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, locked
   const [previousContentString, setPreviousContentString] = useState<string>(
     ReactDOMServer.renderToStaticMarkup(children)
   );
+  const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
 
   const handleUpdateContentItem = async (contentItemId: string, payload: string) => {
     try {
@@ -89,7 +89,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, locked
   }, [showButtons]);
 
   return lockedBy ? (
-    <div id={id} key={id} className="relative group" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+    <div key={key} className="relative group" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
       {children}
       {tooltipPosition.x !== 0 && tooltipPosition.y !== 0 && (
         <div
@@ -106,8 +106,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ id, articleId, locked
   ) : (
     <>
       <div
-        id={id}
-        key={id}
+        key={key}
         ref={divRef}
         // Only add contentEditable and blue border if loggedUserInfo.inspectItems is true
         contentEditable={!!loggedUserInfo?.inspectItems}
