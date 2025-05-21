@@ -145,7 +145,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, children }) => {
               </div>
               <div className="flex flex-col gap-1">
                 <h5 className="font-semibold">Author</h5>
-                <p>{overlayData.authors[0]}</p>
+                <p>{overlayData.authors?.[0] || ''}</p>
               </div>
             </div>
             {/* DIVIDER */}
@@ -160,7 +160,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, children }) => {
               )}
               <div className="flex flex-col gap-1">
                 <h5 className="font-semibold">Publication Date</h5>
-                <p className="text-nowrap">{getPublicationDateString(overlayData.pubInfo.publicationTime)}</p>
+                <p className="text-nowrap">{getPublicationDateString(overlayData?.pubInfo?.publicationTime)}</p>
               </div>
             </div>
           </div>

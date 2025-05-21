@@ -5,6 +5,7 @@ import { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-front
 import Link from 'next/link';
 import ContentEditable from './utilities/ContentEditable';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
+import ArticleOverlay from './base/ArticleOverlay';
 
 type ArticleWepageProps = {
   data: PageData<WebpageModel>;
@@ -16,7 +17,6 @@ type ArticleWepageProps = {
 const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainPicture, linkedObjects }) => {
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
   const key1 = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
-
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
   return (
@@ -43,9 +43,12 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainP
               {displayMainPicture && (
                 <img
                   alt="/static/img/nothumb.jpeg"
+                  width="200"
+                  height="200"
                   decoding="async"
                   data-nimg="1"
-                  src={linkedObject.links?.system?.mainPicture[0].dynamicCropsResourceUrls.Portrait_small}
+                  src={linkedObject.links.system.mainPicture[0].dynamicCropsResourceUrls.Portrait_small}
+                  className="w-48 h-48 object-cover"
                   style={{ color: 'transparent' }}
                 />
               )}
@@ -55,7 +58,7 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainP
                 <p>{title}</p>
               </div>
             </ContentEditable>
-            <ContentEditable key={key1} id="title" articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
+            <ContentEditable key={key1} id="summary" articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
               <div id={summaryId} className="text-black text-xs font-normal font-source-sans leading-snug">
                 <p>{summary}</p>
               </div>
@@ -70,9 +73,11 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, zone, displayMainP
             {loggedUserInfo?.inspectItems ? (
               contentBlock
             ) : (
-              <Link className="no-underline" href={linkedObjects[`${index}`].url}>
-                {contentBlock}
-              </Link>
+              <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus}>
+                <Link className="no-underline" href={linkedObjects[`${index}`].url}>
+                  {contentBlock}
+                </Link>
+              </ArticleOverlay>
             )}
             <br />
           </div>
