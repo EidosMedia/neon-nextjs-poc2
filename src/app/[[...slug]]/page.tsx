@@ -1,13 +1,15 @@
 import { cookies, headers } from 'next/headers';
-import { redirect, notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import AboutPage from '../_pages/AboutPage';
 import Article from '../_pages/Article';
-import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
-import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
-import SectionWebPage from '../_pages/SectionWebPage';
 import DefaultLanding from '../_pages/DefaultLanding';
 import DefaultSection from '../_pages/DefaultSection';
 import HomeWebPage from '../_pages/HomeWebPage';
 import Liveblog from '../_pages/Liveblog';
+import SearchPage from '../_pages/SearchPage';
+import SectionWebPage from '../_pages/SectionWebPage';
+import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
+import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 
 export default async function Page({
   params,
@@ -16,11 +18,28 @@ export default async function Page({
   params: Promise<{ slug: string[] }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+
   const currentHeaders = await headers();
 
   const hostname = currentHeaders.get('x-neon-backend-url');
+  const siteName = currentHeaders.get('x-neon-site-name');
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
+
+  if (slug && slug.length === 1) {
+    const site = await connection.getSiteByName(siteName ?? "");
+    switch (slug[0]) {
+      case 'search':
+        if (site) {
+          return (<SearchPage data = {site}/>);
+        }
+      case 'about':
+        if (site) {
+          return (<AboutPage data = {site}/>);
+        }
+    }
+   }
+ 
 
   const cookiesFromRequest = await cookies();
   const previewtoken = cookiesFromRequest.get('previewtoken')?.value;

@@ -1,11 +1,11 @@
 import { NextRequest } from 'next/server';
-import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { NeonConnection, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 declare global {
   // eslint-disable-next-line no-var
   var connection: NeonConnection;
 }
 
-export const getAPIHostnameConfig = async (request: NextRequest) => {
+export const getAPIHostnameConfig = async (request: NextRequest) : Promise<{ apiHostname: string; viewStatus: string; root: SiteNode }> => {
   const protocol = request.headers.get('X-Forwarded-Proto') || 'http';
 
   const forwardedHostname = request.headers.get('x-forwarded-host');
