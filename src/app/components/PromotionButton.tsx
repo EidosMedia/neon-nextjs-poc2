@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { ArticleModel } from '@/types/models';
 import useAuth from '@/hooks/useAuth';
-import { Download, Rocket, Upload, X } from 'lucide-react';
 
 type PromotionButtonProps = {
   data: ArticleModel;
