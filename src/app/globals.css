@@ -163,10 +163,12 @@
 
 h1 {
   @apply text-primary text-4xl;
+  line-height: normal;
 }
 
 h6 {
   @apply text-gray-400 text-xl;
+  line-height: normal;
 }
 
 figcaption {
@@ -175,6 +177,12 @@ figcaption {
 
 [data-type="credit"] {
   @apply text-gray-500 italic indent-4;
+}
+
+.liveblog-posts {
+  h1 {
+    @apply text-primary text-2xl
+  }
 }
 
 [data-type="byline"] {

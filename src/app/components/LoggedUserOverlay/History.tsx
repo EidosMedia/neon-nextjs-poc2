@@ -1,9 +1,9 @@
-import Clock from '../icons/clock';
 import { BaseModel, NodeVersion, PageData, PageNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import Close from '../icons/close';
 import useVersions from '@/hooks/useVersions';
 import clsx from 'clsx';
+import { Clock } from 'lucide-react';
 
 type UserLayerProps = {
   data: PageData<BaseModel>;
@@ -61,7 +61,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                             {`Version ${item.major}.${item.minor}`}
                           </h3>
                           {item.live && (
-                            <div className="text-xs font-bold text-green-600 bg-green-200 border border-green-600 rounded-full px-2 py-0.5">
+                            <div className="text-xs font-bold text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5">
                               LIVE
                             </div>
                           )}
