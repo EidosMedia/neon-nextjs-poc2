@@ -20,11 +20,11 @@ const Article: React.FC<PageProps> = ({ data }) => {
       <Grouphead data={articleData} />
       <MainImage data={articleData} />
       <div className="mt-5">
-        {renderContent(findElementsInContentJson(['summary'], articleData.files.content.data)[0])}
+        {renderContent(findElementsInContentJson(['summary'], articleData.files.content.data)[0], articleData)}
         {renderContent(findElementsInContentJson(['byline'], articleData.files.content.data)[0])}
       </div>
       <div className="mt-5">
-        {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0])}
+        {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0], articleData)}
       </div>
       <PromotionButton data={articleData} viewStatus={data.siteData.viewStatus} />
     </article>
