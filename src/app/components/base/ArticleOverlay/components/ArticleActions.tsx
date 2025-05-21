@@ -26,8 +26,15 @@ const ArticleActions: React.FC<ArticleActionsProps> = ({ data, viewStatus }) => 
   };
 
   return (
-    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-5 z-10 bg-white shadow-lg border border-gray-300 rounded-xs h-5 group hidden group-hover:block">
-      <button className="bg-gray-700 text-white w-5 h-5 cursor-pointer p-1" title="Unpublish" onClick={handlePromotion}>
+    <div
+      className="absolute -top-2.5 left-1/2 transform -translate-x-1/2 -translate-y-5 z-10 h-8 bg-gray-700 px-4 py-2.5 shadow-lg rounded-xs
+    group hidden group-hover:flex group-hover:gap-4"
+    >
+      <button
+        className="text-white w-3 h-3 cursor-pointer"
+        title={isLive ? 'Unpublish' : 'Publish'}
+        onClick={handlePromotion}
+      >
         {isLive ? <Unpublish /> : <Publish />}
       </button>
     </div>

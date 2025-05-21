@@ -1,10 +1,13 @@
-import { PageData } from "@eidosmedia/neon-frontoffice-ts-sdk";
-import { WebpageModel } from "@eidosmedia/neon-frontoffice-ts-sdk";
-import Navbar from "../components/Navbar";
-import ArticleWebpage from "../components/ArticleWebpage";
-import ArticleBanner from "../components/ArticleBanner";
-import WebpageFooter from "../components/WebpageFooter";
-import React from "react";
+import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import Navbar from '../components/Navbar';
+import ArticleWebpage from '../components/ArticleWebpage';
+import ArticleBanner from '../components/ArticleBanner';
+import WebpageFooter from '../components/WebpageFooter';
+import React from 'react';
+import Main from '../components/webpage/Main';
+import Context from '../components/webpage/Context';
+import Insight1 from '../components/webpage/Insight1';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -31,20 +34,20 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div className="p-4 rounded-lg col-span-12 md:col-span-3">
-          <ArticleWebpage data={data} zone="main" displayMainPicture={true} />
+          <Main data={data} />
         </div>
 
         <div className="p-4 rounded-lg col-span-12 md:col-span-6">
-          <ArticleWebpage data={data} zone="context" displayMainPicture={true} />
+          <Context data={data} />
         </div>
 
         <div className="p-4 rounded-lg col-span-12 md:col-span-3">
-          <ArticleWebpage data={data} zone="insight1" displayMainPicture={false} />
+          <Insight1 data={data} displayMainPicture={false} />
         </div>
       </div>
 
       <footer className="bg-gray-800 text-white p-4 rounded-b-lg mt-4">
-          <WebpageFooter data={data} />
+        <WebpageFooter data={data} />
       </footer>
     </div>
   );

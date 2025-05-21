@@ -3,7 +3,7 @@ import { ContentElement, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import { JSX, ReactNode } from 'react';
 import { ArticleModel } from '@/types/models';
-import EditableContent from '@/app/components/utilities/EditableContent';
+import ContentEditable from '@/app/components/utilities/ContentEditable';
 
 /**
  *
@@ -58,19 +58,19 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
   switch (content.nodeType) {
     case 'headline':
       return (
-        <EditableContent key={key} id="headline" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} id="headline" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h1 key={key} {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </h1>
-        </EditableContent>
+        </ContentEditable>
       );
     case 'overhead':
       return (
-        <EditableContent key={key} id="overhead" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} id="overhead" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h6 key={key} {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </h6>
-        </EditableContent>
+        </ContentEditable>
       );
     case 'grouphead':
       return (
@@ -105,11 +105,11 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
     case 'p':
       if (parent === 'text') {
         return (
-          <EditableContent key={key} id="p" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+          <ContentEditable key={key} id="p" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
             <p key={key} {...buildAttributes(content)}>
               {content.elements.map(elem => renderContent(elem, data))}
             </p>
-          </EditableContent>
+          </ContentEditable>
         );
       } else {
         return <p key={key}>{content.elements.map(elem => renderContent(elem, data))}</p>;
@@ -118,11 +118,11 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
       return content.value;
     case 'summary':
       return (
-        <EditableContent key={key} id="summary" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} id="summary" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <div key={key} data-type="summary" {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </div>
-        </EditableContent>
+        </ContentEditable>
       );
     case 'inline-media-group':
       return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} />;

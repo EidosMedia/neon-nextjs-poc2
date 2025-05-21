@@ -8,6 +8,7 @@ interface OverlayProps {
   data: SiteNode;
   viewStatus: string;
   showOverlay?: boolean;
+  width?: 'normal' | 'max';
   children: React.ReactNode;
 }
 interface OverlayDataObj {
@@ -73,7 +74,7 @@ export const priorityOptions = [
   },
 ];
 
-const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, children }) => {
+const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', children }) => {
   const [overlayData, setOverlayData] = useState<OverlayDataObj>();
   const [objectNotFound, setObjectNotFound] = useState(false);
 
@@ -125,8 +126,10 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, children }) => {
           <ArticleActions data={data} viewStatus={viewStatus} />
           {children}
           <div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
-          hidden group-hover:grid group-hover:grid-cols-2 group-hover:gap-5 w-max"
+            className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
+          hidden group-hover:grid group-hover:grid-cols-2 group-hover:gap-5 ${
+            width === 'max' ? 'w-max max-w-screen' : 'w-[125%]'
+          }`}
           >
             {/* POINTING ARROW */}
             <div
@@ -137,7 +140,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, children }) => {
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <h5 className="font-semibold">ID</h5>
-                <p className="text-nowrap">{overlayData.id}</p>
+                <p className={`${width === 'max' && 'text-nowrap'}`}>{overlayData.id}</p>
               </div>
               <div className="flex flex-col gap-1">
                 <h5 className="font-semibold">Title</h5>
@@ -145,7 +148,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, children }) => {
               </div>
               <div className="flex flex-col gap-1">
                 <h5 className="font-semibold">Author</h5>
-                <p>{overlayData.authors[0]}</p>
+                <p>{overlayData.authors?.[0] || ''}</p>
               </div>
             </div>
             {/* DIVIDER */}
@@ -160,7 +163,9 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, children }) => {
               )}
               <div className="flex flex-col gap-1">
                 <h5 className="font-semibold">Publication Date</h5>
-                <p className="text-nowrap">{getPublicationDateString(overlayData.pubInfo.publicationTime)}</p>
+                <p className={`${width === 'max' && 'text-nowrap'}`}>
+                  {getPublicationDateString(overlayData?.pubInfo?.publicationTime)}
+                </p>
               </div>
             </div>
           </div>
