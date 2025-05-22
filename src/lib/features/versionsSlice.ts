@@ -33,6 +33,7 @@ export const { setVersions, setVersionPanelOpen } = versionsSlice.actions;
 
 // Selectors
 export const getVersions = (id: string) => (state: any) => {
+  if (!id) return null;
   return state.nodes && state.nodes[getFamilyRef(id)]?.versions; // editorContainer.currentDocument is the id of the current document
 };
 export const getVersionsPanelOpened = (state: any) => {

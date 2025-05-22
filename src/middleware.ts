@@ -2,16 +2,18 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getAPIHostnameConfig } from './services/utils';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { SiteNode } from './neon-frontoffice-ts-sdk/src/types/site';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  const { apiHostname } = await getAPIHostnameConfig(request);
+  const foundsite : { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
 
   // Passing the apiHostname resolved as header to the app router
   const headers = new Headers(request.headers);
 
-  headers.set('x-neon-backend-url', apiHostname);
+  headers.set('x-neon-backend-url', foundsite.apiHostname);
   headers.set('x-neon-pathname', request.nextUrl.pathname);
+  headers.set('x-neon-site-name', foundsite.root?.name);
 
   const urlObject = request.nextUrl;
   const urlParams = new URLSearchParams(urlObject.search);
@@ -43,7 +45,7 @@ export async function middleware(request: NextRequest) {
       const cookieValue = cookieObject.empreviewtoken;
       const cookieOptions: ResponseCookie = {
         path: '/',
-        maxAge: 1200,
+        maxAge: 14400,
         httpOnly: true,
         name: 'previewtoken',
         value: cookieValue,

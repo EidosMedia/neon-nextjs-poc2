@@ -58,7 +58,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
   switch (content.nodeType) {
     case 'headline':
       return (
-        <ContentEditable key={key} id="headline" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h1 key={key} {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </h1>
@@ -66,7 +66,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
       );
     case 'overhead':
       return (
-        <ContentEditable key={key} id="overhead" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <h6 key={key} {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </h6>
@@ -105,7 +105,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
     case 'p':
       if (parent === 'text') {
         return (
-          <ContentEditable key={key} id="p" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+          <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
             <p key={key} {...buildAttributes(content)}>
               {content.elements.map(elem => renderContent(elem, data))}
             </p>
@@ -118,7 +118,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
       return content.value;
     case 'summary':
       return (
-        <ContentEditable key={key} id="summary" articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
           <div key={key} data-type="summary" {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </div>

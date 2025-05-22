@@ -1,23 +1,30 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
-import { X, Check } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { X, Check, LockKeyhole } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ReactDOMServer from 'react-dom/server';
+import { isString } from 'lodash';
 
 type ContentEditableProps = {
   articleId?: string;
   lockedBy?: lockedByInfo;
   children?: React.ReactNode;
+  showLockedByTooltip?: boolean;
 };
 
-type lockedByInfo = {
-  userId: string;
-  userName: string;
-};
+type lockedByInfo =
+  | {
+      userId: string;
+      userName: string;
+    }
+  | string;
 
-const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, children }) => {
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-
+const ContentEditable: React.FC<ContentEditableProps> = ({
+  articleId,
+  lockedBy,
+  children,
+  showLockedByTooltip = true,
+}) => {
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
 
@@ -54,15 +61,19 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
 
   const handleSave = (event?: React.MouseEvent) => {
     event?.stopPropagation();
-    const dataId = divRef.current?.firstChild?.getAttribute('id');
-    const content = divRef.current?.firstChild?.innerHTML;
 
-    handleUpdateContentItem(dataId, content);
-    setContentString(divRef?.current?.innerHTML);
-    setPreviousContentString(divRef?.current?.innerHTML);
+    if (divRef.current) {
+      const firstChild = divRef.current?.firstChild as HTMLElement;
+      const dataId = firstChild?.getAttribute('id') || '';
+      const content = firstChild?.innerHTML;
 
-    hideDivButtons(); // Hide buttons after save
-    divRef.current?.blur(); // Remove focus from the div
+      handleUpdateContentItem(dataId, content);
+      setContentString(divRef?.current?.innerHTML);
+      setPreviousContentString(divRef?.current?.innerHTML);
+
+      hideDivButtons(); // Hide buttons after save
+      divRef.current?.blur(); // Remove focus from the div
+    }
   };
 
   const handleCancel = (event?: React.MouseEvent) => {
@@ -70,14 +81,6 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
     setContentString(previousContentString);
     hideDivButtons(); // Hide buttons after cancel
     divRef.current?.blur(); // Remove focus from the div
-  };
-
-  const handleMouseMove = (event: React.MouseEvent) => {
-    setTooltipPosition({ x: event.clientX, y: event.clientY });
-  };
-
-  const handleMouseLeave = () => {
-    setTooltipPosition({ x: 0, y: 0 });
   };
 
   // Hide buttons when the contenteditable div loses focus
@@ -88,19 +91,30 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
   };
 
   return lockedBy ? (
-    <div key={key} className="relative group" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-      {children}
-      {tooltipPosition.x !== 0 && tooltipPosition.y !== 0 && (
-        <div
-          className="fixed bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg"
-          style={{
-            top: tooltipPosition.y + 10,
-            left: tooltipPosition.x + 10,
-          }}
-        >
-          The content is not editable because it is locked by {lockedBy.userName}
-        </div>
-      )}
+    <div key={key} className="relative group">
+      <div className="flex items-center">
+        {children}
+        {showLockedByTooltip && loggedUserInfo?.inspectItems && (
+          <>
+            <span
+              className="ml-2 relative"
+              onMouseEnter={e => {
+                const tooltip = e.currentTarget.nextSibling as HTMLDivElement;
+                if (tooltip) tooltip.classList.remove('hidden');
+              }}
+              onMouseLeave={e => {
+                const tooltip = e.currentTarget.nextSibling as HTMLDivElement;
+                if (tooltip) tooltip.classList.add('hidden');
+              }}
+            >
+              <LockKeyhole />
+            </span>
+            <div className="hidden px-2 py-1 rounded bg-black text-white text-xs whitespace-nowrap shadow-lg z-10">
+              Locked by {isString(lockedBy) ? lockedBy : lockedBy.userName}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   ) : (
     <>
@@ -116,28 +130,30 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
         tabIndex={0}
       ></div>
 
-      <div
-        ref={divButtonsRef}
-        className="bg-white flex flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
-      >
-        <button
-          type="button"
-          className="p-1 rounded hover:bg-gray-200"
-          onMouseDown={handleSave}
-          aria-label="Save"
-          tabIndex={-1}
+      <div className="relative">
+        <div
+          ref={divButtonsRef}
+          className="bg-white z-10 flex absolute right-0 flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
         >
-          <Check className="h-5 w-5 text-gray-700" />
-        </button>
-        <button
-          type="button"
-          className="p-1 rounded hover:bg-gray-200"
-          onMouseDown={handleCancel}
-          aria-label="Cancel"
-          tabIndex={-1}
-        >
-          <X className="h-5 w-5 text-gray-700" />
-        </button>
+          <button
+            type="button"
+            className="p-1 rounded hover:bg-gray-200"
+            onMouseDown={handleSave}
+            aria-label="Save"
+            tabIndex={-1}
+          >
+            <Check className="h-5 w-5 text-gray-700" />
+          </button>
+          <button
+            type="button"
+            className="p-1 rounded hover:bg-gray-200"
+            onMouseDown={handleCancel}
+            aria-label="Cancel"
+            tabIndex={-1}
+          >
+            <X className="h-5 w-5 text-gray-700" />
+          </button>
+        </div>
       </div>
     </>
   );
