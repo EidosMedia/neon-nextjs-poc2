@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
       const cookieValue = cookieObject.empreviewtoken;
       const cookieOptions: ResponseCookie = {
         path: '/',
-        maxAge: 1200,
+        maxAge: 14400,
         httpOnly: true,
         name: 'previewtoken',
         value: cookieValue,
