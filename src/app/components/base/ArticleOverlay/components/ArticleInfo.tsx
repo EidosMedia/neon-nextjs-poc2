@@ -67,6 +67,20 @@ const ArticleInfo: React.FC<ArticleInfoProps> = ({ width, overlayData }) => {
             {getPublicationDateString(overlayData?.pubInfo?.publicationTime)}
           </p>
         </div>
+        {overlayData?.sys?.lockedBy && (
+          <>
+            <div className="flex flex-col gap-1">
+              <h5 className="font-semibold">Locked by</h5>
+              <p className={`${width === 'max' && 'text-nowrap'}`}>{overlayData?.sys?.lockedBy}</p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h5 className="font-semibold">Lock Date</h5>
+              <p className={`${width === 'max' && 'text-nowrap'}`}>
+                {getPublicationDateString(overlayData?.sys?.LockedTime)}
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

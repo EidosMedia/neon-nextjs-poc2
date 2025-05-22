@@ -86,7 +86,18 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
         const response = await fetch(`/nodes/${data.id}`);
         if (response.ok) {
           const data = await response.json();
-          setOverlayData(data);
+
+          const overlayObj: OverlayDataObj = {
+            id: data.model.data.id,
+            title: data.model.data.title,
+            authors: data.model.data.authors || [],
+            pubInfo: {
+              priority: data.model.data.pubInfo?.priority,
+              publicationTime: data.model.data.pubInfo?.publicationTime,
+            },
+          };
+
+          setOverlayData(overlayObj);
         } else {
           console.error('Failed to fetch overlay data');
           setObjectNotFound(true);
