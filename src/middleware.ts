@@ -6,7 +6,7 @@ import { SiteNode } from './neon-frontoffice-ts-sdk/src/types/site';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  const foundsite : { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
+  const foundsite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
 
   // Passing the apiHostname resolved as header to the app router
   const headers = new Headers(request.headers);
@@ -14,6 +14,7 @@ export async function middleware(request: NextRequest) {
   headers.set('x-neon-backend-url', foundsite.apiHostname);
   headers.set('x-neon-pathname', request.nextUrl.pathname);
   headers.set('x-neon-site-name', foundsite.root?.name);
+  headers.set('x-neon-view-status', foundsite.viewStatus);
 
   const urlObject = request.nextUrl;
   const urlParams = new URLSearchParams(urlObject.search);

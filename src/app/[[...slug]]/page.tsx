@@ -23,6 +23,7 @@ export default async function Page({
 
   const hostname = currentHeaders.get('x-neon-backend-url');
   const siteName = currentHeaders.get('x-neon-site-name');
+  const viewStatus = currentHeaders.get('x-neon-view-status') as string;
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
 
@@ -34,7 +35,7 @@ export default async function Page({
         if (site) {
           return (
             <div className="root" data-theme={site.root.attributes?.theme}>
-              <LoggedUserBar data={{ siteData: site }} />
+              <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
               <SearchPage data={site} />
             </div>
           );
@@ -43,7 +44,7 @@ export default async function Page({
         if (site) {
           return (
             <div className="root" data-theme={site.root.attributes?.theme}>
-              <LoggedUserBar data={{ siteData: site }} />
+              <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
               <AboutPage data={site} />
             </div>
           );

@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ArticleOverlay from './base/ArticleOverlay';
-import { set } from 'lodash';
 import { LoaderCircle } from 'lucide-react';
+import ErrorBoundaryContainer from './base/ErrorBoundaryContainer/ErrorBoundaryContainer';
 
 type ChatRoundTrip = {
   titles: string[];
@@ -371,33 +371,36 @@ const SearchResult = ({ data }: { data: Site }) => {
                           />
                         </div>
                         <Link className="no-underline" href={result.nodeData.url}>
-                          <div className="p-4 flex" style={{ textAlign: 'left' }}>
-                            <div id="photo{index}" className="mr-4">
-                              <img
-                                alt="/static/img/nothumb.jpeg"
-                                width="200"
-                                height="200"
-                                decoding="async"
-                                data-nimg="1"
-                                src={
-                                  result.nodeData.links.system.mainPicture[0].dynamicCropsResourceUrls.Portrait_small
-                                }
-                                className="w-48 h-48 object-cover"
-                                style={{ color: 'transparent' }}
-                              />
+                          <ErrorBoundaryContainer>
+                            <div className="p-4 flex" style={{ textAlign: 'left' }}>
+                              <div id="photo{index}" className="mr-4">
+                                <img
+                                  alt="/static/img/nothumb.jpeg"
+                                  width="200"
+                                  height="200"
+                                  decoding="async"
+                                  data-nimg="1"
+                                  src={
+                                    result.nodeData.links?.system?.mainPicture[0]?.dynamicCropsResourceUrls
+                                      .Portrait_small
+                                  }
+                                  className="w-48 h-48 object-cover"
+                                  style={{ color: 'transparent' }}
+                                />
+                              </div>
+                              <div id="item{index}" className="flex-1">
+                                <h6 className="text-xl font-semibold">{title}</h6>
+                                <p className="text-base">{summary}</p>
+                                {result.highlights && result.highlights['_full_text.content.all'] ? (
+                                  result.highlights['_full_text.content.all'].map((reference, idx) => (
+                                    <p key={idx}>... {reference.replaceAll('\n', ' ')} ...</p>
+                                  ))
+                                ) : (
+                                  <p />
+                                )}
+                              </div>
                             </div>
-                            <div id="item{index}" className="flex-1">
-                              <h6 className="text-xl font-semibold">{title}</h6>
-                              <p className="text-base">{summary}</p>
-                              {result.highlights && result.highlights['_full_text.content.all'] ? (
-                                result.highlights['_full_text.content.all'].map((reference, idx) => (
-                                  <p key={idx}>... {reference.replaceAll('\n', ' ')} ...</p>
-                                ))
-                              ) : (
-                                <p />
-                              )}
-                            </div>
-                          </div>
+                          </ErrorBoundaryContainer>
                         </Link>
                       </ArticleOverlay>
                     </div>
