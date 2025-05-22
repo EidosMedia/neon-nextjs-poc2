@@ -1,8 +1,9 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { X, Check } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ReactDOMServer from 'react-dom/server';
+import { isString } from 'lodash';
 
 type ContentEditableProps = {
   articleId?: string;
@@ -10,10 +11,12 @@ type ContentEditableProps = {
   children?: React.ReactNode;
 };
 
-type lockedByInfo = {
-  userId: string;
-  userName: string;
-};
+type lockedByInfo =
+  | {
+      userId: string;
+      userName: string;
+    }
+  | string;
 
 const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, children }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
@@ -54,15 +57,19 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
 
   const handleSave = (event?: React.MouseEvent) => {
     event?.stopPropagation();
-    const dataId = divRef.current?.firstChild?.getAttribute('id');
-    const content = divRef.current?.firstChild?.innerHTML;
 
-    handleUpdateContentItem(dataId, content);
-    setContentString(divRef?.current?.innerHTML);
-    setPreviousContentString(divRef?.current?.innerHTML);
+    if (divRef.current) {
+      const firstChild = divRef.current?.firstChild as HTMLElement;
+      const dataId = firstChild?.getAttribute('id') || '';
+      const content = firstChild?.innerHTML;
 
-    hideDivButtons(); // Hide buttons after save
-    divRef.current?.blur(); // Remove focus from the div
+      handleUpdateContentItem(dataId, content);
+      setContentString(divRef?.current?.innerHTML);
+      setPreviousContentString(divRef?.current?.innerHTML);
+
+      hideDivButtons(); // Hide buttons after save
+      divRef.current?.blur(); // Remove focus from the div
+    }
   };
 
   const handleCancel = (event?: React.MouseEvent) => {
@@ -98,7 +105,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ articleId, lockedBy, 
             left: tooltipPosition.x + 10,
           }}
         >
-          The content is not editable because it is locked by {lockedBy.userName}
+          The content is not editable because it is locked by {isString(lockedBy) ? lockedBy : lockedBy.userName}
         </div>
       )}
     </div>
