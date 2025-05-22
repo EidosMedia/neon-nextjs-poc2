@@ -1,9 +1,17 @@
 'use client';
-import { PaginatedSearchRagResult, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PaginatedSearchRagResult, RagOnItemsResponse, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ArticleOverlay from './base/ArticleOverlay';
+import { set } from 'lodash';
+import { LoaderCircle } from 'lucide-react';
+
+type ChatRoundTrip = {
+  titles: string[];
+  question: string;
+  answer: string;
+};
 
 const SearchResult = ({ data }: { data: Site }) => {
   const [result, setResult] = useState<PaginatedSearchRagResult>({} as PaginatedSearchRagResult);
@@ -11,12 +19,20 @@ const SearchResult = ({ data }: { data: Site }) => {
   const router = useRouter();
   const query = useSearchParams();
   const [searchText, setSearchText] = useState('');
+  const [authorized, setAuthorized] = useState(true);
   const [selectedOption, setSelectedOption] = useState('Last Week');
+  const [selectedResults, setSelectedResults] = useState<Map<string, string>>(new Map<string, string>());
   const options = ['Today', 'Last Week', 'Last Month', 'Last Quarter', 'Last Year'];
   const [isLoading, setLoading] = useState(true);
+  const [isAsking, setAsking] = useState(false);
+  const [chat, setChat] = useState<ChatRoundTrip[]>([]);
+  const [questionText, setQuestionText] = useState('');
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
+  };
+  const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuestionText(e.target.value);
   };
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -24,7 +40,7 @@ const SearchResult = ({ data }: { data: Site }) => {
   };
 
   /** route client to server api exposed for default search */
-  const fetchData = async (queryParams: URLSearchParams) => {
+  const fetchSearch = async (queryParams: URLSearchParams) => {
     const queryCallParams = new URLSearchParams();
 
     if (queryParams.has('query')) {
@@ -39,21 +55,26 @@ const SearchResult = ({ data }: { data: Site }) => {
     if (queryCallParams.size >= 2 && queryCallParams.has('query') && queryCallParams.has('startDate')) {
       const response = await fetch(`/api/search?${queryCallParams.toString()}`);
       setLoading(true);
+      setChat([]);
+      setResult({} as PaginatedSearchRagResult);
+      setSelectedResults(new Map<string, string>());
       if (response.ok) {
         const search = (await response.json()) as PaginatedSearchRagResult;
 
         console.log('Fetched data:', search);
         setResult(search);
+        setSelectedResults(new Map(search.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
       } else {
         console.log('Fetched rag data error', response);
         setResult({} as PaginatedSearchRagResult);
+        setSelectedResults(new Map<string, string>());
       }
     }
     setLoading(false);
   };
 
   /** route client to server api exposed for natural search */
-  const fetchNatutalData = async (queryParams: URLSearchParams) => {
+  const fetchNaturalSearch = async (queryParams: URLSearchParams) => {
     const queryCallParams = new URLSearchParams();
 
     if (queryParams.has('query')) {
@@ -65,17 +86,25 @@ const SearchResult = ({ data }: { data: Site }) => {
 
     queryCallParams.append('rag', 'true');
 
-    if (queryCallParams.size === 3 && queryCallParams.has('query') && queryCallParams.has('pastDays')) {
+    if (queryCallParams.size === 3 && queryCallParams.has('query') && queryCallParams.has('pastDays') && authorized) {
       setLoading(true);
+      setChat([]);
+      setResult({} as PaginatedSearchRagResult);
+      setSelectedResults(new Map<string, string>());
       const response = await fetch(`/api/search?${queryCallParams.toString()}`);
       if (response.ok) {
         const data = (await response.json()) as PaginatedSearchRagResult;
 
         console.log('Fetched rag data:', data);
         setResult(data);
+        setSelectedResults(new Map(data.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
       } else {
         console.log('Fetched rag data error', response);
         setResult({} as PaginatedSearchRagResult);
+        setSelectedResults(new Map<string, string>());
+        if (response.status === 401 || response.status == 403) {
+          setAuthorized(false);
+        }
       }
     }
     setLoading(false);
@@ -93,9 +122,9 @@ const SearchResult = ({ data }: { data: Site }) => {
     }
 
     if (query.get('t') && query.get('t') === 'n') {
-      fetchNatutalData(query);
+      fetchNaturalSearch(query);
     } else {
-      fetchData(query);
+      fetchSearch(query);
     }
   }, [query]); // Refetch data when query parameters change
 
@@ -129,6 +158,60 @@ const SearchResult = ({ data }: { data: Site }) => {
     router.push(`/search?${queryParams.toString()}`);
   };
 
+  const handleAnswerToSelection = async () => {
+    console.log(`Question about selected results: ${questionText}`);
+
+    const selectedKeys = Array.from(selectedResults.keys());
+    const queryCallParams = new URLSearchParams();
+
+    queryCallParams.append('query', questionText);
+
+    try {
+      if (questionText.trim() === '') return;
+
+      setAsking(true);
+      const response = await fetch(`/api/askabout?${queryCallParams.toString()}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedKeys),
+      });
+
+      if (response.ok) {
+        const ragAnwser: RagOnItemsResponse = (await response.json()) as RagOnItemsResponse;
+
+        console.log('askabout response:', data);
+
+        const newChatRoundTrip: ChatRoundTrip = {
+          titles: Array.from(selectedResults.values()),
+          question: questionText,
+          answer: ragAnwser.result.answer,
+        };
+
+        setChat(prevChat => [...prevChat, newChatRoundTrip]);
+        setQuestionText('');
+      } else {
+        console.log('askabout error', response);
+        if (response.status === 401 || response.status == 403) {
+          setAuthorized(false);
+        } else {
+          const newChatRoundTrip: ChatRoundTrip = {
+            titles: Array.from(selectedResults.values()),
+            question: questionText,
+            answer: `for error ${response.status} as answer`,
+          };
+
+          setChat(prevChat => [...prevChat, newChatRoundTrip]);
+        }
+      }
+      setAsking(false);
+    } catch (error) {
+      console.error('Error during fetch:', error);
+      setAsking(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -155,7 +238,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             id="searchText"
             value={searchText}
             onChange={handleTextChange}
-            style={{ marginRight: '8px', border: '1px solid #ccc', padding: '1px', width: '400px' }}
+            style={{ marginLeft: '8px', marginRight: '8px', border: '1px solid #ccc', padding: '1px', width: '400px' }}
             placeholder="Enter search text"
           />
 
@@ -178,15 +261,16 @@ const SearchResult = ({ data }: { data: Site }) => {
           type="submit"
           style={{
             padding: '8px 16px',
-            backgroundColor: '#007BFF', // Solid blue background
+            backgroundColor: !isLoading ? '#007BFF' : '#ccc', // Solid blue background
             color: '#fff', // White text
             border: 'none', // Remove border
             borderRadius: '4px', // Rounded corners
-            cursor: 'pointer', // Pointer cursor on hover
+            cursor: !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor on hover
             width: '100px', // Fixed width
             margin: '4px', // Space between buttons
           }}
           onClick={handleSearch}
+          disabled={isLoading}
         >
           Search
         </button>
@@ -194,15 +278,16 @@ const SearchResult = ({ data }: { data: Site }) => {
           type="submit"
           style={{
             padding: '8px 16px',
-            backgroundColor: '#007BFF', // Solid blue background
+            backgroundColor: authorized && !isLoading ? '#007BFF' : '#ccc', // Solid blue if authorized, gray if not
             color: '#fff', // White text
             border: 'none', // Remove border
             borderRadius: '4px', // Rounded corners
-            cursor: 'pointer', // Pointer cursor on hover
+            cursor: authorized || !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor if authorized, not-allowed if not
             width: '100px', // Fixed width
             margin: '4px',
           }}
           onClick={handleAiSearch}
+          disabled={!authorized || isLoading} // Disable button if not authorized
         >
           AI Search
         </button>
@@ -211,7 +296,10 @@ const SearchResult = ({ data }: { data: Site }) => {
       {
         /* Render search results */
         isLoading ? (
-          <div style={{ marginTop: '16px' }}>
+          <div style={{ marginTop: '16px', justifyContent: 'center' }}>
+            <div style={{ marginTop: '16px', justifyContent: 'center', display: 'flex', alignItems: 'center' }}>
+              <LoaderCircle className="animate-spin" />
+            </div>
             <p>Loading data...</p>
           </div>
         ) : (
@@ -250,10 +338,38 @@ const SearchResult = ({ data }: { data: Site }) => {
                   summary = result.nodeData.summary;
                 }
 
+                const changeSelected =
+                  (id: string, ref: string, title: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+                    console.log(`Checkbox for item ${id} changed to ${event.target.checked} for ref:${ref}`);
+                    // Implement any additional logic for handling the checkbox state change here
+                    if (event.target.checked) {
+                      setSelectedResults(prev => new Map(prev).set(ref, title));
+                    } else {
+                      setSelectedResults(prev => {
+                        const newSet = new Map(prev);
+                        newSet.delete(ref);
+                        return newSet;
+                      });
+                    }
+                    console.log(
+                      `Selected results: ${Array.from(selectedResults.entries())
+                        .map(([key, value]) => `${key}: ${value}`)
+                        .join(', ')}`
+                    );
+                  };
+
                 return (
                   <div key={result.nodeData.id} className="grid grid-cols-1 md:grid-cols-1 gap-2">
                     <div className="col-span-1 relative group">
                       <ArticleOverlay data={data.root} viewStatus={data.viewStatus}>
+                        <div style={{ position: 'absolute', top: '8px', left: '8px', zIndex: 10 }}>
+                          <input
+                            type="checkbox"
+                            id="sel{index}"
+                            onChange={changeSelected(`sel${index}`, result.nodeData.id, title)}
+                            defaultChecked={true}
+                          />
+                        </div>
                         <Link className="no-underline" href={result.nodeData.url}>
                           <div className="p-4 flex" style={{ textAlign: 'left' }}>
                             <div id="photo{index}" className="mr-4">
@@ -290,8 +406,111 @@ const SearchResult = ({ data }: { data: Site }) => {
               })
             ) : (
               <div style={{ marginTop: '16px' }}>
-                <p>No results found.</p>
+                {!authorized && query.get('t') === 'n' ? (
+                  <p>You are not unauthorized to use AI features.</p>
+                ) : (
+                  <p>No results found.</p>
+                )}
               </div>
+            )}
+            {chat.length > 0 ? (
+              <div style={{ marginTop: '16px', textAlign: 'center' }}>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+                  AI Chat History:
+                </h3>
+                {chat.map((item, index) => (
+                  <div key={index} style={{ marginTop: '16px', marginBottom: '16px', textAlign: 'left' }}>
+                    <div style={{ fontSize: '1.1rem', marginTop: '4px', textAlign: 'left' }}>
+                      <p>
+                        Question:
+                        <br />
+                        <b>{item.question}</b>
+                      </p>
+                    </div>
+                    <div style={{ fontSize: '1.1rem', marginTop: '4px', textAlign: 'right' }}>
+                      <p>
+                        Answer:
+                        <br />
+                        <i>{item.answer}</i>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ marginTop: '16px' }}></div>
+            )}
+            {authorized && selectedResults.size > 0 ? (
+              <div style={{ marginTop: '16px', textAlign: 'left' }}>
+                <ul style={{ marginBottom: '8px', color: '#333' }}>
+                  <i>Using the set of select results:</i>
+                  {Array.from(selectedResults.entries()).map(([key, value], index) => {
+                    return (
+                      <li key={index} style={{ marginTop: '8px', marginLeft: '20px' }}>
+                        <p>
+                          <span style={{ marginRight: '8px', color: 'black' }}>•</span>
+                          <i>{value}</i>
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'left',
+                    marginBottom: '16px',
+                    paddingLeft: '8px',
+                  }}
+                >
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <b>Ask about that content:</b>
+                  </label>
+                  <input
+                    type="text"
+                    id="questionText"
+                    value={questionText}
+                    onChange={handleQuestionTextChange}
+                    style={{
+                      marginLeft: '8px',
+                      marginRight: '8px',
+                      border: '1px solid #ccc',
+                      padding: '1px',
+                      width: '70%',
+                    }}
+                    placeholder="Enter question about selected"
+                  />
+                  <button
+                    type="button"
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: !isAsking ? '#007BFF' : '#ccc',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: !isAsking ? 'pointer' : 'not-allowed', // Pointer cursor if authorized, not-allowed if not
+                      marginLeft: '8px',
+                    }}
+                    onClick={handleAnswerToSelection}
+                    disabled={isAsking}
+                  >
+                    Ask
+                  </button>
+                </div>
+                {isAsking ? (
+                  <div style={{ textAlign: 'center', marginLeft: '8px' }}>
+                    <div style={{ marginTop: '16px', justifyContent: 'center', display: 'flex', alignItems: 'center' }}>
+                      <LoaderCircle className="animate-spin" />
+                    </div>
+                    <p>Asking...</p>
+                  </div>
+                ) : (
+                  <div style={{ marginTop: '16px' }}></div>
+                )}
+              </div>
+            ) : (
+              <div style={{ marginTop: '16px' }}></div>
             )}
           </div>
         )
