@@ -30,7 +30,7 @@ export const findText = (node: ContentElement): ReactNode => {
   return node.elements.map(elem => findText(elem)).join('');
 };
 
-export const buildAttributes = (node: ContentElement): Record<string, string> => {
+export const buildAttributes = (node: ContentElement): Record<string, any> => {
   // replace "class" with "className" and "stroke-linecap" with "strokeLinecap"
   return Object.fromEntries(
     Object.entries(node.attributes || {}).map(([key, value]) => [
@@ -47,7 +47,7 @@ export const buildAttributes = (node: ContentElement): Record<string, string> =>
         : key === 'contenteditable'
         ? 'contentEditable'
         : key,
-      value,
+      key === 'style' ? convertStyleToObject(value) : value,
     ])
   );
 };
@@ -125,7 +125,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
         </ContentEditable>
       );
     case 'inline-media-group':
-      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format={"Wide"}/>;
+      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format={'Wide'} />;
     case 'anchor':
       return (
         <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
@@ -155,3 +155,16 @@ export const getFamilyRef = (ref: string): string => {
   }
   return idElements.join('-');
 };
+
+function convertStyleToObject(value: string): React.CSSProperties {
+  console.log('value', value);
+  return value.split(';').reduce((styleObj: React.CSSProperties, styleProp) => {
+    const [property, val] = styleProp.split(':');
+    if (property && val) {
+      // Convert kebab-case to camelCase
+      const camelCaseProp = property.trim().replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+      styleObj[camelCaseProp as keyof React.CSSProperties] = val.trim() as any;
+    }
+    return styleObj;
+  }, {});
+}
