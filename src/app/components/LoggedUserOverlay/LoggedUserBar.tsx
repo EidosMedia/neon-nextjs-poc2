@@ -15,8 +15,7 @@ import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
 import { SquareArrowOutUpRight } from 'lucide-react';
 
-const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
-  const articleData = data.model.data;
+const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const dispatch = useDispatch();
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
@@ -48,14 +47,18 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data }) => {
         <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} />
       </div>
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center text-white">{data.siteData?.siteName}</div>
-      <PromotionButton data={articleData} viewStatus={data.siteData.viewStatus} />
-        <InfoTooltip pageData={data} />
-        <Link href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
-          <SquareArrowOutUpRight />
-        </Link>
-        <History data={data} />
-        <VisibilityChip data={data} />
+        <div className="flex items-center justify-center text-white">{siteName || data.siteData?.siteName}</div>
+        {'model' in data && (
+          <>
+            <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
+            <InfoTooltip pageData={data} />
+            <Link href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
+              <SquareArrowOutUpRight />
+            </Link>
+            <History data={data} />
+            <VisibilityChip data={data} />
+          </>
+        )}
         <div className="flex items-center justify-center text-white gap-3">
           <img
             className="w-10 h-10 rounded-full"

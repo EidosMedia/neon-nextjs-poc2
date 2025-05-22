@@ -5,11 +5,11 @@ import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 
 const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
   const { getVersion, getCurrentLiveVersion } = useVersions({
-    currentNode: data,
+    currentNode: 'model' in data ? data : undefined,
   });
 
   const isPreview = data.siteData.viewStatus === 'PREVIEW';
-  const version = isPreview ? 'PREVIEW' : getVersion(data.model.data.url);
+  const version = isPreview ? 'PREVIEW' : getVersion('model' in data ? data.model?.data?.url : '');
   const isLive = version ? version === 'LIVE' : data.siteData.viewStatus;
 
   const colorClass = () => {

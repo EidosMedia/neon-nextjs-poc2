@@ -27,6 +27,11 @@ export async function register() {
 
   await connection.startup();
 
+  setInterval(() => {
+    connection.refreshLiveSites();
+    connection.refreshPreviewSites();
+  }, parseInt(process.env.SITES_REFRESH_INTERVAL || '') || 120000);
+
   Object.assign(globalThis, {
     connection,
   });

@@ -1,6 +1,6 @@
-import { LoggedUserBarProps } from './LoggedUserOverlay.types';
+import { LoggedUserBarComponentProps } from './LoggedUserOverlay.types';
 
-const VisibilityChip: React.FC<LoggedUserBarProps> = ({ data }) => {
+const VisibilityChip: React.FC<LoggedUserBarComponentProps> = ({ data }) => {
   const expirationDateString = data.model.changeVisibility;
   if (!expirationDateString) {
     return null;
