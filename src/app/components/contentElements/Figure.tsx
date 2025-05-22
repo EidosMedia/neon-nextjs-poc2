@@ -1,51 +1,54 @@
-import { ContentElement } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import {ContentElement} from '@eidosmedia/neon-frontoffice-ts-sdk';
 
-type MainImageProps = {
-  data: ContentElement;
-  alt: string;
+type FigureProps = {
+    data: ContentElement;
+    alt: string;
+    format: string;
 };
 
-const getMainImageUrl = (data: ContentElement, format: string) => {
-  const element = data.elements.find((elem) => elem.attributes.crop === format);
-  return element && element.dynamicCropsResourceUrls
-    ? element.dynamicCropsResourceUrls[format]
-    : undefined;
+const getRasterUrl = (data: ContentElement, format: string) => {
+    const element = data.elements.find(elem => elem.attributes.crop === format || elem.attributes.softCrop === format);
+    if (element?.attributes.src) {
+        return element.attributes.src;
+    }
+    return element && element.dynamicCropsResourceUrls ? element.dynamicCropsResourceUrls[format] : undefined;
 };
 
-const Figure: React.FC<MainImageProps> = ({ data, alt }) => {
-  console.log('data figure', data);
-  let imageWidth = 1024;
-  let imageHeight = 576;
+const getSvgUrl = (data: ContentElement): string | undefined => {
+    const element = data.elements.find(elem => elem.nodeType === "graphic");
+    return element?.attributes.fileref;
+};
 
-  const mainImageUrl = getMainImageUrl(data, 'Wide_large');
+const getDimensionsFromUrl = (url: string): { width: number; height: number } | null => {
+    const match = url.match(/:(\d+)x(\d+):/);
+    if (match) {
+        const width = parseInt(match[1], 10);
+        const height = parseInt(match[2], 10);
+        return { width, height };
+    }
+    return null;
+}
 
-  // let tmx = data?.pageContext?.mainPicture?.metadata.softCrops?.Wide?.tmx;
-  // if (tmx === undefined)
-  //   tmx = data?.pageContext?.mainPicture?.metadata.softCrops?.Square?.tmx;
+const Figure: React.FC<FigureProps> = ({data, alt, format}) => {
+    const imageUrl = getSvgUrl(data) || getRasterUrl(data, format);
+    const dimensions = imageUrl && getDimensionsFromUrl(imageUrl);
 
-  // if (tmx !== undefined) {
-  //   let tokens = tmx.split(' ');
-  //   imageWidth = tokens[tokens.length - 2];
-  //   imageHeight = tokens[tokens.length - 1];
-  // }
-
-  const render = (
-    <div>
-      <div>
-        {mainImageUrl ? (
-          <img
-            src={mainImageUrl}
-            alt={alt}
-            height={imageHeight}
-            width={imageWidth}
-          />
-        ) : (
-          <p>No image available</p>
-        )}
-      </div>
-    </div>
-  );
-  return render;
+    return (
+        <div>
+            <div>
+                {imageUrl ? (
+                    <img
+                        src={imageUrl}
+                        alt={alt}
+                        width={dimensions ? dimensions.width : undefined}
+                        height={dimensions ? dimensions.height : undefined}
+                    />
+                ) : (
+                    <p>No image available</p>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default Figure;

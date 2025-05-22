@@ -125,7 +125,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
         </ContentEditable>
       );
     case 'inline-media-group':
-      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} />;
+      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format={"Wide"}/>;
     case 'anchor':
       return (
         <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
