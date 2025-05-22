@@ -22,16 +22,16 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture
     <>
       {linkedObjects.map((linkedObject: any, index: number) => {
         var title, summary, titleId, summaryId;
-        titleId = linkedObject.attributes.contentIds.teaserTitle;
-        summaryId = linkedObject.attributes.contentIds.teaserSummary;
+        titleId = linkedObject.attributes?.contentIds?.teaserTitle;
+        summaryId = linkedObject.attributes?.contentIds?.teaserSummary;
 
         if (linkedObject.attributes?.teaser?.title) {
-          title = linkedObject.attributes.teaser.title;
+          title = linkedObject.attributes?.teaser?.title;
         } else {
           title = linkedObject.title;
         }
         if (linkedObject.attributes?.teaser?.summary) {
-          summary = linkedObject.attributes.teaser.summary;
+          summary = linkedObject.attributes?.teaser?.summary;
         } else {
           summary = linkedObject.summary;
         }

@@ -19,6 +19,7 @@ export type OverlayDataObj = {
     priority?: number;
     publicationTime: string;
   };
+  sys?: Record<string, any>;
 };
 
 export const priorityOptions = [

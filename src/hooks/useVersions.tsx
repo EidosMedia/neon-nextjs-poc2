@@ -3,18 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getVersions, getVersionsPanelOpened, setVersionPanelOpen, setVersions } from '@/lib/features/versionsSlice';
 import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
-const useVersions = ({ currentNode }: { currentNode: PageData<BaseModel> }) => {
+const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => {
   const dispatch = useDispatch();
 
-  const versions = useSelector(getVersions(currentNode?.model.data.id)) || [];
+  const versions = useSelector(getVersions(currentNode?.model?.data?.id || '')) || [];
 
   const loadHistory = async () => {
     try {
-      const response = await fetch(`/api/nodes/${currentNode.model.data.id}/versions`);
+      const response = await fetch(`/api/nodes/${currentNode?.model.data.id}/versions`);
       const jsonResp = await response.json();
 
       let filteredVersions: NodeVersion[];
-      if (currentNode.siteData.viewStatus === 'PREVIEW') {
+      if (currentNode?.siteData.viewStatus === 'PREVIEW') {
         filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.versionTimestamp != '-1');
       } else {
         filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.live && item.versionTimestamp != '-1');
@@ -22,7 +22,7 @@ const useVersions = ({ currentNode }: { currentNode: PageData<BaseModel> }) => {
 
       dispatch(
         setVersions({
-          id: currentNode.model.data.id,
+          id: currentNode?.model.data.id,
           versions: filteredVersions,
         })
       );
@@ -41,14 +41,14 @@ const useVersions = ({ currentNode }: { currentNode: PageData<BaseModel> }) => {
     if (currentNode) {
       loadHistory();
     }
-  }, [currentNode.model.id]);
+  }, [currentNode?.model?.id]);
 
   const getVersion = (canonicalUrl: string) => {
     if (versions.length === 0) {
       return 'LIVE';
     }
 
-    if (currentNode.model.data.url === new URL(versions[0]?.pubInfo.canonical).pathname) {
+    if (currentNode?.model.data.url === new URL(versions[0]?.pubInfo.canonical).pathname) {
       return 'LIVE';
     }
 

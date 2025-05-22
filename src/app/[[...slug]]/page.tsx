@@ -10,6 +10,7 @@ import SearchPage from '../_pages/SearchPage';
 import SectionWebPage from '../_pages/SectionWebPage';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
+import type { Metadata } from 'next';
 
 export default async function Page({
   params,
@@ -18,7 +19,6 @@ export default async function Page({
   params: Promise<{ slug: string[] }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-
   const currentHeaders = await headers();
 
   const hostname = currentHeaders.get('x-neon-backend-url');
@@ -27,19 +27,29 @@ export default async function Page({
   const id = (await searchParams)?.id;
 
   if (slug && slug.length === 1) {
-    const site = await connection.getSiteByName(siteName ?? "");
+    const site = await connection.getSiteByName(siteName ?? '');
+
     switch (slug[0]) {
       case 'search':
         if (site) {
-          return (<SearchPage data = {site}/>);
+          return (
+            <div className="root" data-theme={site.root.attributes?.theme}>
+              <LoggedUserBar data={{ siteData: site }} />
+              <SearchPage data={site} />
+            </div>
+          );
         }
       case 'about':
         if (site) {
-          return (<AboutPage data = {site}/>);
+          return (
+            <div className="root" data-theme={site.root.attributes?.theme}>
+              <LoggedUserBar data={{ siteData: site }} />
+              <AboutPage data={site} />
+            </div>
+          );
         }
     }
-   }
- 
+  }
 
   const cookiesFromRequest = await cookies();
   const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
@@ -116,4 +126,57 @@ export default async function Page({
       {resolvePage()}
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string[] }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<Metadata> {
+  const currentHeaders = await headers();
+
+  const hostname = currentHeaders.get('x-neon-backend-url');
+  const siteName = currentHeaders.get('x-neon-site-name');
+  const slug = (await params).slug || [];
+  const id = (await searchParams)?.id;
+
+  const cookiesFromRequest = await cookies();
+  const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+
+  const pageData = await fetch(
+    `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
+      id !== undefined ? (id ? `${id}` : '') : ''
+    }`,
+    {
+      redirect: 'manual',
+      headers: {
+        Authorization: `Bearer ${previewtoken}`,
+        'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+      },
+    }
+  );
+  const pageDataJSON = await pageData.json();
+  let title;
+
+  if (slug && slug.length === 1) {
+    switch (slug[0]) {
+      case 'search':
+        title = 'Search';
+        break;
+      case 'about':
+        title = 'About';
+        break;
+    }
+  }
+
+  if (!title) {
+    title = pageDataJSON.model.data.title;
+  }
+
+  return {
+    title: `${pageDataJSON.siteData.siteName} - ${title}`,
+    description: pageDataJSON.model.data.summary,
+  };
 }
