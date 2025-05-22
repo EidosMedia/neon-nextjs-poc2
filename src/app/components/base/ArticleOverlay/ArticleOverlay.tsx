@@ -19,7 +19,13 @@ export type OverlayDataObj = {
     priority?: number;
     publicationTime: string;
   };
-  sys?: Record<string, any>;
+  sys: {
+    lockedBy?: {
+      id: string;
+      name: string;
+    };
+    lockedTime: string;
+  };
 };
 
 export const priorityOptions = [
@@ -95,6 +101,13 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
             pubInfo: {
               priority: data.model.data.pubInfo?.priority,
               publicationTime: data.model.data.pubInfo?.publicationTime,
+            },
+            sys: {
+              lockedBy: {
+                id: data.model.data.sys?.lockedBy?.userId,
+                name: data.model.data.sys?.lockedBy?.userName,
+              },
+              lockedTime: data.model.data.sys?.lockedTime,
             },
           };
 
