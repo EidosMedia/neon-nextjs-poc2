@@ -52,12 +52,22 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture
                 />
               )}
             </div>
-            <ContentEditable key={key} articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
+            <ContentEditable
+              key={key}
+              articleId={linkedObject.id}
+              lockedBy={linkedObject.sys?.lockedBy}
+              showLockedByTooltip={false}
+            >
               <div id={titleId} className="text-black text-lg font-semibold font-source-sans leading-snug">
                 <p>{title}</p>
               </div>
             </ContentEditable>
-            <ContentEditable key={key1} articleId={linkedObject.id} lockedBy={linkedObject.sys?.lockedBy}>
+            <ContentEditable
+              key={key1}
+              articleId={linkedObject.id}
+              lockedBy={linkedObject.sys?.lockedBy}
+              showLockedByTooltip={false}
+            >
               <div id={summaryId} className="text-black text-xs font-normal font-source-sans leading-snug">
                 <p>{summary}</p>
               </div>
