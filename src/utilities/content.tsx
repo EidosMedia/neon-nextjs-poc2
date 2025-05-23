@@ -168,3 +168,15 @@ function convertStyleToObject(value: string): React.CSSProperties {
     return styleObj;
   }, {});
 }
+
+export const getPublicationDateString = (publicationTime: string) => {
+  const date = new Date(publicationTime);
+  return `${date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })} - ${date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })}`;
+};

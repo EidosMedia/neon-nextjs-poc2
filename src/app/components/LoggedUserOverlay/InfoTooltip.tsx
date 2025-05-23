@@ -64,7 +64,7 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
             </div>
             <div className="flex flex-col gap-1">
               <h5 className="font-semibold">Author</h5>
-              <p>{data.authors[0]}</p>
+              <p>{data.authors?.[0]}</p>
             </div>
           </div>
           {/* DIVIDER */}

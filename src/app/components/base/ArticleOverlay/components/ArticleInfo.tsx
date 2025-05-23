@@ -1,5 +1,6 @@
 import React from 'react';
 import { OverlayDataObj, priorityOptions } from '../ArticleOverlay';
+import { getPublicationDateString } from '@/utilities/content';
 
 type ArticleInfoProps = {
   width?: 'normal' | 'max';
@@ -10,18 +11,6 @@ const ArticleInfo: React.FC<ArticleInfoProps> = ({ width, overlayData }) => {
   const getPriorityString = (priority: number) => {
     const priorityOption = priorityOptions.find(option => option.value === priority);
     return priorityOption?.content;
-  };
-
-  const getPublicationDateString = (publicationTime: string) => {
-    const date = new Date(publicationTime);
-    return `${date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    })} - ${date.toLocaleTimeString('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })}`;
   };
 
   return (
