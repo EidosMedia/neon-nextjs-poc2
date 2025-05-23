@@ -157,7 +157,6 @@ export const getFamilyRef = (ref: string): string => {
 };
 
 function convertStyleToObject(value: string): React.CSSProperties {
-  console.log('value', value);
   return value.split(';').reduce((styleObj: React.CSSProperties, styleProp) => {
     const [property, val] = styleProp.split(':');
     if (property && val) {
