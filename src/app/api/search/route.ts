@@ -10,7 +10,14 @@ export async function GET(req: NextRequest) {
   const cookiesFromRequest = await cookies();
   const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
 
-  const url = req.nextUrl.searchParams.get("rag") === "true" ? '/api/search/natural' : '/api/search';
+  const ragsearch = req.nextUrl.searchParams.get("rag") === "true" 
+
+  const url = ragsearch ? '/api/search/natural' : '/api/search';
+
+  if (!ragsearch) {
+    req.nextUrl.searchParams.append('baseType', 'article')
+    req.nextUrl.searchParams.append('baseType', 'liveblog');
+  }
 
   const resp = await fetch(`${apiHostname}${url}?${req.nextUrl.searchParams}`, {
     headers: {
