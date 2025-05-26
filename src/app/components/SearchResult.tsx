@@ -315,7 +315,7 @@ const SearchResult = ({ data }: { data: Site }) => {
           formAction={handleAiSearch}
           disabled={!authorized || isLoading}
         >
-          Search with AI
+          AI Search
         </button>
         <button
           type="submit"
@@ -325,7 +325,7 @@ const SearchResult = ({ data }: { data: Site }) => {
           formAction={handleAiAsk}
           disabled={!authorized || isLoading} // Disable button if not authorized
         >
-          Ask to AI
+          AI Question
         </button>
       </form>
 
