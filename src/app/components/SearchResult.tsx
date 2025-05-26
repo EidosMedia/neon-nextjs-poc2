@@ -1,5 +1,10 @@
 'use client';
-import { PaginatedSearchRagResult, RagOnItemsResponse, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import {
+  PaginatedSearchRagResult,
+  PaginatedSearchResult,
+  RagOnItemsResponse,
+  Site,
+} from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -20,7 +25,7 @@ const SearchResult = ({ data }: { data: Site }) => {
   const query = useSearchParams();
   const [searchText, setSearchText] = useState('');
   const [authorized, setAuthorized] = useState(true);
-  const [selectedOption, setSelectedOption] = useState('Last Week');
+  const [selectedOption, setSelectedOption] = useState('Last Year');
   const [selectedResults, setSelectedResults] = useState<Map<string, string>>(new Map<string, string>());
   const options = ['Today', 'Last Week', 'Last Month', 'Last Quarter', 'Last Year'];
   const [isLoading, setLoading] = useState(true);
@@ -53,8 +58,8 @@ const SearchResult = ({ data }: { data: Site }) => {
     }
 
     if (queryCallParams.size >= 2 && queryCallParams.has('query') && queryCallParams.has('startDate')) {
-      const response = await fetch(`/api/search?${queryCallParams.toString()}`);
       setLoading(true);
+      const response = await fetch(`/api/search?${queryCallParams.toString()}`);
       setChat([]);
       setResult({} as PaginatedSearchRagResult);
       setSelectedResults(new Map<string, string>());
@@ -75,6 +80,42 @@ const SearchResult = ({ data }: { data: Site }) => {
 
   /** route client to server api exposed for natural search */
   const fetchNaturalSearch = async (queryParams: URLSearchParams) => {
+    const queryCallParams = new URLSearchParams();
+
+    if (queryParams.has('query')) {
+      queryCallParams.append('query', queryParams.get('query') ?? '');
+    }
+    if (queryParams.has('time')) {
+      queryCallParams.append('pastDays', optionToDays(queryParams.get('time') ?? ''));
+    }
+
+    queryCallParams.append('rag', 'false');
+
+    if (queryCallParams.size === 3 && queryCallParams.has('query') && queryCallParams.has('pastDays') && authorized) {
+      setLoading(true);
+      setChat([]);
+      setResult({} as PaginatedSearchRagResult);
+      setSelectedResults(new Map<string, string>());
+      const response = await fetch(`/api/search?${queryCallParams.toString()}`);
+      if (response.ok) {
+        const data = (await response.json()) as PaginatedSearchRagResult;
+
+        console.log('Fetched rag data:', data);
+        setResult(data);
+        setSelectedResults(new Map(data.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
+      } else {
+        console.log('Fetched rag data error', response);
+        setResult({} as PaginatedSearchRagResult);
+        setSelectedResults(new Map<string, string>());
+        if (response.status === 401 || response.status == 403) {
+          setAuthorized(false);
+        }
+      }
+    }
+    setLoading(false);
+  };
+
+  const fetchNaturalAsk = async (queryParams: URLSearchParams) => {
     const queryCallParams = new URLSearchParams();
 
     if (queryParams.has('query')) {
@@ -121,8 +162,12 @@ const SearchResult = ({ data }: { data: Site }) => {
       setSelectedOption(timeText);
     }
 
-    if (query.get('t') && query.get('t') === 'n') {
-      fetchNaturalSearch(query);
+    if (query.get('t')) {
+      if (query.get('t') === 'n') {
+        fetchNaturalSearch(query);
+      } else if (query.get('t') === 'a') {
+        fetchNaturalAsk(query);
+      }
     } else {
       fetchSearch(query);
     }
@@ -153,6 +198,17 @@ const SearchResult = ({ data }: { data: Site }) => {
     const queryParams = getQueryParams();
 
     queryParams.append('t', 'n');
+
+    // Update the URL with query parameters
+    router.push(`/search?${queryParams.toString()}`);
+  };
+
+  const handleAiAsk = async () => {
+    if (!searchText || searchText.trim() === '') return;
+
+    const queryParams = getQueryParams();
+
+    queryParams.append('t', 'a');
 
     // Update the URL with query parameters
     router.push(`/search?${queryParams.toString()}`);
@@ -266,7 +322,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             border: 'none', // Remove border
             borderRadius: '4px', // Rounded corners
             cursor: !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor on hover
-            width: '100px', // Fixed width
+            width: '140px', // Fixed width
             margin: '4px', // Space between buttons
           }}
           onClick={handleSearch}
@@ -283,13 +339,30 @@ const SearchResult = ({ data }: { data: Site }) => {
             border: 'none', // Remove border
             borderRadius: '4px', // Rounded corners
             cursor: authorized || !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor if authorized, not-allowed if not
-            width: '100px', // Fixed width
+            width: '140px', // Fixed width
             margin: '4px',
           }}
           onClick={handleAiSearch}
           disabled={!authorized || isLoading} // Disable button if not authorized
         >
-          AI Search
+          Search with AI
+        </button>
+        <button
+          type="submit"
+          style={{
+            padding: '8px 16px',
+            backgroundColor: authorized && !isLoading ? '#007BFF' : '#ccc', // Solid blue if authorized, gray if not
+            color: '#fff', // White text
+            border: 'none', // Remove border
+            borderRadius: '4px', // Rounded corners
+            cursor: authorized || !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor if authorized, not-allowed if not
+            width: '140px', // Fixed width
+            margin: '4px',
+          }}
+          onClick={handleAiAsk}
+          disabled={!authorized || isLoading} // Disable button if not authorized
+        >
+          Ask to AI
         </button>
       </div>
 
@@ -410,7 +483,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             ) : (
               <div style={{ marginTop: '16px' }}>
                 {!authorized && query.get('t') === 'n' ? (
-                  <p>You are not unauthorized to use AI features.</p>
+                  <p>You are not authorized to use AI features.</p>
                 ) : (
                   <p>No results found.</p>
                 )}
