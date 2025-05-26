@@ -32,9 +32,11 @@ const SearchResult = ({ data }: { data: Site }) => {
   const [isAsking, setAsking] = useState(false);
   const [chat, setChat] = useState<ChatRoundTrip[]>([]);
   const [questionText, setQuestionText] = useState('');
+  const [searchEnabled, setSearchEnabled] = useState(false);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
+    enableSearch(e.target.value, selectedOption);
   };
   const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuestionText(e.target.value);
@@ -42,7 +44,16 @@ const SearchResult = ({ data }: { data: Site }) => {
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(e.target.value);
+    enableSearch(searchText, e.target.value);
   };
+
+  function enableSearch(queryText: string, timeSlice: string) {
+    setSearchEnabled(
+      ((queryText.trim() != '' && !query.has('query')) ||
+        (queryText.trim() != '' && query.has('query') && queryText !== query.get('query'))) &&
+        (timeSlice.trim() != '' || query.get('time') !== timeSlice)
+    );
+  }
 
   /** route client to server api exposed for default search */
   const fetchSearch = async (queryParams: URLSearchParams) => {
@@ -157,10 +168,22 @@ const SearchResult = ({ data }: { data: Site }) => {
 
     if (queryText) {
       setSearchText(queryText);
+    } else {
+      setSearchText('');
+      setChat([]);
+      setResult({} as PaginatedSearchRagResult);
+      setSelectedResults(new Map<string, string>());
     }
     if (timeText) {
       setSelectedOption(timeText);
+    } else {
+      setSelectedOption('Last Year');
+      setChat([]);
+      setResult({} as PaginatedSearchRagResult);
+      setSelectedResults(new Map<string, string>());
     }
+
+    enableSearch(searchText, selectedOption);
 
     if (query.get('t')) {
       if (query.get('t') === 'n') {
@@ -187,6 +210,8 @@ const SearchResult = ({ data }: { data: Site }) => {
     if (!searchText || searchText.trim() === '') return;
 
     const queryParams = getQueryParams();
+
+    queryParams.delete('t');
 
     // Update the URL with query parameters
     router.push(`/search?${queryParams.toString()}`);
@@ -278,8 +303,8 @@ const SearchResult = ({ data }: { data: Site }) => {
             id="searchText"
             value={searchText}
             onChange={handleTextChange}
-            className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[600px] rounded"
-            placeholder="Enter search text"
+            className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[800px] rounded"
+            placeholder="Enter search text to enable search"
           />
 
           <label className="relative inline-flex items-center cursor-pointer">Time frame:</label>
@@ -287,7 +312,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             id="options"
             value={selectedOption}
             onChange={handleOptionChange}
-            className="px-2 py-1 border border-gray-300 rounded"
+            className="ml-2 px-2 py-1 border border-gray-300 rounded"
           >
             <option value="">Select an option</option>
             {options.map((option, index) => (
@@ -300,30 +325,34 @@ const SearchResult = ({ data }: { data: Site }) => {
         <button
           type="submit"
           className={`px-4 py-2 bg-blue-600 text-white rounded w-[100px] m-1 ${
-            isLoading ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'
+            isLoading || !searchEnabled ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'
           }`}
           formAction={handleSearch}
-          disabled={isLoading}
+          disabled={isLoading || !searchEnabled} // Disable button if not authorized or loading
         >
           Search
         </button>
         <button
           type="submit"
           className={`px-4 py-2 ${
-            authorized && !isLoading ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
+            authorized && !isLoading && searchEnabled
+              ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              : 'bg-gray-400 cursor-not-allowed'
           } text-white rounded w-[100px] m-1`}
           formAction={handleAiSearch}
-          disabled={!authorized || isLoading}
+          disabled={!authorized || isLoading || !searchEnabled}
         >
           AI Search
         </button>
         <button
           type="submit"
           className={`px-4 py-2 ${
-            authorized && !isLoading ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
+            authorized && !isLoading && searchEnabled
+              ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              : 'bg-gray-400 cursor-not-allowed'
           } text-white rounded w-[100px] m-1`}
           formAction={handleAiAsk}
-          disabled={!authorized || isLoading} // Disable button if not authorized
+          disabled={!authorized || isLoading || !searchEnabled} // Disable button if not authorized
         >
           AI Question
         </button>
@@ -342,14 +371,16 @@ const SearchResult = ({ data }: { data: Site }) => {
           <div className="mt-4 flex flex-col items-center">
             {result?.answer ? (
               <div className="mt-4 flex flex-col items-center">
-                <h2 className="text-xl font-bold mb-2 text-gray-800">AI Answer:</h2>
+                <h3 className="text-xl font-bold mb-2 mt-2 text-gray-800">AI Answer:</h3>
                 <p className="text-left italic">{result?.answer}</p>
 
-                <h3 className="text-lg font-bold mb-2 text-gray-800">Response references</h3>
+                <h3 className="text-xl font-bold mb-2 mt-2 text-gray-800">Response references</h3>
               </div>
             ) : (
               <div className="mt-4">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">Search Results:</h3>
+                <h3 className="text-xl font-bold mb-2 mt-2 text-gray-800">
+                  {query.has('t') ? 'AI Search Results' : 'Search Results'}
+                </h3>
               </div>
             )}
             {result?.count > 0 ? (
@@ -575,3 +606,5 @@ function optionToDays(selectedOption: string): string {
       return '7';
   }
 }
+
+
