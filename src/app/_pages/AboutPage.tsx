@@ -1,11 +1,11 @@
 import React from 'react';
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbarsite from '../components/Navbarsite';
+import Navbar from '../components/Navbar';
 
 const AboutPage = ({ data }: { data: Site }) => {
   return (
     <div className="container mx-auto max-w-2xl text-center">
-      <Navbarsite data={data} />
+      <Navbar data={{ siteNode: data.root }} />
       <h1 className="text-3xl font-bold my-2">
         Neon NextJS POC v2 {data.root.title} site's About Page
         <br />

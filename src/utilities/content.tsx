@@ -67,9 +67,9 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
     case 'overhead':
       return (
         <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
-          <h6 key={key} {...buildAttributes(content)}>
+          <h5 key={key} {...buildAttributes(content)} className="uppercase">
             {content.elements.map(elem => renderContent(elem, data))}
-          </h6>
+          </h5>
         </ContentEditable>
       );
     case 'grouphead':

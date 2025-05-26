@@ -40,7 +40,10 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   }
 
   return (
-    <div className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm">
+    <div
+      id="loggedUserBar"
+      className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm"
+    >
       <div className="flex items-center">
         <ViewStatus data={data} />
         <Switch label="Inspect items" checked={inspectItemsEnabled} onChange={toggleInspectItems} />
