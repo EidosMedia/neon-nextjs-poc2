@@ -269,32 +269,16 @@ const SearchResult = ({ data }: { data: Site }) => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column', // Stack elements vertically
-        height: '100vh', // Full viewport height
-        textAlign: 'center', // Center text alignment
-      }}
-    >
-      <div style={{ textAlign: 'center' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '16px',
-            paddingLeft: '8px',
-          }}
-        >
+    <div className="flex flex-col items-center h-screen text-center">
+      <form className="text-center">
+        <div className="flex items-center justify-center mb-4 pl-2">
           <label className="relative inline-flex items-center cursor-pointer">Search:</label>
           <input
             type="text"
             id="searchText"
             value={searchText}
             onChange={handleTextChange}
-            style={{ marginLeft: '8px', marginRight: '8px', border: '1px solid #ccc', padding: '1px', width: '600px' }}
+            className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[600px] rounded"
             placeholder="Enter search text"
           />
 
@@ -303,7 +287,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             id="options"
             value={selectedOption}
             onChange={handleOptionChange}
-            style={{ padding: '1px', border: '1px solid #ccc' }}
+            className="px-2 py-1 border border-gray-300 rounded"
           >
             <option value="">Select an option</option>
             {options.map((option, index) => (
@@ -315,86 +299,57 @@ const SearchResult = ({ data }: { data: Site }) => {
         </div>
         <button
           type="submit"
-          style={{
-            padding: '8px 16px',
-            backgroundColor: !isLoading ? '#007BFF' : '#ccc', // Solid blue background
-            color: '#fff', // White text
-            border: 'none', // Remove border
-            borderRadius: '4px', // Rounded corners
-            cursor: !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor on hover
-            width: '140px', // Fixed width
-            margin: '4px', // Space between buttons
-          }}
-          onClick={handleSearch}
+          className={`px-4 py-2 bg-blue-600 text-white rounded w-[100px] m-1 ${
+            isLoading ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'
+          }`}
+          formAction={handleSearch}
           disabled={isLoading}
         >
           Search
         </button>
         <button
           type="submit"
-          style={{
-            padding: '8px 16px',
-            backgroundColor: authorized && !isLoading ? '#007BFF' : '#ccc', // Solid blue if authorized, gray if not
-            color: '#fff', // White text
-            border: 'none', // Remove border
-            borderRadius: '4px', // Rounded corners
-            cursor: authorized || !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor if authorized, not-allowed if not
-            width: '140px', // Fixed width
-            margin: '4px',
-          }}
-          onClick={handleAiSearch}
-          disabled={!authorized || isLoading} // Disable button if not authorized
+          className={`px-4 py-2 ${
+            authorized && !isLoading ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
+          } text-white rounded w-[100px] m-1`}
+          formAction={handleAiSearch}
+          disabled={!authorized || isLoading}
         >
           Search with AI
         </button>
         <button
           type="submit"
-          style={{
-            padding: '8px 16px',
-            backgroundColor: authorized && !isLoading ? '#007BFF' : '#ccc', // Solid blue if authorized, gray if not
-            color: '#fff', // White text
-            border: 'none', // Remove border
-            borderRadius: '4px', // Rounded corners
-            cursor: authorized || !isLoading ? 'pointer' : 'not-allowed', // Pointer cursor if authorized, not-allowed if not
-            width: '140px', // Fixed width
-            margin: '4px',
-          }}
-          onClick={handleAiAsk}
+          className={`px-4 py-2 ${
+            authorized && !isLoading ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
+          } text-white rounded w-[100px] m-1`}
+          formAction={handleAiAsk}
           disabled={!authorized || isLoading} // Disable button if not authorized
         >
           Ask to AI
         </button>
-      </div>
+      </form>
 
       {
         /* Render search results */
         isLoading ? (
-          <div style={{ marginTop: '16px', justifyContent: 'center' }}>
-            <div style={{ marginTop: '16px', justifyContent: 'center', display: 'flex', alignItems: 'center' }}>
+          <div className="mt-4 flex flex-col items-center">
+            <div className="mt-4 flex justify-center items-center">
               <LoaderCircle className="animate-spin" />
             </div>
             <p>Loading data...</p>
           </div>
         ) : (
-          <div style={{ marginTop: '16px', alignItems: 'center' }}>
+          <div className="mt-4 flex flex-col items-center">
             {result?.answer ? (
-              <div style={{ marginTop: '16px', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-                  AI Answer:
-                </h2>
-                <p style={{ textAlign: 'left' }}>
-                  <i>{result?.answer}</i>
-                </p>
+              <div className="mt-4 flex flex-col items-center">
+                <h2 className="text-xl font-bold mb-2 text-gray-800">AI Answer:</h2>
+                <p className="text-left italic">{result?.answer}</p>
 
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-                  Response references
-                </h3>
+                <h3 className="text-lg font-bold mb-2 text-gray-800">Response references</h3>
               </div>
             ) : (
-              <div style={{ marginTop: '16px' }}>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-                  Search Results:
-                </h3>
+              <div className="mt-4">
+                <h3 className="text-xl font-bold mb-2 text-gray-800">Search Results:</h3>
               </div>
             )}
             {result?.count > 0 ? (
@@ -435,7 +390,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                   <div key={result.nodeData.id} className="grid grid-cols-1 md:grid-cols-1 gap-2">
                     <div className="col-span-1 relative group">
                       <ArticleOverlay data={data.root} viewStatus={data.viewStatus}>
-                        <div style={{ position: 'absolute', top: '8px', left: '8px', zIndex: 10 }}>
+                        <div className="absolute top-2 left-2 z-10">
                           <input
                             type="checkbox"
                             id="sel{index}"
@@ -481,7 +436,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                 );
               })
             ) : (
-              <div style={{ marginTop: '16px' }}>
+              <div className="mt-4">
                 {!authorized && query.get('t') === 'n' ? (
                   <p>You are not authorized to use AI features.</p>
                 ) : (
@@ -490,20 +445,18 @@ const SearchResult = ({ data }: { data: Site }) => {
               </div>
             )}
             {chat.length > 0 ? (
-              <div style={{ marginTop: '16px', textAlign: 'center' }}>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-                  AI Chat History:
-                </h3>
+              <div className="mt-4 text-center">
+                <h3 className="text-xl font-bold mb-2 text-gray-800">AI Chat History:</h3>
                 {chat.map((item, index) => (
-                  <div key={index} style={{ marginTop: '16px', marginBottom: '16px', textAlign: 'left' }}>
-                    <div style={{ fontSize: '1.1rem', marginTop: '4px', textAlign: 'left' }}>
+                  <div key={index} className="mt-4 mb-4 text-left">
+                    <div className="text-lg mt-1 text-left">
                       <p>
                         Question:
                         <br />
                         <b>{item.question}</b>
                       </p>
                     </div>
-                    <div style={{ fontSize: '1.1rem', marginTop: '4px', textAlign: 'right' }}>
+                    <div className="text-lg mt-1 text-right">
                       <p>
                         Answer:
                         <br />
@@ -514,32 +467,24 @@ const SearchResult = ({ data }: { data: Site }) => {
                 ))}
               </div>
             ) : (
-              <div style={{ marginTop: '16px' }}></div>
+              <div className="mt-4"></div>
             )}
             {authorized && selectedResults.size > 0 ? (
-              <div style={{ marginTop: '16px', textAlign: 'left' }}>
-                <ul style={{ marginBottom: '8px', color: '#333' }}>
+              <div className="mt-4 text-left">
+                <ul className="mb-2 text-gray-800">
                   <i>Using the set of select results:</i>
                   {Array.from(selectedResults.entries()).map(([key, value], index) => {
                     return (
-                      <li key={index} style={{ marginTop: '8px', marginLeft: '20px' }}>
+                      <li key={index} className="mt-2 ml-5">
                         <p>
-                          <span style={{ marginRight: '8px', color: 'black' }}>•</span>
+                          <span className="mr-2 text-black">•</span>
                           <i>{value}</i>
                         </p>
                       </li>
                     );
                   })}
                 </ul>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'left',
-                    marginBottom: '16px',
-                    paddingLeft: '8px',
-                  }}
-                >
+                <div className="flex items-center justify-start mb-4 pl-2">
                   <label className="relative inline-flex items-center cursor-pointer">
                     <b>Ask about that content:</b>
                   </label>
@@ -548,26 +493,14 @@ const SearchResult = ({ data }: { data: Site }) => {
                     id="questionText"
                     value={questionText}
                     onChange={handleQuestionTextChange}
-                    style={{
-                      marginLeft: '8px',
-                      marginRight: '8px',
-                      border: '1px solid #ccc',
-                      padding: '1px',
-                      width: '70%',
-                    }}
+                    className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[70%] rounded"
                     placeholder="Enter question about selected"
                   />
                   <button
                     type="button"
-                    style={{
-                      padding: '8px 16px',
-                      backgroundColor: !isAsking ? '#007BFF' : '#ccc',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: !isAsking ? 'pointer' : 'not-allowed', // Pointer cursor if authorized, not-allowed if not
-                      marginLeft: '8px',
-                    }}
+                    className={`px-4 py-2 ${
+                      !isAsking ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
+                    } text-white rounded ml-2`}
                     onClick={handleAnswerToSelection}
                     disabled={isAsking}
                   >
@@ -575,18 +508,18 @@ const SearchResult = ({ data }: { data: Site }) => {
                   </button>
                 </div>
                 {isAsking ? (
-                  <div style={{ textAlign: 'center', marginLeft: '8px' }}>
-                    <div style={{ marginTop: '16px', justifyContent: 'center', display: 'flex', alignItems: 'center' }}>
+                  <div className="text-center ml-2">
+                    <div className="mt-4 flex justify-center items-center">
                       <LoaderCircle className="animate-spin" />
                     </div>
                     <p>Asking...</p>
                   </div>
                 ) : (
-                  <div style={{ marginTop: '16px' }}></div>
+                  <div className="mt-4"></div>
                 )}
               </div>
             ) : (
-              <div style={{ marginTop: '16px' }}></div>
+              <div className="mt-4"></div>
             )}
           </div>
         )

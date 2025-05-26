@@ -77,6 +77,12 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
                 <p>{getPriorityString(data.pubInfo.priority)}</p>
               </div>
             )}
+            {data.pubInfo?.paywallLevel && (
+              <div className="flex flex-col gap-1">
+                <h5 className="font-semibold">Paywall</h5>
+                <p>{data.pubInfo.paywallLevel}</p>
+              </div>
+            )}
             <div className="flex flex-col gap-1">
               <h5 className="font-semibold">Publication Date</h5>
               <p className="text-nowrap">{getPublicationDateString(data.pubInfo.publicationTime)}</p>

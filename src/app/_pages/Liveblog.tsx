@@ -1,11 +1,10 @@
 import React from 'react';
 import { ArticleModel } from '@/types/models';
-import { ContentElement, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from '../components/Navbar';
 import { renderContent, findElementsInContentJson } from '@/utilities/content';
 import Grouphead from '../components/contentElements/Grouphead';
 import MainImage from '../components/contentElements/MainImage';
-import PromotionButton from '../components/PromotionButton';
 import LiveblogPosts from './LiveblogPosts';
 
 type PageProps = {
@@ -27,7 +26,6 @@ const Liveblog: React.FC<PageProps> = ({ data }) => {
       <div className="mt-5">
         {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0])}
       </div>
-      <PromotionButton data={articleData} viewStatus={data.siteData.viewStatus} />
       <LiveblogPosts data={data} />
     </article>
   );
