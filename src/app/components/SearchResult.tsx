@@ -222,7 +222,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             id="searchText"
             value={searchText}
             onChange={handleTextChange}
-            className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[400px] rounded"
+            className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[600px] rounded"
             placeholder="Enter search text"
           />
 
@@ -332,9 +332,9 @@ const SearchResult = ({ data }: { data: Site }) => {
                             defaultChecked={true}
                           />
                         </div>
-                        <Link className="no-underline" href={result.nodeData.url}>
-                          <ErrorBoundaryContainer>
-                            <div className="p-4 flex text-left">
+                        <ErrorBoundaryContainer>
+                          <Link className="no-underline" href={result.nodeData.url}>
+                            <div className="p-4 flex" style={{ textAlign: 'left' }}>
                               <div id="photo{index}" className="mr-4">
                                 <img
                                   alt="/static/img/nothumb.jpeg"
@@ -362,8 +362,8 @@ const SearchResult = ({ data }: { data: Site }) => {
                                 )}
                               </div>
                             </div>
-                          </ErrorBoundaryContainer>
-                        </Link>
+                          </Link>
+                        </ErrorBoundaryContainer>
                       </ArticleOverlay>
                     </div>
                   </div>

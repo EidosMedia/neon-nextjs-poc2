@@ -6,6 +6,7 @@ import Link from 'next/link';
 import ContentEditable from './utilities/ContentEditable';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ArticleOverlay from './base/ArticleOverlay';
+import { getPublicationDateString } from '@/utilities/content';
 
 type ArticleWepageProps = {
   data: PageData<WebpageModel>;
@@ -73,7 +74,7 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture
               </div>
             </ContentEditable>
             <div className="self-stretch text-[#5d5d5d] text-xs font-normal font-source-sans leading-snug">
-              {linkedObject.pubInfo.publicationTime}
+              {getPublicationDateString(linkedObject.pubInfo.publicationTime)}
             </div>
           </>
         );
