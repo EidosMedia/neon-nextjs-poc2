@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import { renderContent, findElementsInContentJson } from '@/utilities/content';
 import Grouphead from '../components/contentElements/Grouphead';
 import MainImage from '../components/contentElements/MainImage';
+import Footer from '../components/Footer';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -25,6 +26,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
       <div className="mt-5">
         {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0], articleData)}
       </div>
+      <Footer data={data}></Footer>
     </article>
   );
 };

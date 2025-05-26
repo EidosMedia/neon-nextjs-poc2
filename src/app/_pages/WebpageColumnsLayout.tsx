@@ -3,12 +3,11 @@ import { WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from '../components/Navbar';
 import ArticleWebpage from '../components/ArticleWebpage';
 import ArticleBanner from '../components/ArticleBanner';
-import WebpageFooter from '../components/WebpageFooter';
 import React from 'react';
 import Main from '../components/webpage/Main';
 import Context from '../components/webpage/Context';
 import Insight1 from '../components/webpage/Insight1';
-
+import Footer from '../components/Footer';
 type PageProps = {
   data: PageData<WebpageModel>;
 };
@@ -46,8 +45,8 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
         </div>
       </div>
 
-      <footer className="bg-gray-800 text-white p-4 rounded-b-lg mt-4">
-        <WebpageFooter data={data} />
+      <footer className="p-4 rounded-b-lg mt-4">
+        <Footer data={data} />
       </footer>
     </div>
   );
