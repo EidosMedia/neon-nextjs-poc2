@@ -1,9 +1,14 @@
-import React from 'react'
+'use client'
 import { Button } from './button'
-import { Copy, Edit, Ghost, Mail, Target } from 'lucide-react'
+import { Copy, Edit, Ghost, Mail } from 'lucide-react'
+import { notFound } from 'next/navigation'
 
 const TempEntryPage = () => {
-  
+
+    if (process.env.NODE_ENV !== 'development') {
+      notFound()
+    }
+
   return (
     <div className='flex'>
       <div className="flex gap-4 flex-col w-fit p-8 font-epilogue">
