@@ -1,17 +1,16 @@
 import { NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
+import { authenticationHeader } from '@/utilities/security';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const id = body?.id;
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
-
+    const authHeaders = await authenticationHeader(false);
+   
     const promoteContentLive = await connection.promoteContentLive({
       id: id,
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
+        ...authHeaders,
       },
       baseUrl: process.env.BASE_NEON_FE_URL || '',
     });
@@ -34,13 +33,12 @@ export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json();
     const id = body?.id;
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+    const authHeaders = await authenticationHeader(false);
 
     const unpromoteContentLive = await connection.unpromoteContentLive({
       id: id,
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
+        ...authHeaders,
       },
       baseUrl: process.env.BASE_NEON_FE_URL || '',
     });
