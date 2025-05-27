@@ -1,21 +1,16 @@
 import { NextRequest } from 'next/server';
-import { cookies, headers } from 'next/headers';
-import { getAPIHostnameConfig } from '../../../services/utils';
-import { SiteNode } from '@/neon-frontoffice-ts-sdk/src';
+import { authenticationHeader } from '@/utilities/security';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const id = body?.id;
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
-
-    const foundSite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
+    const authHeaders = await authenticationHeader(false);
 
     const promoteContentLive = await connection.promoteContentLive({
       id: id,
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
+        ...authHeaders,
       },
       sites: foundSite.root.name,
     });
@@ -38,15 +33,13 @@ export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json();
     const id = body?.id;
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
-    const foundSite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
+    const authHeaders = await authenticationHeader(false);
 
     const unpromoteContentLive = await connection.unpromoteContentLive({
       id: id,
       sites: foundSite.root.name,
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
+        ...authHeaders,
       },
     });
 

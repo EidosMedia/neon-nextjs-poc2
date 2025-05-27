@@ -1,7 +1,7 @@
 import { RagOnItemsResponse } from '@/neon-frontoffice-ts-sdk/src';
 import { getAPIHostnameConfig } from '@/services/utils';
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
+import { authenticationHeader } from '@/utilities/security';
 
 export async function POST(req: NextRequest) {
 
@@ -12,11 +12,10 @@ export async function POST(req: NextRequest) {
     const familyRefs : string[] = Array.isArray(body) ? body : [];
   
     const { apiHostname } = await getAPIHostnameConfig(req);
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+    const authHeaders = await authenticationHeader(true);
+    
     const headers = {
-      Authorization: `Bearer ${previewtoken}`,
-      'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+      ...authHeaders,
       'Content-Type': 'application/json'
     }
 
