@@ -64,7 +64,7 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
             </div>
             <div className="flex flex-col gap-1">
               <h5 className="font-semibold">Author</h5>
-              <p>{data.authors[0]}</p>
+              <p>{data.authors?.[0]}</p>
             </div>
           </div>
           {/* DIVIDER */}
@@ -75,6 +75,12 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
               <div className="flex flex-col gap-1">
                 <h5 className="font-semibold">Priority</h5>
                 <p>{getPriorityString(data.pubInfo.priority)}</p>
+              </div>
+            )}
+            {data.pubInfo?.paywallLevel && (
+              <div className="flex flex-col gap-1">
+                <h5 className="font-semibold">Paywall</h5>
+                <p>{data.pubInfo.paywallLevel}</p>
               </div>
             )}
             <div className="flex flex-col gap-1">

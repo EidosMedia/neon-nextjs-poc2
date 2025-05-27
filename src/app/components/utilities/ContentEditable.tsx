@@ -78,6 +78,9 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
 
   const handleCancel = (event?: React.MouseEvent) => {
     event?.stopPropagation();
+    if (divRef.current) {
+      divRef.current.innerHTML = previousContentString; // Reset to previous content
+    }
     setContentString(previousContentString);
     hideDivButtons(); // Hide buttons after cancel
     divRef.current?.blur(); // Remove focus from the div
@@ -123,8 +126,8 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
         ref={divRef}
         contentEditable={!!loggedUserInfo?.inspectItems}
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
-        onClick={showDivButtons}
-        onBlur={handleBlur}
+        onClick={!!loggedUserInfo?.inspectItems ? showDivButtons : undefined}
+        onBlur={!!loggedUserInfo?.inspectItems ? handleBlur : undefined}
         className={`relative rounded ${loggedUserInfo?.inspectItems ? 'border-1 border-blue-600' : ''}`}
         dangerouslySetInnerHTML={{ __html: contentString }}
         tabIndex={0}

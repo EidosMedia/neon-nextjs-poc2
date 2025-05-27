@@ -13,6 +13,7 @@
   --font-gabarito: "Gabarito", "sans-serif";
   --font-epilogue: "Epilogue", "sans-serif";
   --font-georgia: "Georgia", "serif";
+  --font-source-sans: "Source Sans 3", sans-serif;
 
   /* COLORS */
   --color-primary: #3969AC;
@@ -103,22 +104,22 @@
 }
 
 /* TYPOGRAPHY */
-h1 {
+h1, h1 p {
   @apply font-gabarito font-semibold text-[40px] leading-[124%] tracking-normal;
 }
-h2 {
+h2, h2 p {
   @apply font-gabarito font-semibold text-3xl leading-[124%] tracking-normal;
 }
-h3 {
+h3, h3 p {
   @apply font-gabarito font-semibold text-xl leading-[120%] tracking-normal;
 }
-h4 {
+h4, h4 p {
   @apply font-gabarito font-semibold text-base leading-[120%] tracking-normal;
 }
-h5 {
+h5, h5 p {
   @apply font-gabarito font-semibold text-sm leading-[120%] tracking-normal;
 }
-h6 {
+h6, h6 p{
   @apply font-gabarito font-semibold text-xs leading-[120%] tracking-normal;
 }
 
@@ -236,5 +237,18 @@ figcaption {
 /* Optional: Pause animation on hover */
 .scroll-content:hover {
   animation-play-state: paused;
+}
+
+#loggedUserBar * {
+  @apply font-source-sans text-base
+
+}
+
+[data-type="article-xl"] {
+  max-height: 470px;
+}
+
+[data-type="article-md"] {
+  max-height: 330px;
 }
 

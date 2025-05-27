@@ -1,4 +1,4 @@
-import { cookies, headers } from 'next/headers';
+import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import AboutPage from '../_pages/AboutPage';
 import Article from '../_pages/Article';
@@ -11,6 +11,7 @@ import SectionWebPage from '../_pages/SectionWebPage';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
+import { authenticationHeader } from '@/utilities/security';
 import TempEntryPage from '../components/baseComponents/TempEntryPage';
 
 export default async function Page({
@@ -59,8 +60,7 @@ export default async function Page({
     }
   }
 
-  const cookiesFromRequest = await cookies();
-  const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+  const authHeaders = await authenticationHeader(true);
 
   const pageData = await fetch(
     `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
@@ -69,9 +69,9 @@ export default async function Page({
     {
       redirect: 'manual',
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
-        'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+        ...authHeaders,
       },
+      cache: 'no-cache',
     }
   );
 
@@ -149,9 +149,7 @@ export async function generateMetadata({
   const siteName = currentHeaders.get('x-neon-site-name');
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
-
-  const cookiesFromRequest = await cookies();
-  const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+  const authHeaders = await authenticationHeader(true);
 
   const pageData = await fetch(
     `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
@@ -160,11 +158,12 @@ export async function generateMetadata({
     {
       redirect: 'manual',
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
-        'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+        ...authHeaders,
       },
+      cache: 'no-cache',
     }
   );
+
   const pageDataJSON = await pageData.json();
   let title;
 

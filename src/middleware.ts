@@ -62,7 +62,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (urlParams.get('neon.outputMode') === 'raw' && request.cookies.get('previewtoken')) {
+  if (urlParams.get('neon.outputMode')?.toLowerCase() === 'raw' && request.cookies.get('previewtoken')) {
     const url = request.nextUrl.clone();
     url.pathname = `/api/proxy${url.pathname}`;
     return NextResponse.rewrite(url);

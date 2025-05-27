@@ -67,9 +67,9 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
     case 'overhead':
       return (
         <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
-          <h6 key={key} {...buildAttributes(content)}>
+          <h5 key={key} {...buildAttributes(content)} className="uppercase">
             {content.elements.map(elem => renderContent(elem, data))}
-          </h6>
+          </h5>
         </ContentEditable>
       );
     case 'grouphead':
@@ -157,7 +157,6 @@ export const getFamilyRef = (ref: string): string => {
 };
 
 function convertStyleToObject(value: string): React.CSSProperties {
-  console.log('value', value);
   return value.split(';').reduce((styleObj: React.CSSProperties, styleProp) => {
     const [property, val] = styleProp.split(':');
     if (property && val) {
@@ -168,3 +167,15 @@ function convertStyleToObject(value: string): React.CSSProperties {
     return styleObj;
   }, {});
 }
+
+export const getPublicationDateString = (publicationTime: string) => {
+  const date = new Date(publicationTime);
+  return `${date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })} - ${date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })}`;
+};
