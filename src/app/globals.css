@@ -17,11 +17,11 @@
   /* COLORS */
   --color-primary: #3969AC;
   --color-primary-dark: #1D3557;
-  --color-primary-light: #81A4D5;
-  --color-primary-lightest: #D5E1F1;
+  --color-primary-light: #83A5D6;
+  --color-primary-lightest: #D5E1F0;
 
-  --color-neutral-primary: #BC79D8;
-  --color-neutral-light: #AFAFAF;
+  --color-neutral-primary: #2F2F2F;
+  --color-neutral-light: #B0B0B0;
   --color-neutral-lightest: #FFFFFF;
 
   --color-feedback-red: #D22D2D;
