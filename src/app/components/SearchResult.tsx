@@ -420,15 +420,15 @@ const SearchResult = ({ data }: { data: Site }) => {
                 return (
                   <div key={result.nodeData.id} className="grid grid-cols-1 md:grid-cols-1 gap-2">
                     <div className="col-span-1 relative group">
+                      <div className="absolute top-2 left-2 z-10">
+                        <input
+                          type="checkbox"
+                          id="sel{index}"
+                          onChange={changeSelected(`sel${index}`, result.nodeData.id, title)}
+                          defaultChecked={true}
+                        />
+                      </div>
                       <ArticleOverlay data={data.root} viewStatus={data.viewStatus}>
-                        <div className="absolute top-2 left-2 z-10">
-                          <input
-                            type="checkbox"
-                            id="sel{index}"
-                            onChange={changeSelected(`sel${index}`, result.nodeData.id, title)}
-                            defaultChecked={true}
-                          />
-                        </div>
                         <ErrorBoundaryContainer>
                           <Link className="no-underline" href={result.nodeData.url}>
                             <div className="p-4 flex" style={{ textAlign: 'left' }}>
@@ -606,5 +606,3 @@ function optionToDays(selectedOption: string): string {
       return '7';
   }
 }
-
-

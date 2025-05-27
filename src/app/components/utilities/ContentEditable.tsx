@@ -78,7 +78,9 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
 
   const handleCancel = (event?: React.MouseEvent) => {
     event?.stopPropagation();
-    divRef.current.innerHTML = previousContentString; // Reset to previous content
+    if (divRef.current) {
+      divRef.current.innerHTML = previousContentString; // Reset to previous content
+    }
     setContentString(previousContentString);
     hideDivButtons(); // Hide buttons after cancel
     divRef.current?.blur(); // Remove focus from the div

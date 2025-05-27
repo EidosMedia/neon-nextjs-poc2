@@ -240,6 +240,15 @@ figcaption {
 }
 
 #loggedUserBar * {
-  @apply font-source-sans
+  @apply font-source-sans text-base
+
+}
+
+[data-type="article-xl"] {
+  max-height: 470px;
+}
+
+[data-type="article-md"] {
+  max-height: 330px;
 }
 

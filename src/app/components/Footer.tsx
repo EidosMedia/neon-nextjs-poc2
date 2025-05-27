@@ -4,7 +4,7 @@ import Logo from './Logo';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import FooterMenu from './FooterMenu';
 
-export default async function Footer({ data }: { data: PageData<BaseModel> }) {
+export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   return (
     <div className="w-full">
       {/* Blue line */}
@@ -12,7 +12,7 @@ export default async function Footer({ data }: { data: PageData<BaseModel> }) {
       {/* Logo and site name */}
       <div className="flex items-center space-x-2 py-4">
         <Logo data={data} size="small" />
-        <span className="font-semibold text-lg">{data.siteNode.name}</span>
+        <span className="font-semibold text-lg">{data.siteNode?.title}</span>
       </div>
       {/* 70% - 30% split section */}
       <div className="flex w-full">

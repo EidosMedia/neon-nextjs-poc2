@@ -5,6 +5,7 @@ import Main from '../components/webpage/Main';
 import Context from '../components/webpage/Context';
 import Insight1 from '../components/webpage/Insight1';
 import Insight2 from '../components/webpage/Insight2';
+import Footer from '../components/Footer';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -34,6 +35,7 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
           <Insight2 data={data} />
         </div>
       </div>
+      <Footer data={data} />
     </div>
   );
 };

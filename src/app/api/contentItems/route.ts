@@ -8,11 +8,11 @@ export async function POST(request: NextRequest) {
     const contentItemId = body?.contentItemId;
     const payload = body?.payload;
     const authHeaders = await authenticationHeader(false);
-  
+
     const headers = {
-       ...authHeaders,
-        'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
-    }
+      Authorization: authHeaders.Authorization as string,
+      // 'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
+    };
 
     const updateContentItem = await connection.updateContentItem({
       id: id,
