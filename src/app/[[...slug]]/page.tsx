@@ -65,6 +65,7 @@ export default async function Page({
         Authorization: `Bearer ${previewtoken}`,
         'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
       },
+      cache: 'no-cache',
     }
   );
 
@@ -156,8 +157,10 @@ export async function generateMetadata({
         Authorization: `Bearer ${previewtoken}`,
         'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
       },
+      cache: 'no-cache',
     }
   );
+
   const pageDataJSON = await pageData.json();
   let title;
 
