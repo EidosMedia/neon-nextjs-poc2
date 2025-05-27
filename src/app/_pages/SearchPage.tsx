@@ -1,5 +1,4 @@
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbarsite from '../components/Navbarsite';
 import SearchResult from '../components/SearchResult';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';

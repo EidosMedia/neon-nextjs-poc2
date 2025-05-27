@@ -1,16 +1,12 @@
 'use client';
-import {
-  PaginatedSearchRagResult,
-  PaginatedSearchResult,
-  RagOnItemsResponse,
-  Site,
-} from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PaginatedSearchRagResult, RagOnItemsResponse, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ArticleOverlay from './base/ArticleOverlay';
 import { LoaderCircle } from 'lucide-react';
 import ErrorBoundaryContainer from './base/ErrorBoundaryContainer/ErrorBoundaryContainer';
+import { Button } from './baseComponents/button';
 
 type ChatRoundTrip = {
   titles: string[];
@@ -294,7 +290,7 @@ const SearchResult = ({ data }: { data: Site }) => {
   };
 
   return (
-    <div className="flex flex-col items-center h-screen text-center">
+    <div className="flex flex-col items-center text-center">
       <form className="text-center">
         <div className="flex items-center justify-center mb-4 pl-2">
           <label className="relative inline-flex items-center cursor-pointer">Search:</label>
@@ -322,40 +318,25 @@ const SearchResult = ({ data }: { data: Site }) => {
             ))}
           </select>
         </div>
-        <button
-          type="submit"
-          className={`px-4 py-2 bg-blue-600 text-white rounded w-[100px] m-1 ${
-            isLoading || !searchEnabled ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'
-          }`}
-          formAction={handleSearch}
-          disabled={isLoading || !searchEnabled} // Disable button if not authorized or loading
-        >
-          Search
-        </button>
-        <button
-          type="submit"
-          className={`px-4 py-2 ${
-            authorized && !isLoading && searchEnabled
-              ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
-              : 'bg-gray-400 cursor-not-allowed'
-          } text-white rounded w-[100px] m-1`}
-          formAction={handleAiSearch}
-          disabled={!authorized || isLoading || !searchEnabled}
-        >
-          AI Search
-        </button>
-        <button
-          type="submit"
-          className={`px-4 py-2 ${
-            authorized && !isLoading && searchEnabled
-              ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
-              : 'bg-gray-400 cursor-not-allowed'
-          } text-white rounded w-[100px] m-1`}
-          formAction={handleAiAsk}
-          disabled={!authorized || isLoading || !searchEnabled} // Disable button if not authorized
-        >
-          AI Question
-        </button>
+        <div className="flex items-center justify-center mb-4 pl-2 gap-2">
+          <Button
+            type="submit"
+            formAction={handleSearch}
+            disabled={isLoading || !searchEnabled} // Disable button if not authorized or loading
+          >
+            Search
+          </Button>
+          <Button type="submit" formAction={handleAiSearch} disabled={!authorized || isLoading || !searchEnabled}>
+            AI Search
+          </Button>
+          <Button
+            type="submit"
+            formAction={handleAiAsk}
+            disabled={!authorized || isLoading || !searchEnabled} // Disable button if not authorized
+          >
+            AI Question
+          </Button>
+        </div>
       </form>
 
       {
@@ -527,16 +508,16 @@ const SearchResult = ({ data }: { data: Site }) => {
                     className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[70%] rounded"
                     placeholder="Enter question about selected"
                   />
-                  <button
+                  <Button
                     type="button"
-                    className={`px-4 py-2 ${
-                      !isAsking ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
-                    } text-white rounded ml-2`}
+                    // className={`px-4 py-2 ${
+                    //   !isAsking ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
+                    // } text-white rounded ml-2`}
                     onClick={handleAnswerToSelection}
                     disabled={isAsking}
                   >
                     Ask
-                  </button>
+                  </Button>
                 </div>
                 {isAsking ? (
                   <div className="text-center ml-2">

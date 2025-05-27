@@ -3,7 +3,8 @@ import Logo from './Logo';
 import { BaseModel, PageData, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
 import { headers } from 'next/headers';
-import { Hamburger, HamburgerIcon, Menu, Search } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
+import { Button } from './baseComponents/button';
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   if (!data.siteNode || !data.siteNode.name) {
@@ -25,16 +26,16 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       <div className="container mx-auto px-4 h-full flex flex-col gap-3">
         <div className="w-full rounded mt-8 flex justify-between items-center p-4">
           <div className="flex gap-2">
-            <button className="flex items-center justify-center w-10 h-10">
+            <Button variant="ghost">
               <Menu />
-            </button>
+            </Button>
             <Link href="/search" className="flex items-center justify-center w-10 h-10">
               <Search />
             </Link>
           </div>
           <div className="flex gap-2">
-            <button className="">Subscribe</button>
-            <button>Login</button>
+            <Button variant="default">Subscribe</Button>
+            <Button variant="secondary">Login</Button>
           </div>
         </div>
         <div className="flex justify-center items-center gap-4">
