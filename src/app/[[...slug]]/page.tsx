@@ -11,6 +11,7 @@ import SectionWebPage from '../_pages/SectionWebPage';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
+import TempEntryPage from '../components/baseComponents/TempEntryPage';
 
 export default async function Page({
   params,
@@ -31,6 +32,12 @@ export default async function Page({
     const site = await connection.getSiteByName(siteName ?? '');
 
     switch (slug[0]) {
+      case 'ui':
+        
+          return (
+            <TempEntryPage />
+          );
+        
       case 'search':
         if (site) {
           return (
