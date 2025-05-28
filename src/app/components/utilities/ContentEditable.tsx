@@ -4,7 +4,6 @@ import { X, Check, LockKeyhole } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ReactDOMServer from 'react-dom/server';
 import { isString } from 'lodash';
-import { isNeonAppPreview } from '@/neon-frontoffice-ts-sdk/src';
 
 type ContentEditableProps = {
   articleId?: string;
@@ -98,7 +97,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
     <div key={key} className="relative group">
       <div className="flex items-center">
         {children}
-        {showLockedByTooltip && loggedUserInfo?.inspectItems && !isNeonAppPreview() && (
+        {showLockedByTooltip && loggedUserInfo?.inspectItems && !loggedUserInfo?.preview && (
           <>
             <span
               className="ml-2 relative"
@@ -125,7 +124,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       <div
         key={key}
         ref={divRef}
-        contentEditable={!!loggedUserInfo?.inspectItems || !isNeonAppPreview()}
+        contentEditable={!!loggedUserInfo?.inspectItems || !loggedUserInfo?.preview}
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
         onClick={!!loggedUserInfo?.inspectItems ? showDivButtons : undefined}
         onBlur={!!loggedUserInfo?.inspectItems ? handleBlur : undefined}
