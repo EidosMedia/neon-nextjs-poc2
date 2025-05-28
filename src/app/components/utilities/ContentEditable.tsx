@@ -97,7 +97,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
     <div key={key} className="relative group">
       <div className="flex items-center">
         {children}
-        {showLockedByTooltip && loggedUserInfo?.inspectItems && (
+        {showLockedByTooltip && loggedUserInfo?.inspectItems && !loggedUserInfo?.preview && (
           <>
             <span
               className="ml-2 relative"
@@ -124,7 +124,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       <div
         key={key}
         ref={divRef}
-        contentEditable={!!loggedUserInfo?.inspectItems}
+        contentEditable={!!loggedUserInfo?.inspectItems && !loggedUserInfo?.preview}
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
         onClick={!!loggedUserInfo?.inspectItems ? showDivButtons : undefined}
         onBlur={!!loggedUserInfo?.inspectItems ? handleBlur : undefined}

@@ -5,6 +5,26 @@ import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import FooterMenu from './FooterMenu';
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
+  const site = await connection.getSiteByName(data.siteNode?.name || '');
+  if (!site) {
+    throw new Error('Site not found');
+  }
+
+  const menus = site.menus;
+  console.log('Menus:', menus);
+
+  // Helper to flatten children for links
+  function flattenLinks(items: any[]): any[] {
+    if (!Array.isArray(items)) return [];
+    return items.map(child => ({
+      label: child.label,
+      href: child.url || child.ref || '#',
+    }));
+  }
+
+  // Only consider the "Footer" menu
+  const footerMenu = menus?.Footer;
+
   return (
     <div className="w-full">
       {/* Blue line */}
@@ -12,55 +32,16 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
       {/* Logo and site name */}
       <div className="flex items-center space-x-2 py-4">
         <Logo data={data} size="small" />
-        <span className="font-semibold text-lg">{data.siteNode?.title}</span>
+        <span className="font-semibold text-lg">{data.siteNode?.name}</span>
       </div>
       {/* 70% - 30% split section */}
       <div className="flex w-full">
         <div className="w-[70%] p-4">
           {/* Left 70% content */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            <FooterMenu
-              title="Section 1"
-              links={[
-                { label: 'Link 1', href: '#' },
-                { label: 'Link 2', href: '#' },
-              ]}
-            />
-            <FooterMenu
-              title="Section 2"
-              links={[
-                { label: 'Link 1', href: '#' },
-                { label: 'Link 2', href: '#' },
-              ]}
-            />
-            <FooterMenu
-              title="Section 3"
-              links={[
-                { label: 'Link 1', href: '#' },
-                { label: 'Link 2', href: '#' },
-              ]}
-            />
-            <FooterMenu
-              title="Section 4"
-              links={[
-                { label: 'Link 1', href: '#' },
-                { label: 'Link 2', href: '#' },
-              ]}
-            />
-            <FooterMenu
-              title="Section 5"
-              links={[
-                { label: 'Link 1', href: '#' },
-                { label: 'Link 2', href: '#' },
-              ]}
-            />
-            <FooterMenu
-              title="Section 6"
-              links={[
-                { label: 'Link 1', href: '#' },
-                { label: 'Link 2', href: '#' },
-              ]}
-            />
+            {footerMenu?.items?.map((item: any, idx: number) => (
+              <FooterMenu key={item.ref || idx} title={item.label} links={flattenLinks(item.items)} />
+            ))}
           </div>
         </div>
         {/* Vertical blue line */}
@@ -69,6 +50,11 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
           {/* Right 30% content */}
           <div>
             <div className="mb-6">
+              <div className="font-bold mb-2">
+                <a href="/about" className="hover:underline">
+                  About
+                </a>
+              </div>
               <div className="font-bold mb-2">Account</div>
               <ul className="space-y-3 pl-4">
                 <li>

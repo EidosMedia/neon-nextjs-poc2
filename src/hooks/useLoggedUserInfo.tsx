@@ -7,12 +7,14 @@ import {
   setInspectItems as setInspectItemsAction,
 } from '@/lib/features/loggedUserSlice';
 import { useEffect, useState } from 'react';
+import { isNeonAppPreview } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 const useLoggedUserInfo = () => {
   const dispatch = useDispatch();
   const inspectItems = useSelector(getInspectItems);
 
   const analyticsData = useSelector(getAnalytics);
+  const [preview, setPreview] = useState(false);
 
   const setInspectItems = (value: boolean) => {
     dispatch(setInspectItemsAction(value));
@@ -21,6 +23,8 @@ const useLoggedUserInfo = () => {
   useEffect(() => {
     const initialItemsData = localStorage.getItem('inspectItems') === 'true';
     setInspectItems(initialItemsData);
+    setPreview(isNeonAppPreview());
+
     const onChangeStorage = (event: StorageEvent) => {
       if (event.key === 'inspectItems') {
         const newValue = event.newValue === 'true';
@@ -44,6 +48,7 @@ const useLoggedUserInfo = () => {
     data: {
       inspectItems,
       analytics: analyticsData,
+      preview: preview,
     },
     changeInspectItems,
   };

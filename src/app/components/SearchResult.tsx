@@ -1,16 +1,13 @@
 'use client';
-import {
-  PaginatedSearchRagResult,
-  PaginatedSearchResult,
-  RagOnItemsResponse,
-  Site,
-} from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PaginatedSearchRagResult, RagOnItemsResponse, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ArticleOverlay from './base/ArticleOverlay';
 import { LoaderCircle } from 'lucide-react';
 import ErrorBoundaryContainer from './base/ErrorBoundaryContainer/ErrorBoundaryContainer';
+import { Button } from './baseComponents/button';
+import SearchResultItem from './SearchResultItem';
 
 type ChatRoundTrip = {
   titles: string[];
@@ -294,68 +291,56 @@ const SearchResult = ({ data }: { data: Site }) => {
   };
 
   return (
-    <div className="flex flex-col items-center h-screen text-center">
+    <div className="grid items-center text-center">
       <form className="text-center">
-        <div className="flex items-center justify-center mb-4 pl-2">
-          <label className="relative inline-flex items-center cursor-pointer">Search:</label>
-          <input
-            type="text"
-            id="searchText"
-            value={searchText}
-            onChange={handleTextChange}
-            className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[800px] rounded"
-            placeholder="Enter search text to enable search"
-          />
-
-          <label className="relative inline-flex items-center cursor-pointer">Time frame:</label>
-          <select
-            id="options"
-            value={selectedOption}
-            onChange={handleOptionChange}
-            className="ml-2 px-2 py-1 border border-gray-300 rounded"
-          >
-            <option value="">Select an option</option>
-            {options.map((option, index) => (
-              <option key={index} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center justify-center mb-4 pl-2 flex-col md:flex-row">
+          <div className="flex grow-1">
+            <label className="relative inline-flex items-center cursor-pointer">Search:</label>
+            <input
+              type="text"
+              id="searchText"
+              value={searchText}
+              onChange={handleTextChange}
+              className="ml-2 mr-2 border border-gray-300 px-2 py-1 grow-1 rounded"
+              placeholder="Enter search text to enable search"
+            />
+          </div>
+          <div>
+            <label className="relative inline-flex items-center cursor-pointer">Time frame:</label>
+            <select
+              id="options"
+              value={selectedOption}
+              onChange={handleOptionChange}
+              className="ml-2 px-2 py-1 border border-gray-300 rounded"
+            >
+              <option value="">Select an option</option>
+              {options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        <button
-          type="submit"
-          className={`px-4 py-2 bg-blue-600 text-white rounded w-[100px] m-1 ${
-            isLoading || !searchEnabled ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'
-          }`}
-          formAction={handleSearch}
-          disabled={isLoading || !searchEnabled} // Disable button if not authorized or loading
-        >
-          Search
-        </button>
-        <button
-          type="submit"
-          className={`px-4 py-2 ${
-            authorized && !isLoading && searchEnabled
-              ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
-              : 'bg-gray-400 cursor-not-allowed'
-          } text-white rounded w-[100px] m-1`}
-          formAction={handleAiSearch}
-          disabled={!authorized || isLoading || !searchEnabled}
-        >
-          AI Search
-        </button>
-        <button
-          type="submit"
-          className={`px-4 py-2 ${
-            authorized && !isLoading && searchEnabled
-              ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
-              : 'bg-gray-400 cursor-not-allowed'
-          } text-white rounded w-[100px] m-1`}
-          formAction={handleAiAsk}
-          disabled={!authorized || isLoading || !searchEnabled} // Disable button if not authorized
-        >
-          AI Question
-        </button>
+        <div className="flex items-center justify-center mb-4 pl-2 gap-2">
+          <Button
+            type="submit"
+            formAction={handleSearch}
+            disabled={isLoading || !searchEnabled} // Disable button if not authorized or loading
+          >
+            Search
+          </Button>
+          <Button type="submit" formAction={handleAiSearch} disabled={!authorized || isLoading || !searchEnabled}>
+            AI Search
+          </Button>
+          <Button
+            type="submit"
+            formAction={handleAiAsk}
+            disabled={!authorized || isLoading || !searchEnabled} // Disable button if not authorized
+          >
+            AI Question
+          </Button>
+        </div>
       </form>
 
       {
@@ -428,40 +413,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                           defaultChecked={true}
                         />
                       </div>
-                      <ArticleOverlay data={data.root} viewStatus={data.viewStatus}>
-                        <ErrorBoundaryContainer>
-                          <Link className="no-underline" href={result.nodeData.url}>
-                            <div className="p-4 flex" style={{ textAlign: 'left' }}>
-                              <div id="photo{index}" className="mr-4">
-                                <img
-                                  alt="/static/img/nothumb.jpeg"
-                                  width="200"
-                                  height="200"
-                                  decoding="async"
-                                  data-nimg="1"
-                                  src={
-                                    result.nodeData.links?.system?.mainPicture[0]?.dynamicCropsResourceUrls
-                                      .Portrait_small
-                                  }
-                                  className="w-48 h-48 object-cover"
-                                  style={{ color: 'transparent' }}
-                                />
-                              </div>
-                              <div id="item{index}" className="flex-1">
-                                <h6 className="text-xl font-semibold">{title}</h6>
-                                <p className="text-base">{summary}</p>
-                                {result.highlights && result.highlights['_full_text.content.all'] ? (
-                                  result.highlights['_full_text.content.all'].map((reference, idx) => (
-                                    <p key={idx}>... {reference.replaceAll('\n', ' ')} ...</p>
-                                  ))
-                                ) : (
-                                  <p />
-                                )}
-                              </div>
-                            </div>
-                          </Link>
-                        </ErrorBoundaryContainer>
-                      </ArticleOverlay>
+                      <SearchResultItem result={result} data={data} />
                     </div>
                   </div>
                 );
@@ -527,16 +479,16 @@ const SearchResult = ({ data }: { data: Site }) => {
                     className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[70%] rounded"
                     placeholder="Enter question about selected"
                   />
-                  <button
+                  <Button
                     type="button"
-                    className={`px-4 py-2 ${
-                      !isAsking ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
-                    } text-white rounded ml-2`}
+                    // className={`px-4 py-2 ${
+                    //   !isAsking ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
+                    // } text-white rounded ml-2`}
                     onClick={handleAnswerToSelection}
                     disabled={isAsking}
                   >
                     Ask
-                  </button>
+                  </Button>
                 </div>
                 {isAsking ? (
                   <div className="text-center ml-2">
