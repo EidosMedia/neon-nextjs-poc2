@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       headers: {
         Authorization: `Bearer ${previewtoken}`,
       },
-      baseUrl: process.env.BASE_NEON_FE_URL || '',
+      baseUrl: process.env.BASE_NEON_FO_URL || '',
     });
     return Response.json({ ...promoteContentLive });
   } catch (error) {
@@ -42,7 +42,7 @@ export async function DELETE(request: NextRequest) {
       headers: {
         Authorization: `Bearer ${previewtoken}`,
       },
-      baseUrl: process.env.BASE_NEON_FE_URL || '',
+      baseUrl: process.env.BASE_NEON_FO_URL || '',
     });
     return Response.json({ ...unpromoteContentLive });
   } catch (error) {

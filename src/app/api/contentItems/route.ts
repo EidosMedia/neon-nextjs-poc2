@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${previewtoken}`,
         'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
       },
-      baseUrl: process.env.BASE_NEON_FE_URL || '',
+      baseUrl: process.env.BASE_NEON_FO_URL || '',
     });
     return Response.json({ ...updateContentItem });
   } catch (error) {

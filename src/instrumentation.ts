@@ -12,8 +12,8 @@ export async function register() {
   //   // await require('next-logger');
   // }
 
-  if (!process.env.BASE_NEON_FE_URL) {
-    throw new Error('BASE_NEON_FE_URL not specified in any .env file');
+  if (!process.env.BASE_NEON_FO_URL) {
+    throw new Error('BASE_NEON_FO_URL not specified in any .env file');
   }
 
   if (!process.env.NEON_FRONTOFFICE_SERVICE_KEY) {
@@ -21,7 +21,8 @@ export async function register() {
   }
 
   const connection = new NeonConnection({
-    neonFeUrl: process.env.BASE_NEON_FE_URL,
+    
+    neonFoUrl: process.env.BASE_NEON_FO_URL,
     frontOfficeServiceKey: process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
   });
 
