@@ -1,8 +1,14 @@
 import Link from 'next/link';
 import ArticleOverlay from './base/ArticleOverlay';
 import ErrorBoundaryContainer from './base/ErrorBoundaryContainer/ErrorBoundaryContainer';
+import { Key } from 'react';
 
-const SearchResultItem = ({ result, data }) => {
+type SearchResultItemProps = {
+  result: any; // Replace 'any' with a more specific type if available
+  data: any; // Replace 'any' with a more specific type if available
+};
+
+const SearchResultItem = ({ result, data }: SearchResultItemProps) => {
   var title, summary;
   if (result.nodeData.attributes?.teaser?.title) {
     title = result.nodeData.attributes.teaser.title;
@@ -40,7 +46,7 @@ const SearchResultItem = ({ result, data }) => {
                 <span dangerouslySetInnerHTML={{ __html: summary }} />
               </p>
               {result.highlights && result.highlights['_full_text.content.all'] ? (
-                result.highlights['_full_text.content.all'].map((reference, idx) => (
+                result.highlights['_full_text.content.all'].map((reference: string, idx: Key | null | undefined) => (
                   <p key={idx}>
                     ...
                     <span dangerouslySetInnerHTML={{ __html: reference.replaceAll('\n', ' ') }} />
