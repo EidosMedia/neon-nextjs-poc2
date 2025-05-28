@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const headers = {
       Authorization: authHeaders.Authorization as string,
-      // 'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
+      'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
     };
 
     const updateContentItem = await connection.updateContentItem({

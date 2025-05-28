@@ -4,6 +4,7 @@ import { Copy, Edit, Ghost, Mail, Search } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { Input } from './textInput'
 import Select from './select'
+import { ReactNode } from 'react';
 
 const TempEntryPage = () => {
 
@@ -86,16 +87,24 @@ const TempEntryPage = () => {
   )
 }
 
-export const ComponentsContainer = ({className, children, title}) => {
+type ComponentsContainerProps = {
+  className?: string;
+  children: ReactNode;
+  title: string;
+};
+
+export const ComponentsContainer = ({ className = '', children, title }: ComponentsContainerProps) => {
   return (
     <>
-      <h2 className='text-fuchsia-800'>{title}</h2>
+      <h2 className="text-fuchsia-800">{title}</h2>
       <br />
-      <div className={`flex w-fit rounded border-2 border-fuchsia-800 border-dashed p-6 font-epilogue mb-8 ${className}`}>
+      <div
+        className={`flex w-fit rounded border-2 border-fuchsia-800 border-dashed p-6 font-epilogue mb-8 ${className}`}
+      >
         {children}
       </div>
     </>
-  )
-}
+  );
+};
 
 export default TempEntryPage

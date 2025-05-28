@@ -49,7 +49,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     if (!prevTsVersion) {
       return null;
     }
-    const prevVersion = versionsData.find((v: NodeVersion) => v.versionTimestamp === prevTsVersion)));
+    const prevVersion = versionsData.find((v: NodeVersion) => v.versionTimestamp === prevTsVersion);
     if (prevVersion) {
       return `${prevVersion.major}.${prevVersion.minor}`;
     }
