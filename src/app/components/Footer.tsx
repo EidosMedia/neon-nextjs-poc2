@@ -50,8 +50,11 @@ export default async function Footer({ data }: { data: PageData<BaseModel> }) {
           {/* Right 30% content */}
           <div>
             <div className="mb-6">
-              <div className="font-bold mb-2">About</div>
-
+              <div className="font-bold mb-2">
+                <a href="/about" className="hover:underline">
+                  About
+                </a>
+              </div>
               <div className="font-bold mb-2">Account</div>
               <ul className="space-y-3 pl-4">
                 <li>
