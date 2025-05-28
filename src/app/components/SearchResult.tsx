@@ -321,7 +321,6 @@ const SearchResult = ({ data }: { data: Site }) => {
               id="options"
               options={options}
               value={selectedOption}
-              defaultValue='Select a time frame'
               onChange={handleOptionChange}
               className="ml-2"
             />

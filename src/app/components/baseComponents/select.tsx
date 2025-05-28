@@ -13,7 +13,7 @@ type Option = {
 
 const Select:React.FC<SelectProps> = ({className, options, value, ...props}) => {
   return (
-    <select
+    <select value={value}
     {...props}
     className={cn(
                 "flex w-full h-fit min-w-0 rounded-xs border-1 border-neutral-primary bg-transparent py-[11px] px-2 text-base font-bold transition-[color] outline-none",
