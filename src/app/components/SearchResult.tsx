@@ -291,33 +291,36 @@ const SearchResult = ({ data }: { data: Site }) => {
   };
 
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="grid items-center text-center">
       <form className="text-center">
-        <div className="flex items-center justify-center mb-4 pl-2">
-          <label className="relative inline-flex items-center cursor-pointer">Search:</label>
-          <input
-            type="text"
-            id="searchText"
-            value={searchText}
-            onChange={handleTextChange}
-            className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[800px] rounded"
-            placeholder="Enter search text to enable search"
-          />
-
-          <label className="relative inline-flex items-center cursor-pointer">Time frame:</label>
-          <select
-            id="options"
-            value={selectedOption}
-            onChange={handleOptionChange}
-            className="ml-2 px-2 py-1 border border-gray-300 rounded"
-          >
-            <option value="">Select an option</option>
-            {options.map((option, index) => (
-              <option key={index} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center justify-center mb-4 pl-2 flex-col md:flex-row">
+          <div className="flex grow-1">
+            <label className="relative inline-flex items-center cursor-pointer">Search:</label>
+            <input
+              type="text"
+              id="searchText"
+              value={searchText}
+              onChange={handleTextChange}
+              className="ml-2 mr-2 border border-gray-300 px-2 py-1 grow-1 rounded"
+              placeholder="Enter search text to enable search"
+            />
+          </div>
+          <div>
+            <label className="relative inline-flex items-center cursor-pointer">Time frame:</label>
+            <select
+              id="options"
+              value={selectedOption}
+              onChange={handleOptionChange}
+              className="ml-2 px-2 py-1 border border-gray-300 rounded"
+            >
+              <option value="">Select an option</option>
+              {options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex items-center justify-center mb-4 pl-2 gap-2">
           <Button
