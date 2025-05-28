@@ -1,3 +1,4 @@
+'use client'
 import { cn } from "@/lib/utils"
 
 type Option = {
@@ -10,17 +11,17 @@ type Option = {
     options: Option[];
   };
 
-const Select:React.FC<SelectProps> = ({className, options, ...props}) => {
+const Select:React.FC<SelectProps> = ({className, options, value, ...props}) => {
   return (
     <select
+    {...props}
     className={cn(
-                "flex w-full min-w-0 rounded-xs border-1 border-neutral-primary bg-transparent py-[10px] px-2 text-base font-bold transition-[color] outline-none",
+                "flex w-full h-fit min-w-0 rounded-xs border-1 border-neutral-primary bg-transparent py-[11px] px-2 text-base font-bold transition-[color] outline-none",
                 "hover:border-primary",
                 "focus:ring-2 focus:ring-primary focus:ring-offset-2",
                 "disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-neutral-light-2 disabled:text-neutral-light-2",
                 className
                 )}
-                {...props}
     >
         {options.map((opt) => (
         <option key={opt.value} value={opt.value}>
