@@ -4,9 +4,6 @@ import Logo from './Logo';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import FooterMenu from './FooterMenu';
 
-<<<<<<< Updated upstream
-export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
-=======
 export default async function Footer({ data }: { data: PageData<BaseModel> }) {
   const site = await connection.getSiteByName(data.siteNode?.name || '');
   if (!site) {
@@ -28,7 +25,6 @@ export default async function Footer({ data }: { data: PageData<BaseModel> }) {
   // Only consider the "Footer" menu
   const footerMenu = menus?.Footer;
 
->>>>>>> Stashed changes
   return (
     <div className="w-full">
       {/* Blue line */}
@@ -36,7 +32,7 @@ export default async function Footer({ data }: { data: PageData<BaseModel> }) {
       {/* Logo and site name */}
       <div className="flex items-center space-x-2 py-4">
         <Logo data={data} size="small" />
-        <span className="font-semibold text-lg">{data.siteNode?.title}</span>
+        <span className="font-semibold text-lg">{data.siteNode.name}</span>
       </div>
       {/* 70% - 30% split section */}
       <div className="flex w-full">
@@ -54,6 +50,8 @@ export default async function Footer({ data }: { data: PageData<BaseModel> }) {
           {/* Right 30% content */}
           <div>
             <div className="mb-6">
+              <div className="font-bold mb-2">About</div>
+
               <div className="font-bold mb-2">Account</div>
               <ul className="space-y-3 pl-4">
                 <li>
