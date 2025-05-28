@@ -124,7 +124,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       <div
         key={key}
         ref={divRef}
-        contentEditable={!!loggedUserInfo?.inspectItems || !loggedUserInfo?.preview}
+        contentEditable={!!loggedUserInfo?.inspectItems && !loggedUserInfo?.preview}
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
         onClick={!!loggedUserInfo?.inspectItems ? showDivButtons : undefined}
         onBlur={!!loggedUserInfo?.inspectItems ? handleBlur : undefined}
