@@ -65,8 +65,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         <Clock />
       </a>
       {panelOpened && (
-        <div className="h-screen w-xs absolute text-black top-0 right-0 z-10 flex flex-col">
-          <div className="h-16"></div>
+        <div className="h-screen w-xs absolute text-black top-0 right-0 z-10 grid">
+          <div className="h-[56px]"></div>
           <div className="text-black relative grow-1 min-h-0 flex flex-col">
             <div className="flex items-center justify-between py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <span className="flex items-center gap-2 text-(--color-panel-text-header) ml-1">
@@ -77,7 +77,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                 <Close />
               </a>
             </div>
-            <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0">
+            <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0 overflow-y-auto">
               <ol className="relative border-s border-gray-300 dark:border-gray-700">
                 {versionsData.map((item: NodeVersion, index: number) => (
                   <li className="mb-10 ms-4" key={item.nodeId}>

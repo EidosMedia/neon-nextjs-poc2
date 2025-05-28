@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
+import { authenticationHeader } from '@/utilities/security';
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,18 +7,18 @@ export async function POST(request: NextRequest) {
     const id = body?.id;
     const contentItemId = body?.contentItemId;
     const payload = body?.payload;
+    const authHeaders = await authenticationHeader(false);
 
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+    const headers = {
+      Authorization: authHeaders.Authorization as string,
+      // 'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
+    };
 
     const updateContentItem = await connection.updateContentItem({
       id: id,
       contentItemId: contentItemId,
       payload: payload,
-      headers: {
-        Authorization: `Bearer ${previewtoken}`,
-        'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
-      },
+      headers: headers,
       baseUrl: process.env.BASE_NEON_FO_URL || '',
     });
     return Response.json({ ...updateContentItem });

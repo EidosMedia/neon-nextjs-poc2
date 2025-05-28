@@ -1,14 +1,13 @@
 import { getAPIHostnameConfig } from '@/services/utils';
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
+import { authenticationHeader } from '@/utilities/security';
 
 export async function GET(req: NextRequest) {
 
   try {
     const { apiHostname } = await getAPIHostnameConfig(req);
 
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+    const authHeaders = await authenticationHeader(true);
 
     const ragsearch = req.nextUrl.searchParams.get("rag") === "true" 
     const naturalsearch = req.nextUrl.searchParams.get("rag") === "false" 
@@ -22,16 +21,15 @@ export async function GET(req: NextRequest) {
 
     const resp = await fetch(`${apiHostname}${url}?${req.nextUrl.searchParams}`, {
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
-        'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+        ...authHeaders,
       },
     });
 
     return resp;
   } catch (error) {
     console.log('Error in search POST request:', error);
-    return Response.json( 
-      (error instanceof Error && error.cause instanceof Response) ? { error: error.cause.statusText } : {error: 'Internal Server Error' }, 
+    return Response.json(
+      (error instanceof Error && error.cause instanceof Response) ? { error: error.cause.statusText } : { error: 'Internal Server Error' },
       (error instanceof Error && error.cause instanceof Response) ? { status: error.cause.status } : { status: 500 });
   }  
 }

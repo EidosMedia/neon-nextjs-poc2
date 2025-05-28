@@ -1,7 +1,7 @@
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbarsite from '../components/Navbarsite';
 import SearchResult from '../components/SearchResult';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const SearchPage = ({ data }: { data: Site }) => {
   return (
@@ -11,6 +11,7 @@ const SearchPage = ({ data }: { data: Site }) => {
         <h1 className="my-2">Search Page</h1>
       </div>
       <SearchResult data={data} />
+      <Footer data={{ siteNode: data.root }} />
     </div>
   );
 };

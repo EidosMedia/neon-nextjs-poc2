@@ -1,19 +1,26 @@
 import { NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
+import { authenticationHeader } from '@/utilities/security';
+import { getAPIHostnameConfig } from '../../../services/utils';
+import { SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const id = body?.id;
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+
+    const foundSite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
+    const authHeaders = await authenticationHeader(false);
+
+    if (!authHeaders.Authorization) {
+      throw new Error('Authorization header is missing');
+    }
 
     const promoteContentLive = await connection.promoteContentLive({
       id: id,
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
+        Authorization: authHeaders.Authorization,
       },
-      baseUrl: process.env.BASE_NEON_FO_URL || '',
+      sites: foundSite.root.name,
     });
     return Response.json({ ...promoteContentLive });
   } catch (error) {
@@ -34,16 +41,22 @@ export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json();
     const id = body?.id;
-    const cookiesFromRequest = await cookies();
-    const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+
+    const authHeaders = await authenticationHeader(false);
+    const foundSite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
+
+    if (!authHeaders.Authorization) {
+      throw new Error('Authorization header is missing');
+    }
 
     const unpromoteContentLive = await connection.unpromoteContentLive({
       id: id,
+      sites: foundSite.root.name,
       headers: {
-        Authorization: `Bearer ${previewtoken}`,
+        Authorization: authHeaders.Authorization,
       },
-      baseUrl: process.env.BASE_NEON_FO_URL || '',
     });
+
     return Response.json({ ...unpromoteContentLive });
   } catch (error) {
     console.log('Error in DELETE request:', error);

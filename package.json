@@ -1,6 +1,6 @@
 {
   "name": "neon-nextjs-poc2",
-  "version": "0.1.16",
+  "version": "0.1.19",
   "private": true,
   "scripts": {
     "dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_OPTIONS='--inspect' next dev --turbopack",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.6.1",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.510.0",

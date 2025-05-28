@@ -3,6 +3,8 @@ import Logo from './Logo';
 import { BaseModel, PageData, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
 import { headers } from 'next/headers';
+import { Menu, Search } from 'lucide-react';
+import { Button } from './baseComponents/button';
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   if (!data.siteNode || !data.siteNode.name) {
@@ -21,7 +23,21 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
 
   return (
     <nav className="w-full h-max bg-white top-0">
-      <div className="container mx-auto px-4 h-full flex flex-col gap-6">
+      <div className="container mx-auto px-4 h-full flex flex-col gap-3">
+        <div className="w-full rounded mt-8 flex justify-between items-center p-4">
+          <div className="flex gap-2">
+            <Button variant="ghost">
+              <Menu />
+            </Button>
+            <Link href="/search" className="flex items-center justify-center w-10 h-10">
+              <Search />
+            </Link>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="default">Subscribe</Button>
+            <Button variant="secondary">Login</Button>
+          </div>
+        </div>
         <div className="flex justify-center items-center gap-4">
           <Logo data={data} />
           <h1 className="text-2xl font-bold text-gray-800">{site.root.title}</h1>
@@ -30,7 +46,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
           <ul className="hidden md:flex gap-x-6">
             {site.root.items.map(item => (
               <li key={item.id}>
-                <Link href={item.path} className={clsx(isActiveLink(item) && 'text-blue-500')}>
+                <Link href={item.path} className={clsx(isActiveLink(item) && 'text-(--color-primary)')}>
                   <h3 className="text-lg uppercase">{item.title}</h3>
                 </Link>
               </li>

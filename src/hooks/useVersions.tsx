@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getVersions, getVersionsPanelOpened, setVersionPanelOpen, setVersions } from '@/lib/features/versionsSlice';
 import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
@@ -7,6 +7,8 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
   const dispatch = useDispatch();
 
   const versions = useSelector(getVersions(currentNode?.model?.data?.id || '')) || [];
+
+  const currentModelIdRef = useRef<string>('');
 
   const loadHistory = async () => {
     try {
@@ -38,7 +40,14 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
   const panelOpened = useSelector(getVersionsPanelOpened);
 
   useEffect(() => {
-    if (currentNode) {
+    if (
+      currentNode &&
+      currentNode.model &&
+      currentNode.model.id &&
+      currentNode?.model.data.id &&
+      currentModelIdRef.current !== currentNode.model.id
+    ) {
+      currentModelIdRef.current = currentNode.model.id;
       loadHistory();
     }
   }, [currentNode?.model?.id]);

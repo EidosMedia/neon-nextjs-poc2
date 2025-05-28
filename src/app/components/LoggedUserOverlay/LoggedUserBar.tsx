@@ -6,7 +6,6 @@ import History from './History';
 import useAuth from '@/hooks/useAuth';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 import VisibilityChip from './VisibilityChip';
-import { isNeonAppPreview } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
@@ -35,14 +34,14 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     return null;
   }
 
-  if (isNeonAppPreview()) {
-    return null;
-  }
+  // if (loggedUserInfo.preview) {
+  // return null;
+  // }
 
   return (
     <div
       id="loggedUserBar"
-      className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm"
+      className="flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm sticky top-0 z-10"
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
