@@ -103,6 +103,10 @@
   }
 }
 
+p {
+  @apply mt-8;
+}
+
 /* TYPOGRAPHY */
 h1, h1 p {
   @apply font-gabarito font-semibold text-[40px] leading-[124%] tracking-normal;

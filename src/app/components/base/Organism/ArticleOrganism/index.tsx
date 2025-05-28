@@ -15,12 +15,14 @@ const extractSectionFromUrl = (url: string): string => url.split('/')[1];
 const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, linkedObjects, index, type }) => {
   const TitleComponent = type === 'article-xl' ? 'h1' : 'h2';
 
+  const url = linkedObject.url || linkedObjects[`${index}`].url;
+
   return (
     <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus} width="max" data-type={type}>
-      <Link className="no-underline" href={linkedObjects[`${index}`].url}>
+      <Link className="no-underline" href={url}>
         <div className="p-4 grid grid-cols-12">
           <div className="flex flex-col col-span-5">
-            <span className="mt-2 subhead1 uppercase">{extractSectionFromUrl(linkedObjects[index].url)}</span>
+            <span className="mt-2 subhead1 uppercase">{extractSectionFromUrl(url)}</span>
             <TitleComponent className="mt-2 ">{linkedObject.title}</TitleComponent>
             <span className="mt-2">{linkedObject.summary}</span>
             <span className="mt-2">{linkedObject.author}</span>

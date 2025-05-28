@@ -42,7 +42,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   return (
     <div
       id="loggedUserBar"
-      className="relative flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm"
+      className="flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm sticky top-0 z-10"
     >
       <div className="flex items-center">
         <ViewStatus data={data} />

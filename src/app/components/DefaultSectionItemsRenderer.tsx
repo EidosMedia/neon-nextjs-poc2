@@ -10,6 +10,8 @@ type DefaultSectionItemsRendererProps = {
 const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = ({ data }) => {
   const linkedObjects = data.model.data.children ? data.model.data.children.map(item => data.model.nodes[item]) : [];
 
+  console.log('DefaultSectionItemsRenderer length', linkedObjects);
+
   if (linkedObjects.length === 0) {
     return <div className="container mx-auto flex align-center justify-center">No articles found.</div>;
   }
