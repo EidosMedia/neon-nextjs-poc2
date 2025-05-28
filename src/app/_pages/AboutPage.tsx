@@ -36,7 +36,7 @@ const AboutPage = ({ data }: { data: Site }) => {
           </p>
         </div>
       </div>
-      <Footer data={{ siteNode: data.root }} />
+      <Footer data={data} />
     </div>
   );
 };
