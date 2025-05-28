@@ -7,6 +7,7 @@ import ArticleOverlay from './base/ArticleOverlay';
 import { LoaderCircle } from 'lucide-react';
 import ErrorBoundaryContainer from './base/ErrorBoundaryContainer/ErrorBoundaryContainer';
 import { Button } from './baseComponents/button';
+import SearchResultItem from './SearchResultItem';
 
 type ChatRoundTrip = {
   titles: string[];
@@ -409,40 +410,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                           defaultChecked={true}
                         />
                       </div>
-                      <ArticleOverlay data={data.root} viewStatus={data.viewStatus}>
-                        <ErrorBoundaryContainer>
-                          <Link className="no-underline" href={result.nodeData.url}>
-                            <div className="p-4 flex" style={{ textAlign: 'left' }}>
-                              <div id="photo{index}" className="mr-4">
-                                <img
-                                  alt="/static/img/nothumb.jpeg"
-                                  width="200"
-                                  height="200"
-                                  decoding="async"
-                                  data-nimg="1"
-                                  src={
-                                    result.nodeData.links?.system?.mainPicture[0]?.dynamicCropsResourceUrls
-                                      .Portrait_small
-                                  }
-                                  className="w-48 h-48 object-cover"
-                                  style={{ color: 'transparent' }}
-                                />
-                              </div>
-                              <div id="item{index}" className="flex-1">
-                                <h6 className="text-xl font-semibold">{title}</h6>
-                                <p className="text-base">{summary}</p>
-                                {result.highlights && result.highlights['_full_text.content.all'] ? (
-                                  result.highlights['_full_text.content.all'].map((reference, idx) => (
-                                    <p key={idx}>... {reference.replaceAll('\n', ' ')} ...</p>
-                                  ))
-                                ) : (
-                                  <p />
-                                )}
-                              </div>
-                            </div>
-                          </Link>
-                        </ErrorBoundaryContainer>
-                      </ArticleOverlay>
+                      <SearchResultItem result={result} data={data} />
                     </div>
                   </div>
                 );

@@ -24,9 +24,9 @@ const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = 
         type="article-xl"
       />
       <div className="grid grid-cols-12">
-        <div className="col-span-8 p-4">
+        <div className="col-span-8">
           {linkedObjects.map((linkedObject: any, index: number) => (
-            <div key={linkedObject.id} className="p-4 relative group">
+            <div key={linkedObject.id} className="relative group">
               <ArticleOrganism
                 linkedObject={linkedObject}
                 linkedObjects={linkedObjects}
@@ -37,7 +37,7 @@ const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = 
             </div>
           ))}
         </div>
-        <div className="col-span-4 p-4"></div>
+        <div className="col-span-4"></div>
       </div>
     </>
   );
