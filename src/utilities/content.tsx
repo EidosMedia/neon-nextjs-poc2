@@ -104,12 +104,16 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
       );
     case 'p':
       if (parent === 'text') {
-        return (
+        return data?.id ? (
           <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
             <p key={key} {...buildAttributes(content)}>
               {content.elements.map(elem => renderContent(elem, data))}
             </p>
           </ContentEditable>
+        ) : (
+          <p key={key} {...buildAttributes(content)}>
+            {content.elements.map(elem => renderContent(elem, data))}
+          </p>
         );
       } else {
         return <p key={key}>{content.elements.map(elem => renderContent(elem, data))}</p>;
