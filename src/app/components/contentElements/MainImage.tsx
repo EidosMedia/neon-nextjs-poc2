@@ -16,14 +16,14 @@ const getTeaserOrMainImageUrl = (data: ArticleModel, format: string): string | u
 };
 
 const MainImage: React.FC<MainImageProps> = ({ data, format, hideCaptions }) => {
-  const mainImageUrl = getTeaserOrMainImageUrl(data, format || 'Wide_large');
+  const imageUrl = getTeaserOrMainImageUrl(data, format || 'Wide_large');
 
   return (
       <div>
         <div>
-          {mainImageUrl ? (
+          {imageUrl ? (
               <div>
-                <img src={mainImageUrl} alt=""/>
+                <img src={imageUrl} alt=""/>
                 {!hideCaptions &&
                     renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
               </div>
