@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ArticleOverlay from './base/ArticleOverlay';
-import { LoaderCircle } from 'lucide-react';
+import { LoaderCircle, Search } from 'lucide-react';
 import ErrorBoundaryContainer from './base/ErrorBoundaryContainer/ErrorBoundaryContainer';
 import { Button } from './baseComponents/button';
 import SearchResultItem from './SearchResultItem';
+import { Input } from './baseComponents/textInput';
+import Select from './baseComponents/select';
 
 type ChatRoundTrip = {
   titles: string[];
@@ -22,14 +24,21 @@ const SearchResult = ({ data }: { data: Site }) => {
   const query = useSearchParams();
   const [searchText, setSearchText] = useState('');
   const [authorized, setAuthorized] = useState(true);
-  const [selectedOption, setSelectedOption] = useState('Last Year');
+  const [selectedOption, setSelectedOption] = useState('Select a time frame');
   const [selectedResults, setSelectedResults] = useState<Map<string, string>>(new Map<string, string>());
-  const options = ['Today', 'Last Week', 'Last Month', 'Last Quarter', 'Last Year'];
   const [isLoading, setLoading] = useState(true);
   const [isAsking, setAsking] = useState(false);
   const [chat, setChat] = useState<ChatRoundTrip[]>([]);
   const [questionText, setQuestionText] = useState('');
   const [searchEnabled, setSearchEnabled] = useState(false);
+
+  const options = [
+     {value: '', text: 'Select a time frame'},
+     {value: 'Today', text: 'Today'},
+     {value: 'Last Week', text: 'Last Week'},
+     {value: 'Last Month', text: 'Last Month'},
+     {value: 'Last Quarter', text: 'Last Quarter'},
+     {value: 'Last Year', text: 'Last Year'}]
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -293,33 +302,28 @@ const SearchResult = ({ data }: { data: Site }) => {
   return (
     <div className="grid items-center text-center">
       <form className="text-center">
-        <div className="flex items-center justify-center mb-4 pl-2 flex-col md:flex-row">
+        <div className="flex items-center justify-center mb-4 pl-2 flex-col md:flex-row gap-2">
           <div className="flex grow-1">
-            <label className="relative inline-flex items-center cursor-pointer">Search:</label>
-            <input
+            {/* <label className="relative inline-flex items-center cursor-pointer">Search:</label> */}
+            <br />
+            <Input
               type="text"
               id="searchText"
               value={searchText}
               onChange={handleTextChange}
-              className="ml-2 mr-2 border border-gray-300 px-2 py-1 grow-1 rounded"
+              Icon={<Search />}
               placeholder="Enter search text to enable search"
             />
           </div>
-          <div>
-            <label className="relative inline-flex items-center cursor-pointer">Time frame:</label>
-            <select
+          <div className='flex'>
+            <label className=" text-base self-center whitespace-nowrap">Time frame:</label>
+            <Select
               id="options"
+              options={options}
               value={selectedOption}
               onChange={handleOptionChange}
-              className="ml-2 px-2 py-1 border border-gray-300 rounded"
-            >
-              <option value="">Select an option</option>
-              {options.map((option, index) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              className="ml-2"
+            />
           </div>
         </div>
         <div className="flex items-center justify-center mb-4 pl-2 gap-2">
