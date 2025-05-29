@@ -120,7 +120,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       </div>
     </div>
   ) : (
-    <>
+    <div>
       <div
         key={key}
         ref={divRef}
@@ -128,37 +128,40 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
         onClick={!!loggedUserInfo?.inspectItems ? showDivButtons : undefined}
         onBlur={!!loggedUserInfo?.inspectItems ? handleBlur : undefined}
-        className={`relative rounded ${loggedUserInfo?.inspectItems ? 'border-1 border-blue-600' : ''}`}
+        className={`relative rounded ${
+          loggedUserInfo?.inspectItems ? 'border-1 border-neutral-light/30 hover:border-primary p-1' : ''
+        }`}
         dangerouslySetInnerHTML={{ __html: contentString }}
         tabIndex={0}
-      ></div>
-
-      <div className="relative">
-        <div
-          ref={divButtonsRef}
-          className="bg-white z-10 flex absolute right-0 flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
-        >
-          <button
-            type="button"
-            className="p-1 rounded hover:bg-gray-200"
-            onMouseDown={handleSave}
-            aria-label="Save"
-            tabIndex={-1}
+      />
+      {loggedUserInfo?.inspectItems && (
+        <div className="relative">
+          <div
+            ref={divButtonsRef}
+            className="bg-white z-10 flex absolute right-0 flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
           >
-            <Check className="h-5 w-5 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            className="p-1 rounded hover:bg-gray-200"
-            onMouseDown={handleCancel}
-            aria-label="Cancel"
-            tabIndex={-1}
-          >
-            <X className="h-5 w-5 text-gray-700" />
-          </button>
+            <button
+              type="button"
+              className="p-1 rounded hover:bg-gray-200"
+              onMouseDown={handleSave}
+              aria-label="Save"
+              tabIndex={-1}
+            >
+              <Check className="h-5 w-5 text-gray-700" />
+            </button>
+            <button
+              type="button"
+              className="p-1 rounded hover:bg-gray-200"
+              onMouseDown={handleCancel}
+              aria-label="Cancel"
+              tabIndex={-1}
+            >
+              <X className="h-5 w-5 text-gray-700" />
+            </button>
+          </div>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 };
 

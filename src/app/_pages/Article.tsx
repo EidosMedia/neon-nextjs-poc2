@@ -16,15 +16,22 @@ const Article: React.FC<PageProps> = ({ data }) => {
 
   return (
     <article className="container mx-auto">
-      <Navbar data={data}></Navbar>
-      <Grouphead data={articleData} />
-      <MainImage data={articleData} />
-      <div className="mt-5">
-        {renderContent(findElementsInContentJson(['summary'], articleData.files.content.data)[0], articleData)}
-        {renderContent(findElementsInContentJson(['byline'], articleData.files.content.data)[0])}
+      <Navbar data={data} />
+      <div className="xl:px-52 mt-10 mb-12">
+        <Grouphead data={articleData} />
+        <MainImage data={articleData} />
+        <div>
+          {renderContent(
+            findElementsInContentJson(['text'], articleData.files.content.data)[0],
+            articleData,
+            undefined,
+            'flex flex-col gap-4'
+          )}
+        </div>
       </div>
-      <div className="mt-5">
-        {renderContent(findElementsInContentJson(['text'], articleData.files.content.data)[0], articleData)}
+      <div className="flex justify-center mb-24">
+        {/* Placeholder for advertisement */}
+        <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
       </div>
       <Footer data={data}></Footer>
     </article>
