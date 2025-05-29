@@ -5,6 +5,7 @@ export type ArticleModel = {
   links: {
     system: {
       mainPicture: any[];
+      teaserPicture?: any[];
     };
   };
   pubInfo: {
