@@ -113,7 +113,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
               <LockKeyhole />
             </span>
             <div className="hidden px-2 py-1 rounded bg-black text-white text-xs whitespace-nowrap shadow-lg z-10">
-              Locked by {isString(lockedBy) ? lockedBy : lockedBy.userName}
+              Locked by {isString(lockedBy) ? lockedBy : (lockedBy as any).userName}
             </div>
           </>
         )}

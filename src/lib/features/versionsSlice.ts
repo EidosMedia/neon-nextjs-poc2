@@ -1,9 +1,8 @@
 import { getFamilyRef } from '@/utilities/content';
 import { createSlice } from '@reduxjs/toolkit';
-import logger from '../utilities/logger';
 
 const initialState: Record<string, any> = {
-  edited: false
+  edited: false,
 };
 
 export const versionsSlice = createSlice({
@@ -28,7 +27,7 @@ export const versionsSlice = createSlice({
     },
     setEdited: (state, action) => {
       state.edited = action.payload;
-    }
+    },
   },
 });
 

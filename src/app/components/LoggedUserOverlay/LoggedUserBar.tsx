@@ -17,11 +17,10 @@ import EditedChip from './EditedChip';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const dispatch = useDispatch();
-  const { data: loggedUserInfo, changeInspectItems, changeEdited } = useLoggedUserInfo();
+  const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
   const inspectItemsEnabled = loggedUserInfo.inspectItems;
   const analyticsEnabled = loggedUserInfo.analytics;
-  const editedEnabled = loggedUserInfo.edited;
 
   const toggleInspectItems = () => {
     changeInspectItems(!inspectItemsEnabled);
