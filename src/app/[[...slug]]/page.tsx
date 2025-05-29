@@ -94,6 +94,10 @@ export default async function Page({
   const pageDataJSON = await pageData.json();
   console.log('Current page model', pageDataJSON);
 
+  if (pageDataJSON.model.data.httpStatusCode === 410) {
+    notFound();
+  }
+
   if (process.env.NODE_ENV === 'development' && pageData.status >= 500) {
     throw new Error(pageDataJSON.model.data.trace);
   }
