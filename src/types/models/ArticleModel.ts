@@ -7,4 +7,11 @@ export type ArticleModel = {
       mainPicture: any[];
     };
   };
+  pubInfo: {
+    publicationTime: string;
+    publishedBy: {
+      userName: string;
+    };
+    visible: boolean;
+  };
 } & BaseModel;
