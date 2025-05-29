@@ -3,13 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 interface LoggedUserState {
   inspectItems: boolean;
   analytics: boolean;
-  edited: boolean;
 }
 
 const initialState: LoggedUserState = {
   inspectItems: false,
   analytics: false,
-  edited: false,
 };
 
 export const loggedUserSlice = createSlice({
@@ -27,15 +25,12 @@ export const loggedUserSlice = createSlice({
     },
     setAnalytics: (state, action) => {
       state.analytics = action.payload;
-    },
-    setEdited: (state, action) => {
-      state.edited = action.payload;
     }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setInspectItems, setAnalytics, setEdited} = loggedUserSlice.actions;
+export const { setInspectItems, setAnalytics} = loggedUserSlice.actions;
 
 // Selectors
 export const getInspectItems = (state: any) => {
@@ -43,9 +38,6 @@ export const getInspectItems = (state: any) => {
 };
 export const getAnalytics = (state: any) => {
   return state && state.loggedUser.analytics;
-};
-export const getEdited = (state: any) => {
-  return state && state.loggedUser.edited;
 };
 
 export default loggedUserSlice.reducer;

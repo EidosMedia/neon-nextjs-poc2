@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ArticleModel } from '@/types/models';
 import useAuth from '@/hooks/useAuth';
+import useVersions from '@/hooks/useVersions';
 
 type PromotionButtonProps = {
   data: ArticleModel;
@@ -12,6 +13,7 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
   const [showButton, setShowButton] = useState(true);
   const isLive = viewStatus === 'LIVE';
   const { data: authData } = useAuth();
+  const { changeEdited } = useVersions({ currentNode: data as any }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
 
   const handlePromotion = async () => {
     try {
@@ -20,6 +22,7 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
         body: JSON.stringify({ id: data.id }),
       });
       if (response.ok) {
+        changeEdited(false);
         document.location.reload();
       } else {
         console.error('Failed to fetch data');

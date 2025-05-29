@@ -61,7 +61,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
             </Link>
             <History data={data} />
             <VisibilityChip data={data} />
-            <EditedChip />
+            <EditedChip data={data} />
           </>
         )}
         <div className="flex items-center justify-center text-white gap-3">

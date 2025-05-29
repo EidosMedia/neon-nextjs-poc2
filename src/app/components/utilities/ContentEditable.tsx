@@ -4,10 +4,11 @@ import { X, Check, LockKeyhole } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ReactDOMServer from 'react-dom/server';
 import { isString } from 'lodash';
+import useVersions from '@/hooks/useVersions';
+import { ArticleModel } from '@/types/models/ArticleModel';
 
 type ContentEditableProps = {
-  articleId?: string;
-  lockedBy?: lockedByInfo;
+  data?: ArticleModel;
   children?: React.ReactNode;
   showLockedByTooltip?: boolean;
 };
@@ -19,22 +20,20 @@ type lockedByInfo =
     }
   | string;
 
-const ContentEditable: React.FC<ContentEditableProps> = ({
-  articleId,
-  lockedBy,
-  children,
-  showLockedByTooltip = true,
-}) => {
+const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showLockedByTooltip = true }) => {
+  const articleId = data?.id;
+  const lockedBy = data?.sys?.lockedBy;
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
 
-  const { data: loggedUserInfo, changeEdited } = useLoggedUserInfo();
+  const { changeEdited } = useVersions({ currentNode: data as any }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
+  const { data: loggedUserInfo } = useLoggedUserInfo();
+
   const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
   const [previousContentString, setPreviousContentString] = useState<string>(
     ReactDOMServer.renderToStaticMarkup(children)
   );
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
-  const editedEnabled = loggedUserInfo.edited;
 
   const showDivButtons = () => {
     divButtonsRef.current?.classList.remove('hidden');

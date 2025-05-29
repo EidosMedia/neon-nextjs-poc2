@@ -1,13 +1,19 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getVersions, getVersionsPanelOpened, setVersionPanelOpen, setVersions } from '@/lib/features/versionsSlice';
+import {
+  getVersions,
+  getVersionsPanelOpened,
+  setVersionPanelOpen,
+  setVersions,
+  getEdited,
+  setEdited as setEditedAction,
+} from '@/lib/features/versionsSlice';
 import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { getEdited, setEdited as setEditedAction } from '@/lib/features/loggedUserSlice';
+
 const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => {
   const dispatch = useDispatch();
 
   const versions = useSelector(getVersions(currentNode?.model?.data?.id || '')) || [];
-  const edited = useSelector(getEdited);
 
   const currentModelIdRef = useRef<string>('');
 
@@ -34,11 +40,16 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
     }
   };
 
+  const setEdited = (value: boolean) => {
+    dispatch(setEditedAction(value));
+  };
+
   const setPanelOpened = (status: boolean) => {
     dispatch(setVersionPanelOpen(status));
   };
 
   const panelOpened = useSelector(getVersionsPanelOpened);
+  const edited = useSelector(getEdited);
 
   useEffect(() => {
     if (
@@ -78,7 +89,7 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
     setEdited(value);
   };
 
-  return { data: versions, panelOpened, setPanelOpened, getVersion, getCurrentLiveVersion, changeEdited };
+  return { data: versions, panelOpened, edited, setPanelOpened, getVersion, getCurrentLiveVersion, changeEdited };
 };
 
 export default useVersions;

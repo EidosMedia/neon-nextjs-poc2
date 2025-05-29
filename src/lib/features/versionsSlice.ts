@@ -1,8 +1,9 @@
 import { getFamilyRef } from '@/utilities/content';
 import { createSlice } from '@reduxjs/toolkit';
+import logger from '../utilities/logger';
 
 const initialState: Record<string, any> = {
-  test: {},
+  edited: false
 };
 
 export const versionsSlice = createSlice({
@@ -25,11 +26,14 @@ export const versionsSlice = createSlice({
     setVersionPanelOpen: (state, action) => {
       state.versionPanelOpen = action.payload;
     },
+    setEdited: (state, action) => {
+      state.edited = action.payload;
+    }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setVersions, setVersionPanelOpen } = versionsSlice.actions;
+export const { setVersions, setVersionPanelOpen, setEdited } = versionsSlice.actions;
 
 // Selectors
 export const getVersions = (id: string) => (state: any) => {
@@ -38,6 +42,9 @@ export const getVersions = (id: string) => (state: any) => {
 };
 export const getVersionsPanelOpened = (state: any) => {
   return state.nodes && state.nodes.versionPanelOpen; // editorContainer.currentDocument is the id of the current document
+};
+export const getEdited = (state: any) => {
+  return state.nodes && state.nodes.edited;
 };
 
 export default versionsSlice.reducer;

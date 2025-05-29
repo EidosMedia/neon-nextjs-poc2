@@ -63,7 +63,7 @@ export const renderContent = (
   switch (content.nodeType) {
     case 'headline':
       return (
-        <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} data={data}>
           <h1 key={key} {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </h1>
@@ -71,7 +71,7 @@ export const renderContent = (
       );
     case 'overhead':
       return (
-        <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} data={data}>
           <h5 key={key} {...buildAttributes(content)} className="uppercase">
             {content.elements.map(elem => renderContent(elem, data))}
           </h5>
@@ -115,7 +115,7 @@ export const renderContent = (
     case 'p':
       if (parent === 'text') {
         return data?.id ? (
-          <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+          <ContentEditable key={key} data={data}>
             <p key={key} {...buildAttributes(content)} className={`${styles} body-large`}>
               {content.elements.map(elem => renderContent(elem, data))}
             </p>
@@ -132,7 +132,7 @@ export const renderContent = (
       return content.value;
     case 'summary':
       return (
-        <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
+        <ContentEditable key={key} data={data}>
           <div key={key} data-type="summary" {...buildAttributes(content)} className={styles}>
             {content.elements.map(elem => renderContent(elem, data))}
           </div>
