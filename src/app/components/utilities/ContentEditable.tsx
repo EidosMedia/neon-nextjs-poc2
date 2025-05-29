@@ -28,12 +28,13 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
 
-  const { data: loggedUserInfo } = useLoggedUserInfo();
+  const { data: loggedUserInfo, changeEdited } = useLoggedUserInfo();
   const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
   const [previousContentString, setPreviousContentString] = useState<string>(
     ReactDOMServer.renderToStaticMarkup(children)
   );
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
+  const editedEnabled = loggedUserInfo.edited;
 
   const showDivButtons = () => {
     divButtonsRef.current?.classList.remove('hidden');
@@ -70,7 +71,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       handleUpdateContentItem(dataId, content);
       setContentString(divRef?.current?.innerHTML);
       setPreviousContentString(divRef?.current?.innerHTML);
-
+      changeEdited(true); // Mark as edited
       hideDivButtons(); // Hide buttons after save
       divRef.current?.blur(); // Remove focus from the div
     }

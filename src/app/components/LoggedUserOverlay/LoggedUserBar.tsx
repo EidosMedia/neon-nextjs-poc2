@@ -13,13 +13,15 @@ import { useDispatch } from 'react-redux';
 import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
 import { SquareArrowOutUpRight } from 'lucide-react';
+import EditedChip from './EditedChip';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const dispatch = useDispatch();
-  const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
+  const { data: loggedUserInfo, changeInspectItems, changeEdited } = useLoggedUserInfo();
 
   const inspectItemsEnabled = loggedUserInfo.inspectItems;
   const analyticsEnabled = loggedUserInfo.analytics;
+  const editedEnabled = loggedUserInfo.edited;
 
   const toggleInspectItems = () => {
     changeInspectItems(!inspectItemsEnabled);
@@ -59,6 +61,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
             </Link>
             <History data={data} />
             <VisibilityChip data={data} />
+            <EditedChip />
           </>
         )}
         <div className="flex items-center justify-center text-white gap-3">
