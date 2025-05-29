@@ -35,7 +35,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       });
       if (response.ok) {
         console.log('Rollbacked TO version ', versionName, ' with response:', response);
-        window.location.reload();
+        window.location.href = data.model.data.url; // Redirect to the current page
       } else {
         console.error('Failed to rollback version with response:', response);
       }
@@ -87,47 +87,49 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                         item.pubInfo.canonical === data.model.data.url ? 'bg-gray-400' : 'bg-gray-300'
                       )}
                     ></div>
-                    <Link href={item.pubInfo.canonical || '#'}>
-                      <div
-                        className={clsx(
-                          'p-4 rounded-sm mr-4 ',
-                          item.pubInfo.canonical === data.model.data.url ? 'bg-blue-100' : 'bg-white'
-                        )}
-                      >
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-gray-900 dark:text-white">
-                            {`Version ${item.major}.${item.minor}`}
-                            {(() => {
-                              const prevVersionName = getPrevVersionName(item.prevTsVersion);
-                              return prevVersionName ? ` from ${prevVersionName}` : '';
-                            })()}
-                          </h3>
-                          {item.live && (
-                            <div className="text-xs font-bold text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5">
-                              LIVE
-                            </div>
+                    <div className="relative flex flex-1 min-w-0">
+                      <Link href={item.pubInfo.canonical || '#'} className="flex-1 min-w-0">
+                        <div
+                          className={clsx(
+                            'p-4 rounded-sm mr-1 ',
+                            item.pubInfo.canonical === data.model.data.url ? 'bg-blue-100' : 'bg-white'
                           )}
+                        >
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-semibold text-gray-900 dark:text-white">
+                              {`Version ${item.major}.${item.minor}`}
+                              {(() => {
+                                const prevVersionName = getPrevVersionName(item.prevTsVersion);
+                                return prevVersionName ? ` from ${prevVersionName}` : '';
+                              })()}
+                            </h3>
+                            {item.live && (
+                              <div className="text-xs font-bold text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5">
+                                LIVE
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between ">
+                            <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
+                              {new Date(item.pubInfo.publicationTime).toLocaleString()}
+                              <br />
+                              {item.workflowStatus && <span>{item.workflowStatus}</span>}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between ">
-                          <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                            {new Date(item.pubInfo.publicationTime).toLocaleString()}
-                            <br />
-                            {item.workflowStatus && <span>{item.workflowStatus}</span>}
-                          </p>
-                          <button
-                            className="z-10 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out mb-2"
-                            title="Rollback to this version"
-                            onClick={e => {
-                              e.stopPropagation();
-                              e.nativeEvent.stopImmediatePropagation();
-                              rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
-                            }}
-                          >
-                            Rollback
-                          </button>
-                        </div>
-                      </div>
-                    </Link>
+                      </Link>
+                      <button
+                        className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
+                        title="Rollback to this version"
+                        onClick={e => {
+                          e.stopPropagation();
+                          e.nativeEvent.stopImmediatePropagation();
+                          rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
+                        }}
+                      >
+                        Rollback
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ol>

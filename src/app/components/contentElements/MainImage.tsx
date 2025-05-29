@@ -20,17 +20,17 @@ const MainImage: React.FC<MainImageProps> = ({ data, format, hideCaptions }) => 
 
   return (
       <div>
-        <div>
-          {imageUrl ? (
-              <div>
-                <img src={imageUrl} alt=""/>
-                {!hideCaptions &&
-                    renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
-              </div>
-          ) : (
-              <p>No main image available</p>
-          )}
-        </div>
+          <div>
+              {imageUrl ? (
+                  <div className="flex flex-col gap-2 mb-8">
+                      <img src={imageUrl} alt="" />
+                      {!hideCaptions &&
+                          renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
+                  </div>
+              ) : (
+                  <p>No main image available</p>
+              )}
+          </div>
       </div>
   );
 };

@@ -8,4 +8,11 @@ export type ArticleModel = {
       teaserPicture?: any[];
     };
   };
+  pubInfo: {
+    publicationTime: string;
+    publishedBy: {
+      userName: string;
+    };
+    visible: boolean;
+  };
 } & BaseModel;
