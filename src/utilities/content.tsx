@@ -52,7 +52,12 @@ export const buildAttributes = (node: ContentElement): Record<string, any> => {
   );
 };
 
-export const renderContent = (content: ContentElement, data?: ArticleModel, parent?: string): ReactNode => {
+export const renderContent = (
+  content: ContentElement,
+  data?: ArticleModel,
+  parent?: string,
+  styles?: string
+): ReactNode => {
   const key = content?.attributes?.id || new Date().toISOString() + Math.random().toString(36).substring(2, 15);
 
   switch (content.nodeType) {
@@ -74,31 +79,36 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
       );
     case 'grouphead':
       return (
-        <div key={key} {...buildAttributes(content)}>
-          {content.elements.map(elem => renderContent(elem, data))}
+        <div key={key} {...buildAttributes(content)} className={styles}>
+          {content.elements
+            .filter(elem => elem)
+            .map(elem => {
+              console.log('Grouphead Element:', elem);
+              return renderContent(elem, data);
+            })}
         </div>
       );
     case 'byline':
       return (
-        <div key={key} data-type="byline" {...buildAttributes(content)}>
+        <div key={key} data-type="byline" {...buildAttributes(content)} className={styles}>
           {content.elements.map(elem => renderContent(elem, data))}
         </div>
       );
     case 'text':
       return (
-        <span id="text" key={key} {...buildAttributes(content)}>
+        <div id="text" key={key} {...buildAttributes(content)} className={styles}>
           {content.elements.map(elem => renderContent(elem, data, 'text'))}
-        </span>
+        </div>
       );
     case 'caption':
       return (
-        <figcaption key={key} {...buildAttributes(content)}>
+        <figcaption key={key} {...buildAttributes(content)} className="body-large italic">
           {content.elements.map(elem => renderContent(elem, data))}
         </figcaption>
       );
     case 'credit':
       return (
-        <span key={key} data-type="credit" {...buildAttributes(content)}>
+        <span key={key} data-type="credit" {...buildAttributes(content)} className="body-large italic text-gray-500">
           {content.elements.map(elem => renderContent(elem, data))}
         </span>
       );
@@ -106,7 +116,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
       if (parent === 'text') {
         return (
           <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
-            <p key={key} {...buildAttributes(content)}>
+            <p key={key} {...buildAttributes(content)} className={`${styles} body-large`}>
               {content.elements.map(elem => renderContent(elem, data))}
             </p>
           </ContentEditable>
@@ -119,7 +129,7 @@ export const renderContent = (content: ContentElement, data?: ArticleModel, pare
     case 'summary':
       return (
         <ContentEditable key={key} articleId={data?.id} lockedBy={data?.sys?.lockedBy}>
-          <div key={key} data-type="summary" {...buildAttributes(content)}>
+          <div key={key} data-type="summary" {...buildAttributes(content)} className={styles}>
             {content.elements.map(elem => renderContent(elem, data))}
           </div>
         </ContentEditable>
