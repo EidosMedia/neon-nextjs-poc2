@@ -52,7 +52,9 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
       if (response.ok) {
         console.log('Content updated successfully');
       } else {
-        console.error('Failed to update content');
+        alert('Failed to update content: ' + response.status);
+        console.warn('Failed to update content - response:', response);
+        window.location.reload(); // Reload the page if update fails
       }
     } catch (error) {
       console.error('Error updating content:', error);
