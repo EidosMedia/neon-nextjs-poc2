@@ -60,11 +60,6 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
                 <h3 className="text-lg uppercase">Search</h3>
               </Link>
             </li>
-            <li>
-              <Link href="/about">
-                <h3 className="text-lg uppercase">About</h3>
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

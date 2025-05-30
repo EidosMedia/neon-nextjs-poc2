@@ -1,11 +1,8 @@
 import Link from 'next/link';
-import { BaseModel, PageData, Site} from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { BaseModel, PageData, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
 
-
-
-export default function Navbarsite( { data }: { data: Site } ) {
-
+export default function Navbarsite({ data }: { data: Site }) {
   return (
     <nav className="w-full h-20 bg-white sticky top-0">
       <div className="container mx-auto px-4 h-full">
@@ -24,11 +21,6 @@ export default function Navbarsite( { data }: { data: Site } ) {
             <li>
               <Link href="/search">
                 <span className="text-lg">🔍 Search</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/about">
-                <span className="text-lg">ℹ️ About</span>
               </Link>
             </li>
           </ul>
