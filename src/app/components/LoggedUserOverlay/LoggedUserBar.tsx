@@ -35,9 +35,9 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     return null;
   }
 
-  // if (loggedUserInfo.preview) {
-  // return null;
-  // }
+  if (loggedUserInfo.preview) {
+    return null;
+  }
 
   return (
     <div

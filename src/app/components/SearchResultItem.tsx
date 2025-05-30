@@ -66,8 +66,25 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
         <ArticleOverlay data={data.root} viewStatus={data.viewStatus}>
           <ErrorBoundaryContainer>
             <Link className="no-underline" href={result.nodeData.url}>
-              <div className="text-left grid grid-cols-12 min-h-[250px] gap-4">
-                <div id="item{index}" className="col-span-6 flex flex-col gap-2">
+              <div className="text-left grid grid-cols-12 h-[250px] gap-4">
+                <div
+                  id={`item${index}`}
+                  className="col-span-6 flex flex-col gap-2 relative"
+                  style={{ maxHeight: '200px', overflow: 'hidden' }}
+                  ref={el => {
+                    if (el && el.scrollHeight > el.clientHeight && !el.dataset.showMoreInitialized) {
+                      el.dataset.showMoreInitialized = 'true';
+                      const btn = document.createElement('button');
+                      btn.textContent = 'Show more';
+                      btn.className = 'absolute bottom-0 right-0 bg-white px-2 py-1 text-blue-600 underline';
+                      btn.onclick = () => {
+                        el.style.maxHeight = 'none';
+                        btn.remove();
+                      };
+                      el.appendChild(btn);
+                    }
+                  }}
+                >
                   <h4>{convertToDateString(result.nodeData.pubInfo.publicationTime)}</h4>
                   <h3>
                     <span dangerouslySetInnerHTML={{ __html: title }} />
@@ -95,7 +112,7 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
                       result.nodeData.links?.system?.mainPicture[0]?.dynamicCropsResourceUrls.Wide_small ||
                       '/static/img/nothumb.jpeg'
                     }
-                    height={dimensions ? dimensions.height : 250}
+                    className="h-[250px] object-cover justify-self-end"
                     style={{ color: 'transparent' }}
                   />
                 </div>

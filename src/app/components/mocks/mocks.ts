@@ -11181,3 +11181,854 @@ export const ragData = {
   answer:
     'Trump initially imposed sweeping tariffs on imports from various countries, including a universal 10% tariff on all imports and higher rates for specific countries like China (up to 125%). However, he later backed down on some of his largest tariffs, implementing a 90-day pause for many countries while maintaining the 10% baseline tariff and reducing Chinese tariffs from 145% to 30% after negotiations with Beijing.',
 };
+
+export const chatResponse = {
+  result: {
+    answer:
+      "Jannik Sinner returned to tennis after a three-month anti-doping ban with an impressive showing at the Italian Open, reaching the final where he lost to Carlos Alcaraz 7-6, 6-1. Despite the loss, Sinner's comeback was considered successful as he defeated several opponents including Tommy Paul in the semifinals (1-6, 6-0, 6-3) and Casper Ruud in an earlier round (6-0, 6-1). The tournament reestablished Sinner as one of the top contenders in tennis, with his home crowd in Rome enthusiastically supporting him throughout the event.",
+    input: 'summarize the results',
+    context: [
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0299-1ddba5a41c2c-ec634cb59edb-1000-328292143506',
+          title: 'Carlos Alcaraz storms Sinner’s Roman kingdom to show he rules on clay',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0299-1ddba5a65c7d-57397dd37aaa-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-05-18T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:15:43.506Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0299-1ddba5a41c2c-ec634cb59edb-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0299-1ddba5a41c2c-ec634cb59edb-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'Carlos Alcaraz beat Jannik Sinner 7-6 (5), 6-1 in the final to pick up his first Italian Open title',
+          familyRef: '0299-1ddba5a41c2c-ec634cb59edb-1000',
+        },
+        relevantChunks: [
+          'Despite all of the mania sur­rounding him, Sinner was still able to focus and produce one of his best results on clay. It is still an excellent week that has re-established him as one of the top contenders for all tournaments. There will be many more battles between them to come.\n“For sure there are some things like we saw today what we have to improve if we want to do good in Paris. I am closer than expected in a way of everything,” Sinner said. “But in the other way, it was good.\n“It was a great week for me. Some matches incredibly well, some matches could be better. But this is tennis. It’s a lot of ups and downs. But no, everything together, it was a good, good tournament.”',
+          'Over the peculiar past three months in men’s tennis, the anti-doping suspension imposed on Jannik ­Sinner also left its mark on his greatest rival. In the No 1’s absence, all eyes and expectations turned to Carlos Alcaraz. At times, the Spaniard has said, the pressure “killed” him.\nAlcaraz found his way again by focusing on himself, on approaching his tennis with joy and composure, and in the most highly anticipated match of the season he marked the renewal of their era-defining rivalry with a statement victory by toppling Sinner 7-6 (5), 6-1 to win the Italian Open for the first time in his career.\nBy securing his seventh career Masters 1000 title and 19th overall, Alcaraz ended the Italian’s hopes of a perfect climax to a supreme comeback tournament, also halting his winning streak at 26 matches. Since last August, Sinner has compiled a 41-2 record on the ATP tour. Alcaraz is responsible for both those defeats and he has won his past four matches against Sinner, extending his lead in their head-to-head to 7-4.\n“Tactically since the beginning till the last ball, I didn’t lose the focus, which is great for me,” Alcaraz said. “Probably one of the best matches I played so far in terms of level, ­maintain all the level during the whole match. So I’m just really proud about that.”',
+          'Down two set points on his serve at 5-6, 15-40 in the opening set, Alcaraz locked down his game, ­working a backhand error out of ­Sinner on the second set point before sealing an excellent hold. It was, as ever, also decided by a stroke of genius. At the end of a tense tie-break at 6-5, Alcaraz closed down the net and killed the set point with a spectacular backhand drop volley. With the opening set secured, Alcaraz opened his shoulders and played with freedom until the end as he earned another significant distinction.\nEven beyond Sinner’s success on the court, this was an ­astonishing few weeks in the life of a new national hero. Whether in his practices, matches or even just when fans would catch glimpses of him in the private player areas, swarms of fans followed. Around the Italian capital, he is simply impossible to avoid with so many advertisements bearing his likeness. During the tournament, he even had an audience with the new pope, giving Leo XIV, an avid player, a tennis racket and balls.\nWhile he spoke in his press ­conference, Sinner was interrupted by fans outside chanting his name: “The experience [was] ­amazing, no,” Sinner said. “It’s something very, very special playing here in Italy, in Rome. They pick me up like a small child, no?”',
+          "This article has as title 'Carlos Alcaraz storms Sinner’s Roman kingdom to show he rules on clay', it has been created at Sun May 18 00:00:00 GMT 2025 by Tumaini Carayol at Foro Italico and last updated at Tue May 27 16:15:43 GMT 2025.",
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0299-1ddba5b9ef83-51ec520e7b52-1000-328292157719',
+          title: 'Alcaraz fears ‘dangerous’ Sinner as rivals prepare for French Open duel',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0299-1ddba5bbfb60-f19ebccf23f9-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-05-24T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:15:57.719Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0299-1ddba5b9ef83-51ec520e7b52-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0299-1ddba5b9ef83-51ec520e7b52-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'The top two seeds could meet each other in a grand slam final for the first time while Iga Swiatek is aiming to continue her dominance of the women’s event',
+          familyRef: '0299-1ddba5b9ef83-51ec520e7b52-1000',
+        },
+        relevantChunks: [
+          'From an excruciating March, when Alcaraz was handcuffed by anxiety before matches, he found his path again by focusing on himself and the joy he plays with on court. His performances in Rome were notable for the maturity he demonstrated throughout. Instead of his usual turbulent level, demonstrating both his genius and inconsistency, Alcaraz simply produced what each moment demanded of him. He was spectacular when necessary, but he also ground down his opponents by merely being solid in the decisive moments.\n“During the matches in some moments I was just feeling totally different,” said Alcaraz. “Before I was totally nervous, couldn’t handle the nerves as better as I’m doing right now. I was focused in other things that were important, about the results, about I have to win, I have to make results. Right now I’m focusing in totally a different way, in different things, which is just being happy, being proud about the moments that I’m living. I think that’s the right path. So I’m just feeling great, feeling great right now.”',
+          'As Alcaraz clinched his second Masters 1000 title of the clay-court season, ensuring he will be the player to watch as he attempts to defend his French Open title, Rome was an even more significant occasion for the defeated finalist. In his first tournament back after his ban, Sinner blazed a path to the final in front of a deafening home crowd, immediately re-establishing himself as one of the top contenders in every tournament in the world and providing himself with an excellent base to build upon. On Friday, Sinner discussed both his satisfaction at his progress in Rome and the path ahead as he tries at Roland Garros to win his first grand slam title away from hard courts.\n“There are no miracles, no? I need some time,” said Sinner. “Matches are different than practice sessions. But we are working hard, trying to reach the physical level I would like to, and how I would like to feel on court. Of course it pops into, you know, also the tennis part where it’s just a little bit different. But best-of-five is going to be a great test for me, trying to understand where I am. Let’s see how my body will respond here.”\nIt is unclear who will be there in the latter rounds to derail them. The tour was a turbulent, inconsistent place in Sinner’s absence and Alexander Zverev, Taylor Fritz and Daniil Medvedev have all struggled. Others, \nsuch as Jack Draper',
+          'As \nSwiatek has struggled\n, her rivals have only improved. Gauff has made significant ground in a match-up that once looked hopeless for her, beating Swiatek twice this year, and Aryna Sabalenka has further solidified her status as the best player in the world by finding even greater consistency on a day to day basis. Mirra Andreeva has continued to progress, establishing herself as one of the top players at just 18 years old, while Jasmine Paolini and Zheng Qinwen showed \nlast week in Rome\n that their breakout 2024 seasons were no flukes. The stakes have never been higher for Swiatek in the tournament she has made her home, but it is often in these perilous moments that the greatest players demonstrate their worth.',
+          'such as Jack Draper\n and Lorenzo Musetti, have embedded themselves inside the top eight. Actually contending for the title, however, would mark a significant step forward for both.\nIn the women’s draw, Iga Swiatek has spent the past five years establishing one of the most dominant eras among female players at Roland Garros in history, winning the previous three editions and four of the past five. No woman in the open era has won four consecutive French Open titles.\nAt the same time that Swiatek is trying to break new ground among female players in the modern era of the sport, she is in her biggest crisis since becoming No 1 three years ago. After spending recent years sweeping up titles on both hard courts and clay, the Pole has not won a title at any level since the last edition of the French Open. Her confidence has particularly been blunted by her shock defeat in the semi-finals of the Olympic Games at Roland Garros last August and her own doping case, which led her to accept a one-month ban after taking widely available melatonin medication that had been contaminated by the banned substance trimetazidine. After losing 6-1, 6-1 to Coco Gauff in her Madrid title defence, she was defeated in the third round of the Italian Open by Danielle Collins.\nAs \nSwiatek has struggled',
+          'A little over an hour after reinforcing his supremacy on red clay with his first title at the Italian Open, Carlos Alcaraz ended his time in Rome with an ominous, pointed parting shot from the bowels of the Campo Centrale. “He’s going to be dangerous,” said Alcaraz. “He’s going to be a really dangerous player in Paris.”\nAlcaraz was speaking, of course, about his greatest rival, Jannik Sinner, whom he had just \ndefeated in two fascinating sets\n in the final. Over the next fortnight in Paris, one of the pressing questions surrounding the tournament will be whether Alcaraz and Sinner, the top two seeds, can consolidate those performances by meeting in a grand slam final for the first time.\nHistorically, the absence of a top player is good news for their rival, but few competitors were as happy to see Sinner back in action as Alcaraz. Since the No 1’s three-month doping ban was announced, the Spaniard has struggled with the additional attention and scrutiny, with so many people expecting him to win every tournament he entered. He said that the pressure, at times, “killed” him.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0299-1ddba5a9ee6f-4f7802e9f02b-1000-328292147517',
+          title: 'Jannik Sinner returns with a win to leave rocking Rome celebrating again',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0299-1ddba5abd17c-f1d9f483ac7e-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-05-10T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:15:47.517Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0299-1ddba5a9ee6f-4f7802e9f02b-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0299-1ddba5a9ee6f-4f7802e9f02b-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'World No 1 Jannik Sinner played his first match after three-month doping ban and comfortably defeats Mariano Navone 6-3, 6-4',
+          familyRef: '0299-1ddba5a9ee6f-4f7802e9f02b-1000',
+        },
+        relevantChunks: [
+          'As Sinner closed out his first match back with an authoritative service game, his audience erupted into loud, sustained charts for a final time, delaying the start of the post-match interview as he soaked up the support. There will be many greater challenges ahead for Sinner, who next faces the Dutch lucky loser Jesper de Jong, but the most important development for the tightly packed crowd on the Campo Centrale is that the Sinner is back.\n“Hopefully I can play here one or two matches more to see where I am at, which would be my main goal,” said Sinner. “Then all the rest is just a positive, no? It was a great start from my point of view of this tournament and of the comeback. Let’s see what’s coming.”\nElsewhere, Iga Swiatek’s difficult run continued as the defending champion was defeated 6-1, 7-5 by the American Danielle Collins in the third round. The Pole, who will start her attempt to win a fourth consecutive French Open this month, will return to Paris having not won a single title at any level since her triumph there a year ago. Jacob Fearnley, the British No 2, fell 6-4, 7-6 (0) to the 29th seed, Matteo Berrettini.',
+          "This article has as title 'Jannik Sinner returns with a win to leave rocking Rome celebrating again', it has been created at Sat May 10 00:00:00 GMT 2025 by Tumaini Carayol at the Foro Italico and last updated at Tue May 27 16:15:47 GMT 2025.",
+          'Considering his success on the court over the past 18 months, as he has established himself as the best player in the world with three grand slam titles, it comes as no surprise that Sinner has gained such a high profile in his tennis-mad home country. However, his doping case appears to have only increased his profile and popularity at home, his compatriots rallying around him in case nobody else in the world would. His uncertainty about his reception was quelled from his first practice when he entered the court to huge cheers.\nAfter days of anticipation surrounding his return, Sinner was ushered back on-court by the announcer as \n“\nil \nmaestro\n”,\n the raucous cheers he received on his emergence setting the tone for the night. Every single successful point was cheered loudly and at length, and there was plenty to cheer on against Navone, a gritty clay-court specialist who made life difficult for Sinner but lacked the firepower to seriously trouble him.\nAlthough some rust was unsurprisingly visible in parts of the Italian’s game, particularly in his forehand, so too was the destructive ball-striking that has set him apart from the rest of the world. Sinner struck his trusty backhand brilliantly from the beginning, he moved well and served well enough on the important points. After saving two break points in a messy service game at 1-1, he rolled through the set. He then spurned a break lead at 4-3 in set two before locking down his game and closing out the win.',
+          '“Lord forgive me, the Sinner is back,” read a pair of T-shirts, complete with AI-generated religious imagery, worn by two exuberant women sporting orange wigs in a crowd of thousands that had amassed outside the Foro Italico’s stadium court an hour before festivities began.\nTheir joy was reflective of a jubilant night in Rome as Jannik Sinner marked his return to professional tennis \nafter his three-month doping ban\n with a win on home soil at the Italian Open, closing out a positive performance with a 6-3, 6-4 win over Mariano Navone of Argentina to reach the third round.\n“Today I felt quite good on court,” said Sinner afterwards. “I’m happy about that. Hopefully of course we are aiming for small improvements which are the small details that can make the difference.”\nThe men’s world No 1, who received a first round bye, had not competed since entering a case resolution agreement with the World Anti-Doping Agency (Wada) in February. In April last year, the 23-year-old twice tested positive for the banned substance clostebol before the initial independent declared that Sinner bore no fault or negligence for the anti-doping rule violation and would not receive a suspension. Wada chose to appeal to the court of arbitration for sport and sought a ban of one to two years before the two parties came to an agreement.',
+          'Long before Sinner had even started his first pre-match warm-up since the Australian Open final, his audience was already in full voice. Thousands of fans gathered beneath the bridge that connects the Campo Centrale, the stadium court, to other exclusive player areas on the tournament grounds. Even though Sinner did not appear on the bridge before his match, the spectators chanted his name, waving flags and signs with his likeness.\n“That means much more than any result, to be honest,” said Sinner of the support he received. “It has been an amazing feeling to come here starting from the first practices with other players.”\nWith the exception of an unforgettable Thursday in Rome, when even the big screen on the side of the Campo Centrale switched to the news as Robert Francis Prevost was named the new pope, the focus of the Italian Open has been almost entirely on Italy’s first ever No 1 singles player. It is almost impossible to navigate Rome without catching a glimpse of Sinner in some form. He seems to pop up in almost every other commercial on television channels, whether during the Champions League semi-finals or reality television shows. Throughout the week, his practice sessions were filmed and uploaded online by Tennis TV, the Association of Tennis Professionals’ streaming platform.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0290-1ddba2486540-a7532179d92c-1000-328291580275',
+          title: 'Jannik Sinner keeps focus to fend off Alex Michelsen at US Open',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0290-1ddba24a71d7-801cbf697cae-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2024-08-29T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:06:20.275Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0290-1ddba2486540-a7532179d92c-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0290-1ddba2486540-a7532179d92c-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'The world No 1 reached round three at the US Open with a 6-4, 6-0, 6-2 win, putting the furore over his failed doping tests to one side',
+          familyRef: '0290-1ddba2486540-a7532179d92c-1000',
+        },
+        relevantChunks: [
+          'Throughout the past week, as ­Jannik Sinner has taken his first steps toward putting the revelation of his failed doping tests behind him, the Italian has repeated in almost every appearance and ­interview that he is taking things match by match and day by day. He is endeavouring to focus only on the immediate task ahead, ­blocking out all else.\nIn the process, the world No 1 continues to lay the foundations for a title challenge at the US Open. On Thursday, Sinner navigated a turbulent opening set against a tricky young opponent to reach the third round with a 6-4, 6-0, 6-2 win over Alex Michelsen of the United States.\nLast week, \nSinner announced\n his previously undisclosed case had concluded with an independent tribunal ruling that he bore no fault or negligence for the fact that the banned substance clostebol was detected in two anti-doping tests. A few days later, Sinner’s US Open campaign had started with a minor scare as he trailed the American Mackenzie McDonald before recovering emphatically toprogress.\nAn even greater challenge seemed to await the Italian against Michelsen, a fast-rising 20-year-old. After reaching his third ATP final last week at the Winston Salem Open, the American is now the youngest player inside the top 50 at a career high ranking of No 49.',
+          '“You come to them and you say: ‘Well, I never did anything in my life. I don’t know how did it get there.’ When you don’t know, you get suspended. That’s a little bit the tricky part, but that’s how doping rules are.”\nAs he continues to navigate this situation, Sinner continues to win. His win-loss record now stands at a tour-leading 50-5 (91%) and he has won his past six matches, after winning his fifth title of the year in Cincinnati last week. He will face Christopher O’Connell in the third round after the Australian defeated Sinner’s compatriot Mattia Bellucci 6-3, 6-4, 3-6, 6-3.',
+          'In that final, which he lost to Lorenzo Sonego of Italy, Michelsen smashed a ball into the crowd in anger, striking a spectator. According to the rules and the precedent set by similar incidents, he should have been defaulted. Instead, he was allowed to play on. While such an incident would usually generate more discussion, Sinner’s anti-doping case has overshadowed all minor talking points and controversies.\nAs Michelsen stared down the No 1 player at Arthur Ashe Stadium, the opening set was tense and ­competitive, with the two players trading breaks as they struggled to defend their second serves. But Sinner completely outserved his opponent in the decisive moments, which allowed him to narrowly edge out the opening set. With the first set secured, a far more relaxed Sinner began to step inside the baseline and dominate the exchanges as he ­navigated a ­comfortable win.\nWhile he builds momentum on the court, Sinner’s anti-doping case has continued to generate conversation away from it. Despite facing American players in both of his first two matches, he has received a warm reception from the audience. The response from his fellow players has been more mixed, with both support and criticism alike.\n“I cannot control the players’ reaction, and if I have something to say to someone, I go there privately, because I’m this kind of person,” he said. “But, look, overall, it has been not bad. So I’m happy about that.”',
+          'Discussions about the case itself have also continued. Sinner’s anti-doping rule violation is a rare example of an athlete being able to contest successfully the automatic provisional suspensions that an athlete receives upon notification of testing positive for a banned substance.\nHis team moved incredibly quickly, contesting the first provisional ban on the same day, 4 April, he received the notification and before it was repealed a day later. For many, it underlines the benefit of having money, clout and a team of professionals around him. In the aftermath of testing positive, some lower-ranked players would probably be scrambling for lawyers and representation and would not be in a position to respond so quickly.\nAfter his previous match, Daniil Medvedev noted that what concerned him most about anti-doping was being found positive for a banned substance without knowing the origin. Sinner was able to quickly determine that he had been contaminated by an ointment purchased by his fitness trainer Umberto Ferrara, which is often not the case.\nMedvedev said: “For me the only thing where I’m a little bit, like, ­doping cases make me scared is imagine – so he knew what happened, and good for him, so he managed to defend himself. Imagine whatever tennis player in the top 100 gets an email, and they say: ‘Look, there was cocaine in your blood.’',
+          "This article has as title 'Jannik Sinner keeps focus to fend off Alex Michelsen at US Open', it has been created at Thu Aug 29 00:00:00 GMT 2024 by Tumaini Carayol at Flushing Meadows and last updated at Tue May 27 16:06:20 GMT 2025.",
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0299-1ddba5c32c81-2e16a71c4713-1000-328292163588',
+          title: 'Jannik Sinner routs Casper Ruud with ‘near perfect’ display in Rome',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0299-1ddba5c4e686-218af37b31fd-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-05-15T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:16:03.588Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0299-1ddba5c32c81-2e16a71c4713-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0299-1ddba5c32c81-2e16a71c4713-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'Jannik Sinner reached the semi-finals of the Italian Open for the first time with a ruthless 6-0, 6-1 win over Casper Ruud in Rome',
+          familyRef: '0299-1ddba5c32c81-2e16a71c4713-1000',
+        },
+        relevantChunks: [
+          "This article has as title 'Jannik Sinner routs Casper Ruud with ‘near perfect’ display in Rome', it has been created at Thu May 15 00:00:00 GMT 2025 by Tumaini Carayol at the Foro Italico and last updated at Tue May 27 16:16:03 GMT 2025.",
+          'Forty-six minutes into one of the most highly anticipated matches of the clay-court season, Casper Ruud triumphantly raised both hands to the sky and struggled to suppress a smile. Ruud, however, was not cheering the completion of a successful set or even a singular, spectacular point; he was commemorating sarcastically the very first game he had won.\nIt was the only thing Ruud had to cheer all night as Jannik Sinner pieced together a remarkable statement performance under the lights in Rome, underlining his enduring status as the best player in the world by completely demolishing Ruud, the sixth seed, 6-0, 6-1 to reach the semi-finals of the Italian Open.\nThis victory marks the first time that Sinner has ever reached the last four at the biggest tournament in his home country and he is now two wins away from what would be a remarkable title on his return from a three-month anti-doping suspension. He will face Tommy Paul, the 11th seed, on Friday for a place in the final.\n“It was a great performance,” Sinner said. “Very happy about that. But things can change quickly, no? Every day is different. Tomorrow is a different opponent. We play again in the night. But still it’s a different matchup. I always try to prepare myself in the best possible way.”',
+          '“It doesn’t feel so bad,” Ruud said. “Honestly, I think it was more fun than anything, even though I lost love and one, it’s like you just look at the guy and say: ‘Wow, this is kind of next-level shit.’ Excuse my language. I don’t know what else to say. It was almost fun to witness at the same time. Of course, I wish it was a closer match. I wish I could have given the people, the fans, a longer or closer match. But I think that I was there ready to play, he was just even readier.”\nSinner’s victory rounded off another incredible 24 hours for Italian tennis after Lorenzo Musetti, the eighth seed, defeated the second seed, Alexander Zverev, to join Carlos Alcaraz in the semi-finals. In the women’s draw the sixth seed, Jasmine Paolini, became the first Italian woman to reach the final in Rome since Sara Errani in 2014 with a 7-5, 6-1 win over Peyton Stearns.',
+          'Sinner’s level was stratospheric from the very first point. He opened the match by absolutely thumping the ball. While Sinner’s backhand, the stroke that comes most naturally to him, has been excellent from the beginning of the tournament, here he could also do whatever he wanted on the court with his forehand. The sheer force and weight of his forehand, and the ease with which he redirected his two-handed backhand down the line at will, completely overwhelmed Ruud.\n“There’s a kind of saying that you have that when someone plays that well, it feels like you have two forehands, one from the forehand side and another forehand from the backhand side,” Ruud said. “In his case, it’s almost like two backhands because his backhand is also so good. It was just like playing a wall that shoots 100mph balls at you all the time.”\nThis was a complete performance. Sinner returned stupendously well and demonstrated his growing variety with some well-measured, delicate touches alongside his brutal power. The few times Ruud was in control of the points, Sinner effortlessly shifted his defence into attack. By 3-0, 30-30 in the opening set, Sinner had allowed Ruud one single point and the Norwegian ended the set with two service points. One incredible set would have been impressive enough, but Sinner refused to let up until the end.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0299-1ddba59a5bd9-4755275bce46-1000-328292136776',
+          title: 'Sinner set for hero’s welcome in Rome but how will the locker room react?',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0299-1ddba59c0c19-e162641bdbe8-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-05-03T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:15:36.776Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0299-1ddba59a5bd9-4755275bce46-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0299-1ddba59a5bd9-4755275bce46-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'The world No1 returns at next week’s Italian Open after a three-month anti-doping suspension amid a saga that left players questioning the fairness of the system',
+          familyRef: '0299-1ddba59a5bd9-4755275bce46-1000',
+        },
+        relevantChunks: [
+          'Jannik Sinner could not help but crack a wry smile when he faced the media before the US Open last year in the aftermath of his anti-doping case, one of the most high-profile in the history of tennis.\nSinner, the best player in the world, had been attempting to emphasise just how low the concentration of the banned substance clostebol had been in his urine sample, and therefore how irrelevant it was to his performances on the court.\n“A different part is the amount I had in my body, which is zero point zero, zero, zero, zero, zero, zero, zero… one,” he said, theatrically counting out each zero with his fingers. “So there are a lot of zeros before coming up a one.”\nLast summer was a period of significant tension, uncertainty and doubt for Sinner when \nhis anti-doping case became public\n, but it was also tinged with relief. After initially successfully overturning the automatic provisional ban that follows a positive doping test, he had been cleared by an independent tribunal to continue competing without penalty. As he tried to put the case behind him, he had good reason to smile.',
+          'Since Sinner’s case was made public, \nit has received criticism\n at every stage, particularly due to the belief that the No 1 has been the beneficiary of favouritism that lower-profile athletes would not be granted. Comparisons have been made with other cases, including the 18-month ban Mikael Ymer of Sweden received in 2023 for three whereabouts failures and the 19 months it took for the British doubles specialist Tara Moore to be cleared of doping after being provisionally banned in May 2022. The International Tennis Integrity Unit (ITIA) has since appealed against her case. The anti-doping authorities have pushed back on these comparisons, arguing that all cases operate under completely different facts and circumstances.\nThe announcement of Sinner’s case-resolution agreement and suspension prompted another wave of criticism. Novak Djokovic described the widespread frustration a day after the ban was announced: “A majority of the players that I’ve talked to in the locker room, not just in the last few days, but also last few months, are not happy with the way this whole process has been handled. A majority of the players don’t feel that it’s fair. A majority of the players feel like there is favouritism happening. It seems like, it appears that you can almost affect the outcome if you are a top player, if you have access to the top lawyers and whatnot,” he said.',
+          'Instead it turned out to be the first episode of a protracted saga that has drawn global attention, opened him up to scathing criticism and may have significant implications for many future cases in other sports. Next week, after a three-month suspension, Sinner will make his return to professional tennis. The circumstances surrounding his comeback could hardly be more dramatic. Sinner, one of the most high-profile Italian athletes of his generation, will begin his comeback on home soil to a hero’s welcome at the Italian Open in Rome.\nThe relief Sinner felt in August faded relatively quickly. The World Anti-doping Agency (Wada) had accepted Sinner’s explanation that his fitness trainer, Umberto Ferrara, had bought an over-the-counter healing spray that contains clostebol for his own personal use and that Sinner’s physio, Giacomo Naldi, had inadvertently contaminated the player during their routine treatment after using it for a cut finger. But Wada was not prepared to leave it there. It opted to appeal against the result of the first instance hearing, seeking a period of ineligibility of between one and two years. A hearing was set for April.',
+          'Even as Wada officials were still publicly pushing for a suspension, they were privately in contact with Sinner’s team to look at a case resolution agreement, a provision in place since 2021 that offers more flexibility in what Wada sees as more minor cases. Separately, reforms have been proposed for the next iteration of the Wada anti-doping code that would allow for more lenient penalties for unintentional contamination cases from 2027.\nUnder the current Wada rules, a no significant fault or negligence ruling for an anti-doping violation based on a banned substance rather than a contaminated legal product carries a minimum 12-month ban unless the court of arbitration for sport (Cas) intervenes. The two parties settled on a three-month suspension period, which also meant that Sinner would not miss any grand slam tournaments.\nSince Sinner’s case was made public, \nit has received criticism',
+          'Daniil Medvedev also stressed the need for consistency in future: “I hope that the next few times, the players will be able to do that,” the Russian said. “I hope that it will create a precedent where everyone will have the opportunity to defend themselves better than before. Otherwise, if it’s not going to be possible, it’s going to be bizarre.”\nDuring his time away from the sport, Sinner has kept a low profile, making only a couple of public appearances, but he has begun to speak publicly in the buildup to his return.\nIn a recent interview with the Italian broadcaster Rai, Sinner, 23, admitted that the doubts from his colleagues had briefly led him to consider quitting: “When I arrived in Australia in January I was uncomfortable, also because it seemed to me that the other players looked at me differently. For a moment, \nI even thought about giving up\n everything,” he said.\nBy the end of that Australian Open, Sinner had won his third grand slam title. He stressed the importance of enclosing himself and his team in a “bubble” and focusing on the people around him. His return to competition will force him to confront those feelings again as he navigates lingering doubts and uncertainty inside the player locker room, this time after actually being penalised.\nHe will, however, also have some allies. It came as no surprise that the first prominent player Sinner trained with \nwas his friend Jack Draper',
+          'He will, however, also have some allies. It came as no surprise that the first prominent player Sinner trained with \nwas his friend Jack Draper\n. Aside from Sinner’s Davis Cup teammates and other compatriots, Draper has been one of the few top players to consistently support the Italian publicly. Since the ban began, Draper has sent Sinner text messages emphasising his admiration for him and how he sees him as an inspiration for his own career. “I think it’s important for people to know and recognise that the guy’s very, very kind-hearted and a good human being. So he doesn’t deserve any of the hate that he gets,” Draper said last week in Madrid.\nThe results on the court have only added to the uniqueness of this situation. It is undeniable that Sinner has managed the tension and uncertainty surrounding him remarkably well, producing the most dominant stretch of form in his entire career. He is 36-1 since last August when the case was announced, elevating his grand slam title count to three with wins at the US Open last year and Australian Open in January, which remains his only tournament of 2025. He won the Cincinnati Masters 1000 event last year while staying up until the early hours of the morning to participate in the first hearing remotely.',
+          "This article has as title 'Sinner set for hero’s welcome in Rome but how will the locker room react?', it has been created at Sat May 03 00:00:00 GMT 2025 by Tumaini Carayol in Madrid and last updated at Tue May 27 16:15:36 GMT 2025.",
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0299-1ddba5a9ac36-14027772bdcb-1000-328292147327',
+          title: 'Jannik Sinner recovers to beat Paul and set up dream Rome final against Alcaraz',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0299-1ddba5ac0319-04a5cb2a2580-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-05-16T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:15:47.327Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0299-1ddba5a9ac36-14027772bdcb-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0299-1ddba5a9ac36-14027772bdcb-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'World No 1 fought back impressively to win 1-6, 6-0, 6-3, while Carlos Alcaraz beat Italian Lorenzo Musetti 6-3, 7-6 (4)',
+          familyRef: '0299-1ddba5a9ac36-14027772bdcb-1000',
+        },
+        relevantChunks: [
+          'It did not take long for Sinner to find his way again, settling into the second set with an authoritative hold before forcing himself on to the front foot and breaking with a fierce backhand down-the-line winner. As Sinner continued to impose relentless pressure with his brutal, metronomic groundstrokes, Paul buckled.\nBy the time the Italian led 2-0 in set three, after winning eight games in a row, he was in complete control. There was, however, one final twist. At 3-1, Sinner threw in a loose service game to give back the break. After shaking out his leg earlier in the set, his limp between points had gradually become more pronounced.\nWithin the rallies, however, Sinner continued to chase down every ball and continued his dominance from the baseline with his far greater pace and weight of shot as he closed out another supreme win. “I hope to recover in the best possible way,” said Sinner on his physical issues. “Since a couple of matches [I have had] a blister under the foot, which then some other muscles, they work. I’m not concerned about my leg. Hopefully the blister is going to be healed as fast as possible. But in any case, as I said, there are no excuses, no? I’m in the final. I give it the best I have Sunday, then we see what’s coming.”',
+          "This article has as title 'Jannik Sinner recovers to beat Paul and set up dream Rome final against Alcaraz', it has been created at Fri May 16 00:00:00 GMT 2025 by Tumaini Carayol at the Foro Italico and last updated at Tue May 27 16:15:47 GMT 2025.",
+          'Four matches into his comeback at the Italian Open, the level displayed by Jannik Sinner had only underscored his status as the best tennis player in the world. He had marched past every challenge in his path, reaching the semi-finals without dropping a set.\nConsistent excellence in professional tennis, however, also means finding solutions when things aren’t going well. Sinner handled his first real challenge in Rome spectacularly well, recovering from heavily losing the first set to smother Tommy Paul of the United States 1-6, 6-0, 6-3. “These kind of matches I need,” said Sinner. “I’m happy how we handled this kind of situation, especially going on court and not feeling great.”\nThe victory sent him into the final on his return from a three-month anti-doping suspension and set up the dream scenario for the tournament, a rekindling of the rivalry that will probably define the new generation of men’s tennis.\nSinner will face Carlos Alcaraz, the third seed, on Sunday after the Spaniard demonstrated his improving discipline and consistency by remaining solid in difficult windy conditions to defeat the eighth seed Lorenzo Musetti of Italy 6-3, 7-6 (4).',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0293-1ddba219c38b-01663e17c34c-1000-328291549466',
+          title: 'Jannik Sinner tops off dream year as Italy retain Davis Cup title',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0293-1ddba21bbec9-8ed78d21b09b-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2024-11-24T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:05:49.466Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0293-1ddba219c38b-01663e17c34c-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0293-1ddba219c38b-01663e17c34c-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary: 'The world No 1 sealed a 2-0 triumph over the Netherlands by defeating Tallon Griekspoor in Malaga',
+          familyRef: '0293-1ddba219c38b-01663e17c34c-1000',
+        },
+        relevantChunks: [
+          'The rise of Italian men’s tennis has been forecast by many for years as a special generation of young, talented players gradually climbed towards the top of the game. It is fair to say that they have arrived. One year on from their second ever triumph in the competition, Italy won the Davis Cup for a second straight year by defeating the Netherlands 2-0 in Malaga.\nIn a rematch of Italy’s group-stage victory in September, Matteo Berrettini opened the tie with a dominant 6-4, 6-2 win over Botic van de Zandschulp, providing the perfect platform for Jannik Sinner, the world No 1. After edging a tough opening set against an impressive Tallon Griekspoor, Sinner opened up his shoulders and marched to a 7-6 (2), 6-2 victory.\nThis year marks the first time that the Billie Jean King Cup and Davis Cup finals have overlapped and have been played in the same city. The two competitions produced identical outcomes, with Italy also \nwinning the BJK Cup\n in the stadium next door on Wednesday as Jasmine Paolini, the French Open and Wimbledon finalist in singles and Olympic gold medalist in doubles, appropriately closed out her breakthrough season. Italy is the fifth nation to win the two titles in the same season.',
+          "This article has as title 'Jannik Sinner tops off dream year as Italy retain Davis Cup title', it has been created at Sun Nov 24 00:00:00 GMT 2024 by Tumaini Carayol and last updated at Tue May 27 16:05:49 GMT 2025.",
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0296-1ddba4dd4b32-18f6e2eefcfa-1000-328292012864',
+          title: 'Jannik Sinner’s doping settlement means nobody loses but try telling Halep that',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0296-1ddba4df5855-205464834606-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-02-15T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:13:32.864Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0296-1ddba4dd4b32-18f6e2eefcfa-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0296-1ddba4dd4b32-18f6e2eefcfa-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'Italian received a shorter ban with admission of guilt but others have been treated a lot more harshly in cases of contamination',
+          familyRef: '0296-1ddba4dd4b32-18f6e2eefcfa-1000',
+        },
+        relevantChunks: [
+          'In the end, then, everyone got something they wanted. For Jannik Sinner, the \nthree-month ban he has accepted\n from the World Anti-Doping Agency (Wada) is less than he might have received had he let the appeal go the natural distance. While he will miss almost nothing of note, at least in terms of grand slams, since the world No 1 will be free to return in early May, ready for the French Open and a shot at a third successive major title and fourth in total.\nFor Wada, Sinner’s partial admission of responsibility holds up a key part of the anti-doping programme: that an individual is responsible for what goes in their body, a responsibility that extends to their entourage. And for the sporting world at large, it’s something of a rebuttal to those who say the superstars get preferential treatment.\nHaving the \nrecently crowned Australian Open champion\n receive a drugs ban is not a good look for the sport, of course, but it could have been a lot worse. In appealing against the original decision by the International Tennis Integrity Agency (ITIA) not to ban Sinner, Wada said it was seeking a ban of at least a year. \nThe three-month settlement\n means it will be out of the way before the next grand slam begins at Roland Garros in May.',
+          'The settlement will have done little to appease the feeling among some other players, however, especially Simona Halep and Britain’s Tara Moore. Both players were also the victim of contamination: Sinner was treated with greater kindness than they were.\nThe cases of Halep and Moore were significantly different to that of Sinner, more complicated and requiring more assessment, but it’s also true that Sinner, as the world No 1 and a rich man, had the luxury of being able to call on a team of lawyers immediately.\nThroughout the entire case, Sinner has done a decent job of answering every question asked of him in press conferences, something that may sound like a given, but which nevertheless helps him in terms of the way he is perceived by people inside and outside tennis.\nAll the way through, he has suggested the reason he has been able to continue to play his best tennis has been because his conscience is clear, that he personally had done nothing wrong.\nWith the doubt lifted from his shoulders, it seems likely Sinner will continue to be the man to beat. The Italian lost six matches in 2024 and began this year in brilliant fashion, winning the Australian Open to claim his third major.\nThree months off might halt his momentum but it might also allow for recovery after an intense period on and off the court. The chances are that when he does return – most likely at the Rome Masters in May – he will do so with his head clear and body rested, which spells bad news for his rivals.',
+          'The three-month settlement\n means it will be out of the way before the next grand slam begins at Roland Garros in May.\nSinner will be breathing a big sigh of relief, no doubt. A lengthy ban would have been a heavy weight to bear for something that he, the ITIA and Wada all agreed was not his personal fault. If the explanation given – that the clostebol accidentally entered the Italian’s system via contamination from a medicine used by his physio to treat a cut finger – seemed a little fanciful, few inside tennis believed that Sinner had actually tried to cheat.\nIndeed, had there been a provision in the original case for a three-month ban to be issued, Sinner might have settled for that, too. It would have allowed him to say: ‘OK, I know I did nothing wrong myself, but appreciate that my entourage did and accept my fate.’ As it was, the panel that judged the case was restricted to handing out a minimum 12-month ban if it felt he was guilty.\nThat, too, was surely a factor in the Wada settlement. From 2027, more flexibility will be shown to those who fall foul of contamination in doping cases.\nPanels will be allowed to issue bans of 0-24 months, offering the likelihood that those who can prove their doping sample was the result of a contamination will receive shorter bans. It’s a safe bet Sinner’s lawyers were stressing that point.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0298-1ddba5fc69d0-83d29c69da82-1000-328292201055',
+          title: 'Jack Draper backs Sinner as return from ban nears: ‘He doesn’t deserve any hate’',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0298-1ddba5fe2c23-16317f83884f-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-04-22T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:16:41.055Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0298-1ddba5fc69d0-83d29c69da82-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0298-1ddba5fc69d0-83d29c69da82-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'Jack Draper believes it has been important to stand up for his friend Jannik Sinner during the Italian’s doping ban',
+          familyRef: '0298-1ddba5fc69d0-83d29c69da82-1000',
+        },
+        relevantChunks: [
+          'agreed in February on a case resolution ­agreement\n – essentially a settlement – with the two parties agreeing on a three‑month ban.\nAccording to Wada rules, Sinner had been banned from all officially sanctioned tournament venues for the first two months of his ­suspension but he was allowed to return to ­training at ­official venues and with his colleagues from one month before his return to competition.\nDraper and Sinner, both 23, played each other in doubles as juniors and have become friends during their time in the professional circuit. ­Sinner sent Draper messages of encouragement during his injury problems and even once taught the Englishman how to cook pasta. Since Sinner’s case was made public before the US Open in August, Draper has been supportive. In New York, days after the case had come to light, Draper stressed that he believed Sinner did not intentionally cheat. ­Privately, Draper has sent ­Sinner messages of encouragement, telling the world No 1 that he has been an inspiration in his own career.\nAs both players prepared for their tournaments in the coming weeks, Draper attempting to make progress on clay and Sinner looking towards his return, their time on court was all business. “I didn’t speak to him too much to be honest,” Draper said.',
+          '“I was looking for practice for the week and I knew that Jannik was availa­ble and in Monte Carlo on the clay so I organised with his team to go out there for three or four days and to train with him,” he said. “I mean, look, if you can train with anyone, it’s got to be probably the best in the world, right? He’s obviously had a bit of time off, but he’s playing at an incredible level still. I’m looking forward to having him back on the tour, because I think his presence has been missed. It was great to be with him for a few days and get some good sparring.”\nSinner is now in the final stretch of his three-month ban arising from his testing positive in March last year for the banned substance clostebol and he will return on home soil at the ­Italian Open next month, which will be a ­significant event for one of his country’s most prominent athletes.\nShortly before the US Open in August last year, Sinner received a judgment of no fault or negligence and no suspension \nat a first-instance ­hearing\n. The World Anti-Doping Agency then \nappealed against the decision\n to the court of ­arbitration for sport. The hearing had been sche­duled to begin last week but Wada and ­Sinner’s team \nagreed in February on a case resolution ­agreement\n – essentially a settlement – with the two parties agreeing on a three‑month ban.',
+          'Boulter recovered from losing the first four games against Katerina Siniakova to reach the second round and broke new ground by earning the first WTA Tour clay-court win of her career. Boulter prevailed 4-6, 6-2, 6-1 as Siniakova, ranked 57th in the world and 17 places below the British No 1, wilted in their first-ever meeting. Boulter’s appearance at the WTA 1,000 tournament is only the fifth time she has competed in the main draw of a tour-level clay event.\nFellow Briton Fran Jones qualified for the main draw with a 7-6 (3), 3-6, 6-1 win over Spain’s Cristina Bucsa.',
+          '“On the court always, Jannik is very professional. He’s No 1 in the world for a reason. He’s very consistent, playing great. [That] hasn’t changed that at all. Maybe a bit rusty in some areas but, at the same time, he’s improving every day. The more points we played, the more he was getting better.”\nDespite contesting only one tournament this year, winning the Australian Open in January, Sinner remains the ATP No 1 by nearly 2,000 points and he has only just been leapfrogged by Carlos Alcaraz and ­Alexander Zverev in the ATP Race, which is compiled solely of results registered in this calendar year. Draper sits one spot beneath Sinner in the ATP Race at No 4.\nSeeded fifth in Madrid, Draper has received a first-round bye and he will begin his tournament against either Tallon Griekspoor or a qualifier. Cameron Norrie, meanwhile, will face Martín Landaluce and has been joined in the main draw by Jacob Fearnley, who qualified with a 7-5, 6-1 win against Hugo Dellien.\nIn the women’s draw, Emma Raducanu will face Suzan Lamens of the Netherlands, who recently defeated Katie Boulter in the Billie Jean King Cup. Sonay Kartal will open her tournament against Jaqueline Cristian.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0290-1ddba2533f47-2b4e5b3d7a02-1000-328291587074',
+          title: 'Jannik Sinner case dividing tennis with lack of transparency at its core',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0290-1ddba25553cd-6edb40b094e3-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2024-08-21T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:06:27.074Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0290-1ddba2533f47-2b4e5b3d7a02-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0290-1ddba2533f47-2b4e5b3d7a02-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'World No 1’s complex case asks familiar questions of doping authorities and just why it was kept secret for so long',
+          familyRef: '0290-1ddba2533f47-2b4e5b3d7a02-1000',
+        },
+        relevantChunks: [
+          'Jannik Sinner took his first steps on the clay courts of the Madrid Open on Saturday 20 April. By that time, although the rankings did not yet reflect it, Sinner was undeniably the best player in the world. He had won his first grand slam title at the Australian Open in January before embarking on a spectacular, consistent run. His pre‑tournament interviews in the subsequent days were dominated by his budding rivalry with Carlos Alcaraz, a match-up that many believe will define the next generation of men’s tennis.\nWhat only Sinner, his team and the anti-doping authorities knew then, however, was that until the day of his first training session in Madrid, he had been banned from entering the tournament grounds or any other official grounds or courts because of the automatic provisional suspension he had received in the aftermath of him twice testing positive for the banned substance clostebol.\nNone of that information was made public until this week when the International Tennis Integrity Agency (ITIA) and Sinner’s team revealed jointly that the 23-year-old had been found to bear no fault or negligence for the presence of clostebol in two of his anti-doping test samples taken in March. It is significant enough that the No 1 men’s tennis player has twice tested positive for a banned substance, but it is an even more remarkable situation due to the silence that had led up to this revelation.',
+          'At the same time, this case has continued to progress in private and it has intersected with numerous significant events. During his run to the French Open semi-finals, for example, Sinner’s defence team responded to the ITIA’s official notice of adverse analytical findings and he won his third-round match against Pavel Kotov a day after he was formally charged with an anti-doping rule violation. Sinner’s independent tribunal was held the day after his first-round win at the Cincinnati Open last week. For some, the lack of transparency throughout his case has been troubling.\nDarren Cahill, Sinner’s coach, alongside Simeone Vagnozzi, said in an interview with ESPN that Sinner has been worn down by the case. “If you are a Jannik fan, you would have seen a big change in his body language, physicality on the court, his excitement to be on the court – he’s struggled and I think it’s worn him down physically and mentally,” he said. “He got tonsillitis, which is the reason why he missed the Olympics.\n“I just want to stress that he’s maybe the most professional young man that I have ever had the chance to work with. He would never ever intentionally do anything, and he’s in a situation that is incredibly unfortunate.”',
+          "This article has as title 'Jannik Sinner case dividing tennis with lack of transparency at its core', it has been created at Wed Aug 21 00:00:00 GMT 2024 by Tumaini Carayol and last updated at Tue May 27 16:06:27 GMT 2025.",
+          'Most anti-doping cases end up with a player receiving notification of a failed test and then being provisionally suspended until an independent tribunal has ruled on the case at the end of a lengthy, public process.\nIn Sinner’s case, he was notified for his first positive test on 4 April, just four days after he won the Miami Open. Sinner immediately filed an urgent application to lift the provisional suspension and his request to do so was granted a day later, meaning the ban was not publicly announced.\nSinner received notification of the second positive test on 17 April and the immediate provisional suspension was lifted on 20 April. With his ban occurring at the beginning of the busiest period of the season, Sinner was extremely fortunate that neither of those ­short‑lived provisional bans fell on a tournament week.\nWhile it is rare for provisional bans to be lifted, they can be appealed at an urgent hearing if an athlete is arguing either contamination or if it involves a substance of abuse, with the hearing deciding if a player is likely to be found to have no fault at the end of the process.\nA notable attempt to overturn a provisional ban came when Dayana Yastremska of Ukraine was provisionally suspended in January 2021 after testing positive for mesterolone.',
+          'A notable attempt to overturn a provisional ban came when Dayana Yastremska of Ukraine was provisionally suspended in January 2021 after testing positive for mesterolone.\nYastremska travelled to the Australian Open, which was being played under severe Covid-19 restrictions, while still awaiting the results of her application to lift the suspension but the request and subsequent appeal to the court of arbitration for sport were both dismissed. Yastremska was eventually found to bear no fault or negligence by an independent tribunal five months later.\nAmong the numerous positive cases for clostebol among Italian athletes, the recent case of Marco Bortolotti, a 33‑year‑old with a career-high ranking of 355, bears some similarities to Sinner. Bortolotti was notified of the test on 30 January 2024 after testing positive for clostebol last October. He immediately provided an explanation, which the ITIA accepted after seeking scientific advice and it took just eight days for the agency to conclude on 7 February that he bore no fault or negligence. The nature of Bortolotti’s explanation has been redacted in the ITIA’s final decision.\nWith Sinner being permitted to compete, two separate storylines have been playing out over the last five months. On one hand, Sinner has had a breakout season that has seen him rise to No 1 in the ATP Rankings and consolidate his first grand slam triumph in Melbourne with an extremely consistent season.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0299-1ddba59f2de1-ac1ffe28cd5a-1000-328292139939',
+          title: 'Jannik Sinner sets low expectations as he returns from doping ban at Italian Open',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0299-1ddba5a0ba02-43a1358a56cd-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-05-05T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:15:39.939Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0299-1ddba59f2de1-ac1ffe28cd5a-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0299-1ddba59f2de1-ac1ffe28cd5a-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'Jannik Sinner said it feels strange to be back on the tennis circuit after his three-month anti-doping ban but he is happy and setting his expectations low as he returns on home soil at the Italian Open',
+          familyRef: '0299-1ddba59f2de1-ac1ffe28cd5a-1000',
+        },
+        relevantChunks: [
+          'Jannik Sinner said it feels strange to be back on the tennis circuit after his three-month anti-doping ban but he is happy and setting his expectations low as he returns on home soil at the Italian Open, which begin on Wednesday.\n“It’s a very low expectation tournament in general,” said Sinner during his pre-event press ­conference. “Results-wise, I don’t know. For me, what’s missing is the complete feedback of where my level is. That’s going to come slowly with time playing. After the first-round match I’m going to have a good ­picture of myself, where I am at.\n“Talking about the other stuff, with players, I just arrived 45 ­minutes ago. I haven’t seen so many. I was down talking with some players. It’s all fine at the moment [but] I haven’t seen most of them. So it’s a very strange feeling again, to be around with so many people and attention. But it’s nice to be back. Me and my team are very happy.”\nSinner has not competed since \nhe won the Australian Open\n, his third grand slam title, in January. \nHis three-month ban\n was negotiated through a case resolution agreement with the World Anti-Doping Agency (Wada) after he was initially cleared of wrongdoing by an independent tribunal after testing positive for the banned substance clostebol last April.',
+          "This article has as title 'Jannik Sinner sets low expectations as he returns from doping ban at Italian Open', it has been created at Mon May 05 00:00:00 GMT 2025 by Tumaini Carayol in Rome and last updated at Tue May 27 16:15:39 GMT 2025.",
+          'A few hours later, Sinner entered Campo Centrale to thunderous applause for his first practice session at an official tournament in three months. His practice points with Jiri Lehecka, the 23-year-old Czech, was soundtracked by a constant stream of cheers from his home crowd. Sinner remains the ATP No 1 and as with all seeded players at the Italian Open, he has received a first-round bye. He will mark his return to professional tennis in round two against either Mariano Navone or Federico Cina.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '0296-1ddba4d4b4e4-69a6b9e3aa9a-1000-328292007030',
+          title: 'Whence the next great tennis rivalry? Maybe don’t hold your breath',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '0296-1ddba4d6507b-27aa1dfa91a0-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2025-02-28T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:13:27.030Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '0296-1ddba4d4b4e4-69a6b9e3aa9a-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '0296-1ddba4d4b4e4-69a6b9e3aa9a-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'Tennis has been awash for nearly 60 years with stellar rivalries, especially on the men’s side. But the next great one might not be around the corner',
+          familyRef: '0296-1ddba4d4b4e4-69a6b9e3aa9a-1000',
+        },
+        relevantChunks: [
+          'With the absence of Sinner, there will be an opportunity for several men hoping to make a huge breakthrough at Indian Wells, proving that they can challenge Alcaraz at one of the biggest events and maybe become part of the conversation going forward at the majors. And for the women it looks to be an opportunity for a rivalry among the aforementioned top three players to crystallize into must-see viewing.',
+          'For the women, the situation is entirely opposite of the men, as there hasn’t been a consistent, must-watch rivalry in nearly 30 years, since Steffi Graf and Monica Seles had their epic encounters. And prior to the Graf-Seles battles, there was the most storied women’s rivalry of all time: Chris Evert and Martina Navratilova. The two played an unbelievable 80 times between 1973 and 1988 and, more incredibly, 60 of those matches were finals.\nYes, Venus and Serena created drama whenever they played due to their outsized personalities and singularly extraordinary impact on the sport, but there was never a true rivalry since Serena utterly dominated Venus, claiming 18 out of their final 25 matches. And many of their tussles were one-sided.\nSo many different women have won slam titles the last several years that if one were to ask a tennis journalist to name, say, all the women slam winners since 2020 I doubt any of them would be able to correctly answer that query. Is this parity proof that there are so many talented women players? Undoubtedly. But this parity has robbed the women of having more must-see matches.',
+          'Part of this can be attributed to the overly similar style of play that predominates amongst women players. Varying styles of play is critical in enriching a rivalry in tennis, as the Evert-Navratilova pairing illustrates. Power has overtaken the women’s game just as much – if not more – than the men and there has been a paucity of players who can play an all-court style of play. There have been a few players over the last 20 years – Justine Henin and the recently retired Ash Barty spring to mind – that have bucked the trend and utilized finesse just as much as power. But for the most part the women’s game is about power: see \nSabalenka, Aryna\n.\nSabalenka and Iga Świątek are the two best players in the world and have met 12 times. But, remarkably, only one of those encounters occurred at a slam. That is partly due to the fact that Świątek, in the slams at least, dominates on clay, as her four French titles shows (she also owns a US Open title (2022) . Meanwhile, Sabalenka’s three slams have all come on hard courts.',
+        ],
+      },
+      {
+        node: {
+          type: 'node',
+          nodeRef: '028e-1ddba3c10779-d924a417fba2-1000-328291826864',
+          title: 'Jannik Sinner’s red-hot form makes him the man to beat at Wimbledon',
+          typeName: 'article',
+          linkedNodeRefs: {
+            system: {
+              mainPicture: [
+                {
+                  ref: '028e-1ddba3c2ee9e-ea0dc4902415-1000-n100',
+                  key: 1,
+                  keyString: '1',
+                },
+              ],
+            },
+          },
+          versionInfo: {
+            prevTsVersion: 0,
+            createVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            createFamilyTime: '2024-06-30T00:00:00.000Z',
+            updateVersionUserRef: {
+              userId: '48685ef5-8c3d-3e51-9a29-6048c23fc3b1',
+            },
+            updateVersionTime: '2025-05-27T16:10:26.864Z',
+            versionStatus: 0,
+          },
+          publishInfos: {
+            TheGlobe: {
+              type: 'NodePublishInfo',
+              siteName: 'TheGlobe',
+              nodeFamilyRef: '028e-1ddba3c10779-d924a417fba2-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+            SportsArena: {
+              type: 'NodePublishInfo',
+              siteName: 'SportsArena',
+              nodeFamilyRef: '028e-1ddba3c10779-d924a417fba2-1000',
+              stageTsVersion: -20,
+              liveSourceTsVersion: -20,
+              liveTsVersion: -20,
+              latestTsVersion: -20,
+            },
+          },
+          summary:
+            'Humble Italian is in his first grand slam as world No 1, but he has won six ATP titles since last year’s semi-final defeat',
+          familyRef: '028e-1ddba3c10779-d924a417fba2-1000',
+        },
+        relevantChunks: [
+          'Everything you need to know about Jannik Sinner can be summed up in the words he uttered in the immediate aftermath of his \npainful defeat against Novak Djokovic in the semi-finals here last year\n. “I’m going to learn about this and hopefully I can improve.”\nAnd improve he did. This time last year, Sinner was ranked No 8 in the world, an obvious talent but somewhat overshadowed by the meteoric rise of Carlos Alcaraz, who had already been ranked No 1 and had become a grand slam title winner. As Sinner was licking his wounds, Alcaraz \nwon his first Wimbledon\n and the gap seemed to be widening.\nSince then, though, the Italian has been tearing it up. He has won six ATP titles since Wimbledon, helped \nItaly to win the Davis Cup\n for the first time since 1976, won his \nfirst grand slam title\n and become the first Italian man to top the ATP rankings. He is 38-3 in 2024 so far, with his only defeats coming against Alcaraz (twice) and Stefanos Tsitsipas. After recovering from a hip injury, he reached the semi-finals at the French Open and showed his grass‑court prowess by winning in Halle just over a week ago.\nSinner’s ability has always been clear since he first broke through by reaching the quarter-finals at Roland Garros in 2020, \ngiving Rafael Nadal a hard time\n. Since then, his progress has been steady, if not spectacular, always looking to learn, always working on new things, always looking for the next step.',
+          "This article has as title 'Jannik Sinner’s red-hot form makes him the man to beat at Wimbledon', it has been created at Sun Jun 30 00:00:00 GMT 2024 by Simon Cambers at Wimbledon and last updated at Tue May 27 16:10:26 GMT 2025.",
+          '2021 Wimbledon runner-up Matteo Berrettini\n in round two. But with doubts about his hip seemingly behind him, he looks the player to beat.\n“Last year I played semis here so in my mind I know that I can play also some good tennis on this surface,” Sinner said here on Saturday. “I’m just trying to get used to it, building my confidence here on this court. That’s it. Thinking about seeding or all the rest, it doesn’t make any sense. Everyone wants to win and show their best here. I’m just looking forward to it, to compete, and hopefully I can also show some good tennis.\n“I’m just taking nothing as granted. Feeling honoured to go on court and just having fun. I think that’s the most important [thing].” Honoured, humble and in red-hot form.',
+        ],
+      },
+    ],
+  },
+  statusCode: 200,
+  status: 'OK',
+};
