@@ -101,8 +101,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                   const modelPathName = data.model.data.url;
 
                   const isVersionShown =
-                    (window.location.pathname === rewrittenPath && !item.live) ||
-                    (item.live && rewrittenPath === modelPathName);
+                    item.nodeId === data.model.data.version;
+
 
                   return (
                     <li className="mb-10 ms-4" key={item.nodeId}>
