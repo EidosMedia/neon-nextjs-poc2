@@ -66,7 +66,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       </a>
       {panelOpened && (
         <div
-          className="w-xs absolute text-black top-[56px] right-0 z-10 flex flex-col"
+          className="min-w-xs absolute text-black top-[56px] right-0 z-10 flex flex-col"
           style={{ height: 'calc(100vh - 56px)' }}
         >
           <div className="text-black relative grow-1 min-h-0 flex flex-col">
@@ -116,11 +116,11 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                             )}
                           </div>
                           <div className="flex items-center justify-between ">
-                            <p className="mb-4 font-normal text-gray-500 dark:text-gray-400">
+                            <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
                               {new Date(item.pubInfo.publicationTime).toLocaleString()}
-                              <br />
-                              {item.workflowStatus && <span>{item.workflowStatus}</span>}
-                            </p>
+                              {item.workflowStatus && <div>{item.workflowStatus}</div>}
+                              {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
+                            </div>
                           </div>
                         </div>
                       </Link>

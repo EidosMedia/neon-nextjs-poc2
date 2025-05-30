@@ -43,8 +43,6 @@ const useLoggedUserInfo = () => {
     localStorage.setItem('inspectItems', JSON.stringify(value));
   };
 
-  console.log('preview', preview);
-
   return {
     data: {
       inspectItems,

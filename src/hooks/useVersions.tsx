@@ -77,7 +77,9 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
       return 'LIVE';
     }
 
-    const versionToBeProcessed = versions.find((version: NodeVersion) => version.pubInfo.canonical === canonicalUrl);
+    const versionToBeProcessed = versions.find(
+      (version: NodeVersion) => new URL(version.pubInfo.canonical).pathname === canonicalUrl
+    );
     return `${versionToBeProcessed?.major}.${versionToBeProcessed?.minor}`;
   };
 
