@@ -65,8 +65,10 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         <Clock />
       </a>
       {panelOpened && (
-        <div className="h-screen w-xs absolute text-black top-0 right-0 z-10 flex flex-col">
-          <div className="h-[56px]"></div>
+        <div
+          className="w-xs absolute text-black top-[56px] right-0 z-10 flex flex-col"
+          style={{ height: 'calc(100vh - 56px)' }}
+        >
           <div className="text-black relative grow-1 min-h-0 flex flex-col">
             <div className="flex items-center justify-between py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <span className="flex items-center gap-2 text-(--color-panel-text-header) ml-1">
@@ -88,7 +90,11 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                       )}
                     ></div>
                     <div className="relative flex flex-1 min-w-0">
-                      <Link href={item.pubInfo.canonical || '#'} className="flex-1 min-w-0">
+                      <Link
+                        href={item.pubInfo.canonical || '#'}
+                        target={item.live ? '_blank' : undefined}
+                        className="flex-1 min-w-0"
+                      >
                         <div
                           className={clsx(
                             'p-4 rounded-sm mr-1 ',

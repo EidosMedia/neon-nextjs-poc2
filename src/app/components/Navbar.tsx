@@ -55,11 +55,6 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/search">
-                <h3 className="text-lg uppercase">Search</h3>
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

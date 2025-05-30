@@ -103,7 +103,7 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
                     <p />
                   )}
                 </div>
-                <div id="photo{index}" className="col-span-6">
+                <div id={`photo${index}`} className="col-span-6">
                   <img
                     alt="/static/img/nothumb.jpeg"
                     decoding="async"

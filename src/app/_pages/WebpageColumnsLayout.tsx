@@ -17,15 +17,14 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
     <div className="container mx-auto p-4">
       <Navbar data={data}></Navbar>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-        <div className="p-4 rounded-lg col-span-12 md:col-span-3">
+        <div className="p-4 rounded-lg col-span-12">
           <Main data={data} />
         </div>
 
-        <div className="p-4 rounded-lg col-span-12 md:col-span-6">
+        <div className="p-4 rounded-lg col-span-12">
           <Context data={data} />
         </div>
-
-        <div className="p-4 rounded-lg col-span-12 md:col-span-3">
+        <div className="p-4 rounded-lg col-span-12">
           <Insight1 data={data} displayMainPicture={false} />
         </div>
       </div>

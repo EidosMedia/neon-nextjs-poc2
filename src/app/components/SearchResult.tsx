@@ -259,7 +259,8 @@ const SearchResult = ({ data }: { data: Site }) => {
     }
   };
 
-  const handleAnswerToSelection = async () => {
+  const handleAnswerToSelection = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     console.log(`Question about selected results: ${questionText}`);
 
     const selectedKeys = Array.from(selectedResults.keys());
@@ -436,42 +437,11 @@ const SearchResult = ({ data }: { data: Site }) => {
                 <h3 className="text-xl font-bold mb-2 text-gray-800">AI Chat History</h3>
                 {chat.map((item, index) => (
                   <div key={index} className="mt-4 mb-4 text-left">
-                    <div
-                      className="text-lg mt-1 text-left bg-gray-100"
-                      style={{
-                        borderTopLeftRadius: '12px',
-                        borderTopRightRadius: '12px',
-                        borderBottomLeftRadius: '12px',
-                        borderBottomRightRadius: '0px',
-                        padding: '16px',
-                        marginTop: '8px',
-                        marginBottom: '8px',
-                        display: 'inline-block',
-                        maxWidth: '100%',
-                      }}
-                    >
-                      <p>
-                        <i>{item.question}</i>
-                      </p>
+                    <div className="text-lg mt-1 text-left bg-gray-100 rounded-tl-[12px] rounded-tr-[12px] rounded-bl-none rounded-br-[12px] p-4 my-2 inline-block max-w-full">
+                      <p className="font-gabarito">{item.question}</p>
                     </div>
-                    <div
-                      className="text-lg mt-1 text-right"
-                      style={{
-                        background: 'var(--color-primary-lightest)',
-                        borderTopLeftRadius: '12px',
-                        borderTopRightRadius: '12px',
-                        borderBottomLeftRadius: '12px',
-                        borderBottomRightRadius: '0px',
-                        padding: '16px',
-                        marginTop: '8px',
-                        marginBottom: '8px',
-                        display: 'inline-block',
-                        maxWidth: '100%',
-                      }}
-                    >
-                      <p>
-                        <i>{item.answer}</i>
-                      </p>
+                    <div className="text-lg mt-1 text-right bg-[var(--color-primary-lightest)] rounded-tl-[12px] rounded-tr-[12px] rounded-bl-[12px] rounded-br-none p-4 my-2 inline-block max-w-full ml-40">
+                      <p className="font-gabarito">{item.answer}</p>
                     </div>
                   </div>
                 ))}
@@ -512,7 +482,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                     <div className="mt-4 flex justify-center items-center">
                       <LoaderCircle className="animate-spin color-(--color-primary)" />
                     </div>
-                    <p>Asking...</p>
+                    <p className="font-epilogue">Asking...</p>
                   </div>
                 ) : (
                   <div className="mt-4"></div>
