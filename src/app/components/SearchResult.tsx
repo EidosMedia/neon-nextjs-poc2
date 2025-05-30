@@ -340,8 +340,7 @@ const SearchResult = ({ data }: { data: Site }) => {
           <div className="flex grow-1 flex-col gap-2">
             <div className="flex gap-4">
               <CustomSelect
-              placeholder=''
-                id="searchOptions"
+                placeholder=""
                 options={[
                   { value: 'search', text: 'Search' },
                   { value: 'ai-search', text: 'AI Search' },
@@ -394,8 +393,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                     Select time period
                   </label>
                   <CustomSelect
-                    placeholder=''
-                    id="options"
+                    placeholder=""
                     options={options}
                     value={selectedOption}
                     onChange={handleOptionChange}
