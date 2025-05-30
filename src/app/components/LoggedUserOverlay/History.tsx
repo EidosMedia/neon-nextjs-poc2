@@ -65,7 +65,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         <Clock />
       </a>
       {panelOpened && (
-        <div className="h-screen w-xs absolute text-black top-0 right-0 z-10 grid">
+        <div className="h-screen w-xs absolute text-black top-0 right-0 z-10 flex flex-col">
           <div className="h-[56px]"></div>
           <div className="text-black relative grow-1 min-h-0 flex flex-col">
             <div className="flex items-center justify-between py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
