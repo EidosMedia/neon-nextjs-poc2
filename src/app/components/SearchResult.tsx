@@ -6,7 +6,7 @@ import { LoaderCircle, Search } from 'lucide-react';
 import { Button } from './baseComponents/button';
 import SearchResultItem from './SearchResultItem';
 import { Input } from './baseComponents/textInput';
-import Select from './baseComponents/select';
+import CustomSelect from './baseComponents/select';
 import AiSearchIcon from './icons/AiSearch';
 import { chatResponse } from './mocks/mocks';
 
@@ -33,7 +33,7 @@ const SearchResult = ({ data }: { data: Site }) => {
   const lastSearchText = useRef<string>(searchText);
 
   const options = [
-    { value: '', text: 'Select a time frame' },
+    // { value: '', text: 'Select a time frame' },
     { value: 'Today', text: 'Today' },
     { value: 'Last Week', text: 'Last Week' },
     { value: 'Last Month', text: 'Last Month' },
@@ -49,12 +49,12 @@ const SearchResult = ({ data }: { data: Site }) => {
     setQuestionText(e.target.value);
   };
 
-  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(e.target.value);
+  const handleOptionChange = (value: string) => {
+    setSelectedOption(value);
   };
 
-  const handleSearchOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSearchOption(e.target.value);
+  const handleSearchOptionChange = (value: string) => {
+    setSelectedSearchOption(value);
   };
 
   function enableSearch(queryText: string, timeSlice: string) {}
@@ -339,14 +339,15 @@ const SearchResult = ({ data }: { data: Site }) => {
         <div className="flex items-center justify-center mb-4 flex-col md:flex-row gap-2 mt-10">
           <div className="flex grow-1 flex-col gap-2">
             <div className="flex gap-4">
-              <Select
+              <CustomSelect
+              placeholder=''
                 id="searchOptions"
                 options={[
                   { value: 'search', text: 'Search' },
                   { value: 'ai-search', text: 'AI Search' },
                   { value: 'ai-question', text: 'AI Question' },
                 ]}
-                className="w-fit"
+                className="w-[120px] font-semibold"
                 value={selectedSearchOption}
                 onChange={handleSearchOptionChange}
               />
@@ -392,12 +393,13 @@ const SearchResult = ({ data }: { data: Site }) => {
                   <label className="text-left justify-start whitespace-nowrap font-gabarito font-semibold">
                     Select time period
                   </label>
-                  <Select
+                  <CustomSelect
+                    placeholder=''
                     id="options"
                     options={options}
                     value={selectedOption}
                     onChange={handleOptionChange}
-                    className="w-fit"
+                    className="w-[240px] font-bold"
                   />
                 </div>
               </div>
