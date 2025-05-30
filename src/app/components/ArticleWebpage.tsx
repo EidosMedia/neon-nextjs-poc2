@@ -7,6 +7,7 @@ import ContentEditable from './utilities/ContentEditable';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ArticleOverlay from './base/ArticleOverlay';
 import { getPublicationDateString } from '@/utilities/content';
+import ArticleOrganism from './base/Organism/ArticleOrganism';
 
 type ArticleWepageProps = {
   data: PageData<WebpageModel>;
@@ -69,18 +70,26 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture
           </>
         );
         return (
-          <div key={linkedObject.id} data-layer="article">
-            {loggedUserInfo?.inspectItems ? (
-              <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus}>
-                {contentBlock}
-              </ArticleOverlay>
-            ) : (
-              <Link className="no-underline" href={linkedObjects[`${index}`].url}>
-                {contentBlock}
-              </Link>
-            )}
-            <br />
-          </div>
+          // <div key={linkedObject.id} data-layer="article">
+          //   {loggedUserInfo?.inspectItems ? (
+          //     <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus}>
+          //       {contentBlock}
+          //     </ArticleOverlay>
+          //   ) : (
+          //     <Link className="no-underline" href={linkedObjects[`${index}`].url}>
+          //       {contentBlock}
+          //     </Link>
+          //   )}
+          //   <br />
+          // </div>
+          <ArticleOrganism
+            key={linkedObject.id}
+            data={data}
+            linkedObject={linkedObject}
+            linkedObjects={linkedObjects}
+            index={index}
+            type="article-md"
+          />
         );
       })}
     </>
