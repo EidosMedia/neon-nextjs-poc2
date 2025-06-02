@@ -4,37 +4,43 @@ import Link from 'next/link';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 
 const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
-  const { getVersion, getCurrentLiveVersion } = useVersions({
+  const { getVersionLabelFromVersion, getLatestViewVersion } = useVersions({
     currentNode: 'model' in data ? data : undefined,
   });
 
-  const version = getVersion('model' in data ? data.model?.data?.url : '');
-  const isPreview = version === 'PREVIEW' || data.siteData.viewStatus === 'PREVIEW';
-  const isLive = () => {
-    if (isPreview) {
-      return false;
-    }
-    return version ? version === 'LIVE' : data.siteData.viewStatus;
-  };
+  const version = getVersionLabelFromVersion(
+    'model' in data && data.model?.data?.version
+      ? data.model.data.version
+      : data.siteData.viewStatus === 'LIVE' && 'model' in data && data.model?.data?.id
+      ? data.model.data.id
+      : '',
+    data.siteData.viewStatus
+  );
+
+  const isLastPreview = version === 'PREVIEW';
+  const isLastLive = version === 'LIVE';
+
+  const isPreview = version.startsWith('PREVIEW');
+  const isLive = version.startsWith('LIVE');
 
   const colorClass = () => {
-    if (isLive()) {
+    if (isLastLive || isLive) {
       return 'bg-(--color-live-background)';
     }
-    if (isPreview && version === 'LIVE') {
+    if (isLastPreview) {
       return 'bg-gray-600';
     }
-    return 'bg-gray-100';
+    return 'bg-gray-300';
   };
 
   return (
     <div className={clsx('flex items-center justify-center text-white px-5 h-16', colorClass())}>
-      {(isLive() || isPreview) && version === 'LIVE' ? (
-        data.siteData.viewStatus
+      {isLastLive || isLastPreview ? (
+        version
       ) : (
         <div className="flex flex-col justify-center items-center">
-          <span className="text-black font-semibold text-">Version {version}</span>
-          <Link href={getCurrentLiveVersion().pubInfo.canonical}>
+          <span className="text-black font-semibold text-">{version}</span>
+          <Link href={getLatestViewVersion(data.siteData.viewStatus).pubInfo.canonical}>
             <span className="text-black underline font-medium">Back to latest version</span>
           </Link>
         </div>

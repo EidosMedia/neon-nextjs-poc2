@@ -12,7 +12,7 @@ type UserLayerProps = {
 
 const History: React.FC<UserLayerProps> = ({ data }) => {
   const {
-    data: versionsData,
+    data: historyData,
     setPanelOpened,
     panelOpened,
   } = useVersions({
@@ -23,9 +23,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     if (!url) return '';
     return url.replace(/(-n?\d{10,20})(?=\/|$)/, '');
   }
-
-  const latestVersionUrl: string =
-    versionsData && versionsData.length > 0 ? removeDashNNumber(versionsData[0].canonical) : data.model.data.url;
 
   async function rollbackTo(nodeId: string, baseType: string, versionName: string) {
     if (confirm(`Are you sure you want to Rollback to version ${versionName}`)) {
@@ -64,13 +61,18 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     if (!prevTsVersion) {
       return null;
     }
-    const prevVersion = versionsData.find((v: NodeVersion) => v.versionTimestamp === prevTsVersion);
+    const prevVersion = historyData.versions.find((v: NodeVersion) => v.versionTimestamp === prevTsVersion);
     if (prevVersion) {
       return `${prevVersion.major}.${prevVersion.minor}`;
     }
 
     return null;
   }
+
+  const latestLiveVersionIndex = historyData?.versions
+    ? historyData.versions.findIndex((v: NodeVersion) => v.live)
+    : -1;
+
   return (
     <>
       <a
@@ -95,66 +97,72 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
               </a>
             </div>
             <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0 overflow-y-auto">
-              <ol className="relative border-s border-gray-300 dark:border-gray-700">
-                {versionsData.map((item: NodeVersion, index: number) => {
-                  const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
-                  const modelPathName = data.model.data.url;
+              <ol className="relative border-s border-gray-300 dark:border-gray-200">
+                {historyData &&
+                  historyData.versions &&
+                  historyData.versions.map((item: NodeVersion, index: number) => {
+                    const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
+                    const modelPathName = data.model.data.url;
 
-                  const isVersionShown =
-                    item.nodeId === data.model.data.version;
+                    const isVersionShown = item.nodeId === data.model.data.version;
+                    const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
 
-
-                  return (
-                    <li className="mb-10 ms-4" key={item.nodeId}>
-                      <div
-                        className={clsx(
-                          'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
-                          isVersionShown ? 'bg-gray-600' : 'bg-gray-300'
-                        )}
-                      ></div>
-                      <div className="relative flex flex-1 min-w-0">
-                        <Link href={rewrittenPath || '#'} className="flex-1 min-w-0">
-                          <div className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}>
-                            <div className="flex items-center justify-between">
-                              <h3 className="font-semibold text-gray-900 dark:text-white">
-                                {`Version ${item.major}.${item.minor}`}
-                                {(() => {
-                                  const prevVersionName = getPrevVersionName(item.prevTsVersion);
-                                  return prevVersionName ? ` from ${prevVersionName}` : '';
-                                })()}
-                              </h3>
-                              {item.live && (
-                                <div className="text-xs font-bold text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5">
-                                  LIVE
+                    return (
+                      <li className="mb-10 ms-4" key={item.nodeId}>
+                        <div
+                          className={clsx(
+                            'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
+                            isVersionShown ? 'bg-gray-600' : 'bg-gray-300'
+                          )}
+                        ></div>
+                        <div className="relative flex flex-1 min-w-0">
+                          <Link href={rewrittenPath || '#'} className="flex-1 min-w-0">
+                            <div className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}>
+                              <div className="flex items-center justify-between">
+                                <h3 className="font-semibold text-gray-900 dark:text-white">
+                                  {`Version ${item.major}.${item.minor}`}
+                                  {(() => {
+                                    const prevVersionName = getPrevVersionName(item.prevTsVersion);
+                                    return prevVersionName ? ` from ${prevVersionName}` : '';
+                                  })()}
+                                </h3>
+                                {item.live && (
+                                  <div
+                                    className={clsx(
+                                      'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5',
+                                      isLatestLiveVersion ? 'font-bold' : 'font-normal'
+                                    )}
+                                  >
+                                    {latestLiveVersionIndex === index ? 'LIVE' : 'Old LIVE'}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex items-center justify-between ">
+                                <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
+                                  {new Date(item.pubInfo.publicationTime).toLocaleString()}
+                                  {item.workflowStatus && <div>{item.workflowStatus}</div>}
+                                  {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
                                 </div>
-                              )}
-                            </div>
-                            <div className="flex items-center justify-between ">
-                              <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                                {new Date(item.pubInfo.publicationTime).toLocaleString()}
-                                {item.workflowStatus && <div>{item.workflowStatus}</div>}
-                                {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
                               </div>
                             </div>
-                          </div>
-                        </Link>
-                        {index > 0 && (
-                          <button
-                            className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
-                            title="Rollback to this version"
-                            onClick={e => {
-                              e.stopPropagation();
-                              e.nativeEvent.stopImmediatePropagation();
-                              rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
-                            }}
-                          >
-                            Rollback
-                          </button>
-                        )}
-                      </div>
-                    </li>
-                  );
-                })}
+                          </Link>
+                          {index > 0 && (
+                            <button
+                              className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
+                              title="Rollback to this version"
+                              onClick={e => {
+                                e.stopPropagation();
+                                e.nativeEvent.stopImmediatePropagation();
+                                rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
+                              }}
+                            >
+                              Rollback
+                            </button>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })}
               </ol>
             </div>
           </div>

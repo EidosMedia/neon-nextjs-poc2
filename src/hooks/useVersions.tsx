@@ -1,24 +1,55 @@
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
-  getVersions,
+  getHistory,
+  getLoadingHistory,
   getVersionsPanelOpened,
   setVersionPanelOpen,
-  setVersions,
+  setHistory,
   getEdited,
+  setLoadingHistory,
   setEdited as setEditedAction,
 } from '@/lib/features/versionsSlice';
-import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { BaseModel, NodeHistory, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { version } from 'os';
+import { defaultConfig } from 'next/dist/server/config-shared';
+import { get, set } from 'lodash';
 
 const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => {
   const dispatch = useDispatch();
 
-  const versions = useSelector(getVersions(currentNode?.model?.data?.id || '')) || [];
+  const history: NodeHistory = useSelector(getHistory(currentNode?.model?.data?.id || ''));
+  const store = useStore();
 
   const currentModelIdRef = useRef<string>('');
 
   const loadHistory = async () => {
     try {
+      const now: number = new Date().getTime();
+      const lastLoadingHistory: number = getLoadingHistory(currentNode?.model?.data.id || '')(store.getState());
+
+      console.log(
+        'request Loading history for node',
+        currentNode?.model?.data.id,
+        ' lastLoadingHistory',
+        lastLoadingHistory
+      );
+
+      const elapsertime = now - lastLoadingHistory;
+      console.log('elapsed time since last loading history:', elapsertime, 'ms');
+      // If the last loading was less than 1 second ago, skip the request
+      if (now - lastLoadingHistory < 1000) {
+        console.log('skip request loading');
+        return;
+      }
+
+      dispatch(
+        setLoadingHistory({
+          id: currentNode?.model?.data.id,
+          lastAcquire: now,
+        })
+      );
+
       const response = await fetch(`/api/nodes/${currentNode?.model.data.id}/versions`);
       const jsonResp = await response.json();
 
@@ -29,9 +60,13 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
         filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.live && item.versionTimestamp != -1);
       }
 
+      console.log('dispatch history for node', currentNode?.model?.data.id);
+
       dispatch(
-        setVersions({
+        setHistory({
           id: currentNode?.model.data.id,
+          version: currentNode?.model.data.version,
+          acquireTimestamp: now,
           versions: filteredVersions,
         })
       );
@@ -52,6 +87,8 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
   const edited = useSelector(getEdited);
 
   useEffect(() => {
+    let modelChanged = false;
+
     if (
       currentNode &&
       currentNode.model &&
@@ -60,38 +97,82 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
       currentModelIdRef.current !== currentNode.model.id
     ) {
       currentModelIdRef.current = currentNode.model.id;
-      loadHistory();
+      modelChanged = true;
     }
 
-    if (edited) {
+    // Only run loadHistory if modelChanged or edited, and prevent multiple calls in quick succession
+    if (edited || modelChanged) {
       loadHistory();
+      setEdited(false);
     }
   }, [currentNode?.model?.id, edited]);
 
-  const getVersion = (canonicalUrl: string) => {
-    if (versions.length === 0) {
+  const getVersionLabelFromVersion = (nodeVersion: string, viewStatus: string) => {
+    if (!history?.versions || history.versions.length === 0) {
+      return viewStatus; // while not loaded
+    }
+
+    const dashCount = (nodeVersion.match(/-/g) || []).length;
+    const isVersion = dashCount === 4;
+    const isEditVersion = isVersion && nodeVersion.includes('-n');
+    const firstLiveVersion = history.versions.findIndex((version: NodeVersion) => version.live === true);
+    const firstEditVersion = history.versions.findIndex((version: NodeVersion) => version.nodeId.includes('-n'));
+
+    if (isVersion) {
+      const versionIndex = history.versions.findIndex((version: NodeVersion) => version.nodeId === nodeVersion);
+      if (versionIndex === -1) {
+        console.warn('not able to identify the nodeVersion', nodeVersion, 'in versions', history.versions);
+        return 'not found version';
+      }
+      const versionObj = history.versions[versionIndex];
+
+      if (isEditVersion) {
+        if (versionIndex === firstEditVersion) return 'PREVIEW';
+        else return `PREVIEW ${versionObj.major}.${versionObj.minor}`;
+      } else {
+        if (versionIndex === firstLiveVersion) return 'LIVE';
+        else return `LIVE ${versionObj.major}.${versionObj.minor}`;
+      }
+    }
+
+    if (!currentNode?.model.data.version) {
       return 'LIVE';
     }
 
-    if (currentNode?.model.data.url === new URL(versions[0]?.pubInfo.canonical).pathname) {
-      return 'LIVE';
-    }
-
-    const versionToBeProcessed = versions.find(
-      (version: NodeVersion) => new URL(version.pubInfo.canonical).pathname === canonicalUrl
-    );
-    return `${versionToBeProcessed?.major}.${versionToBeProcessed?.minor}`;
+    return viewStatus;
   };
 
-  const getCurrentLiveVersion = () => {
-    return versions[0];
+  const getLatestViewVersion = (viewStatus: string): NodeVersion => {
+    switch (viewStatus) {
+      case 'PREVIEW':
+        return (
+          history.versions.find((version: NodeVersion) => version.live === false && version.versionTimestamp !== -1) ||
+          history.versions[0]
+        );
+      case 'LIVE':
+        return (
+          history.versions.find((version: NodeVersion) => version.live === true && version.versionTimestamp !== -1) ||
+          history.versions[0]
+        );
+      default:
+        console.warn('Unknown viewStatus', viewStatus, 'using first version', history.versions[0]);
+        return history.versions[0];
+    }
   };
 
   const changeEdited = (value: boolean) => {
     setEdited(value);
   };
 
-  return { data: versions, panelOpened, edited, setPanelOpened, getVersion, getCurrentLiveVersion, changeEdited };
+  return {
+    data: history,
+    panelOpened,
+    edited,
+    setPanelOpened,
+    getVersionLabelFromVersion,
+    getLatestViewVersion,
+    changeEdited,
+  };
 };
 
 export default useVersions;
