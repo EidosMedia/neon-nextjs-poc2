@@ -45,7 +45,6 @@ const Figure: React.FC<FigureProps> = ({data, alt, format}) => {
 
     return (
         <div>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
             <div>
                 {imageUrl ? (
                     <img
