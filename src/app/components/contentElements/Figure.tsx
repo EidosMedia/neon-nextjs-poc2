@@ -12,9 +12,8 @@ const getRasterUrl = (data: ContentElement, format: string): string | undefined 
 
     const element = imageElements.find(elem => {
         const attrs = elem.attributes || {};
-        const crop = attrs.crop?.toLowerCase();
         const softCrop = attrs.softCrop?.toLowerCase();
-        return crop === targetFormat || softCrop === targetFormat;
+        return softCrop === targetFormat;
     });
 
     if (element?.attributes?.src) {
