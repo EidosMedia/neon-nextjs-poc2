@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 interface LoggedUserState {
   inspectItems: boolean;
   analytics: boolean;
+  viewStatus?: string;
 }
 
 const initialState: LoggedUserState = {
   inspectItems: false,
   analytics: false,
+  viewStatus: undefined,
 };
 
 export const loggedUserSlice = createSlice({
@@ -25,12 +27,15 @@ export const loggedUserSlice = createSlice({
     },
     setAnalytics: (state, action) => {
       state.analytics = action.payload;
-    }
+    },
+    setViewStatus: (state, action) => {
+      state.viewStatus = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setInspectItems, setAnalytics} = loggedUserSlice.actions;
+export const { setInspectItems, setAnalytics, setViewStatus } = loggedUserSlice.actions;
 
 // Selectors
 export const getInspectItems = (state: any) => {
@@ -38,6 +43,9 @@ export const getInspectItems = (state: any) => {
 };
 export const getAnalytics = (state: any) => {
   return state && state.loggedUser.analytics;
+};
+export const getViewStatus = (state: any) => {
+  return state && state.loggedUser.viewStatus;
 };
 
 export default loggedUserSlice.reducer;

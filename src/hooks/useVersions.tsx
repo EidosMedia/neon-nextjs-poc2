@@ -11,65 +11,53 @@ import {
   setEdited as setEditedAction,
 } from '@/lib/features/versionsSlice';
 import { BaseModel, NodeHistory, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { version } from 'os';
-import { defaultConfig } from 'next/dist/server/config-shared';
-import { get, set } from 'lodash';
 
-const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => {
+const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; viewStatus?: string }) => {
   const dispatch = useDispatch();
-
-  const history: NodeHistory = useSelector(getHistory(currentNode?.model?.data?.id || ''));
+  const history: NodeHistory = useSelector(getHistory(currentNode?.id || ''));
   const store = useStore();
+  //const viewStatus = useSelector(getViewStatus);
 
-  const currentModelIdRef = useRef<string>('');
+  const currentModelIdRef = useRef<string | undefined>(undefined);
 
   const loadHistory = async () => {
     try {
       const now: number = new Date().getTime();
-      const lastLoadingHistory: number = getLoadingHistory(currentNode?.model?.data.id || '')(store.getState());
-
-      console.log(
-        'request Loading history for node',
-        currentNode?.model?.data.id,
-        ' lastLoadingHistory',
-        lastLoadingHistory
-      );
+      const lastLoadingHistory: number = getLoadingHistory(currentNode?.id || '')(store.getState());
 
       const elapsedtime = now - lastLoadingHistory;
       // If the last loading was less than 5 second ago, skip the request
-      if (now - lastLoadingHistory < 5000) {
+      if (now - lastLoadingHistory < 1000) {
         console.log('skip request loading due to elaspsed', elapsedtime, 'ms');
         return;
       }
 
       dispatch(
         setLoadingHistory({
-          id: currentNode?.model?.data.id,
+          id: currentNode?.id,
           lastAcquire: now,
         })
       );
 
       const versionFetchUrl: string =
-        currentNode?.siteData?.viewStatus === 'LIVE'
-          ? `/api/nodes/${currentNode?.model.data.id}/versions/live`
-          : `/api/nodes/${currentNode?.model.data.id}/versions`;
+        viewStatus === 'LIVE'
+          ? `/api/nodes/${currentNode?.id}/versions/live`
+          : `/api/nodes/${currentNode?.id}/versions`;
 
       const response = await fetch(versionFetchUrl);
       const jsonResp = await response.json();
 
       let filteredVersions: NodeVersion[];
-      if (currentNode?.siteData.viewStatus === 'PREVIEW') {
+      if (viewStatus === 'PREVIEW') {
         filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.versionTimestamp !== -1);
       } else {
         filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.live && item.versionTimestamp != -1);
       }
 
-      console.log('dispatch history for node', currentNode?.model?.data.id);
-
       dispatch(
         setHistory({
-          id: currentNode?.model.data.id,
-          version: currentNode?.model.data.version,
+          id: currentNode?.id,
+          version: currentNode?.version,
           acquireTimestamp: now,
           versions: filteredVersions,
         })
@@ -92,24 +80,18 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
 
   useEffect(() => {
     let modelChanged = false;
+    const versionFromCurrentNode = currentNode?.version;
 
-    if (
-      currentNode &&
-      currentNode.model &&
-      currentNode.model.id &&
-      currentNode?.model.data.id &&
-      currentModelIdRef.current !== currentNode.model.id
-    ) {
-      currentModelIdRef.current = currentNode.model.id;
+    if (currentNode && currentNode.id && currentModelIdRef.current !== versionFromCurrentNode) {
+      currentModelIdRef.current = versionFromCurrentNode;
       modelChanged = true;
     }
 
     // Only run loadHistory if modelChanged or edited, and prevent multiple calls in quick succession
     if (edited || modelChanged) {
       loadHistory();
-      setEdited(false);
     }
-  }, [currentNode?.model?.id, edited]);
+  }, [currentNode?.id, edited, viewStatus]);
 
   const getVersionLabelFromVersion = (nodeVersion: string, viewStatus: string) => {
     if (!history?.versions || history.versions.length === 0) {
@@ -139,7 +121,7 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
       }
     }
 
-    if (!currentNode?.model.data.version) {
+    if (!currentNode?.version) {
       return 'LIVE';
     }
 

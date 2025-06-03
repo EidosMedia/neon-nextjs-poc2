@@ -2,11 +2,21 @@ import useVersions from '@/hooks/useVersions';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
-
+import { setViewStatus as setViewStatusAction } from '@/lib/features/loggedUserSlice';
+import { use, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
   const { getVersionLabelFromVersion, getLatestViewVersion } = useVersions({
-    currentNode: 'model' in data ? data : undefined,
+    currentNode: 'model' in data ? data.model.data : undefined,
+    viewStatus: data.siteData.viewStatus,
   });
+  /*const dispatch = useDispatch();
+   useEffect(() => {
+    if (data.siteData.viewStatus) {
+      console.log('******** Setting view status to', data.siteData.viewStatus);
+      dispatch(setViewStatusAction(data.siteData.viewStatus));
+    }
+  }, [data.siteData.viewStatus]);*/
 
   const version = getVersionLabelFromVersion(
     'model' in data && data.model?.data?.version
