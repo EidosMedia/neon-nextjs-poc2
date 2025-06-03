@@ -22,7 +22,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     setPanelOpened,
     panelOpened,
   } = useVersions({
-    currentNode: data,
+    currentNode: data.model.data,
+    viewStatus: data.siteData.viewStatus,
   });
 
   const dispatch = useDispatch();
@@ -173,7 +174,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                               </div>
                               <div className="flex items-center justify-between ">
                                 <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                                  {new Date(item.pubInfo.publicationTime).toLocaleString()}
+                                  {new Date(item.versionDate).toLocaleString()}
                                   {item.workflowStatus && <div>{item.workflowStatus}</div>}
                                   {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
                                 </div>

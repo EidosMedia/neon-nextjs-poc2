@@ -26,7 +26,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
 
-  const { changeEdited } = useVersions({ currentNode: data as any }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
+  const { changeEdited } = useVersions({ currentNode: data as any, viewStatus: 'PREVIEW' }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
   const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));

@@ -13,7 +13,8 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
   const [showButton, setShowButton] = useState(true);
   const isLive = viewStatus === 'LIVE';
   const { data: authData } = useAuth();
-  const { changeEdited } = useVersions({ currentNode: data as any }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
+
+  const { changeEdited } = useVersions({ currentNode: data as any, viewStatus }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
 
   const handlePromotion = async () => {
     try {
