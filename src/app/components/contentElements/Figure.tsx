@@ -6,12 +6,22 @@ type FigureProps = {
     format: string;
 };
 
-const getRasterUrl = (data: ContentElement, format: string) => {
-    const element = data.elements.find(elem => elem.attributes.crop === format || elem.attributes.softCrop === format);
-    if (element?.attributes.src) {
+const getRasterUrl = (data: ContentElement, format: string): string | undefined => {
+    const targetFormat = format.toLowerCase();
+    const imageElements = data.elements.filter(elem => elem.nodeType === "image");
+
+    const element = imageElements.find(elem => {
+        const attrs = elem.attributes || {};
+        const crop = attrs.crop?.toLowerCase();
+        const softCrop = attrs.softCrop?.toLowerCase();
+        return crop === targetFormat || softCrop === targetFormat;
+    });
+
+    if (element?.attributes?.src) {
         return element.attributes.src;
     }
-    return element && element.dynamicCropsResourceUrls ? element.dynamicCropsResourceUrls[format] : undefined;
+
+    return imageElements[0]?.attributes?.src; // fallback to first available
 };
 
 const getSvgUrl = (data: ContentElement): string | undefined => {
@@ -35,6 +45,7 @@ const Figure: React.FC<FigureProps> = ({data, alt, format}) => {
 
     return (
         <div>
+            <pre>{JSON.stringify(data, null, 2)}</pre>
             <div>
                 {imageUrl ? (
                     <img
