@@ -33,7 +33,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
         {/* Placeholder for advertisement */}
         <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
       </div>
-      <Footer data={data}></Footer>
+      <Footer data={data} />
     </article>
   );
 };
