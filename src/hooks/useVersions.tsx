@@ -10,11 +10,7 @@ import {
   setLoadingHistory,
   setEdited as setEditedAction,
 } from '@/lib/features/versionsSlice';
-import { getViewStatus, setViewStatus as setViewStatusAction } from '@/lib/features/loggedUserSlice';
 import { BaseModel, NodeHistory, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { version } from 'os';
-import { defaultConfig } from 'next/dist/server/config-shared';
-import { get, set } from 'lodash';
 
 const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; viewStatus?: string }) => {
   const dispatch = useDispatch();
@@ -31,7 +27,7 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
 
       const elapsedtime = now - lastLoadingHistory;
       // If the last loading was less than 5 second ago, skip the request
-      if (now - lastLoadingHistory < 5000) {
+      if (now - lastLoadingHistory < 1000) {
         console.log('skip request loading due to elaspsed', elapsedtime, 'ms');
         return;
       }
@@ -41,13 +37,6 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
           id: currentNode?.id,
           lastAcquire: now,
         })
-      );
-
-      console.log(
-        '================================= fetching history for node',
-        currentNode?.id,
-        'viewStatus:',
-        viewStatus
       );
 
       const versionFetchUrl: string =
@@ -64,8 +53,6 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
       } else {
         filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.live && item.versionTimestamp != -1);
       }
-
-      console.log('======= versions', filteredVersions);
 
       dispatch(
         setHistory({
@@ -93,14 +80,12 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
 
   useEffect(() => {
     let modelChanged = false;
-    const versionFromCurrentNode = (currentNode as any).version || currentNode?.version;
+    const versionFromCurrentNode = currentNode?.version;
 
     if (currentNode && currentNode.id && currentModelIdRef.current !== versionFromCurrentNode) {
       currentModelIdRef.current = versionFromCurrentNode;
       modelChanged = true;
     }
-
-    console.log('====== edited', edited, 'modelChanged', modelChanged);
 
     // Only run loadHistory if modelChanged or edited, and prevent multiple calls in quick succession
     if (edited || modelChanged) {

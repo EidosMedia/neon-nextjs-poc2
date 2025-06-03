@@ -11,6 +11,7 @@ type ContentEditableProps = {
   data?: ArticleModel;
   children?: React.ReactNode;
   showLockedByTooltip?: boolean;
+  viewStatus?: 'LIVE' | 'PREVIEW';
 };
 
 type lockedByInfo =
@@ -20,13 +21,18 @@ type lockedByInfo =
     }
   | string;
 
-const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showLockedByTooltip = true }) => {
+const ContentEditable: React.FC<ContentEditableProps> = ({
+  data,
+  children,
+  showLockedByTooltip = true,
+  viewStatus,
+}) => {
   const articleId = data?.id;
   const lockedBy = data?.sys?.lockedBy;
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
 
-  const { changeEdited } = useVersions({ currentNode: data as any, viewStatus: 'PREVIEW' }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
+  const { changeEdited } = useVersions({ currentNode: data as any, viewStatus: viewStatus || 'PREVIEW' }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
   const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
@@ -37,7 +43,6 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
 
   const showDivButtons = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log('show div buttons event', e);
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
     divButtonsRef.current?.classList.remove('hidden');
@@ -79,6 +84,10 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
       changeEdited(true); // Mark as edited
       hideDivButtons(); // Hide buttons after save
       divRef.current?.blur(); // Remove focus from the div
+
+      setTimeout(() => {
+        location.reload();
+      }, 400); // Reload the page to reflect changes
     }
   };
 
@@ -130,12 +139,14 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
       <div
         key={key}
         ref={divRef}
-        contentEditable={!!loggedUserInfo?.inspectItems && !loggedUserInfo?.preview}
+        contentEditable={!!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE' && !loggedUserInfo?.preview}
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
-        onClick={!!loggedUserInfo?.inspectItems ? showDivButtons : undefined}
-        onBlur={!!loggedUserInfo?.inspectItems ? handleBlur : undefined}
+        onClick={!!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE' ? showDivButtons : undefined}
+        onBlur={!!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE' ? handleBlur : undefined}
         className={`relative rounded z-10 ${
-          loggedUserInfo?.inspectItems ? 'border-1 border-neutral-light/30 hover:border-primary p-1 cursor-text' : ''
+          !!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE'
+            ? 'border-1 border-neutral-light/30 hover:border-primary p-1 cursor-text'
+            : ''
         }`}
         dangerouslySetInnerHTML={{ __html: contentString }}
         tabIndex={0}
