@@ -3,11 +3,14 @@ import { PageData } from '@/neon-frontoffice-ts-sdk/src';
 import { ArticleModel } from '@/types/models';
 import { renderContent } from '@/utilities/content';
 import _ from 'lodash';
+import { Bookmark, CircleDot, Link2, Share } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { Button } from '../components/baseComponents/button';
 
 type LiveblogPost = {
   id: string;
   content: any;
+  publicationTime: string;
 };
 
 type PageProps = {
@@ -17,11 +20,12 @@ type PageProps = {
 const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
   const lastLoadedPostId = useRef<string>(null);
 
-  const initialLiveblogPosts = data.model.data.children.map(postId => {
+  const initialLiveblogPosts = data.model.children.map(postId => {
     lastLoadedPostId.current = postId;
     return {
       id: postId,
       content: data.model.nodes[postId].files.content.data,
+      publicationTime: data.model.nodes[postId].pubInfo.publicationTime,
     };
   });
 
@@ -34,10 +38,13 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
       const resp = await fetch(`/api/liveblogs/${liveblogId}`, { cache: 'no-store' });
       const liveblogPostsResp = await resp.json();
       setLiveblogPosts(oldResults =>
-        _.uniqBy([...liveblogPostsResp.posts, ...oldResults], 'id').map(post => ({
-          id: post.id,
-          content: post.content || post.files.content.data,
-        }))
+        _.uniqBy([...liveblogPostsResp.posts, ...oldResults], 'id').map(post => {
+          return {
+            id: post.id,
+            content: post.content || post.files.content.data,
+            publicationTime: post.pubInfo.publicationTime,
+          };
+        })
       );
     };
 
@@ -49,14 +56,48 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
   }, []);
 
   return (
-    <div className="container mx-auto">
-      {liveblogPosts.map(({ id, content }) => {
-        return (
-          <div key={id} className="liveblog-posts">
-            {renderContent(content)}
-          </div>
-        );
-      })}
+    <div className="bg-primary-dark py-8 px-36">
+      <div className="flex items-center gap-1 mb-6 w-fit max-h-[30px] p-2 rounded-xs bg-feedback-red text-neutral-lightest">
+        <CircleDot className="w-4 h-4" />
+        <span className="subhead1 pt-[3px]">Live blog</span>
+      </div>
+      <div className="flex flex-col gap-6">
+        {liveblogPosts.length > 0 ? (
+          liveblogPosts.map(data => (
+            <div key={data.id} className="liveblog-posts bg-neutral-lightest p-6 rounded-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  {/* DATE */}
+                  <span className="subhead1 text-feedback-red-dark">
+                    {new Date(data.publicationTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}{' '}
+                    -{' '}
+                    {new Date(data.publicationTime)
+                      .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                      .replace(/(\d+)(?=,)/, match => `${match}th`)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {/* ICONS */}
+                  <Button variant="ghost">
+                    <Share className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Bookmark className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Link2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              {renderContent(data.content)}
+            </div>
+          ))
+        ) : (
+          <p key="loading" className="text-neutral-lightest">
+            Loading live blog posts...
+          </p>
+        )}
+      </div>
     </div>
   );
 };

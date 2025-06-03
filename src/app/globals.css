@@ -106,7 +106,7 @@
 
 /* TYPOGRAPHY */
 h1, h1 p {
-  @apply font-gabarito font-semibold text-[40px] leading-[124%] tracking-normal;
+  @apply font-gabarito font-semibold text-[2.5rem] leading-[124%] tracking-normal;
 }
 h2, h2 p, h2 span {
   @apply font-gabarito font-semibold text-3xl leading-[124%] tracking-normal;
@@ -167,8 +167,14 @@ h6, h6 p {
 
 /* OTHERS */
 .liveblog-posts {
+  article {
+    @apply flex flex-col gap-2;
+  }
   h1 {
-    @apply text-primary text-2xl
+    @apply font-gabarito font-semibold text-xl leading-[120%] tracking-normal;
+  }
+  figure {
+    @apply my-2;
   }
 }
 
