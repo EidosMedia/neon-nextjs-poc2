@@ -1,10 +1,16 @@
-import { BaseModel, NeonConnection, NodeVersion, PageData, PageNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Link from 'next/link';
-import Close from '../icons/close';
 import useVersions from '@/hooks/useVersions';
+import {
+  getInspectItems,
+  loggedUserSlice,
+  setInspectItems as setInspectItemsAction,
+} from '@/lib/features/loggedUserSlice';
+import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
 import { Clock } from 'lucide-react';
-import { url } from 'inspector';
+import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import Close from '../icons/close';
+import { useEffect } from 'react';
 
 type UserLayerProps = {
   data: PageData<BaseModel>;
@@ -18,6 +24,10 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   } = useVersions({
     currentNode: data,
   });
+
+  const dispatch = useDispatch();
+
+  const inspectItems = useSelector(getInspectItems);
 
   function removeDashNNumber(url?: string) {
     if (!url) return '';
@@ -72,6 +82,30 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   const latestLiveVersionIndex = historyData?.versions
     ? historyData.versions.findIndex((v: NodeVersion) => v.live)
     : -1;
+
+  const latestEditNodeVersion: NodeVersion =
+    historyData?.versions?.find((v: NodeVersion) => v.live === false && v.versionTimestamp !== -1) ||
+    ({
+      nodeId: '',
+      major: 0,
+      minor: 0,
+      pubInfo: { canonical: '', publicationTime: '', publishedBy: { userName: '' } },
+      live: false,
+      versionTimestamp: -1,
+      prevTsVersion: 0,
+    } as NodeVersion);
+
+  useEffect(() => {
+    if (
+      historyData?.versions &&
+      historyData.versions.length > 0 &&
+      latestEditNodeVersion.nodeId === data.model.data.version
+    ) {
+      dispatch(setInspectItemsAction(true));
+    } else if (inspectItems) {
+      dispatch(setInspectItemsAction(false));
+    }
+  }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
   return (
     <>

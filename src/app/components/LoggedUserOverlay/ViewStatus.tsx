@@ -33,15 +33,23 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
     return 'bg-gray-300';
   };
 
+  const textClass = () => {
+    if (isLive) {
+      return 'text-white';
+    } else {
+      return 'text-black';
+    }
+  };
+
   return (
     <div className={clsx('flex items-center justify-center text-white px-5 h-16', colorClass())}>
       {isLastLive || isLastPreview ? (
         version
       ) : (
         <div className="flex flex-col justify-center items-center">
-          <span className="text-black font-semibold text-">{version}</span>
+          <span className={clsx('font-normal', textClass())}>{version}</span>
           <Link href={getLatestViewVersion(data.siteData.viewStatus).pubInfo.canonical}>
-            <span className="text-black underline font-medium">Back to latest version</span>
+            <span className={clsx('underline font-normal', textClass())}>Back to latest version</span>
           </Link>
         </div>
       )}

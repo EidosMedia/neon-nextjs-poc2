@@ -35,11 +35,10 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
         lastLoadingHistory
       );
 
-      const elapsertime = now - lastLoadingHistory;
-      console.log('elapsed time since last loading history:', elapsertime, 'ms');
-      // If the last loading was less than 1 second ago, skip the request
-      if (now - lastLoadingHistory < 1000) {
-        console.log('skip request loading');
+      const elapsedtime = now - lastLoadingHistory;
+      // If the last loading was less than 5 second ago, skip the request
+      if (now - lastLoadingHistory < 5000) {
+        console.log('skip request loading due to elaspsed', elapsedtime, 'ms');
         return;
       }
 
@@ -50,7 +49,12 @@ const useVersions = ({ currentNode }: { currentNode?: PageData<BaseModel> }) => 
         })
       );
 
-      const response = await fetch(`/api/nodes/${currentNode?.model.data.id}/versions`);
+      const versionFetchUrl: string =
+        currentNode?.siteData?.viewStatus === 'LIVE'
+          ? `/api/nodes/${currentNode?.model.data.id}/versions/live`
+          : `/api/nodes/${currentNode?.model.data.id}/versions`;
+
+      const response = await fetch(versionFetchUrl);
       const jsonResp = await response.json();
 
       let filteredVersions: NodeVersion[];
