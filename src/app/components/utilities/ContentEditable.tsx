@@ -35,7 +35,11 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
   );
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
 
-  const showDivButtons = () => {
+  const showDivButtons = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    console.log('show div buttons event', e);
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     divButtonsRef.current?.classList.remove('hidden');
   };
 
@@ -130,8 +134,8 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
         onClick={!!loggedUserInfo?.inspectItems ? showDivButtons : undefined}
         onBlur={!!loggedUserInfo?.inspectItems ? handleBlur : undefined}
-        className={`relative rounded ${
-          loggedUserInfo?.inspectItems ? 'border-1 border-neutral-light/30 hover:border-primary p-1' : ''
+        className={`relative rounded z-10 ${
+          loggedUserInfo?.inspectItems ? 'border-1 border-neutral-light/30 hover:border-primary p-1 cursor-text' : ''
         }`}
         dangerouslySetInnerHTML={{ __html: contentString }}
         tabIndex={0}
@@ -140,11 +144,11 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
         <div className="relative">
           <div
             ref={divButtonsRef}
-            className="bg-white z-10 flex absolute right-0 flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
+            className="bg-white z-20 flex absolute right-0 flex-row items-center justify-end rounded shadow-lg border-gray-500 border-1 ml-auto w-fit hidden"
           >
             <button
               type="button"
-              className="p-1 rounded hover:bg-gray-200"
+              className="p-1 rounded hover:bg-gray-200 cursor-pointer"
               onMouseDown={handleSave}
               aria-label="Save"
               tabIndex={-1}
@@ -153,7 +157,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showL
             </button>
             <button
               type="button"
-              className="p-1 rounded hover:bg-gray-200"
+              className="p-1 rounded hover:bg-gray-200 cursor-pointer"
               onMouseDown={handleCancel}
               aria-label="Cancel"
               tabIndex={-1}
