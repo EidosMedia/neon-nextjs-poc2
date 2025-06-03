@@ -3,8 +3,9 @@ import Logo from './Logo';
 import { BaseModel, PageData, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
 import { headers } from 'next/headers';
-import { Menu, Search } from 'lucide-react';
+import { CircleUserRound, Menu } from 'lucide-react';
 import { Button } from './baseComponents/button';
+import AiSearchIcon from './icons/AiSearch';
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   if (!data.siteNode || !data.siteNode.name) {
@@ -29,13 +30,16 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
             <Button variant="ghost">
               <Menu />
             </Button>
-            <Link href="/search" className="flex items-center justify-center w-10 h-10">
-              <Search />
+            <Link href="/search" className="flex items-center justify-center gap-2">
+              <AiSearchIcon />
+              <span className="font-epilogue">Search</span>
             </Link>
           </div>
           <div className="flex gap-2">
             <Button variant="default">Subscribe</Button>
-            <Button variant="secondary">Login</Button>
+            <Button variant="secondary">
+              Login <CircleUserRound />
+            </Button>
           </div>
         </div>
         <div className="flex justify-center items-center gap-4">
@@ -51,16 +55,6 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/search">
-                <h3 className="text-lg uppercase">Search</h3>
-              </Link>
-            </li>
-            <li>
-              <Link href="/about">
-                <h3 className="text-lg uppercase">About</h3>
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

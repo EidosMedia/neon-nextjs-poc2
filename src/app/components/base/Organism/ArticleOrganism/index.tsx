@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import ArticleOverlay from '../../ArticleOverlay';
 import MainImage from '@/app/components/contentElements/MainImage';
+import ContentEditable from '@/app/components/utilities/ContentEditable';
+import React from 'react';
 
 type ArticleOrganismProps = {
   data: any; // Adjust type as needed
@@ -23,8 +25,16 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
         <div className="p-4 grid grid-cols-12">
           <div className="flex flex-col col-span-5">
             <span className="mt-2 subhead1 uppercase">{extractSectionFromUrl(url)}</span>
-            <TitleComponent className="mt-2 ">{linkedObject.title}</TitleComponent>
-            <span className="mt-2">{linkedObject.summary}</span>
+            <ContentEditable showLockedByTooltip={linkedObject.sys?.lockedBy}>
+              <TitleComponent className="mt-2 " id={`title-${linkedObject.id}`}>
+                {linkedObject.attributes?.teaser?.title ?? linkedObject.title}
+              </TitleComponent>
+            </ContentEditable>
+            <ContentEditable showLockedByTooltip={linkedObject.sys?.lockedBy}>
+              <span className="mt-2" id={`summary-${linkedObject.id}`}>
+                {linkedObject.attributes?.teaser?.summary ?? linkedObject.summary}
+              </span>
+            </ContentEditable>
             <span className="mt-2">{linkedObject.author}</span>
           </div>
           <div className="col-span-7 flex justify-end items-end">

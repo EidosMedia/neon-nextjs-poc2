@@ -12,7 +12,6 @@ import { isNeonAppPreview } from '@eidosmedia/neon-frontoffice-ts-sdk';
 const useLoggedUserInfo = () => {
   const dispatch = useDispatch();
   const inspectItems = useSelector(getInspectItems);
-
   const analyticsData = useSelector(getAnalytics);
   const [preview, setPreview] = useState(false);
 

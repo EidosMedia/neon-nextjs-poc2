@@ -4,10 +4,11 @@ import { X, Check, LockKeyhole } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import ReactDOMServer from 'react-dom/server';
 import { isString } from 'lodash';
+import useVersions from '@/hooks/useVersions';
+import { ArticleModel } from '@/types/models/ArticleModel';
 
 type ContentEditableProps = {
-  articleId?: string;
-  lockedBy?: lockedByInfo;
+  data?: ArticleModel;
   children?: React.ReactNode;
   showLockedByTooltip?: boolean;
 };
@@ -19,16 +20,15 @@ type lockedByInfo =
     }
   | string;
 
-const ContentEditable: React.FC<ContentEditableProps> = ({
-  articleId,
-  lockedBy,
-  children,
-  showLockedByTooltip = true,
-}) => {
+const ContentEditable: React.FC<ContentEditableProps> = ({ data, children, showLockedByTooltip = true }) => {
+  const articleId = data?.id;
+  const lockedBy = data?.sys?.lockedBy;
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
 
+  const { changeEdited } = useVersions({ currentNode: data as any }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
   const { data: loggedUserInfo } = useLoggedUserInfo();
+
   const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
   const [previousContentString, setPreviousContentString] = useState<string>(
     ReactDOMServer.renderToStaticMarkup(children)
@@ -52,7 +52,9 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       if (response.ok) {
         console.log('Content updated successfully');
       } else {
-        console.error('Failed to update content');
+        alert('Failed to update content: ' + response.status);
+        console.warn('Failed to update content - response:', response);
+        window.location.reload(); // Reload the page if update fails
       }
     } catch (error) {
       console.error('Error updating content:', error);
@@ -70,7 +72,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       handleUpdateContentItem(dataId, content);
       setContentString(divRef?.current?.innerHTML);
       setPreviousContentString(divRef?.current?.innerHTML);
-
+      changeEdited(true); // Mark as edited
       hideDivButtons(); // Hide buttons after save
       divRef.current?.blur(); // Remove focus from the div
     }
@@ -113,7 +115,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
               <LockKeyhole />
             </span>
             <div className="hidden px-2 py-1 rounded bg-black text-white text-xs whitespace-nowrap shadow-lg z-10">
-              Locked by {isString(lockedBy) ? lockedBy : lockedBy.userName}
+              Locked by {isString(lockedBy) ? lockedBy : (lockedBy as any).userName}
             </div>
           </>
         )}

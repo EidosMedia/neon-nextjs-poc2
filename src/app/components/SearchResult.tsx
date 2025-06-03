@@ -1,15 +1,14 @@
 'use client';
 import { PaginatedSearchRagResult, RagOnItemsResponse, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import ArticleOverlay from './base/ArticleOverlay';
+import { useEffect, useRef, useState } from 'react';
 import { LoaderCircle, Search } from 'lucide-react';
-import ErrorBoundaryContainer from './base/ErrorBoundaryContainer/ErrorBoundaryContainer';
 import { Button } from './baseComponents/button';
 import SearchResultItem from './SearchResultItem';
 import { Input } from './baseComponents/textInput';
-import Select from './baseComponents/select';
+import CustomSelect from './baseComponents/select';
+import AiSearchIcon from './icons/AiSearch';
+import { chatResponse } from './mocks/mocks';
 
 type ChatRoundTrip = {
   titles: string[];
@@ -25,41 +24,40 @@ const SearchResult = ({ data }: { data: Site }) => {
   const [searchText, setSearchText] = useState('');
   const [authorized, setAuthorized] = useState(true);
   const [selectedOption, setSelectedOption] = useState('Select a time frame');
+  const [selectedSearchOption, setSelectedSearchOption] = useState('search');
   const [selectedResults, setSelectedResults] = useState<Map<string, string>>(new Map<string, string>());
   const [isLoading, setLoading] = useState(true);
   const [isAsking, setAsking] = useState(false);
   const [chat, setChat] = useState<ChatRoundTrip[]>([]);
   const [questionText, setQuestionText] = useState('');
-  const [searchEnabled, setSearchEnabled] = useState(false);
+  const lastSearchText = useRef<string>(searchText);
 
   const options = [
-     {value: '', text: 'Select a time frame'},
-     {value: 'Today', text: 'Today'},
-     {value: 'Last Week', text: 'Last Week'},
-     {value: 'Last Month', text: 'Last Month'},
-     {value: 'Last Quarter', text: 'Last Quarter'},
-     {value: 'Last Year', text: 'Last Year'}]
+    // { value: '', text: 'Select a time frame' },
+    { value: 'Today', text: 'Today' },
+    { value: 'Last Week', text: 'Last Week' },
+    { value: 'Last Month', text: 'Last Month' },
+    { value: 'Last Quarter', text: 'Last Quarter' },
+    { value: 'Last Year', text: 'Last Year' },
+  ];
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-    enableSearch(e.target.value, selectedOption);
   };
+
   const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuestionText(e.target.value);
   };
 
-  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(e.target.value);
-    enableSearch(searchText, e.target.value);
+  const handleOptionChange = (value: string) => {
+    setSelectedOption(value);
   };
 
-  function enableSearch(queryText: string, timeSlice: string) {
-    setSearchEnabled(
-      ((queryText.trim() != '' && !query.has('query')) ||
-        (queryText.trim() != '' && query.has('query') && queryText !== query.get('query'))) &&
-        (timeSlice.trim() != '' || query.get('time') !== timeSlice)
-    );
-  }
+  const handleSearchOptionChange = (value: string) => {
+    setSelectedSearchOption(value);
+  };
+
+  function enableSearch(queryText: string, timeSlice: string) {}
 
   /** route client to server api exposed for default search */
   const fetchSearch = async (queryParams: URLSearchParams) => {
@@ -149,12 +147,13 @@ const SearchResult = ({ data }: { data: Site }) => {
       setChat([]);
       setResult({} as PaginatedSearchRagResult);
       setSelectedResults(new Map<string, string>());
+
       const response = await fetch(`/api/search?${queryCallParams.toString()}`);
       if (response.ok) {
         const data = (await response.json()) as PaginatedSearchRagResult;
 
         console.log('Fetched rag data:', data);
-        setResult(data);
+        setResult({ ...data, answer: 'this is the answer' });
         setSelectedResults(new Map(data.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
       } else {
         console.log('Fetched rag data error', response);
@@ -219,6 +218,8 @@ const SearchResult = ({ data }: { data: Site }) => {
 
     queryParams.delete('t');
 
+    console.log('Search query params:', queryParams.toString());
+
     // Update the URL with query parameters
     router.push(`/search?${queryParams.toString()}`);
   };
@@ -245,7 +246,21 @@ const SearchResult = ({ data }: { data: Site }) => {
     router.push(`/search?${queryParams.toString()}`);
   };
 
-  const handleAnswerToSelection = async () => {
+  const handleOnSearchFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    lastSearchText.current = searchText;
+    if (selectedSearchOption === 'search') {
+      handleSearch();
+    } else if (selectedSearchOption === 'ai-search') {
+      handleAiSearch();
+    } else if (selectedSearchOption === 'ai-question') {
+      handleAiAsk();
+    }
+  };
+
+  const handleAnswerToSelection = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     console.log(`Question about selected results: ${questionText}`);
 
     const selectedKeys = Array.from(selectedResults.keys());
@@ -266,14 +281,14 @@ const SearchResult = ({ data }: { data: Site }) => {
       });
 
       if (response.ok) {
-        const ragAnwser: RagOnItemsResponse = (await response.json()) as RagOnItemsResponse;
+        const ragAnswer: RagOnItemsResponse = (await response.json()) as RagOnItemsResponse;
 
         console.log('askabout response:', data);
 
         const newChatRoundTrip: ChatRoundTrip = {
           titles: Array.from(selectedResults.values()),
           question: questionText,
-          answer: ragAnwser.result.answer,
+          answer: ragAnswer.result.answer,
         };
 
         setChat(prevChat => [...prevChat, newChatRoundTrip]);
@@ -299,156 +314,134 @@ const SearchResult = ({ data }: { data: Site }) => {
     }
   };
 
+  const changeSelected = (id: string, ref: string, title: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(`Checkbox for item ${id} changed to ${event.target.checked} for ref:${ref}`);
+    // Implement any additional logic for handling the checkbox state change here
+    if (event.target.checked) {
+      setSelectedResults(prev => new Map(prev).set(ref, title));
+    } else {
+      setSelectedResults(prev => {
+        const newSet = new Map(prev);
+        newSet.delete(ref);
+        return newSet;
+      });
+    }
+    console.log(
+      `Selected results: ${Array.from(selectedResults.entries())
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ')}`
+    );
+  };
+
   return (
-    <div className="grid items-center text-center">
-      <form className="text-center">
-        <div className="flex items-center justify-center mb-4 pl-2 flex-col md:flex-row gap-2">
-          <div className="flex grow-1">
-            {/* <label className="relative inline-flex items-center cursor-pointer">Search:</label> */}
-            <br />
-            <Input
-              type="text"
-              id="searchText"
-              value={searchText}
-              onChange={handleTextChange}
-              Icon={<Search />}
-              placeholder="Enter search text to enable search"
-            />
+    <div className="grid items-center text-center max-w-5xl mx-auto">
+      <form className="text-center" onSubmit={handleOnSearchFormSubmit}>
+        <div className="flex items-center justify-center mb-4 flex-col md:flex-row gap-2 mt-10">
+          <div className="flex grow-1 flex-col gap-2">
+            <div className="flex gap-4">
+              <CustomSelect
+                placeholder=""
+                options={[
+                  { value: 'search', text: 'Search' },
+                  { value: 'ai-search', text: 'AI Search' },
+                  { value: 'ai-question', text: 'AI Question' },
+                ]}
+                className="w-[120px] font-semibold"
+                value={selectedSearchOption}
+                onChange={handleSearchOptionChange}
+              />
+              <Input
+                type="text"
+                id="searchText"
+                value={searchText}
+                onChange={handleTextChange}
+                className="grow-1"
+                Icon={<AiSearchIcon />}
+                placeholder="Enter search text to enable search"
+              />
+            </div>
           </div>
-          <div className='flex'>
-            <label className=" text-base self-center whitespace-nowrap">Time frame:</label>
-            <Select
-              id="options"
-              options={options}
-              value={selectedOption}
-              onChange={handleOptionChange}
-              className="ml-2"
-            />
-          </div>
-        </div>
-        <div className="flex items-center justify-center mb-4 pl-2 gap-2">
-          <Button
-            type="submit"
-            formAction={handleSearch}
-            disabled={isLoading || !searchEnabled} // Disable button if not authorized or loading
-          >
-            Search
-          </Button>
-          <Button type="submit" formAction={handleAiSearch} disabled={!authorized || isLoading || !searchEnabled}>
-            AI Search
-          </Button>
-          <Button
-            type="submit"
-            formAction={handleAiAsk}
-            disabled={!authorized || isLoading || !searchEnabled} // Disable button if not authorized
-          >
-            AI Question
-          </Button>
         </div>
       </form>
 
       {
         /* Render search results */
         isLoading ? (
-          <div className="mt-4 flex flex-col items-center">
+          <div className="mt-8 flex flex-col items-center">
             <div className="mt-4 flex justify-center items-center">
               <LoaderCircle className="animate-spin" />
             </div>
             <p>Loading data...</p>
           </div>
         ) : (
-          <div className="mt-4 flex flex-col items-center">
-            {result?.answer ? (
-              <div className="mt-4 flex flex-col items-center">
-                <h3 className="text-xl font-bold mb-2 mt-2 text-gray-800">AI Answer:</h3>
-                <p className="text-left italic">{result?.answer}</p>
-
-                <h3 className="text-xl font-bold mb-2 mt-2 text-gray-800">Response references</h3>
-              </div>
-            ) : (
-              <div className="mt-4">
-                <h3 className="text-xl font-bold mb-2 mt-2 text-gray-800">
-                  {query.has('t') ? 'AI Search Results' : 'Search Results'}
-                </h3>
+          <div className="mt-8 flex flex-col items-center">
+            {result?.answer && (
+              <div className="mt-4 flex flex-col items-center bg-(--color-primary-lightest) p-4 rounded-sm">
+                <h4 className="text-xl font-bold mb-2 mt-2 text-gray-800">The globe overview</h4>
+                <p className="text-left">{result?.answer}</p>
+                <h4 className="text-xl font-bold mb-2 mt-2 text-gray-800">Response references</h4>
               </div>
             )}
-            {result?.count > 0 ? (
-              result.result.map((result, index) => {
-                var title, summary;
-                if (result.nodeData.attributes?.teaser?.title) {
-                  title = result.nodeData.attributes.teaser.title;
-                } else {
-                  title = result.nodeData.title;
-                }
-                if (result.nodeData.attributes?.teaser?.summary) {
-                  summary = result.nodeData.attributes.teaser.summary;
-                } else {
-                  summary = result.nodeData.summary;
-                }
-
-                const changeSelected =
-                  (id: string, ref: string, title: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-                    console.log(`Checkbox for item ${id} changed to ${event.target.checked} for ref:${ref}`);
-                    // Implement any additional logic for handling the checkbox state change here
-                    if (event.target.checked) {
-                      setSelectedResults(prev => new Map(prev).set(ref, title));
-                    } else {
-                      setSelectedResults(prev => {
-                        const newSet = new Map(prev);
-                        newSet.delete(ref);
-                        return newSet;
-                      });
-                    }
-                    console.log(
-                      `Selected results: ${Array.from(selectedResults.entries())
-                        .map(([key, value]) => `${key}: ${value}`)
-                        .join(', ')}`
-                    );
-                  };
-
-                return (
-                  <div key={result.nodeData.id} className="grid grid-cols-1 md:grid-cols-1 gap-2">
-                    <div className="col-span-1 relative group">
-                      <div className="absolute top-2 left-2 z-10">
-                        <input
-                          type="checkbox"
-                          id="sel{index}"
-                          onChange={changeSelected(`sel${index}`, result.nodeData.id, title)}
-                          defaultChecked={true}
-                        />
-                      </div>
-                      <SearchResultItem result={result} data={data} />
+            {result.count > 0 && (
+              <div className="flex w-full justify-between items-center mb-4 pl-2 gap-2">
+                <div>
+                  <div className="text-left text-semibold font-gabarito">{result.count} items that match with:</div>
+                  <h2 className="text-left">{lastSearchText.current}</h2>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-left justify-start whitespace-nowrap font-gabarito font-semibold">
+                    Select time period
+                  </label>
+                  <CustomSelect
+                    placeholder=""
+                    options={options}
+                    value={selectedOption}
+                    onChange={handleOptionChange}
+                    className="w-[240px] font-bold"
+                  />
+                </div>
+              </div>
+            )}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
+              {result?.count > 0 ? (
+                result.result.map((result, index) => {
+                  return (
+                    <SearchResultItem
+                      result={result}
+                      data={data}
+                      key={result.nodeData.id}
+                      onChangeSelected={changeSelected}
+                      index={index}
+                    />
+                  );
+                })
+              ) : (
+                <div className="mt-4 flex flex-col items-center">
+                  <AiSearchIcon className="h-[32px]" />
+                  {!authorized && query.get('t') === 'n' ? (
+                    <p>You are not authorized to use AI features</p>
+                  ) : (
+                    <div className="text-center">
+                      <h2>No results found</h2>
+                      <p>
+                        Search content inside {data.root.title}, our AI will give you an overview of what found and the
+                        list of results.
+                      </p>
                     </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="mt-4">
-                {!authorized && query.get('t') === 'n' ? (
-                  <p>You are not authorized to use AI features.</p>
-                ) : (
-                  <p>No results found.</p>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
+            </div>
             {chat.length > 0 ? (
               <div className="mt-4 text-center">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">AI Chat History:</h3>
+                <h3 className="text-xl font-bold mb-2 text-gray-800">AI Chat History</h3>
                 {chat.map((item, index) => (
                   <div key={index} className="mt-4 mb-4 text-left">
-                    <div className="text-lg mt-1 text-left">
-                      <p>
-                        Question:
-                        <br />
-                        <b>{item.question}</b>
-                      </p>
+                    <div className="text-lg mt-1 text-left bg-gray-100 rounded-tl-[12px] rounded-tr-[12px] rounded-bl-none rounded-br-[12px] p-4 my-2 inline-block max-w-full">
+                      <p className="font-gabarito">{item.question}</p>
                     </div>
-                    <div className="text-lg mt-1 text-right">
-                      <p>
-                        Answer:
-                        <br />
-                        <i>{item.answer}</i>
-                      </p>
+                    <div className="text-lg mt-1 text-right bg-[var(--color-primary-lightest)] rounded-tl-[12px] rounded-tr-[12px] rounded-bl-[12px] rounded-br-none p-4 my-2 inline-block max-w-full ml-40">
+                      <p className="font-gabarito">{item.answer}</p>
                     </div>
                   </div>
                 ))}
@@ -457,12 +450,12 @@ const SearchResult = ({ data }: { data: Site }) => {
               <div className="mt-4"></div>
             )}
             {authorized && selectedResults.size > 0 ? (
-              <div className="mt-4 text-left">
-                <ul className="mb-2 text-gray-800">
-                  <i>Using the set of select results:</i>
+              <div className="grid w-full gap-2">
+                <ul className="flex flex-col align-left text-gray-800">
+                  <h3>Using the set of selected results</h3>
                   {Array.from(selectedResults.entries()).map(([key, value], index) => {
                     return (
-                      <li key={index} className="mt-2 ml-5">
+                      <li key={index} className="mt-2 ml-5 text-left">
                         <p>
                           <span className="mr-2 text-black">•</span>
                           <i>{value}</i>
@@ -471,35 +464,25 @@ const SearchResult = ({ data }: { data: Site }) => {
                     );
                   })}
                 </ul>
-                <div className="flex items-center justify-start mb-4 pl-2">
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <b>Ask about that content:</b>
-                  </label>
-                  <input
+                <form onSubmit={handleAnswerToSelection} className="flex w-full gap-2">
+                  <Input
                     type="text"
                     id="questionText"
                     value={questionText}
                     onChange={handleQuestionTextChange}
-                    className="ml-2 mr-2 border border-gray-300 px-2 py-1 w-[70%] rounded"
-                    placeholder="Enter question about selected"
+                    className="grow-1"
+                    placeholder="Enter question about selected results"
                   />
-                  <Button
-                    type="button"
-                    // className={`px-4 py-2 ${
-                    //   !isAsking ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'
-                    // } text-white rounded ml-2`}
-                    onClick={handleAnswerToSelection}
-                    disabled={isAsking}
-                  >
+                  <Button type="submit" disabled={isAsking}>
                     Ask
                   </Button>
-                </div>
+                </form>
                 {isAsking ? (
                   <div className="text-center ml-2">
                     <div className="mt-4 flex justify-center items-center">
-                      <LoaderCircle className="animate-spin" />
+                      <LoaderCircle className="animate-spin color-(--color-primary)" />
                     </div>
-                    <p>Asking...</p>
+                    <p className="font-epilogue">Asking...</p>
                   </div>
                 ) : (
                   <div className="mt-4"></div>

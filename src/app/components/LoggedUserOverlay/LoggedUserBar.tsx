@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
 import { SquareArrowOutUpRight } from 'lucide-react';
+import EditedChip from './EditedChip';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const dispatch = useDispatch();
@@ -34,9 +35,9 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     return null;
   }
 
-  // if (loggedUserInfo.preview) {
-  // return null;
-  // }
+  if (loggedUserInfo.preview) {
+    return null;
+  }
 
   return (
     <div
@@ -59,6 +60,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
             </Link>
             <History data={data} />
             <VisibilityChip data={data} />
+            <EditedChip data={data} />
           </>
         )}
         <div className="flex items-center justify-center text-white gap-3">

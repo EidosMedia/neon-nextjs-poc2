@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const headers = {
       Authorization: authHeaders.Authorization as string,
-      // 'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
+      'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
     };
 
     const updateContentItem = await connection.updateContentItem({
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       contentItemId: contentItemId,
       payload: payload,
       headers: headers,
-      baseUrl: process.env.BASE_NEON_FE_URL || '',
+      baseUrl: process.env.BASE_NEON_FO_URL || '',
     });
     return Response.json({ ...updateContentItem });
   } catch (error) {

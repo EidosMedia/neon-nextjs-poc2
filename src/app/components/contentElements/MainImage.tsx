@@ -7,23 +7,22 @@ type MainImageProps = {
   hideCaptions?: boolean;
 };
 
-const getMainImageUrl = (data: ArticleModel, format: string): string | undefined => {
+const getTeaserOrMainImageUrl = (data: ArticleModel, format: string): string | undefined => {
+  const teaserPicture = data?.links?.system?.teaserPicture?.[0];
   const mainPicture = data?.links?.system?.mainPicture?.[0];
-  return mainPicture?.dynamicCropsResourceUrls?.[format];
+
+  return teaserPicture?.dynamicCropsResourceUrls?.[format] ?? mainPicture?.dynamicCropsResourceUrls?.[format];
 };
 
 const MainImage: React.FC<MainImageProps> = ({ data, format, hideCaptions }) => {
-  let imageWidth = 1024;
-  let imageHeight = 576;
+  const imageUrl = getTeaserOrMainImageUrl(data, format || 'Wide_large');
 
-  const mainImageUrl = getMainImageUrl(data, format || 'Wide_large');
-
-  const render = (
+  return (
     <div>
       <div>
-        {mainImageUrl ? (
+        {imageUrl ? (
           <div className="flex flex-col gap-2 mb-8">
-            <img src={mainImageUrl} alt="" />
+            <img src={imageUrl} alt="" />
             {!hideCaptions &&
               renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
           </div>
@@ -33,7 +32,6 @@ const MainImage: React.FC<MainImageProps> = ({ data, format, hideCaptions }) => 
       </div>
     </div>
   );
-  return render;
 };
 
 export default MainImage;

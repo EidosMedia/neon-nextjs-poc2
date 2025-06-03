@@ -25,12 +25,12 @@ export const loggedUserSlice = createSlice({
     },
     setAnalytics: (state, action) => {
       state.analytics = action.payload;
-    },
+    }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setInspectItems, setAnalytics } = loggedUserSlice.actions;
+export const { setInspectItems, setAnalytics} = loggedUserSlice.actions;
 
 // Selectors
 export const getInspectItems = (state: any) => {
