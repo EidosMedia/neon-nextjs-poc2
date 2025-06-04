@@ -55,8 +55,10 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
     };
   }, []);
 
+  const topDivRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="bg-primary-dark py-8 px-36">
+    <div ref={topDivRef} className="bg-primary-dark py-8 px-36">
       <div className="flex items-center gap-1 mb-6 w-fit max-h-[30px] p-2 rounded-xs bg-feedback-red text-neutral-lightest">
         <CircleDot className="w-4 h-4" />
         <span className="subhead1 pt-[3px]">Live blog</span>
@@ -97,6 +99,18 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
             Loading live blog posts...
           </p>
         )}
+      </div>
+      <div className="flex justify-center mt-8">
+        <Button
+          onClick={() => {
+            topDivRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const navbarHeightOffset = 72; // Adjust for navbar height + additional offset for padding
+            const topPosition = topDivRef.current?.getBoundingClientRect().top || 0;
+            window.scrollTo({ top: window.scrollY + topPosition - navbarHeightOffset, behavior: 'smooth' });
+          }}
+        >
+          Go Back To Top
+        </Button>
       </div>
     </div>
   );
