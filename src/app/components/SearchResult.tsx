@@ -153,7 +153,7 @@ const SearchResult = ({ data }: { data: Site }) => {
         const data = (await response.json()) as PaginatedSearchRagResult;
 
         console.log('Fetched rag data:', data);
-        setResult({ ...data, answer: 'this is the answer' });
+        setResult({ ...data });
         setSelectedResults(new Map(data.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
       } else {
         console.log('Fetched rag data error', response);
@@ -379,12 +379,12 @@ const SearchResult = ({ data }: { data: Site }) => {
               <div className="mt-4 flex flex-col items-center bg-(--color-primary-lightest) p-4 rounded-sm">
                 <h4 className="text-xl font-bold mb-2 mt-2 text-gray-800">The globe overview</h4>
                 <p className="text-left">{result?.answer}</p>
-                <h4 className="text-xl font-bold mb-2 mt-2 text-gray-800">Response references</h4>
               </div>
             )}
             {result.count > 0 && (
               <div className="flex w-full justify-between items-center mb-4 pl-2 gap-2">
                 <div>
+                  <h4 className="text-xl text-left font-bold mb-2 mt-2 text-gray-800">Response references</h4>
                   <div className="text-left text-semibold font-gabarito">{result.count} items that match with:</div>
                   <h2 className="text-left">{lastSearchText.current}</h2>
                 </div>
