@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
   getHistory,
@@ -14,9 +14,10 @@ import { BaseModel, NodeHistory, NodeVersion, PageData } from '@eidosmedia/neon-
 
 const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; viewStatus?: string }) => {
   const dispatch = useDispatch();
-  const history: NodeHistory = useSelector(getHistory(currentNode?.id || '', viewStatus || 'LIVE'));
+  const historySelector = useMemo(() => getHistory(currentNode?.id || '', viewStatus || 'LIVE'), [currentNode?.id]);
+
+  const history: NodeHistory = useSelector(historySelector);
   const store = useStore();
-  //const viewStatus = useSelector(getViewStatus);
 
   const currentModelIdRef = useRef<string | undefined>(undefined);
 
