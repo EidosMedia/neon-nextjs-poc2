@@ -84,6 +84,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     ? historyData.versions.findIndex((v: NodeVersion) => v.live)
     : -1;
 
+  const viewStatus = data.siteData.viewStatus || 'LIVE';
+
   const latestEditNodeVersion: NodeVersion =
     historyData?.versions?.find((v: NodeVersion) => v.live === false && v.versionTimestamp !== -1) ||
     ({
@@ -141,6 +143,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
 
                     const isVersionShown = item.nodeId === data.model.data.version;
                     const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
+                    const isLatestPreviewVersion = !item.live && latestEditNodeVersion?.nodeId === item.nodeId;
 
                     return (
                       <li className="mb-10 ms-4" key={item.nodeId}>
@@ -161,15 +164,31 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                                     return prevVersionName ? ` from ${prevVersionName}` : '';
                                   })()}
                                 </h3>
-                                {item.live && (
+
+                                {viewStatus === 'LIVE' ? (
                                   <div
                                     className={clsx(
                                       'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5',
                                       isLatestLiveVersion ? 'font-bold' : 'font-normal'
                                     )}
                                   >
-                                    {latestLiveVersionIndex === index ? 'LIVE' : 'Old LIVE'}
+                                    {latestLiveVersionIndex === index ? 'LATEST' : 'LIVE version'}
                                   </div>
+                                ) : item.live ? (
+                                  <div className="text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5 font-normal">
+                                    {'LIVE version'}
+                                  </div>
+                                ) : (
+                                  isLatestPreviewVersion && (
+                                    <div
+                                      className={clsx(
+                                        'text-xs text-pink-300 bg-pink-100 border border-pink-300 rounded-full px-2 py-0.5',
+                                        'font-bold'
+                                      )}
+                                    >
+                                      {'LATEST'}
+                                    </div>
+                                  )
                                 )}
                               </div>
                               <div className="flex items-center justify-between ">

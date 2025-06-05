@@ -14,7 +14,7 @@ import { BaseModel, NodeHistory, NodeVersion, PageData } from '@eidosmedia/neon-
 
 const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; viewStatus?: string }) => {
   const dispatch = useDispatch();
-  const history: NodeHistory = useSelector(getHistory(currentNode?.id || ''));
+  const history: NodeHistory = useSelector(getHistory(currentNode?.id || '', viewStatus || 'LIVE'));
   const store = useStore();
   //const viewStatus = useSelector(getViewStatus);
 
@@ -23,7 +23,10 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
   const loadHistory = async () => {
     try {
       const now: number = new Date().getTime();
-      const lastLoadingHistory: number = getLoadingHistory(currentNode?.id || '')(store.getState());
+      const lastLoadingHistory: number = getLoadingHistory(
+        currentNode?.id || '',
+        viewStatus || 'LIVE'
+      )(store.getState());
 
       const elapsedtime = now - lastLoadingHistory;
       // If the last loading was less than 5 second ago, skip the request
@@ -54,12 +57,19 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
         filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.live && item.versionTimestamp != -1);
       }
 
+      const latestLiveVersionIndex = filteredVersions.findIndex((v: NodeVersion) => v.live);
+      const latestEditableVersionIndex = filteredVersions.findIndex((v: NodeVersion) => !v.live);
+
       dispatch(
         setHistory({
           id: currentNode?.id,
           version: currentNode?.version,
           acquireTimestamp: now,
           versions: filteredVersions,
+          viewStatus: viewStatus || 'LIVE',
+          latestLiveVersion: latestLiveVersionIndex !== -1 ? filteredVersions[latestLiveVersionIndex].nodeId : '',
+          latestEditableVersion:
+            latestEditableVersionIndex !== -1 ? filteredVersions[latestEditableVersionIndex].nodeId : '',
         })
       );
     } catch (error) {
@@ -116,7 +126,7 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
         if (versionIndex === firstEditVersion) return 'PREVIEW';
         else return `PREVIEW ${versionObj.major}.${versionObj.minor}`;
       } else {
-        if (versionIndex === firstLiveVersion) return 'LIVE';
+        if (viewStatus === 'LIVE' && versionIndex === firstLiveVersion) return 'LIVE';
         else return `LIVE ${versionObj.major}.${versionObj.minor}`;
       }
     }

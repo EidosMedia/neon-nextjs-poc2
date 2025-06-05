@@ -19,17 +19,18 @@ export const versionsSlice = createSlice({
     // Document actions
     setHistory: (state, action) => {
       const familyRef = getFamilyRef(action.payload.id);
-      if (!state[familyRef]) {
-        state[familyRef] = {};
+      if (!state[familyRef+action.payload.viewStatus]) {
+        state[familyRef+action.payload.viewStatus] = {};
       }
       const history: NodeHistory = {
         id: action.payload.id,
         version: action.payload.version,
+        viewStatus: action.payload.viewStatus,
         acquireTimestamp: action.payload.acquireTimestamp,
         versions: action.payload.versions,
       };
 
-      state[familyRef].history = history;
+      state[familyRef+action.payload.viewStatus].history = history;
       // Update the versions and version in the state
     },
     setVersionPanelOpen: (state, action) => {
@@ -40,11 +41,11 @@ export const versionsSlice = createSlice({
     },
     setLoadingHistory: (state, action) => {
       const familyRef = getFamilyRef(action.payload.id);
-      if (!state[familyRef]) {
-        state[familyRef] = {};
+      if (!state[familyRef+action.payload.viewStatus]) {
+        state[familyRef+action.payload.viewStatus] = {};
       }
-      state[familyRef].lastAcquire = action.payload.lastAcquire;
-      console.log('setLoadingHistory', state[familyRef].lastAcquire);
+      state[familyRef+action.payload.viewStatus].lastAcquire = action.payload.lastAcquire;
+      console.log('setLoadingHistory ',familyRef+action.payload.viewStatus, ' lastAcquire:', state[familyRef+action.payload.viewStatus].lastAcquire);
     },  
   }
 });
@@ -53,16 +54,19 @@ export const versionsSlice = createSlice({
 export const { setHistory, setVersionPanelOpen, setEdited, setLoadingHistory} = versionsSlice.actions;
 
 // Selectors
-export const getHistory = (id: string) => (state: any) : NodeHistory => {
+export const getHistory = (id: string, viewStatus: string) => (state: any) : NodeHistory => {
   if (!id) {
     return {
       id: '',
       version: '',
       acquireTimestamp: 0,
       versions: [],
+      viewStatus: 'LIVE',
+      latestLiveVersion: '',
+      latestEditableVersion: '',
     } as NodeHistory;
   }
-  return state.nodes && state.nodes[getFamilyRef(id)]?.history; // editorContainer.currentDocument is the id of the current document
+  return state.nodes && state.nodes[getFamilyRef(id)+viewStatus]?.history; // editorContainer.currentDocument is the id of the current document
 };
 export const getVersionsPanelOpened = (state: any) => {
   return state.nodes && state.nodes.versionPanelOpen; // editorContainer.currentDocument is the id of the current document
@@ -72,10 +76,11 @@ export const getEdited = (state: any) => {
 };
 
 
-export const getLoadingHistory = (id: string) => (state: any) : number => {
+export const getLoadingHistory = (id: string, viewStatus: string) => (state: any) : number => {
   if (id && state.nodes) {
-    console.log('getLoadingHistory', state.nodes[getFamilyRef(id)]?.lastAcquire);
-    return state.nodes[getFamilyRef(id)]?.lastAcquire || 0; // Return the last acquire timestamp or 0 if not found
+    const familyRef = getFamilyRef(id);
+    console.log('getLoadingHistory ',familyRef+viewStatus, ' lastAcquire:', state.nodes[familyRef+viewStatus]?.lastAcquire);
+    return state.nodes[getFamilyRef(id)+viewStatus]?.lastAcquire || 0; // Return the last acquire timestamp or 0 if not found
   } else {
     return 0;
   }
