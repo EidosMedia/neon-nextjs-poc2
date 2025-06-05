@@ -21,16 +21,19 @@ export async function register() {
   }
 
   const connection = new NeonConnection({
-    
     neonFoUrl: process.env.BASE_NEON_FO_URL,
     frontOfficeServiceKey: process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
   });
 
   await connection.startup();
 
-  setInterval(() => {
+  const refreshSitesData = async () => {
     connection.refreshLiveSites();
     connection.refreshPreviewSites();
+  };
+
+  setInterval(() => {
+    refreshSitesData();
   }, parseInt(process.env.SITES_REFRESH_INTERVAL || '') || 120000);
 
   Object.assign(globalThis, {
