@@ -40,6 +40,7 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
       <Info
         className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
         onClick={handleOnClick}
+        aria-label="Info"
       />
       {opened && (
         <div

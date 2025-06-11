@@ -1,3 +1,5 @@
+import { handleServicesError } from '@/services/utils';
+
 export async function GET(request: Request) {
   try {
     const health = await connection.getBackendInfo();
@@ -7,7 +9,6 @@ export async function GET(request: Request) {
 
     return Response.json({ ...health, pocVersion: version });
   } catch (error) {
-    console.log(error);
-    throw error;
+    return handleServicesError(error);
   }
 }

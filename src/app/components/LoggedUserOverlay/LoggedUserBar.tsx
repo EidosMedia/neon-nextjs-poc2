@@ -42,7 +42,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   return (
     <div
       id="loggedUserBar"
-      className="flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm sticky top-0 z-10"
+      className="flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm sticky top-0 z-100"
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
@@ -55,7 +55,12 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
           <>
             <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
             <InfoTooltip pageData={data} />
-            <Link href={data.editUrl} target="_blank" className="flex items-center justify-center text-white">
+            <Link
+              aria-label="Open in Neon App"
+              href={data.editUrl}
+              target="_blank"
+              className="flex items-center justify-center text-white"
+            >
               <SquareArrowOutUpRight />
             </Link>
             <History data={data} />

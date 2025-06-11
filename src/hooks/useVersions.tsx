@@ -1,82 +1,40 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
-  getHistory,
-  getLoadingHistory,
   getVersionsPanelOpened,
   setVersionPanelOpen,
-  setHistory,
   getEdited,
-  setLoadingHistory,
   setEdited as setEditedAction,
 } from '@/lib/features/versionsSlice';
-import { BaseModel, NodeHistory, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { BaseModel, NodeHistory, NodeVersion } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { useQuery } from '@tanstack/react-query';
+import { getFamilyRef } from '@/utilities/content';
 
 const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; viewStatus?: string }) => {
   const dispatch = useDispatch();
-  const historySelector = useMemo(() => getHistory(currentNode?.id || '', viewStatus || 'LIVE'), [currentNode?.id]);
 
-  const history: NodeHistory = useSelector(historySelector);
-  const store = useStore();
+  const fetchQueries = async () => {
+    const versionFetchUrl: string =
+      viewStatus === 'LIVE' ? `/api/nodes/${currentNode?.id}/versions/live` : `/api/nodes/${currentNode?.id}/versions`;
+
+    const response = await fetch(versionFetchUrl);
+    const jsonResp = await response.json();
+    return { versions: jsonResp.result as NodeVersion[], count: jsonResp.count as number };
+  };
+
+  // Queries
+  const { data, refetch } = useQuery({
+    queryKey: ['versions', getFamilyRef(currentNode?.id || ''), viewStatus],
+    queryFn: fetchQueries,
+    enabled: !!currentNode?.id && currentNode.sys.baseType !== 'site' && currentNode.sys.baseType !== 'section',
+    refetchOnReconnect: true,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+
+  const history: Partial<NodeHistory> = data ?? {};
 
   const currentModelIdRef = useRef<string | undefined>(undefined);
-
-  const loadHistory = async () => {
-    try {
-      const now: number = new Date().getTime();
-      const lastLoadingHistory: number = getLoadingHistory(
-        currentNode?.id || '',
-        viewStatus || 'LIVE'
-      )(store.getState());
-
-      const elapsedtime = now - lastLoadingHistory;
-      // If the last loading was less than 5 second ago, skip the request
-      if (now - lastLoadingHistory < 1000) {
-        console.log('skip request loading due to elaspsed', elapsedtime, 'ms');
-        return;
-      }
-
-      dispatch(
-        setLoadingHistory({
-          id: currentNode?.id,
-          lastAcquire: now,
-        })
-      );
-
-      const versionFetchUrl: string =
-        viewStatus === 'LIVE'
-          ? `/api/nodes/${currentNode?.id}/versions/live`
-          : `/api/nodes/${currentNode?.id}/versions`;
-
-      const response = await fetch(versionFetchUrl);
-      const jsonResp = await response.json();
-
-      let filteredVersions: NodeVersion[];
-      if (viewStatus === 'PREVIEW') {
-        filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.versionTimestamp !== -1);
-      } else {
-        filteredVersions = jsonResp.result.filter((item: NodeVersion) => item.live && item.versionTimestamp != -1);
-      }
-
-      const latestLiveVersionIndex = filteredVersions.findIndex((v: NodeVersion) => v.live);
-      const latestEditableVersionIndex = filteredVersions.findIndex((v: NodeVersion) => !v.live);
-
-      dispatch(
-        setHistory({
-          id: currentNode?.id,
-          version: currentNode?.version,
-          acquireTimestamp: now,
-          versions: filteredVersions,
-          viewStatus: viewStatus || 'LIVE',
-          latestLiveVersion: latestLiveVersionIndex !== -1 ? filteredVersions[latestLiveVersionIndex].nodeId : '',
-          latestEditableVersion:
-            latestEditableVersionIndex !== -1 ? filteredVersions[latestEditableVersionIndex].nodeId : '',
-        })
-      );
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
 
   const setEdited = (value: boolean) => {
     dispatch(setEditedAction(value));
@@ -98,9 +56,9 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
       modelChanged = true;
     }
 
-    // Only run loadHistory if modelChanged or edited, and prevent multiple calls in quick succession
-    if (edited || modelChanged) {
-      loadHistory();
+    // Only run refetch if modelChanged or edited
+    if (edited) {
+      refetch();
     }
   }, [currentNode?.id, edited, viewStatus]);
 
@@ -140,21 +98,27 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
   };
 
   const getLatestViewVersion = (viewStatus: string): NodeVersion => {
+    let version: NodeVersion | undefined;
     switch (viewStatus) {
       case 'PREVIEW':
-        return (
-          history.versions.find((version: NodeVersion) => version.live === false && version.versionTimestamp !== -1) ||
-          history.versions[0]
-        );
+        version =
+          history.versions?.find((version: NodeVersion) => version.live === false && version.versionTimestamp !== -1) ||
+          history.versions?.[0];
+        break;
       case 'LIVE':
-        return (
-          history.versions.find((version: NodeVersion) => version.live === true && version.versionTimestamp !== -1) ||
-          history.versions[0]
-        );
+        version =
+          history.versions?.find((version: NodeVersion) => version.live === true && version.versionTimestamp !== -1) ||
+          history.versions?.[0];
+        break;
       default:
-        console.warn('Unknown viewStatus', viewStatus, 'using first version', history.versions[0]);
-        return history.versions[0];
+        console.warn('Unknown viewStatus', viewStatus, 'using first version', history.versions?.[0]);
+        version = history.versions?.[0];
+        break;
     }
+    if (!version) {
+      throw new Error('No NodeVersion found in history');
+    }
+    return version;
   };
 
   const changeEdited = (value: boolean) => {

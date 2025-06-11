@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { authenticationHeader } from '@/utilities/security';
-import { getAPIHostnameConfig } from '../../../services/utils';
-import { SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { getAPIHostnameConfig, handleServicesError } from '../../../services/utils';
+import { ErrorObject, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,16 +24,7 @@ export async function POST(request: NextRequest) {
     });
     return Response.json({ ...promoteContentLive });
   } catch (error) {
-    console.log('Error in POST request:', error);
-    console.log(error);
-    return Response.json(
-      {
-        error: {
-          message: 'Unable to promote the item',
-        },
-      },
-      { status: 500 }
-    );
+    return handleServicesError(error);
   }
 }
 
@@ -59,15 +50,6 @@ export async function DELETE(request: NextRequest) {
 
     return Response.json({ ...unpromoteContentLive });
   } catch (error) {
-    console.log('Error in DELETE request:', error);
-    console.log(error);
-    return Response.json(
-      {
-        error: {
-          message: 'Unable to unpromote the item',
-        },
-      },
-      { status: 500 }
-    );
+    return handleServicesError(error);
   }
 }

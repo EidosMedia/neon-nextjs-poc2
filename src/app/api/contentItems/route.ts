@@ -1,5 +1,7 @@
 import { NextRequest } from 'next/server';
 import { authenticationHeader } from '@/utilities/security';
+import { ErrorObject } from '@/neon-frontoffice-ts-sdk/src';
+import { handleServicesError } from '@/services/utils';
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,24 +9,17 @@ export async function POST(request: NextRequest) {
     const id = body?.id;
     const contentItemId = body?.contentItemId;
     const payload = body?.payload;
-    const authHeaders = await authenticationHeader(false);
-
-    const headers = {
-      Authorization: authHeaders.Authorization as string,
-      'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
-    };
 
     const updateContentItem = await connection.updateContentItem({
       id: id,
       contentItemId: contentItemId,
       payload: payload,
-      headers: headers,
-      baseUrl: process.env.BASE_NEON_FO_URL || '',
+      contextId: 'Neon-poc:' + Math.random().toString(36).substring(2), // Generate a random value
+      editorialToken: request.cookies.get('previewtoken')?.value || '',
     });
+
     return Response.json({ ...updateContentItem });
   } catch (error) {
-    console.log('Error in POST request:', error);
-    console.log(error);
-    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
+    return handleServicesError(error);
   }
 }

@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
+import { handleServicesError } from '@/services/utils';
 import { RollbackVersionOptions } from '@/neon-frontoffice-ts-sdk/src/services/contents';
 
 export async function POST(request: NextRequest) {
@@ -8,15 +9,12 @@ export async function POST(request: NextRequest) {
     const targetVersion = body?.nodeId;
     const baseType = body?.baseType;
 
-    const rollbackLinks = baseType === 'webpage' ||
-      baseType === 'homewebpage' ||
-      baseType === 'sectionwebpage';
+    const rollbackLinks = baseType === 'webpage' || baseType === 'homewebpage' || baseType === 'sectionwebpage';
 
-  
     const cookiesFromRequest = await cookies();
     const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
 
-    const payload : RollbackVersionOptions = {
+    const payload: RollbackVersionOptions = {
       version: targetVersion,
       rollbackLinks: rollbackLinks,
       rollbackMetadata: false,
@@ -24,21 +22,15 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${previewtoken}`,
         'Content-Type': 'application/json',
         'update-context-id': Math.random().toString(36).substring(2), // Generate a random value
-      }
+      },
     };
 
-    console.log("calling with", payload);
+    console.log('calling with', payload);
 
-    const response = await connection.rollbackVersion(
-      payload
-    );
+    const response = await connection.rollbackVersion(payload);
 
     return Response.json({ ...response });
-
   } catch (error) {
-    console.log('Error in search POST request:', error);
-    return Response.json( 
-      (error instanceof Error && error.cause instanceof Response) ? { error: error.cause.statusText } : {error: 'Internal Server Error' }, 
-      (error instanceof Error && error.cause instanceof Response) ? { status: error.cause.status } : { status: 500 });
-  }  
+    return handleServicesError(error);
+  }
 }

@@ -50,7 +50,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         }),
       });
       if (response.ok) {
-        console.log('Rollbacked TO version ', versionName, ' with response:', response);
         response.json().then(rollbacked => {
           console.log('Rollbacked TO version ', versionName, ' with new node:', rollbacked.nodeRef);
 
@@ -72,7 +71,9 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     if (!prevTsVersion) {
       return null;
     }
-    const prevVersion = historyData.versions.find((v: NodeVersion) => v.versionTimestamp === prevTsVersion);
+    const prevVersion =
+      Array.isArray(historyData.versions) &&
+      historyData.versions.find((v: NodeVersion) => v.versionTimestamp === prevTsVersion);
     if (prevVersion) {
       return `${prevVersion.major}.${prevVersion.minor}`;
     }
@@ -115,6 +116,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       <a
         onClick={() => setPanelOpened(!panelOpened)}
         className="flex items-center justify-center text-white cursor-pointer"
+        aria-label="Versions history"
       >
         <Clock />
       </a>

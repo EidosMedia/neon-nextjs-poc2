@@ -18,9 +18,6 @@ export async function authenticationHeader(foAccessKey: boolean): Promise<Authen
   if (previewtoken) {
     headers.Authorization = `Bearer ${previewtoken}`;
   }
-  if (foAccessKey) {
-    headers['neon-fo-access-key'] = process.env.NEON_FRONTOFFICE_SERVICE_KEY || '';
-  }
 
   return headers;
 }

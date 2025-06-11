@@ -4,6 +4,7 @@ import { WebVitals } from './components/utilities/WebVitals';
 import './globals.css';
 import { ReloadListener } from './components/utilities/ReloadListener';
 import StoreProvider from './StoreProvider';
+import QueryProvider from './components/utilities/QueryProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,8 +38,9 @@ export default async function RootLayout({
       <body className={inter.className}>
         <WebVitals />
         <ReloadListener />
-
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </StoreProvider>
       </body>
     </html>
   );
