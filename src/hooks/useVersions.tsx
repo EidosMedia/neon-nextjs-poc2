@@ -58,6 +58,7 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
 
     // Only run refetch if modelChanged or edited
     if (edited) {
+      console.log('calling refetch');
       refetch();
     }
   }, [currentNode?.id, edited, viewStatus]);

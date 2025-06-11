@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
-import { authenticationHeader } from '@/utilities/security';
-import { ErrorObject } from '@/neon-frontoffice-ts-sdk/src';
+import { getAuthOptions } from '@/utilities/security';
 import { handleServicesError } from '@/services/utils';
 
 export async function POST(request: NextRequest) {
@@ -15,7 +14,7 @@ export async function POST(request: NextRequest) {
       contentItemId: contentItemId,
       payload: payload,
       contextId: 'Neon-poc:' + Math.random().toString(36).substring(2), // Generate a random value
-      editorialToken: request.cookies.get('previewtoken')?.value || '',
+      auth: await getAuthOptions(),
     });
 
     return Response.json({ ...updateContentItem });

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { authenticationHeader } from '@/utilities/security';
+import { authenticationHeader, getAuthOptions } from '@/utilities/security';
 import { getAPIHostnameConfig, handleServicesError } from '../../../services/utils';
 import { ErrorObject, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
@@ -17,9 +17,7 @@ export async function POST(request: NextRequest) {
 
     const promoteContentLive = await connection.promoteContentLive({
       id: id,
-      headers: {
-        Authorization: authHeaders.Authorization,
-      },
+      auth: await getAuthOptions(),
       sites: foundSite.root.name,
     });
     return Response.json({ ...promoteContentLive });
@@ -43,9 +41,7 @@ export async function DELETE(request: NextRequest) {
     const unpromoteContentLive = await connection.unpromoteContentLive({
       id: id,
       sites: foundSite.root.name,
-      headers: {
-        Authorization: authHeaders.Authorization,
-      },
+      auth: await getAuthOptions(),
     });
 
     return Response.json({ ...unpromoteContentLive });

@@ -21,3 +21,14 @@ export async function authenticationHeader(foAccessKey: boolean): Promise<Authen
 
   return headers;
 }
+
+export const getAuthOptions = async () => {
+  const cookiesFromRequest = await cookies();
+  const editorialAuth = cookiesFromRequest.get('previewtoken')?.value;
+  const webAuth = cookiesFromRequest.get('webAuth')?.value;
+
+  return {
+    editorialAuth: editorialAuth,
+    webAuth: webAuth,
+  };
+};
