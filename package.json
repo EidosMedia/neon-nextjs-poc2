@@ -7,7 +7,7 @@
     "dev_https": "NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_OPTIONS='--inspect' next dev --turbopack --experimental-https",
     "ci-frontoffice": "npm ci --prefix ./src/neon-frontoffice-ts-sdk",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 next start",
     "lint": "next lint"
   },
   "dependencies": {
