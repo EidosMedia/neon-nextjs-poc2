@@ -246,6 +246,7 @@ nav {
 }
 
 /* Base list styles */
+ol,
 ul,
 ul ul,
 ul ol,
@@ -298,4 +299,6 @@ ul ol,
 ol ul {
   @apply ml-6;
 }
+
+
 

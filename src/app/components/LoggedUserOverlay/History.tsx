@@ -136,7 +136,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
               </a>
             </div>
             <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0 overflow-y-auto">
-              <ol className="relative border-s border-gray-300 dark:border-gray-200">
+              <ol className="relative border-s border-gray-300 dark:border-gray-200 list-none">
                 {historyData &&
                   historyData.versions &&
                   historyData.versions.map((item: NodeVersion, index: number) => {
