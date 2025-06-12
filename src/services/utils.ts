@@ -26,7 +26,7 @@ export const handleServicesError = (error: unknown) => {
   const responseError = error as ErrorObject;
   return Response.json(
     {
-      error: responseError.cause,
+     ...responseError.cause,
     },
     {
       status: responseError.status,

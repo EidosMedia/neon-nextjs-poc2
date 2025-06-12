@@ -13,8 +13,7 @@ export async function POST(request: NextRequest) {
       id: id,
       contentItemId: contentItemId,
       payload: payload,
-      contextId: 'Neon-poc:' + Math.random().toString(36).substring(2), // Generate a random value
-      auth: await getAuthOptions(),
+      auth: await getAuthOptions('Neon-poc:' + Math.random().toString(36).substring(2)),
     });
 
     return Response.json({ ...updateContentItem });
