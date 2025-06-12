@@ -233,3 +233,69 @@ button {
   max-height: 330px;
 }
 
+p {
+  a {
+    @apply text-base underline hover:text-primary;
+  }
+}
+
+nav {
+  ul {
+    @apply list-none;
+  }
+}
+
+/* Base list styles */
+ul,
+ul ul,
+ul ol,
+ol ul,
+ol ol {
+  @apply list-inside;
+}
+
+ul,
+ul ul,
+ol ul {
+  @apply list-disc;
+}
+
+ol,
+ol ol,
+ul ol {
+  @apply list-decimal;
+}
+
+li,
+li li {
+  @apply text-base;
+}
+
+/* Multilevel nested unordered lists */
+ul ul {
+  @apply list-disc ml-6;
+}
+ul ul ul {
+  @apply list-disc ml-6;
+}
+ul ul ul ul {
+  @apply list-disc ml-6;
+}
+
+/* Multilevel nested ordered lists */
+ol ol {
+  @apply list-[lower-alpha] ml-6;
+}
+ol ol ol {
+  @apply list-[lower-roman] ml-6;
+}
+ol ol ol ol {
+  @apply list-[lower-roman] ml-6;
+}
+
+/* Mixed nested lists */
+ul ol,
+ol ul {
+  @apply ml-6;
+}
+
