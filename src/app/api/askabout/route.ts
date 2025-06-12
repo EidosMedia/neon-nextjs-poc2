@@ -2,6 +2,7 @@ import { RagOnItemsResponse } from '@/neon-frontoffice-ts-sdk/src';
 import { getAPIHostnameConfig } from '@/services/utils';
 import { NextRequest } from 'next/server';
 import { authenticationHeader } from '@/utilities/security';
+import { getAuthOptions } from '@/utilities/security';
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
       query: req.nextUrl.searchParams.get('query') || '',
       ids: familyRefs,
       baseUrl: apiHostname,
-      headers: headers,
+      auth: await getAuthOptions(),
     });
 
     return Response.json(resp, {

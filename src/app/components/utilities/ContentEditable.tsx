@@ -85,9 +85,9 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       hideDivButtons(); // Hide buttons after save
       divRef.current?.blur(); // Remove focus from the div
 
-      setTimeout(() => {
-        location.reload();
-      }, 400); // Reload the page to reflect changes
+      //setTimeout(() => {
+      //  location.reload();
+      //}, 400); // Reload the page to reflect changes
     }
   };
 
