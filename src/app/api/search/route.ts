@@ -1,6 +1,5 @@
 import { getAPIHostnameConfig } from '@/services/utils';
 import { NextRequest } from 'next/server';
-import { makeRequest } from '@/services/services';
 import { getAuthOptions } from '@/utilities/security';
 
 export async function GET(req: NextRequest) {

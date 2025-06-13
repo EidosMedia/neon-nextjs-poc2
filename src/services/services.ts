@@ -7,7 +7,7 @@ export const getPageData = async (hostname: string, slug: string[]) => {
   return pageDataJSON;
 };
 
-export const makeRequest = async (baseUrl: string, path: string, options: RequestInit = {}) => {
+export const makeApiHostnameRequest = async (baseUrl: string, path: string, options: RequestInit = {}) => {
   const authHeaders = await authenticationHeader(true);
 
   const requestUrl = new URL(path, baseUrl).toString();
