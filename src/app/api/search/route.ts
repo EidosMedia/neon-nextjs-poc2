@@ -1,22 +1,13 @@
 import { getAPIHostnameConfig } from '@/services/utils';
 import { NextRequest } from 'next/server';
 import { makeRequest } from '@/services/services';
+import { getAuthOptions } from '@/utilities/security';
 
 export async function GET(req: NextRequest) {
   try {
     const { apiHostname } = await getAPIHostnameConfig(req);
 
-    const ragsearch = req.nextUrl.searchParams.get('rag') === 'true';
-    const naturalsearch = req.nextUrl.searchParams.get('rag') === 'false';
-
-    const url = ragsearch || naturalsearch ? '/api/search/natural' : '/api/search';
-
-    if (!(ragsearch || naturalsearch)) {
-      req.nextUrl.searchParams.append('baseType', 'article');
-      req.nextUrl.searchParams.append('baseType', 'liveblog');
-    }
-
-    return await makeRequest(apiHostname, `${url}?${req.nextUrl.searchParams}`);
+    return await connection.search({ apiHostname, searchParams: req.nextUrl.searchParams, auth: await getAuthOptions() })
   } catch (error) {
     console.log('Error in search POST request:', error);
     return Response.json(
