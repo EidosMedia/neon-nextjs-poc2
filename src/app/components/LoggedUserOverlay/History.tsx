@@ -111,6 +111,10 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     }
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
+  const getVersionNameFromItem = (item: NodeVersion) => {
+    return `${item.major}.${item.minor}`;
+  };
+
   return (
     <>
       <a
@@ -156,7 +160,14 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                           )}
                         ></div>
                         <div className="relative flex flex-1 min-w-0">
-                          <Link href={rewrittenPath || '#'} className="flex-1 min-w-0">
+                          <Link
+                            href={rewrittenPath || '#'}
+                            className="flex-1 min-w-0"
+                            data-version={`${item.major}.${item.minor}`}
+                            {...(getPrevVersionName(item.prevTsVersion)
+                              ? { 'data-prev-version': getPrevVersionName(item.prevTsVersion) }
+                              : {})}
+                          >
                             <div className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}>
                               <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
