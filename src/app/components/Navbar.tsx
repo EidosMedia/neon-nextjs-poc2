@@ -2,10 +2,11 @@ import Link from 'next/link';
 import Logo from './Logo';
 import { BaseModel, PageData, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
-import { headers } from 'next/headers';
+import { headers, cookies } from 'next/headers';
 import { CircleUserRound, Menu } from 'lucide-react';
 import { Button } from './baseComponents/button';
 import AiSearchIcon from './icons/AiSearch';
+import LoginButton from './LoginButton';
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   if (!data.siteNode || !data.siteNode.name) {
@@ -22,6 +23,10 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
 
   const isActiveLink = (item: SiteNode) => item.path.slice(-1) === '/' && pathname === item.path.slice(0, -1);
 
+  // Get the webauth cookie value
+  const cookieStore = await cookies();
+  const webauth = cookieStore.get('webauth')?.value;
+
   return (
     <nav className="w-full h-max bg-white top-0">
       <div className="container mx-auto px-4 h-full flex flex-col gap-3">
@@ -36,12 +41,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
             </Link>
           </div>
           <div className="flex gap-2">
-            <Button variant="default">Subscribe</Button>
-            <Link href="/login" className="flex items-center gap-2">
-              <Button variant="secondary" className="flex items-center gap-2">
-                Login <CircleUserRound />
-              </Button>
-            </Link>
+            <LoginButton webauth={webauth} />
           </div>
         </div>
         <div className="flex justify-center items-center gap-4">
