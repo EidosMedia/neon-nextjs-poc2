@@ -13,6 +13,7 @@ import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { authenticationHeader } from '@/utilities/security';
 import TempEntryPage from '../components/baseComponents/TempEntryPage';
+import LoginPage from '../_pages/LoginPage';
 
 export default async function Page({
   params,
@@ -34,11 +35,8 @@ export default async function Page({
 
     switch (slug[0]) {
       case 'ui':
-        
-          return (
-            <TempEntryPage />
-          );
-        
+        return <TempEntryPage />;
+
       case 'search':
         if (site) {
           return (
@@ -54,6 +52,15 @@ export default async function Page({
             <div className="root" data-theme={site.root.attributes?.theme}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
               <AboutPage data={site} />
+            </div>
+          );
+        }
+      case 'login':
+        if (site) {
+          return (
+            <div className="root" data-theme={site.root.attributes?.theme}>
+              <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
+              <LoginPage data={site} />
             </div>
           );
         }
@@ -178,6 +185,9 @@ export async function generateMetadata({
         break;
       case 'about':
         title = 'About';
+        break;
+      case 'login':
+        title = 'Login';
         break;
     }
   }

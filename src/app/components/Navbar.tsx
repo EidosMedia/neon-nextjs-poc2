@@ -37,9 +37,11 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
           </div>
           <div className="flex gap-2">
             <Button variant="default">Subscribe</Button>
-            <Button variant="secondary">
-              Login <CircleUserRound />
-            </Button>
+            <Link href="/login" className="flex items-center gap-2">
+              <Button variant="secondary" className="flex items-center gap-2">
+                Login <CircleUserRound />
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="flex justify-center items-center gap-4">
