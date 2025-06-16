@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { authenticationHeader, getAuthOptions } from '@/utilities/security';
 import { getAPIHostnameConfig, handleServicesError } from '../../../../services/utils';
 import { ErrorObject, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
@@ -16,9 +16,19 @@ export async function POST(request: NextRequest) {
       rememberMe: body.rememberMe,
     };
 
-    return await connection.login(
-      loginOptions
-    );
+    const result = await connection.login(loginOptions);
+
+    // Set the webauthToken as a cookie
+    const response = NextResponse.json(result);
+    if (result.webauthToken) {
+      response.cookies.set('webauth', result.webauthToken, {
+        httpOnly: true,
+        sameSite: process.env.DEV_MODE === 'false' ? 'none' : false,
+        path: '/',
+        secure: process.env.DEV_MODE === 'false',
+      });
+    }
+    return response;
 
   } catch (error) {
     return handleServicesError(error);
