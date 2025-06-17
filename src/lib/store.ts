@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import auth from './features/authSlice';
+import webauth from './features/webauthSlice';
 import nodes from './features/versionsSlice';
 import loggedUser from './features/loggedUserSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      auth,
+      webauth,
       nodes,
       loggedUser
     },

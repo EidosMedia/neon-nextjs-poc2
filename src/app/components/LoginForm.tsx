@@ -1,7 +1,10 @@
 'use client';
 import React from 'react';
+import useWebauth from '@/hooks/useWebauth';
 
 const LoginForm: React.FC = () => {
+  const { data: webauthData, setUserName } = useWebauth();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -13,8 +16,11 @@ const LoginForm: React.FC = () => {
       body: JSON.stringify({ name, password }),
     });
     if (res.ok) {
+      const webauthResp = await res.json();
+      setUserName(webauthResp.name);
       if (typeof window !== 'undefined') {
-        window.history.back();
+        // window.history.back();
+        window.location.href = '/';
       }
     }
     // handle error as needed

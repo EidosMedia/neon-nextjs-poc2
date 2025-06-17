@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState: Record<string, string> = {};
+const initialState: Record<string, any> = {
+  userName: undefined,
+};
 
-export const authSlices = createSlice({
-  name: 'auth',
+
+export const webauthSlices = createSlice({
+  name: 'webauth',
   initialState,
   reducers: {
     // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -12,16 +15,17 @@ export const authSlices = createSlice({
     // immutable state based off those changes
 
     // Document actions
-    setAuthData: (state, action) => {
-      state.user = action.payload;
+    setUserName: (state, action) => {
+      state.userName = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setAuthData } = authSlices.actions;
+export const { setUserName } = webauthSlices.actions;
 
 // Selectors
-export const getAuthData = (state: any) => state.auth;
-
-export default authSlices.reducer;
+export const getUserName = (state: any) => {
+  return state && state.webauth.userName;
+};
+export default webauthSlices.reducer;

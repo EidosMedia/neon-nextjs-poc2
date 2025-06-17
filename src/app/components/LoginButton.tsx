@@ -2,20 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from './baseComponents/button';
-import { CircleUserRound } from 'lucide-react';
+import { CircleUserRound, LogOut } from 'lucide-react';
+import useWebauth from '@/hooks/useWebauth';
 
 const LoginButton: React.FC<{ webauth?: string }> = ({ webauth }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [currentWebauth, setCurrentWebauth] = useState(webauth);
+  const { data: webauthData } = useWebauth();
 
   // Refresh the button if webauth changes
   useEffect(() => {
     setCurrentWebauth(webauth);
     setShowMenu(false);
   }, [webauth]);
-
-  // Dummy user name if webauth is present
-  const userName = currentWebauth ? 'User' : '';
 
   const handleLogout = async () => {
     // Call a dedicated logout API route to clear the cookie server-side
@@ -32,14 +31,20 @@ const LoginButton: React.FC<{ webauth?: string }> = ({ webauth }) => {
           <>
             <div className="flex flex-col relative">
               <Button variant="secondary" className="flex items-center gap-2" onClick={() => setShowMenu(v => !v)}>
-                {userName} <CircleUserRound />
+                {webauthData.userName} <CircleUserRound />
               </Button>
               {showMenu && (
                 <div className="relative">
                   <div className="bg-white z-20 flex absolute mt-1 left-0 flex-row items-center justify-start rounded shadow-lg border-gray-500 border-1 ml-0 w-fit">
-                    <Button variant="secondary" className="flex items-center gap-2" onClick={handleLogout}>
-                      Logout <CircleUserRound />
-                    </Button>
+                    <div className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded">
+                      <Button
+                        variant="ghost"
+                        className="flex items-center gap-1 hover:bg-gray-100"
+                        onClick={handleLogout}
+                      >
+                        Logout <LogOut />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
