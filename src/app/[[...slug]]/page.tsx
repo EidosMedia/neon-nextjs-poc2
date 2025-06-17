@@ -69,9 +69,7 @@ export default async function Page({
 
   const authHeaders = await authenticationHeader(true);
 
-  const baseUrl = `${hostname}/${slug.join('/')}`;
-  const url = id !== undefined && id ?
-      `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+  const url = resolveUrl(hostname, slug, id as string);
 
   const pageData = await fetch(
     url,
@@ -149,6 +147,12 @@ export default async function Page({
   );
 }
 
+function resolveUrl(hostname: string | null, slug: string[], id?: string | null) {
+  const baseUrl = `${hostname}/${slug.join('/')}`;
+  return id !== undefined && id ?
+      `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+}
+
 export async function generateMetadata({
   params,
   searchParams,
@@ -163,9 +167,7 @@ export async function generateMetadata({
   const id = (await searchParams)?.id;
   const authHeaders = await authenticationHeader(true);
 
-  const baseUrl = `${hostname}/${slug.join('/')}`;
-  const url = id !== undefined && id ?
-      `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+  const url = resolveUrl(hostname, slug, id as string);
 
   const pageData = await fetch(
     url,
