@@ -1,5 +1,5 @@
-import { headers } from 'next/headers';
-import { notFound, redirect } from 'next/navigation';
+import {headers} from 'next/headers';
+import {notFound, redirect} from 'next/navigation';
 import AboutPage from '../_pages/AboutPage';
 import Article from '../_pages/Article';
 import DefaultLanding from '../_pages/DefaultLanding';
@@ -10,8 +10,8 @@ import SearchPage from '../_pages/SearchPage';
 import SectionWebPage from '../_pages/SectionWebPage';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
-import type { Metadata } from 'next';
-import { authenticationHeader } from '@/utilities/security';
+import type {Metadata} from 'next';
+import {authenticationHeader} from '@/utilities/security';
 import TempEntryPage from '../components/baseComponents/TempEntryPage';
 import LoginPage from '../_pages/LoginPage';
 
@@ -69,10 +69,12 @@ export default async function Page({
 
   const authHeaders = await authenticationHeader(true);
 
+  const baseUrl = `${hostname}/${slug.join('/')}`;
+  const url = id !== undefined && id ?
+      `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+
   const pageData = await fetch(
-    `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
-      id !== undefined ? (id ? `${id}` : '') : ''
-    }`,
+    url,
     {
       redirect: 'manual',
       headers: {
@@ -157,15 +159,16 @@ export async function generateMetadata({
   const currentHeaders = await headers();
 
   const hostname = currentHeaders.get('x-neon-backend-url');
-  const siteName = currentHeaders.get('x-neon-site-name');
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
   const authHeaders = await authenticationHeader(true);
 
+  const baseUrl = `${hostname}/${slug.join('/')}`;
+  const url = id !== undefined && id ?
+      `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+
   const pageData = await fetch(
-    `${hostname}/${slug.join('/')}${!slug.length || slug[slug.length - 1].endsWith('.html') ? '' : '/'}${
-      id !== undefined ? (id ? `${id}` : '') : ''
-    }`,
+    url,
     {
       redirect: 'manual',
       headers: {
