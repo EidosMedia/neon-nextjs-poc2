@@ -35,14 +35,15 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
 
   useEffect(() => {
     const getLiveblogPosts = async () => {
-      const resp = await fetch(`/api/liveblogs/${liveblogId}`, { cache: 'no-store' });
-      const liveblogPostsResp = await resp.json();
+      const response = await fetch(`/api/liveblogs/${liveblogId}`, { cache: 'no-store' });
+      const liveblogPostsResp = await response.json();
+      console.log('Liveblog posts response:', liveblogPostsResp);
       setLiveblogPosts(oldResults =>
         _.uniqBy([...liveblogPostsResp.posts, ...oldResults], 'id').map(post => {
           return {
             id: post.id,
-            content: post.content || post.files.content.data,
-            publicationTime: post.pubInfo.publicationTime,
+            content: post.content || post.files?.content?.data,
+            publicationTime: post.pubInfo?.publicationTime,
           };
         })
       );

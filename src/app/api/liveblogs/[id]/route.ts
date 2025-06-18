@@ -1,5 +1,5 @@
 import { getAPIHostnameConfig } from '@/services/utils';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getAuthOptions } from '@/utilities/security';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -8,5 +8,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const id = (await params).id;
   const searchParams = req.nextUrl.searchParams;
 
-  return await connection.getLiveBlogsPosts({ apiHostname, id, searchParams, auth: await getAuthOptions() });
+  const result = await connection.getLiveBlogsPosts({ apiHostname, id, searchParams, auth: await getAuthOptions() });
+
+  return NextResponse.json(result);
 }
