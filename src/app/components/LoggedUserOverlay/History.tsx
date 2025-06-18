@@ -30,7 +30,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
 
   const inspectItems = useSelector(getInspectItems);
 
-  function removeDashNNumber(url?: string) {
+  function removeDashNumber(url?: string) {
     if (!url) return '';
     return url.replace(/(-n?\d{10,20})(?=\/|$)/, '');
   }
@@ -53,8 +53,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         response.json().then(rollbacked => {
           console.log('Rollbacked TO version ', versionName, ' with new node:', rollbacked.nodeRef);
 
-          window.location.href = removeDashNNumber(window.location.href).replace(
-            removeDashNNumber(data.model.data.id),
+          window.location.href = removeDashNumber(window.location.href).replace(
+            removeDashNumber(data.model.data.id),
             rollbacked.nodeRef
           );
         });
@@ -213,7 +213,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                               </div>
                             </div>
                           </Link>
-                          {index > 0 && (
+                          {index > 0 && !item.live && (
                             <button
                               className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
                               title="Rollback to this version"
