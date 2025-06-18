@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       version: targetVersion,
       rollbackLinks: rollbackLinks,
       rollbackMetadata: false,
-      auth: await getAuthOptions(),
+      auth: await getAuthOptions(Math.random().toString(36).substring(2)),
     };
 
     console.log('calling with', payload);
