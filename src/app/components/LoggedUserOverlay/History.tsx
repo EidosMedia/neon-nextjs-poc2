@@ -88,7 +88,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   const viewStatus = data.siteData.viewStatus || 'LIVE';
 
   const latestEditNodeVersion: NodeVersion =
-    historyData?.versions?.find((v: NodeVersion) => v.live === false && v.versionTimestamp !== -1) ||
+    historyData?.versions?.find((v: NodeVersion) => !v.live && v.versionTimestamp !== -1) ||
     ({
       nodeId: '',
       major: 0,
@@ -206,7 +206,10 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                               </div>
                               <div className="flex items-center justify-between ">
                                 <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                                  {new Date(item.versionDate).toLocaleString()}
+                                  {(() => {
+                                    const d = new Date(item.versionDate);
+                                    return isNaN(d.getTime()) ? '-' : d.toLocaleString();
+                                  })()}
                                   {item.workflowStatus && <div>{item.workflowStatus}</div>}
                                   {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
                                 </div>
