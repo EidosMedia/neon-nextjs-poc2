@@ -56,7 +56,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
                 </a>
               </div>
               <div className="font-bold mb-2">Account</div>
-              <ul className="space-y-3 pl-4">
+              <ul className="space-y-3 pl-4 !list-none">
                 <li>
                   <a href="#" className="hover:underline">
                     Subscribe to Premium
