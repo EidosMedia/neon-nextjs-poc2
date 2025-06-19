@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { useRef, useEffect, useState, SyntheticEvent } from 'react';
 import { priorityOptions } from '../base/ArticleOverlay/ArticleOverlay';
 import { Info } from 'lucide-react';
 import clsx from 'clsx';
@@ -26,6 +26,7 @@ const getPublicationDateString = (publicationTime: string) => {
 const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
   const [opened, setOpened] = useState(false);
   const data = pageData.model.data;
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleOnClick = (event: SyntheticEvent) => {
     if ((event as React.MouseEvent).metaKey || (event as React.MouseEvent).ctrlKey) {
@@ -35,8 +36,18 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
     setOpened(!opened);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setOpened(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
+    <div ref={wrapperRef} className="relative">
       <Info
         className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
         onClick={handleOnClick}
