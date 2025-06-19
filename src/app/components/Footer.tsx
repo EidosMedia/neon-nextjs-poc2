@@ -80,8 +80,8 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
               </ul>
             </div>
             <div>
-              <div className="font-bold mb-2">Follow The Globe</div>
-              <ul className="space-y-3 pl-4">
+              <div className="font-bold mb-2">Follow {data.siteNode?.name}</div>
+              <ul className="list-none pl-0 space-y-3" style={{ listStyle: 'none', paddingLeft: 0 }}>
                 <li>
                   <a href="#" className="hover:underline flex items-center space-x-2">
                     <Instagram size={18} />
