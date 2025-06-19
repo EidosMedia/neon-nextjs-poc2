@@ -57,6 +57,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
             <InfoTooltip pageData={data} />
             <Link
               aria-label="Open in Neon App"
+              title={"Open in Neon App"}
               href={data.editUrl}
               target="_blank"
               className="flex items-center justify-center text-white"
