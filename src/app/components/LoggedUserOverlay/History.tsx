@@ -26,6 +26,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     viewStatus: data.siteData.viewStatus,
   });
 
+  console.log('data in history', data);
+
   const dispatch = useDispatch();
 
   const inspectItems = useSelector(getInspectItems);
@@ -51,7 +53,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       });
       if (response.ok) {
         response.json().then(rollbacked => {
-          console.log('Rollbacked TO version ', versionName, ' with new node:', rollbacked.nodeRef);
+          console.log('Rollbacked to version ', versionName, ' with new node:', rollbacked.nodeRef);
 
           window.location.href = removeDashNumber(window.location.href).replace(
             removeDashNumber(data.model.data.id),
@@ -88,7 +90,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   const viewStatus = data.siteData.viewStatus || 'LIVE';
 
   const latestEditNodeVersion: NodeVersion =
-    historyData?.versions?.find((v: NodeVersion) => v.live === false && v.versionTimestamp !== -1) ||
+    historyData?.versions?.find((v: NodeVersion) => !v.live && v.versionTimestamp !== -1) ||
     ({
       nodeId: '',
       major: 0,
@@ -111,10 +113,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     }
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
-  const getVersionNameFromItem = (item: NodeVersion) => {
-    return `${item.major}.${item.minor}`;
-  };
-
   return (
     <>
       <a
@@ -128,6 +126,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         <div
           className="min-w-xs absolute text-black top-[56px] right-0 z-10 flex flex-col"
           style={{ height: 'calc(100vh - 56px)' }}
+          data-panel="history"
         >
           <div className="text-black relative grow-1 min-h-0 flex flex-col">
             <div className="flex items-center justify-between py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
@@ -145,8 +144,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                   historyData.versions &&
                   historyData.versions.map((item: NodeVersion, index: number) => {
                     const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
-                    const modelPathName = data.model.data.url;
-
                     const isVersionShown = item.nodeId === data.model.data.version;
                     const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
                     const isLatestPreviewVersion = !item.live && latestEditNodeVersion?.nodeId === item.nodeId;
@@ -206,14 +203,17 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                               </div>
                               <div className="flex items-center justify-between ">
                                 <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                                  {new Date(item.versionDate).toLocaleString()}
+                                  {(() => {
+                                    const d = new Date(item.versionDate);
+                                    return isNaN(d.getTime()) ? '-' : d.toLocaleString();
+                                  })()}
                                   {item.workflowStatus && <div>{item.workflowStatus}</div>}
                                   {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
                                 </div>
                               </div>
                             </div>
                           </Link>
-                          {index > 0 && !item.live && (
+                          {index > 0 && !item.live && !data.model.data.sys.lockedBy && (
                             <button
                               className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
                               title="Rollback to this version"

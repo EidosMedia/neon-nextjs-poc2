@@ -300,5 +300,11 @@ ol ul {
   @apply ml-6;
 }
 
+[data-panel="history"] {
+  ul, ol {
+    @apply list-none;
+  }
+}
+
 
 

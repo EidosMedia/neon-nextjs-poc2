@@ -18,8 +18,6 @@ export async function POST(request: NextRequest) {
       auth: await getAuthOptions(Math.random().toString(36).substring(2)),
     };
 
-    console.log('calling with', payload);
-
     const response = await connection.rollbackVersion(payload);
 
     return Response.json({ ...response });
