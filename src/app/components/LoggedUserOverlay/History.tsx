@@ -53,7 +53,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       });
       if (response.ok) {
         response.json().then(rollbacked => {
-          console.log('Rollbacked TO version ', versionName, ' with new node:', rollbacked.nodeRef);
+          console.log('Rollbacked to version ', versionName, ' with new node:', rollbacked.nodeRef);
 
           window.location.href = removeDashNumber(window.location.href).replace(
             removeDashNumber(data.model.data.id),
@@ -113,10 +113,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     }
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
-  const getVersionNameFromItem = (item: NodeVersion) => {
-    return `${item.major}.${item.minor}`;
-  };
-
   return (
     <>
       <a
@@ -148,8 +144,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                   historyData.versions &&
                   historyData.versions.map((item: NodeVersion, index: number) => {
                     const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
-                    const modelPathName = data.model.data.url;
-
                     const isVersionShown = item.nodeId === data.model.data.version;
                     const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
                     const isLatestPreviewVersion = !item.live && latestEditNodeVersion?.nodeId === item.nodeId;
