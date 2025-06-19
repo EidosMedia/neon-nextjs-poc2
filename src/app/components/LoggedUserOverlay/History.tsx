@@ -128,6 +128,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         <div
           className="min-w-xs absolute text-black top-[56px] right-0 z-10 flex flex-col"
           style={{ height: 'calc(100vh - 56px)' }}
+          data-panel="history"
         >
           <div className="text-black relative grow-1 min-h-0 flex flex-col">
             <div className="flex items-center justify-between py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
