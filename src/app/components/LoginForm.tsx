@@ -1,12 +1,15 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import useWebauth from '@/hooks/useWebauth';
+import { CircleX } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
   const { data: webauthData, setUserName } = useWebauth();
+  const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoginError(false);
     const formData = new FormData(e.currentTarget);
     const name = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -16,20 +19,26 @@ const LoginForm: React.FC = () => {
       body: JSON.stringify({ name, password }),
     });
     if (res.ok) {
+      setLoginError(false);
       const webauthResp = await res.json();
       setUserName(webauthResp.name);
       if (typeof window !== 'undefined') {
-        // window.history.back();
         window.location.href = '/';
       }
+    } else {
+      setLoginError(true);
     }
-    // handle error as needed
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <form className="bg-white p-8 rounded shadow-md w-full max-w-sm" onSubmit={handleSubmit}>
         <h2 className="text-2xl font-bold mb-6 text-center">Log in</h2>
+        {loginError && (
+          <div className="bg-red-600 text-white text-center py-2 rounded flex items-center justify-center gap-2 mb-4">
+            <CircleX /> <span>Unable to login</span>
+          </div>
+        )}
         <p className="mb-4 text-gray-600">
           Enter your credential to access all The Globe products. By proceeding, you agree to out terms and conditions.
         </p>
