@@ -26,6 +26,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     viewStatus: data.siteData.viewStatus,
   });
 
+  console.log('data in history', data);
+
   const dispatch = useDispatch();
 
   const inspectItems = useSelector(getInspectItems);
@@ -214,7 +216,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                               </div>
                             </div>
                           </Link>
-                          {index > 0 && !item.live && (
+                          {index > 0 && !item.live && !data.model.data.sys.lockedBy && (
                             <button
                               className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
                               title="Rollback to this version"
