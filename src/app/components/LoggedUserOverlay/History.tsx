@@ -119,6 +119,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         onClick={() => setPanelOpened(!panelOpened)}
         className="flex items-center justify-center text-white cursor-pointer"
         aria-label="Versions history"
+        title={"Versions history"}
       >
         <Clock />
       </a>

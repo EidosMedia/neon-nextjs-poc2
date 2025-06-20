@@ -48,11 +48,13 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
 
   return (
     <div ref={wrapperRef} className="relative">
+      <span title="Info">
       <Info
-        className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
-        onClick={handleOnClick}
-        aria-label="Info"
+          className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
+          onClick={handleOnClick}
+          aria-label="Info"
       />
+        </span>
       {opened && (
         <div
           className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
