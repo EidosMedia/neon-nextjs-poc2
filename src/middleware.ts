@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest) {
         path: '/',
         maxAge: 14400,
         httpOnly: true,
-        name: 'previewtoken',
+        name: 'editorialauth',
         value: cookieValue,
         sameSite: process.env.DEV_MODE === 'false' ? 'none' : false,
         secure: process.env.DEV_MODE === 'false',
@@ -56,13 +56,13 @@ export async function middleware(request: NextRequest) {
       };
 
       const response = NextResponse.next({ headers });
-      response.cookies.set('previewtoken', '', cookieOptions);
+      response.cookies.set('editorialauth', '', cookieOptions);
 
       return response;
     }
   }
 
-  if (urlParams.get('neon.outputMode')?.toLowerCase() === 'raw' && request.cookies.get('previewtoken')) {
+  if (urlParams.get('neon.outputMode')?.toLowerCase() === 'raw' && request.cookies.get('editorialauth')) {
     const url = request.nextUrl.clone();
     url.pathname = `/api/proxy${url.pathname}`;
     return NextResponse.rewrite(url);

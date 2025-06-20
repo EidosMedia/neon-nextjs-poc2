@@ -8,16 +8,16 @@ type AuthenticationHeaderProps = {
 
 export async function authenticationHeader(foAccessKey: boolean): Promise<AuthenticationHeaderProps> {
   const cookiesFromRequest = await cookies();
-  const previewtoken = cookiesFromRequest.get('previewtoken')?.value;
+  const editorialauth = cookiesFromRequest.get('editorialauth')?.value;
 
-  if (!previewtoken && !foAccessKey) {
+  if (!editorialauth && !foAccessKey) {
     return {};
   }
 
   const headers: AuthenticationHeaderProps = {};
 
-  if (previewtoken) {
-    headers.Authorization = `Bearer ${previewtoken}`;
+  if (editorialauth) {
+    headers.Authorization = `Bearer ${editorialauth}`;
   }
 
   headers['neon-fo-access-key'] = process.env.NEON_FRONTOFFICE_SERVICE_KEY || '';
@@ -27,8 +27,8 @@ export async function authenticationHeader(foAccessKey: boolean): Promise<Authen
 
 export const getAuthOptions = async (contextId?: string): Promise<AuthContext> => {
   const cookiesFromRequest = await cookies();
-  const editorialAuth = cookiesFromRequest.get('previewtoken')?.value;
-  const webAuth = cookiesFromRequest.get('webAuth')?.value;
+  const editorialAuth = cookiesFromRequest.get('editorialauth')?.value;
+  const webAuth = cookiesFromRequest.get('webauth')?.value;
 
   return {
     editorialAuth: editorialAuth,
