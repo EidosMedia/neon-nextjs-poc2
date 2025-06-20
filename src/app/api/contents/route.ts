@@ -9,11 +9,6 @@ export async function POST(request: NextRequest) {
     const id = body?.id;
 
     const foundSite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
-    const authHeaders = await authenticationHeader(false);
-
-    if (!authHeaders.Authorization) {
-      throw new Error('Authorization header is missing');
-    }
 
     const promoteContentLive = await connection.promoteContentLive({
       id: id,
@@ -31,12 +26,7 @@ export async function DELETE(request: NextRequest) {
     const body = await request.json();
     const id = body?.id;
 
-    const authHeaders = await authenticationHeader(false);
     const foundSite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
-
-    if (!authHeaders.Authorization) {
-      throw new Error('Authorization header is missing');
-    }
 
     const unpromoteContentLive = await connection.unpromoteContentLive({
       id: id,
