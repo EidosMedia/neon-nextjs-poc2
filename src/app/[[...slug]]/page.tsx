@@ -1,5 +1,5 @@
-import {headers} from 'next/headers';
-import {notFound, redirect} from 'next/navigation';
+import { headers } from 'next/headers';
+import { notFound, redirect } from 'next/navigation';
 import AboutPage from '../_pages/AboutPage';
 import Article from '../_pages/Article';
 import DefaultLanding from '../_pages/DefaultLanding';
@@ -10,8 +10,8 @@ import SearchPage from '../_pages/SearchPage';
 import SectionWebPage from '../_pages/SectionWebPage';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
-import type {Metadata} from 'next';
-import {authenticationHeader} from '@/utilities/security';
+import type { Metadata } from 'next';
+import { getAuthOptions } from '@/utilities/security';
 import TempEntryPage from '../components/baseComponents/TempEntryPage';
 import LoginPage from '../_pages/LoginPage';
 
@@ -23,7 +23,6 @@ export default async function Page({
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const currentHeaders = await headers();
-
   const hostname = currentHeaders.get('x-neon-backend-url');
   const siteName = currentHeaders.get('x-neon-site-name');
   const viewStatus = currentHeaders.get('x-neon-view-status') as string;
@@ -67,20 +66,13 @@ export default async function Page({
     }
   }
 
-  const authHeaders = await authenticationHeader(true);
-
+  const auth = await getAuthOptions();
   const url = resolveUrl(hostname, slug, id as string);
 
-  const pageData = await fetch(
-    url,
-    {
-      redirect: 'manual',
-      headers: {
-        ...authHeaders,
-      },
-      cache: 'no-cache',
-    }
-  );
+  const pageData = await connection.makePageRequest(url, auth, {
+    redirect: 'manual',
+    cache: 'no-cache',
+  });
 
   // handle 404 not found
   if (pageData.status === 404) {
@@ -149,8 +141,7 @@ export default async function Page({
 
 function resolveUrl(hostname: string | null, slug: string[], id?: string | null) {
   const baseUrl = `${hostname}/${slug.join('/')}`;
-  return id !== undefined && id ?
-      `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+  return id !== undefined && id ? `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
 }
 
 export async function generateMetadata({
@@ -165,44 +156,46 @@ export async function generateMetadata({
   const hostname = currentHeaders.get('x-neon-backend-url');
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
-  const authHeaders = await authenticationHeader(true);
+  const auth = await getAuthOptions();
 
   const url = resolveUrl(hostname, slug, id as string);
 
-  const pageData = await fetch(
-    url,
-    {
-      redirect: 'manual',
-      headers: {
-        ...authHeaders,
-      },
-      cache: 'no-cache',
+  const pageData = await connection.makePageRequest(url, auth, {
+    redirect: 'manual',
+    cache: 'no-cache',
+  });
+
+  if (pageData.ok) {
+    const pageDataJSON = await pageData.json();
+    let title;
+
+    if (slug && slug.length === 1) {
+      switch (slug[0]) {
+        case 'search':
+          title = 'Search';
+          break;
+        case 'about':
+          title = 'About';
+          break;
+        case 'login':
+          title = 'Login';
+          break;
+      }
     }
-  );
 
-  const pageDataJSON = await pageData.json();
-  let title;
-
-  if (slug && slug.length === 1) {
-    switch (slug[0]) {
-      case 'search':
-        title = 'Search';
-        break;
-      case 'about':
-        title = 'About';
-        break;
-      case 'login':
-        title = 'Login';
-        break;
+    if (!title) {
+      title = pageDataJSON.model.data.title;
     }
-  }
 
-  if (!title) {
-    title = pageDataJSON.model.data.title;
+    return {
+      title: `${pageDataJSON.siteData.siteName} - ${title}`,
+      description: pageDataJSON.model.data.summary,
+    };
+  } else {
+    console.error('Failed to fetch page data for metadata generation:', pageData.statusText);
+    return {
+      title: 'Error',
+      description: 'Failed to load page metadata.',
+    };
   }
-
-  return {
-    title: `${pageDataJSON.siteData.siteName} - ${title}`,
-    description: pageDataJSON.model.data.summary,
-  };
 }

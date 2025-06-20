@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticationHeader, getAuthOptions } from '@/utilities/security';
+import { getAuthOptions } from '@/utilities/security';
 import { getAPIHostnameConfig, handleServicesError } from '../../../../services/utils';
 import { ErrorObject, SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { LoginRequestOptions } from '@/neon-frontoffice-ts-sdk/src/services/users';
