@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import useWebauth from '@/hooks/useWebauth';
 import { CircleX } from 'lucide-react';
+import { Button } from './baseComponents/button';
 
 const LoginForm: React.FC = () => {
   const { data: webauthData, setUserName } = useWebauth();
@@ -69,9 +70,9 @@ const LoginForm: React.FC = () => {
             autoComplete="current-password"
           />
         </div>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+        <Button variant="default" className="flex items-center gap-2">
           Login
-        </button>
+        </Button>
       </form>
     </div>
   );

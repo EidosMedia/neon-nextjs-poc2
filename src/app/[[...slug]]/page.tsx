@@ -159,13 +159,12 @@ export async function generateMetadata({
   const auth = await getAuthOptions();
 
   const url = resolveUrl(hostname, slug, id as string);
+  try {
+    const pageData = await connection.makePageRequest(url, auth, {
+      redirect: 'manual',
+      cache: 'no-cache',
+    });
 
-  const pageData = await connection.makePageRequest(url, auth, {
-    redirect: 'manual',
-    cache: 'no-cache',
-  });
-
-  if (pageData.ok) {
     const pageDataJSON = await pageData.json();
     let title;
 
@@ -191,11 +190,11 @@ export async function generateMetadata({
       title: `${pageDataJSON.siteData.siteName} - ${title}`,
       description: pageDataJSON.model.data.summary,
     };
-  } else {
-    console.error('Failed to fetch page data for metadata generation:', pageData.statusText);
+  } catch (error) {
+    console.warn('Error generating metadata:', error);
     return {
       title: 'Error',
-      description: 'Failed to load page metadata.',
+      description: 'Failed to generate metadata.',
     };
   }
 }
