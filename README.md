@@ -14,8 +14,13 @@ This project demonstrates how to use [Next.js](https://nextjs.org) in a headless
 - How Neon APIs can be used to power a modern frontend
 - Realistic interaction patterns between a web client and the Neon CMS
 - Key integration use cases in a developer-friendly context
+- Server Side based upon https://github.com/EidosMedia/neon-frontoffice-ts-sdk library 
 
 The purpose is to **illustrate usage**, not to provide a template or pattern for building production apps.
+
+## License
+
+This library is provided under the BSD-3-Clause license, allowing usages as specified by the license.
 
 ---
 
@@ -27,10 +32,14 @@ The project showcases a lot of real use cases, such as:
 - Compatibility with Neon's SaaS Sites provisioning
 - Showcase of Neon's URL management for content
 - Showcase of Neon's Sitemaps and Menus handling
-- Handling of Neon's advanced versioning features and rollback
+- Handling of Neon's advanced versioning features and rollback 
 - Secured Content Preview and Authorization through Neon's Webapp
-- Content modification through the Preview
+- Content modification and publishing through the Preview 
 - Open Neon Webapp's editor for an object from the Site rendering
+- Search capabilities
+- Natural Search AI-powered
+- RAG on content 
+- Use the searched content for AI question answering 
 
 ---
 
