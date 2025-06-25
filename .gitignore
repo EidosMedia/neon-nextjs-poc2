@@ -131,3 +131,6 @@ dist
 
 # Ignoring .env local file
 .env
+
+.idea
+certificates

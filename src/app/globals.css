@@ -1,33 +1,310 @@
-@tailwind base;
-@tailwind components;
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
+@import "./themes/variant-a.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* FONTS */
+  --font-gabarito: "Gabarito", "sans-serif";
+  --font-epilogue: "Epilogue", "sans-serif";
+  --font-georgia: "Georgia", "serif";
+  --font-source-sans: "Source Sans 3", sans-serif;
+
+  /* COLORS */
+  --color-primary: #3969AC;
+  --color-primary-dark: #1D3557;
+  --color-primary-light: #83A5D6;
+  --color-primary-lightest: #D5E1F0;
+
+  --color-neutral-primary: #2F2F2F;
+  --color-neutral-light-2: #999999;
+  --color-neutral-light: #B0B0B0;
+  --color-neutral-lightest: #FFFFFF;
+
+  --color-feedback-red: #D22D2D;
+  --color-feedback-red-dark: #8B1E1E;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  /* INSPECT ITEMS TOOLBAR */
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-toolbar-background: hsl(var(--toolbar-bg));
+  --color-switch-checked-background: hsl(var(--switch-checked-bg));
+  --color-live-background: hsl(var(--live-background));
+  --color-panel-text-header: hsl(var(--panel-text-header));
 }
 
-/* @media (prefers-color-scheme: dark) {
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@layer utilities {
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 255, 255, 255;
+  }
+
+  /* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
 } */
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --toolbar-bg: 250, 32%, 14%;
+    --switch-checked-bg: 230, 77%, 76%;
+    --live-background: 236, 60%, 53%;
+    --panel-text-header: 230, 76%, 52%, 1;
   }
 }
+
+/* BASE STYLES */
+@layer base {
+  * {
+    @apply font-georgia text-sm leading-[134%] tracking-normal;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* TYPOGRAPHY */
+h1, h1 p {
+  @apply font-gabarito font-semibold text-[2.5rem] leading-[124%] tracking-normal;
+}
+h2, h2 p, h2 span {
+  @apply font-gabarito font-semibold text-3xl leading-[124%] tracking-normal;
+}
+h3, h3 p, h3 span {
+  @apply font-gabarito font-semibold text-xl leading-[120%] tracking-normal;
+}
+h4, h4 p {
+  @apply font-gabarito font-semibold text-base leading-[120%] tracking-normal;
+}
+h5, h5 p {
+  @apply font-gabarito font-semibold text-sm leading-[120%] tracking-normal;
+}
+h6, h6 p {
+  @apply font-gabarito font-semibold text-xs leading-[120%] tracking-normal;
+}
+
+.subhead1, .subhead1 p {
+  @apply font-epilogue font-bold text-sm leading-[114%] tracking-[3%];
+}
+.subhead2, .subhead2 p {
+  @apply font-epilogue font-bold text-xs leading-[114%] tracking-[3%];
+}
+
+.body-large, .body-large p {
+  @apply font-georgia text-base leading-[144%] tracking-normal;
+}
+.body-medium, .body-medium p {
+  @apply font-georgia text-sm leading-[134%] tracking-normal;
+}
+.body-small, .body-small p {
+  @apply font-georgia text-xs leading-[134%] tracking-normal;
+}
+
+.author-medium, .author-medium p {
+  @apply font-epilogue text-sm leading-[124%] tracking-[3%];
+}
+.author-small, .author-small p {
+  @apply font-epilogue text-xs leading-[124%] tracking-[3%];
+}
+
+/* ICONS */
+.icon-xl {
+  @apply text-[32px];
+}
+.icon-lg {
+  @apply text-2xl;
+}
+.icon-md {
+  @apply text-base;
+}
+.icon-sm {
+  @apply text-xs;
+}
+.icon-xs {
+  @apply text-[8px];
+}
+
+/* OTHERS */
+.liveblog-posts {
+  article {
+    @apply flex flex-col gap-2;
+  }
+  h1 {
+    @apply font-gabarito font-semibold text-xl leading-[120%] tracking-normal;
+  }
+  figure {
+    @apply my-2;
+  }
+}
+
+@layer components {
+  /* Style for switch button */
+  .switch-btn {
+    @apply w-11 h-6 bg-gray-200 rounded-full
+        peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-(--color-toolbar-background) peer-checked:after:translate-x-full peer-checked:after:border-(--color-toolbar-background) peer-checked:bg-(--color-switch-checked-background)
+        after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-(--color-toolbar-background) after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
+  }
+  /* Style for webpages */
+  .banner-container {
+    @apply w-full overflow-hidden;
+  }
+  .scroll-content {
+    @apply inline-flex whitespace-nowrap;
+    animation: scroll 20s linear infinite;
+  }
+  .banner-item {
+    @apply flex items-center px-4 py-2 mx-4 rounded-md;
+    /* If you want a fixed width, uncomment the next line */
+    /* min-width: 200px; */
+  }
+}
+
+
+
+@keyframes scroll {
+  0% {
+    transform: translateX(500%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Optional: Pause animation on hover */
+.scroll-content:hover {
+  animation-play-state: paused;
+}
+
+#loggedUserBar * {
+  @apply font-source-sans text-base
+
+}
+
+button {
+  @apply font-epilogue
+}
+
+[data-type="article-xl"] {
+  max-height: 470px;
+}
+
+[data-type="article-md"] {
+  max-height: 330px;
+}
+
+p {
+  a {
+    @apply text-base underline hover:text-primary;
+  }
+}
+
+nav {
+  ul {
+    @apply list-none;
+  }
+}
+
+/* Base list styles */
+ol,
+ul,
+ul ul,
+ul ol,
+ol ul,
+ol ol {
+  @apply list-inside;
+}
+
+ul,
+ul ul,
+ol ul {
+  @apply list-disc;
+}
+
+ol,
+ol ol,
+ul ol {
+  @apply list-decimal;
+}
+
+li,
+li li {
+  @apply text-base;
+}
+
+/* Multilevel nested unordered lists */
+ul ul {
+  @apply list-disc ml-6;
+}
+ul ul ul {
+  @apply list-disc ml-6;
+}
+ul ul ul ul {
+  @apply list-disc ml-6;
+}
+
+/* Multilevel nested ordered lists */
+ol ol {
+  @apply list-[lower-alpha] ml-6;
+}
+ol ol ol {
+  @apply list-[lower-roman] ml-6;
+}
+ol ol ol ol {
+  @apply list-[lower-roman] ml-6;
+}
+
+/* Mixed nested lists */
+ul ol,
+ol ul {
+  @apply ml-6;
+}
+
+[data-panel="history"] {
+  ul, ol {
+    @apply list-none;
+  }
+}
+
+
+

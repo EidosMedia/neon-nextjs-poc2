@@ -1,0 +1,6 @@
+.root[data-theme="variant-a"] {
+    --color-primary: #f98866;
+    --color-secondary: #80bd9e;
+    --color-buttons: #89da59;
+    --color-typography: #ff320e;
+}

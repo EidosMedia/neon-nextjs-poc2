@@ -1,55 +1,35 @@
 import { NextRequest } from 'next/server';
-import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
-
+import { NeonConnection, SiteNode, ErrorObject } from '@eidosmedia/neon-frontoffice-ts-sdk';
 declare global {
   // eslint-disable-next-line no-var
   var connection: NeonConnection;
 }
 
-type Site = {
-  root: {
-    hostname: string;
-  };
-  apiHostnames: {
-    liveHostname: string;
-    previewHostname: string;
-  };
+export const getAPIHostnameConfig = async (
+  request: NextRequest
+): Promise<{ apiHostname: string; viewStatus: string; root: SiteNode }> => {
+  const protocol = request.headers.get('X-Forwarded-Proto') || 'http';
+
+  const forwardedHostname = request.headers.get('x-forwarded-host');
+
+  if (forwardedHostname === null) {
+    throw new Error('x-forwarded-host header not found');
+  }
+
+  const apiHostnameConfig = await connection.resolveApiHostname(`${protocol}://${forwardedHostname}`);
+
+  apiHostnameConfig.apiHostname = `https://${apiHostnameConfig.apiHostname}`;
+  return apiHostnameConfig;
 };
 
-export const getAPIHostname = async (
-  request: NextRequest,
-  viewStatus?: string | null
-) => {
-  const protocol = request.headers.get('x-forwarded-protocol') || 'http';
-
-  const sitesResp = await fetch(
-    `${process.env.BASE_NEON_FE_URL}/api/sites/live` || '',
+export const handleServicesError = (error: unknown) => {
+  const responseError = error as ErrorObject;
+  return Response.json(
     {
-      // cache: 'no-cache',
-      next: { tags: ['sites'] },
+     ...responseError.cause,
+    },
+    {
+      status: responseError.status,
     }
   );
-
-  // console.log('sitesResp', sitesResp);
-  const sites = await sitesResp.json();
-
-  const siteFound = sites.find((site: Site) =>
-    site.root.hostname.match(request.headers.get('x-forwarded-host') || '')
-  );
-
-  if (viewStatus === 'PREVIEW') {
-    return `${protocol}://${siteFound?.apiHostnames.previewHostname}`;
-  }
-
-  return `${protocol}://${siteFound?.apiHostnames.liveHostname}`;
-};
-
-export const getConnection = () => {
-  if (!process.env.BASE_NEON_FE_URL) {
-    throw new Error('BASE_NEON_FE_URL not specified in any .env file');
-  }
-
-  if (!globalThis.connection) globalThis.connection = new NeonConnection();
-
-  return globalThis.connection;
 };
