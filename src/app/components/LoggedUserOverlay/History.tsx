@@ -169,7 +169,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                             <div className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}>
                               <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                  {`Version ${item.major}.${item.minor}`}
+                                  {isNaN(new Date(item.versionDate).getTime()) ? `Checkout` : `Version ${item.major}.${item.minor}`}
                                   {(() => {
                                     const prevVersionName = getPrevVersionName(item.prevTsVersion);
                                     return prevVersionName ? ` from ${prevVersionName}` : '';
@@ -206,7 +206,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                                 <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
                                   {(() => {
                                     const d = new Date(item.versionDate);
-                                    return isNaN(d.getTime()) ? '-' : d.toLocaleString();
+                                    return isNaN(d.getTime()) ? <em>My working copy</em> : d.toLocaleString();
                                   })()}
                                   {item.workflowStatus && <div>{item.workflowStatus}</div>}
                                   {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}

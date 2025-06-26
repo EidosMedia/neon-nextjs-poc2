@@ -7,13 +7,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const targetVersion = body?.nodeId;
-    const baseType = body?.baseType;
-
-    const rollbackLinks = baseType === 'webpage' || baseType === 'homewebpage' || baseType === 'sectionwebpage';
-
     const payload: RollbackVersionOptions = {
       version: targetVersion,
-      rollbackLinks: rollbackLinks,
+      rollbackLinks: true,
       rollbackMetadata: false,
       auth: await getAuthOptions(Math.random().toString(36).substring(2)),
     };
