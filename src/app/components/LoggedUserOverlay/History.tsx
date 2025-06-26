@@ -53,7 +53,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       });
       if (response.ok) {
         response.json().then(rollbacked => {
-          console.log('Rollbacked TO version ', versionName, ' with new node:', rollbacked.nodeRef);
+          console.log('Rollbacked to version ', versionName, ' with new node:', rollbacked.nodeRef);
 
           window.location.href = removeDashNumber(window.location.href).replace(
             removeDashNumber(data.model.data.id),
@@ -90,7 +90,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   const viewStatus = data.siteData.viewStatus || 'LIVE';
 
   const latestEditNodeVersion: NodeVersion =
-    historyData?.versions?.find((v: NodeVersion) => v.live === false && v.versionTimestamp !== -1) ||
+    historyData?.versions?.find((v: NodeVersion) => !v.live && v.versionTimestamp !== -1) ||
     ({
       nodeId: '',
       major: 0,
@@ -113,16 +113,13 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     }
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
-  const getVersionNameFromItem = (item: NodeVersion) => {
-    return `${item.major}.${item.minor}`;
-  };
-
   return (
     <>
       <a
         onClick={() => setPanelOpened(!panelOpened)}
         className="flex items-center justify-center text-white cursor-pointer"
         aria-label="Versions history"
+        title={"Versions history"}
       >
         <Clock />
       </a>
@@ -148,8 +145,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                   historyData.versions &&
                   historyData.versions.map((item: NodeVersion, index: number) => {
                     const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
-                    const modelPathName = data.model.data.url;
-
                     const isVersionShown = item.nodeId === data.model.data.version;
                     const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
                     const isLatestPreviewVersion = !item.live && latestEditNodeVersion?.nodeId === item.nodeId;
@@ -174,7 +169,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                             <div className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}>
                               <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                  {`Version ${item.major}.${item.minor}`}
+                                  {isNaN(new Date(item.versionDate).getTime()) ? `Checkout` : `Version ${item.major}.${item.minor}`}
                                   {(() => {
                                     const prevVersionName = getPrevVersionName(item.prevTsVersion);
                                     return prevVersionName ? ` from ${prevVersionName}` : '';
@@ -209,7 +204,10 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                               </div>
                               <div className="flex items-center justify-between ">
                                 <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                                  {new Date(item.versionDate).toLocaleString()}
+                                  {(() => {
+                                    const d = new Date(item.versionDate);
+                                    return isNaN(d.getTime()) ? <em>My working copy</em> : d.toLocaleString();
+                                  })()}
                                   {item.workflowStatus && <div>{item.workflowStatus}</div>}
                                   {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
                                 </div>
