@@ -209,7 +209,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                                     return isNaN(d.getTime()) ? <em>My working copy</em> : d.toLocaleString();
                                   })()}
                                   {item.workflowStatus && <div>{item.workflowStatus}</div>}
-                                  {item.pubInfo.publishedBy && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
+                                  {item.pubInfo.publishedBy.userName && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
                                 </div>
                               </div>
                             </div>
