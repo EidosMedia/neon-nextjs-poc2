@@ -20,7 +20,7 @@ type PageProps = {
 const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
   const lastLoadedPostId = useRef<string>(null);
 
-  const initialLiveblogPosts = data.model.children.map(postId => {
+  const initialLiveblogPosts = data.model.data.children.map(postId => {
     lastLoadedPostId.current = postId;
     return {
       id: postId,
@@ -37,9 +37,8 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
     const getLiveblogPosts = async () => {
       const response = await fetch(`/api/liveblogs/${liveblogId}`, { cache: 'no-store' });
       const liveblogPostsResp = await response.json();
-      console.log('Liveblog posts response:', liveblogPostsResp);
       setLiveblogPosts(oldResults =>
-        _.uniqBy([...liveblogPostsResp.posts, ...oldResults], 'id').map(post => {
+        _.uniqBy([...liveblogPostsResp, ...oldResults], 'id').map(post => {
           return {
             id: post.id,
             content: post.content || post.files?.content?.data,
@@ -97,7 +96,7 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
           ))
         ) : (
           <p key="loading" className="text-neutral-lightest">
-            Loading live blog posts...
+            No liveblog posts available at the moment. Please check back later.
           </p>
         )}
       </div>
