@@ -12,7 +12,7 @@ import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
 import { useDispatch } from 'react-redux';
 import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
-import { SquareArrowOutUpRight } from 'lucide-react';
+import {Braces, SquareArrowOutUpRight} from 'lucide-react';
 import EditedChip from './EditedChip';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
@@ -56,12 +56,19 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
             <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
             <InfoTooltip pageData={data} />
             <Link
+                aria-label="View Model"
+                title={"View Model"}
+                href={data.model.data.url + '?neon.outputMode=RAW'}
+                target="_blank"
+                className="flex items-center justify-center text-white">
+              <Braces />
+            </Link>
+            <Link
               aria-label="Open in Editor"
               title={"Open in Editor"}
               href={data.editUrl}
               target="_blank"
-              className="flex items-center justify-center text-white"
-            >
+              className="flex items-center justify-center text-white">
               <SquareArrowOutUpRight />
             </Link>
             <History data={data} />
