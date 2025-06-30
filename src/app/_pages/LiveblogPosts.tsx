@@ -20,14 +20,16 @@ type PageProps = {
 const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
   const lastLoadedPostId = useRef<string>(null);
 
-  const initialLiveblogPosts = data.model.data.children.map(postId => {
-    lastLoadedPostId.current = postId;
-    return {
-      id: postId,
-      content: data.model.nodes[postId].files.content.data,
-      publicationTime: data.model.nodes[postId].pubInfo.publicationTime,
-    };
-  });
+  const initialLiveblogPosts = Array.isArray(data.model.children)
+    ? data.model.children.map(postId => {
+        lastLoadedPostId.current = postId;
+        return {
+          id: postId,
+          content: data.model.nodes[postId].files.content.data,
+          publicationTime: data.model.nodes[postId].pubInfo.publicationTime,
+        };
+      })
+    : [];
 
   const [liveblogPosts, setLiveblogPosts] = useState<LiveblogPost[]>(initialLiveblogPosts);
 
