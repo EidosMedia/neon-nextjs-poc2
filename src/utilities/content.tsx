@@ -64,7 +64,7 @@ export const renderContent = (
     case 'headline':
       return (
         <ContentEditable key={key} data={data}>
-          <h1 key={key} {...buildAttributes(content)}>
+          <h1 key={key} data-type="headline" {...buildAttributes(content)}>
             {content.elements.map(elem => renderContent(elem, data))}
           </h1>
         </ContentEditable>
@@ -72,14 +72,14 @@ export const renderContent = (
     case 'overhead':
       return (
         <ContentEditable key={key} data={data}>
-          <h5 key={key} {...buildAttributes(content)} className="uppercase">
+          <h5 key={key} data-type="overhead" {...buildAttributes(content)} className="uppercase">
             {content.elements.map(elem => renderContent(elem, data))}
           </h5>
         </ContentEditable>
       );
     case 'grouphead':
       return (
-        <div key={key} {...buildAttributes(content)} className={styles}>
+        <div key={key} {...buildAttributes(content)} className={styles} data-type="grouphead">
           {content.elements
             .filter(elem => elem)
             .map(elem => {
@@ -96,13 +96,13 @@ export const renderContent = (
       );
     case 'text':
       return (
-        <div id="text" key={key} {...buildAttributes(content)} className={styles}>
+        <div id="text" key={key} {...buildAttributes(content)} className={styles} data-type="text">
           {content.elements.map(elem => renderContent(elem, data, 'text'))}
         </div>
       );
     case 'caption':
       return (
-        <figcaption key={key} {...buildAttributes(content)} className="body-large italic">
+        <figcaption key={key} {...buildAttributes(content)} className="body-large italic" data-type="caption">
           {content.elements.map(elem => renderContent(elem, data))}
         </figcaption>
       );
@@ -139,7 +139,16 @@ export const renderContent = (
         </ContentEditable>
       );
     case 'inline-media-group':
-      return <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format={'Wide'} />;
+      return (
+        <Figure
+          key={key}
+          data={content}
+          alt="/public/file.svg"
+          {...content.attributes}
+          format={'Wide'}
+          data-type="inline-media-group"
+        />
+      );
     case 'anchor':
       return (
         <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">

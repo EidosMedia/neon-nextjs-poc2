@@ -119,7 +119,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
         onClick={() => setPanelOpened(!panelOpened)}
         className="flex items-center justify-center text-white cursor-pointer"
         aria-label="Versions history"
-        title={"Versions history"}
+        title="Versions history"
       >
         <Clock />
       </a>
@@ -169,7 +169,9 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                             <div className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}>
                               <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                  {isNaN(new Date(item.versionDate).getTime()) ? `Checkout` : `Version ${item.major}.${item.minor}`}
+                                  {isNaN(new Date(item.versionDate).getTime())
+                                    ? `Checkout`
+                                    : `Version ${item.major}.${item.minor}`}
                                   {(() => {
                                     const prevVersionName = getPrevVersionName(item.prevTsVersion);
                                     return prevVersionName ? ` from ${prevVersionName}` : '';
@@ -209,7 +211,9 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                                     return isNaN(d.getTime()) ? <em>My working copy</em> : d.toLocaleString();
                                   })()}
                                   {item.workflowStatus && <div>{item.workflowStatus}</div>}
-                                  {item.pubInfo.publishedBy.userName && <div>Edited by {item.pubInfo.publishedBy.userName}</div>}
+                                  {item.pubInfo.publishedBy.userName && (
+                                    <div>Edited by {item.pubInfo.publishedBy.userName}</div>
+                                  )}
                                 </div>
                               </div>
                             </div>

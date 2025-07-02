@@ -37,11 +37,13 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
 
   return (
     <div className="relative">
-      <Info
-        className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
+      <a
         onClick={handleOnClick}
+        className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
         aria-label="Info"
-      />
+      >
+        <Info />
+      </a>
       {opened && (
         <div
           className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
