@@ -8,8 +8,7 @@ import {
   getViewStatus,
   setViewStatus as setViewStatusAction,
 } from '@/lib/features/loggedUserSlice';
-import { useEffect, useState } from 'react';
-import { isNeonAppPreview } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { useState } from 'react';
 
 const useLoggedUserInfo = () => {
   const dispatch = useDispatch();
@@ -25,25 +24,6 @@ const useLoggedUserInfo = () => {
   const setViewStatus = (value: string) => {
     dispatch(setViewStatusAction(value));
   };
-
-  useEffect(() => {
-    const initialItemsData = localStorage.getItem('inspectItems') === 'true';
-    setInspectItems(initialItemsData);
-    setPreview(isNeonAppPreview());
-
-    const onChangeStorage = (event: StorageEvent) => {
-      if (event.key === 'inspectItems') {
-        const newValue = event.newValue === 'true';
-        setInspectItems(newValue);
-      }
-    };
-
-    window.addEventListener('storage', onChangeStorage);
-
-    return () => {
-      window.removeEventListener('storage', onChangeStorage);
-    };
-  }, []);
 
   const changeInspectItems = (value: boolean) => {
     setInspectItems(value);
