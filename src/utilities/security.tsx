@@ -1,5 +1,5 @@
-import { AuthTokens } from '@/neon-frontoffice-ts-sdk/src';
 import { cookies } from 'next/headers';
+import {AuthContext} from "@/neon-frontoffice-ts-sdk/src";
 
 type AuthenticationHeaderProps = {
   Authorization?: string;
@@ -25,7 +25,7 @@ export async function authenticationHeader(foAccessKey: boolean): Promise<Authen
   return headers;
 }
 
-export const getAuthOptions = async (contextId?: string): Promise<AuthTokens> => {
+export const getAuthOptions = async (contextId?: string): Promise<AuthContext> => {
   const cookiesFromRequest = await cookies();
   const editorialAuth = cookiesFromRequest.get('previewtoken')?.value;
   const webAuth = cookiesFromRequest.get('webAuth')?.value;
