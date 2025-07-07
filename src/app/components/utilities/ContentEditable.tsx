@@ -14,13 +14,6 @@ type ContentEditableProps = {
   viewStatus?: 'LIVE' | 'PREVIEW';
 };
 
-type lockedByInfo =
-  | {
-      userId: string;
-      userName: string;
-    }
-  | string;
-
 const ContentEditable: React.FC<ContentEditableProps> = ({
   data,
   children,
@@ -61,7 +54,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       if (response.ok) {
         console.log('Content updated successfully');
       } else {
-        alert('Failed to update content: ' + response.status);
+        alert('Failed to update content with articleId=' + articleId + '\nResponse status: ' + response.statusText);
         console.warn('Failed to update content - response:', response);
         window.location.reload(); // Reload the page if update fails
       }
