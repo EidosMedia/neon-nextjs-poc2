@@ -8,11 +8,11 @@ import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 import VisibilityChip from './VisibilityChip';
 import Link from 'next/link';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
-import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
+//import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
 import { useDispatch } from 'react-redux';
 import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
-import {Braces, SquareArrowOutUpRight} from 'lucide-react';
+import { Braces, SquareArrowOutUpRight } from 'lucide-react';
 import EditedChip from './EditedChip';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
@@ -20,14 +20,14 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
   const inspectItemsEnabled = loggedUserInfo.inspectItems;
-  const analyticsEnabled = loggedUserInfo.analytics;
+  //const analyticsEnabled = loggedUserInfo.analytics;
 
   const toggleInspectItems = () => {
     changeInspectItems(!inspectItemsEnabled);
   };
-  const toggleAnalytics = () => {
+  /*const toggleAnalytics = () => {
     dispatch(loggedUserSlice.actions.setAnalytics(!analyticsEnabled));
-  };
+  };*/
 
   const { data: userData } = useAuth();
 
@@ -39,6 +39,9 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     return null;
   }
 
+  const liveWebPage =
+    'model' in data && data.model.data.sys.baseType === 'webpage' && data.siteData.viewStatus === 'LIVE';
+
   return (
     <div
       id="loggedUserBar"
@@ -46,8 +49,10 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
-        <Switch label="Inspect items" checked={inspectItemsEnabled} onChange={toggleInspectItems} />
-        <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} />
+        {(liveWebPage || data.siteData.viewStatus === 'PREVIEW') && (
+          <Switch label="Inspect items" checked={inspectItemsEnabled} onChange={toggleInspectItems} />
+        )}
+        {/* <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} /> */}
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center text-white">{siteName || data.siteData?.siteName}</div>
@@ -56,19 +61,21 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
             <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
             <InfoTooltip pageData={data} />
             <Link
-                aria-label="View Model"
-                title={"View Model"}
-                href={data.model.data.url + '?neon.outputMode=RAW'}
-                target="_blank"
-                className="flex items-center justify-center text-white">
+              aria-label="View Model"
+              title={'View Model'}
+              href={data.model.data.url + '?neon.outputMode=RAW'}
+              target="_blank"
+              className="flex items-center justify-center text-white"
+            >
               <Braces />
             </Link>
             <Link
               aria-label="Open in Editor"
-              title={"Open in Editor"}
+              title={'Open in Editor'}
               href={data.editUrl}
               target="_blank"
-              className="flex items-center justify-center text-white">
+              className="flex items-center justify-center text-white"
+            >
               <SquareArrowOutUpRight />
             </Link>
             <History data={data} />

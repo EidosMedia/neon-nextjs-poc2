@@ -27,7 +27,6 @@ const useLoggedUserInfo = () => {
 
   const changeInspectItems = (value: boolean) => {
     setInspectItems(value);
-    localStorage.setItem('inspectItems', JSON.stringify(value));
   };
 
   return {
