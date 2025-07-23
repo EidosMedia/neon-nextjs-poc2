@@ -6,17 +6,30 @@ import {
 } from '@/lib/features/loggedUserSlice';
 import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
-import { Clock } from 'lucide-react';
+import { Clock, LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import Close from '../icons/close';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+type SysData = {
+  baseType: string;
+  type: string;
+  lockedBy?: {
+    userId: string;
+    userName: string;
+  };
+  lockedTime?: string;
+};
 
 type UserLayerProps = {
   data: PageData<BaseModel>;
 };
 
 const History: React.FC<UserLayerProps> = ({ data }) => {
+  const [latestPreviewSysData, setLatestPreviewSysData] = useState<SysData | null>(null);
+  const [loadingHistory, setLoadingHistory] = useState(true);
+
   const {
     data: historyData,
     setPanelOpened,
@@ -101,6 +114,21 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       prevTsVersion: 0,
     } as NodeVersion);
 
+  const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
+    if (data.siteData.viewStatus !== 'PREVIEW') return null;
+
+    try {
+      const fetchUrl = data.model.data.url.replace(/(-\d{4})[^/]*(?=\/index\.html)/, '$1');
+
+      const res = await fetch(fetchUrl + '?neon.outputMode=RAW');
+      const json = await res.json();
+      return json?.model?.data?.sys ?? null;
+    } catch (err) {
+      console.warn('Error fetching sys data:', err);
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (data.model.data.sys.baseType === 'webpage' && data.siteData.viewStatus === 'LIVE') {
       return;
@@ -115,6 +143,13 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     } else if (inspectItems) {
       dispatch(setInspectItemsAction(false));
     }
+
+    fetchLatestPreviewSysData().then(sys => {
+      if (sys) {
+        setLatestPreviewSysData(sys);
+      }
+      setLoadingHistory(false);
+    });
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
   return (
@@ -144,102 +179,110 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
               </a>
             </div>
             <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0 overflow-y-auto">
-              <ol className="relative border-s border-gray-300 dark:border-gray-200 list-none">
-                {historyData &&
-                  historyData.versions &&
-                  historyData.versions.map((item: NodeVersion, index: number) => {
-                    const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
-                    const isVersionShown = item.nodeId === data.model.data.version;
-                    const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
-                    const isLatestPreviewVersion = !item.live && latestEditNodeVersion?.nodeId === item.nodeId;
+              {loadingHistory ? (
+                <div className="text-gray-500 italic">
+                  <LoaderCircle className="animate-spin" />
+                </div>
+              ) : (
+                <ol className="relative border-s border-gray-300 dark:border-gray-200 list-none">
+                  {historyData &&
+                    historyData.versions &&
+                    historyData.versions.map((item: NodeVersion, index: number) => {
+                      const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
+                      const isVersionShown = item.nodeId === data.model.data.version;
+                      const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
+                      const isLatestPreviewVersion = !item.live && latestEditNodeVersion?.nodeId === item.nodeId;
 
-                    return (
-                      <li className="mb-10 ms-4" key={item.nodeId}>
-                        <div
-                          className={clsx(
-                            'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
-                            isVersionShown ? 'bg-gray-600' : 'bg-gray-300',
-                          )}
-                        ></div>
-                        <div className="relative flex flex-1 min-w-0">
-                          <Link
-                            href={rewrittenPath || '#'}
-                            className="flex-1 min-w-0"
-                            data-version={`${item.major}.${item.minor}`}
-                            {...(getPrevVersionName(item.prevTsVersion)
-                              ? { 'data-prev-version': getPrevVersionName(item.prevTsVersion) }
-                              : {})}
-                          >
-                            <div className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}>
-                              <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-gray-900 dark:text-white">
-                                  {isNaN(new Date(item.versionDate).getTime())
-                                    ? `Checkout`
-                                    : `Version ${item.major}.${item.minor}`}
-                                  {(() => {
-                                    const prevVersionName = getPrevVersionName(item.prevTsVersion);
-                                    return prevVersionName ? ` from ${prevVersionName}` : '';
-                                  })()}
-                                </h3>
+                      return (
+                        <li className="mb-10 ms-4" key={item.nodeId}>
+                          <div
+                            className={clsx(
+                              'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
+                              isVersionShown ? 'bg-gray-600' : 'bg-gray-300',
+                            )}
+                          ></div>
+                          <div className="relative flex flex-1 min-w-0">
+                            <Link
+                              href={rewrittenPath || '#'}
+                              className="flex-1 min-w-0"
+                              data-version={`${item.major}.${item.minor}`}
+                              {...(getPrevVersionName(item.prevTsVersion)
+                                ? { 'data-prev-version': getPrevVersionName(item.prevTsVersion) }
+                                : {})}
+                            >
+                              <div
+                                className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <h3 className="font-semibold text-gray-900 dark:text-white">
+                                    {isNaN(new Date(item.versionDate).getTime())
+                                      ? `Checkout`
+                                      : `Version ${item.major}.${item.minor}`}
+                                    {(() => {
+                                      const prevVersionName = getPrevVersionName(item.prevTsVersion);
+                                      return prevVersionName ? ` from ${prevVersionName}` : '';
+                                    })()}
+                                  </h3>
 
-                                {viewStatus === 'LIVE' ? (
-                                  <div
-                                    className={clsx(
-                                      'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5',
-                                      isLatestLiveVersion ? 'font-bold' : 'font-normal',
-                                    )}
-                                  >
-                                    {latestLiveVersionIndex === index ? 'LATEST' : 'LIVE version'}
-                                  </div>
-                                ) : item.live ? (
-                                  <div className="text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5 font-normal">
-                                    {'LIVE version'}
-                                  </div>
-                                ) : (
-                                  isLatestPreviewVersion && (
+                                  {viewStatus === 'LIVE' ? (
                                     <div
                                       className={clsx(
-                                        'text-xs text-pink-300 bg-pink-100 border border-pink-300 rounded-full px-2 py-0.5',
-                                        'font-bold',
+                                        'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5',
+                                        isLatestLiveVersion ? 'font-bold' : 'font-normal',
                                       )}
                                     >
-                                      {'LATEST'}
+                                      {latestLiveVersionIndex === index ? 'LATEST' : 'LIVE version'}
                                     </div>
-                                  )
-                                )}
-                              </div>
-                              <div className="flex items-center justify-between ">
-                                <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                                  {(() => {
-                                    const d = new Date(item.versionDate);
-                                    return isNaN(d.getTime()) ? <em>My working copy</em> : d.toLocaleString();
-                                  })()}
-                                  {item.workflowStatus && <div>{item.workflowStatus}</div>}
-                                  {item.pubInfo.publishedBy.userName && (
-                                    <div>Edited by {item.pubInfo.publishedBy.userName}</div>
+                                  ) : item.live ? (
+                                    <div className="text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5 font-normal">
+                                      {'LIVE version'}
+                                    </div>
+                                  ) : (
+                                    isLatestPreviewVersion && (
+                                      <div
+                                        className={clsx(
+                                          'text-xs text-pink-300 bg-pink-100 border border-pink-300 rounded-full px-2 py-0.5',
+                                          'font-bold',
+                                        )}
+                                      >
+                                        {'LATEST'}
+                                      </div>
+                                    )
                                   )}
                                 </div>
+                                <div className="flex items-center justify-between ">
+                                  <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
+                                    {(() => {
+                                      const d = new Date(item.versionDate);
+                                      return isNaN(d.getTime()) ? <em>My working copy</em> : d.toLocaleString();
+                                    })()}
+                                    {item.workflowStatus && <div>{item.workflowStatus}</div>}
+                                    {item.pubInfo.publishedBy.userName && (
+                                      <div>Edited by {item.pubInfo.publishedBy.userName}</div>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </Link>
-                          {index > 0 && !item.live && !data.model.data.sys.lockedBy && (
-                            <button
-                              className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
-                              title="Rollback to this version"
-                              onClick={e => {
-                                e.stopPropagation();
-                                e.nativeEvent.stopImmediatePropagation();
-                                rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
-                              }}
-                            >
-                              Rollback
-                            </button>
-                          )}
-                        </div>
-                      </li>
-                    );
-                  })}
-              </ol>
+                            </Link>
+                            {index > 0 && !item.live && !isLatestPreviewVersion && !latestPreviewSysData?.lockedBy && (
+                              <button
+                                className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
+                                title="Rollback to this version"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  e.nativeEvent.stopImmediatePropagation();
+                                  rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
+                                }}
+                              >
+                                Rollback
+                              </button>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                </ol>
+              )}
             </div>
           </div>
         </div>
