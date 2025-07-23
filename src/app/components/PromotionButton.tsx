@@ -26,6 +26,8 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
         changeEdited(false);
         document.location.reload();
       } else {
+        const respJson = await response.json();
+        alert('Failed to promote: ' + respJson.error.message);
         console.error('Failed to fetch data');
       }
     } catch (error) {
@@ -41,7 +43,7 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
       <div className="flex items-center justify-center text-white cursor-pointer">
         <button
           className="fit-content cursor-pointer px-4 py-2 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
-          title={isLive ? 'Unpkublish' : 'Publish'}
+          title={isLive ? 'Unpublish' : 'Publish'}
           onClick={handlePromotion}
         >
           {isLive ? 'Unpublish' : 'Publish'}
