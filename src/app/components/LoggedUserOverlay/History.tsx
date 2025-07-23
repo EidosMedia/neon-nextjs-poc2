@@ -131,6 +131,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
 
   useEffect(() => {
     if (data.model.data.sys.baseType === 'webpage' && data.siteData.viewStatus === 'LIVE') {
+      setLoadingHistory(false);
       return;
     }
 
