@@ -2,35 +2,25 @@ import useVersions from '@/hooks/useVersions';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
-import { setViewStatus as setViewStatusAction } from '@/lib/features/loggedUserSlice';
-import { use, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+
 const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
   const { getVersionLabelFromVersion, getLatestViewVersion } = useVersions({
     currentNode: 'model' in data ? data.model.data : undefined,
     viewStatus: data.siteData.viewStatus,
   });
-  /*const dispatch = useDispatch();
-   useEffect(() => {
-    if (data.siteData.viewStatus) {
-      console.log('******** Setting view status to', data.siteData.viewStatus);
-      dispatch(setViewStatusAction(data.siteData.viewStatus));
-    }
-  }, [data.siteData.viewStatus]);*/
 
   const version = getVersionLabelFromVersion(
     'model' in data && data.model?.data?.version
       ? data.model.data.version
       : data.siteData.viewStatus === 'LIVE' && 'model' in data && data.model?.data?.id
-      ? data.model.data.id
-      : '',
-    data.siteData.viewStatus
+        ? data.model.data.id
+        : '',
+    data.siteData.viewStatus,
   );
 
   const isLastPreview = version === 'PREVIEW';
   const isLastLive = version === 'LIVE';
-
-  const isPreview = version.startsWith('PREVIEW');
   const isLive = version.startsWith('LIVE');
 
   const colorClass = () => {
@@ -46,9 +36,8 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
   const textClass = () => {
     if (isLive) {
       return 'text-white';
-    } else {
-      return 'text-black';
     }
+    return 'text-black';
   };
 
   return (

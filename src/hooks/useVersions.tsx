@@ -71,8 +71,10 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
     const dashCount = (nodeVersion.match(/-/g) || []).length;
     const isVersion = dashCount === 4;
     const isEditVersion = isVersion && nodeVersion.includes('-n');
-    const firstLiveVersion = history.versions.findIndex((version: NodeVersion) => version.live === true);
-    const firstEditVersion = history.versions.findIndex((version: NodeVersion) => version.nodeId.includes('-n'));
+    const firstLiveVersion = history.versions.findIndex((version: NodeVersion) => version.live);
+    const firstEditVersion = history.versions.findIndex(
+      (version: NodeVersion) => !version.live && version.versionTimestamp !== -1,
+    );
 
     if (isVersion) {
       const versionIndex = history.versions.findIndex((version: NodeVersion) => version.nodeId === nodeVersion);
