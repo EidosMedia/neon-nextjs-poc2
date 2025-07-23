@@ -19,6 +19,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const dispatch = useDispatch();
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
+  const inspectItemsVisible = loggedUserInfo.inspectItemsVisible;
   const inspectItemsEnabled = loggedUserInfo.inspectItems;
   const analyticsEnabled = loggedUserInfo.analytics;
 
@@ -46,7 +47,9 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
-        <Switch label="Inspect items" checked={inspectItemsEnabled} onChange={toggleInspectItems} />
+        {(inspectItemsVisible) && (
+          <Switch label="Inspect items" checked={inspectItemsEnabled} onChange={toggleInspectItems} />
+        )}
         <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} />
       </div>
       <div className="flex items-center gap-3">
