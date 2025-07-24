@@ -1,5 +1,5 @@
-import {headers} from 'next/headers';
-import {notFound, redirect} from 'next/navigation';
+import { headers } from 'next/headers';
+import { notFound, redirect } from 'next/navigation';
 import AboutPage from '../_pages/AboutPage';
 import Article from '../_pages/Article';
 import DefaultLanding from '../_pages/DefaultLanding';
@@ -10,8 +10,8 @@ import SearchPage from '../_pages/SearchPage';
 import SectionWebPage from '../_pages/SectionWebPage';
 import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
-import type {Metadata} from 'next';
-import {authenticationHeader} from '@/utilities/security';
+import type { Metadata } from 'next';
+import { authenticationHeader } from '@/utilities/security';
 import TempEntryPage from '../components/baseComponents/TempEntryPage';
 import LoginPage from '../_pages/LoginPage';
 
@@ -71,16 +71,13 @@ export default async function Page({
 
   const url = resolveUrl(hostname, slug, id as string);
 
-  const pageData = await fetch(
-    url,
-    {
-      redirect: 'manual',
-      headers: {
-        ...authHeaders,
-      },
-      cache: 'no-cache',
-    }
-  );
+  const pageData = await fetch(url, {
+    redirect: 'manual',
+    headers: {
+      ...authHeaders,
+    },
+    cache: 'no-cache',
+  });
 
   // handle 404 not found
   if (pageData.status === 404) {
@@ -139,7 +136,7 @@ export default async function Page({
       <LoggedUserBar
         data={{
           ...pageDataJSON,
-          editUrl: `${process.env.NEON_APP_URL}/neon/app/#open/${pageDataJSON.model.data.id}`,
+          editUrl: `${process.env.NEON_APP_URL}/neon/app/neon.html#open/${pageDataJSON.model.data.id}`,
         }}
       />
       {resolvePage()}
@@ -149,8 +146,7 @@ export default async function Page({
 
 function resolveUrl(hostname: string | null, slug: string[], id?: string | null) {
   const baseUrl = `${hostname}/${slug.join('/')}`;
-  return id !== undefined && id ?
-      `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+  return id !== undefined && id ? `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
 }
 
 export async function generateMetadata({
@@ -169,16 +165,13 @@ export async function generateMetadata({
 
   const url = resolveUrl(hostname, slug, id as string);
 
-  const pageData = await fetch(
-    url,
-    {
-      redirect: 'manual',
-      headers: {
-        ...authHeaders,
-      },
-      cache: 'no-cache',
-    }
-  );
+  const pageData = await fetch(url, {
+    redirect: 'manual',
+    headers: {
+      ...authHeaders,
+    },
+    cache: 'no-cache',
+  });
 
   const pageDataJSON = await pageData.json();
   let title;
