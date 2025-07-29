@@ -112,6 +112,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       dispatch(setInspectItemsAction(true));
     } else {
       dispatch(setInspectItemsVisibleAction(false));
+      dispatch(setInspectItemsAction(false));
     }
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
