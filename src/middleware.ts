@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
         contentId,
         siteName,
         viewStatus,
-        previewToken
+        previewToken,
       );
 
       if (authorizationResponse.status !== 204) {
@@ -38,9 +38,7 @@ export async function middleware(request: NextRequest) {
       }
 
       const cookie = authorizationResponse.headers.getSetCookie()[0];
-
       const cookieObject = parseCookie(cookie);
-
       const domainValue = (headers.get('x-forwarded-host') || '/').replace(':3000', '');
 
       const cookieValue = cookieObject.empreviewtoken;

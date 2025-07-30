@@ -8,7 +8,7 @@ type SiteLogoProps = {
 };
 
 const SiteLogo: React.FC<SiteLogoProps> = async ({ data, size = 'medium' }) => {
-  const site = await connection.getSiteByName(data.siteNode?.name || '');
+  const site = await connection.findSite(data.siteNode?.name || '');
 
   if (!site) {
     throw new Error('Site not found');

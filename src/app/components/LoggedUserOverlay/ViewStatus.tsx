@@ -40,19 +40,45 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
     return 'text-black';
   };
 
+  const goToUrl = (): string => {
+    if (!('model' in data && data.model.data.url)) {
+      return '';
+    }
+
+    let host = isLastLive ? data.previewHost : data.liveHost;
+    return `${host}${data.model.data.url}`;
+  };
+
   return (
-    <div className={clsx('flex items-center justify-center text-white px-5 h-16', colorClass())}>
-      {isLastLive || isLastPreview ? (
-        version
-      ) : (
-        <div className="flex flex-col justify-center items-center">
-          <span className={clsx('font-normal', textClass())}>{version}</span>
-          <Link href={getLatestViewVersion(data.siteData.viewStatus).pubInfo.canonical}>
-            <span className={clsx('underline font-normal', textClass())}>Back to latest version</span>
+    <>
+      <div className={clsx('flex items-center justify-center text-white px-5 h-16', colorClass())}>
+        {isLastLive || isLastPreview ? (
+          version
+        ) : (
+          <div className="flex flex-col justify-center items-center">
+            <span className={clsx('font-normal', textClass())}>{version}</span>
+            <Link href={getLatestViewVersion(data.siteData.viewStatus).pubInfo.canonical}>
+              <span className={clsx('underline font-normal', textClass())}>Back to latest version</span>
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {(isLastLive || isLastPreview) && 'model' in data && data.model.data.url && (
+        <div className={clsx('flex items-center justify-center text-white px-5 h-16', colorClass())}>
+          <Link
+            href="#"
+            className="no-underline"
+            onClick={e => {
+              e.preventDefault();
+              window.location.href = goToUrl();
+            }}
+          >
+            {isLastLive ? 'GO TO PREVIEW' : 'GO TO LIVE'}
           </Link>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
