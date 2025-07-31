@@ -58,7 +58,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
 
           window.location.href = removeDashNumber(window.location.href).replace(
             removeDashNumber(data.model.data.id),
-            rollbacked.nodeRef
+            rollbacked.nodeRef,
           );
         });
       } else {
@@ -109,7 +109,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       latestEditNodeVersion.nodeId === data.model.data.version
     ) {
       dispatch(setInspectItemsVisibleAction(true));
-      dispatch(setInspectItemsAction(true));
+      dispatch(setInspectItemsAction(false));
     } else {
       dispatch(setInspectItemsVisibleAction(false));
       dispatch(setInspectItemsAction(false));
@@ -157,7 +157,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                         <div
                           className={clsx(
                             'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
-                            isVersionShown ? 'bg-gray-600' : 'bg-gray-300'
+                            isVersionShown ? 'bg-gray-600' : 'bg-gray-300',
                           )}
                         ></div>
                         <div className="relative flex flex-1 min-w-0">
@@ -185,7 +185,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                                   <div
                                     className={clsx(
                                       'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5',
-                                      isLatestLiveVersion ? 'font-bold' : 'font-normal'
+                                      isLatestLiveVersion ? 'font-bold' : 'font-normal',
                                     )}
                                   >
                                     {latestLiveVersionIndex === index ? 'LATEST' : 'LIVE version'}
@@ -199,7 +199,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                                     <div
                                       className={clsx(
                                         'text-xs text-pink-300 bg-pink-100 border border-pink-300 rounded-full px-2 py-0.5',
-                                        'font-bold'
+                                        'font-bold',
                                       )}
                                     >
                                       {'LATEST'}
