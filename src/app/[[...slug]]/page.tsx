@@ -187,7 +187,7 @@ export async function generateMetadata({
           break;
       }
     }
-
+    
     if (!title) {
       title = pageDataJSON.model.data.title;
     }
@@ -196,6 +196,7 @@ export async function generateMetadata({
       title: `${pageDataJSON.siteData.siteName} - ${title}`,
       description: pageDataJSON.model.data.summary,
     };
+  
   } catch (error) {
     console.warn('Error generating metadata:', error);
     return {

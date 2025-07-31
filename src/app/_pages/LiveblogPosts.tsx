@@ -26,7 +26,7 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
         return {
           id: postId,
           content: data.model.nodes[postId].files.content.data,
-          publicationTime: data.model.nodes[postId].pubInfo.publicationTime,
+          publicationTime: data.model.nodes[postId].sys.updateTime,
         };
       })
     : [];
@@ -44,7 +44,7 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
           return {
             id: post.id,
             content: post.content || post.files?.content?.data,
-            publicationTime: post.pubInfo?.publicationTime,
+            publicationTime: post.sys?.updateTime,
           };
         })
       );

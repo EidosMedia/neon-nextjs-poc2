@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface LoggedUserState {
+  inspectItemsVisible: boolean;
   inspectItems: boolean;
   analytics: boolean;
   viewStatus?: string;
 }
 
 const initialState: LoggedUserState = {
+  inspectItemsVisible: false,
   inspectItems: false,
   analytics: false,
   viewStatus: undefined,
@@ -22,6 +24,9 @@ export const loggedUserSlice = createSlice({
     // immutable state based off those changes
 
     // Document actions
+    setInspectItemsVisible: (state, action) => {
+      state.inspectItemsVisible = action.payload;
+    },
     setInspectItems: (state, action) => {
       state.inspectItems = action.payload;
     },
@@ -35,9 +40,12 @@ export const loggedUserSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setInspectItems, setAnalytics, setViewStatus } = loggedUserSlice.actions;
+export const { setInspectItemsVisible, setInspectItems, setAnalytics, setViewStatus } = loggedUserSlice.actions;
 
 // Selectors
+export const getInspectItemsVisible = (state: any) => {
+  return state && state.loggedUser.inspectItemsVisible;
+};
 export const getInspectItems = (state: any) => {
   return state && state.loggedUser.inspectItems;
 };

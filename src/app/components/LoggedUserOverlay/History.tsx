@@ -2,6 +2,7 @@ import useVersions from '@/hooks/useVersions';
 import {
   getInspectItems,
   loggedUserSlice,
+  setInspectItemsVisible as setInspectItemsVisibleAction,
   setInspectItems as setInspectItemsAction,
 } from '@/lib/features/loggedUserSlice';
 import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
@@ -140,8 +141,10 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       historyData.versions.length > 0 &&
       latestEditNodeVersion.nodeId === data.model.data.version
     ) {
+      dispatch(setInspectItemsVisibleAction(true));
       dispatch(setInspectItemsAction(false));
-    } else if (inspectItems) {
+    } else {
+      dispatch(setInspectItemsVisibleAction(false));
       dispatch(setInspectItemsAction(false));
     }
 

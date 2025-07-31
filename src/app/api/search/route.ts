@@ -6,7 +6,13 @@ export async function GET(req: NextRequest) {
   try {
     const { apiHostname } = await getAPIHostnameConfig(req);
 
-    return await connection.search({ apiHostname, searchParams: req.nextUrl.searchParams, auth: await getAuthOptions() })
+    const result = await connection.search({
+      apiHostname,
+      searchParams: req.nextUrl.searchParams,
+      auth: await getAuthOptions()
+    });
+
+    return Response.json(result);
   } catch (error) {
     console.log('Error in search POST request:', error);
     return Response.json(

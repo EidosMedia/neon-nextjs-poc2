@@ -26,6 +26,8 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
         changeEdited(false);
         document.location.reload();
       } else {
+        const respJson = await response.json();
+        alert('Failed to promote: ' + respJson.error.message);
         console.error('Failed to fetch data');
       }
     } catch (error) {

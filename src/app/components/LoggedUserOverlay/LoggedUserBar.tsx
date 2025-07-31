@@ -19,6 +19,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const dispatch = useDispatch();
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
+  const inspectItemsVisible = loggedUserInfo.inspectItemsVisible;
   const inspectItemsEnabled = loggedUserInfo.inspectItems;
   //const analyticsEnabled = loggedUserInfo.analytics;
 
