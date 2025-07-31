@@ -13,7 +13,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
     throw new Error('Site node data is missing');
   }
 
-  const site = await connection.getSiteByName(data.siteNode.name);
+  const site = await connection.findSite(data.siteNode.name);
 
   if (!site) {
     throw new Error('Site not found');

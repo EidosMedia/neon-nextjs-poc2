@@ -30,7 +30,7 @@ export default async function Page({
   const id = (await searchParams)?.id;
 
   if (slug && slug.length === 1) {
-    const site = await connection.getSiteByName(siteName ?? '');
+    const site = await connection.findSite(siteName ?? '');
 
     switch (slug[0]) {
       case 'ui':
@@ -100,6 +100,12 @@ export default async function Page({
   if (process.env.NODE_ENV === 'development' && pageData.status >= 500) {
     throw new Error(pageDataJSON.model.data.trace);
   }
+
+  const siteLive = await connection.findSite(siteName ?? '', 'live');
+  const sitePreview = await connection.findSite(siteName ?? '', 'preview');
+
+  pageDataJSON.liveHost = siteLive?.root.hostname;
+  pageDataJSON.previewHost = sitePreview?.root.hostname;
 
   const resolvePage = () => {
     switch (pageDataJSON.model?.data?.sys?.baseType) {

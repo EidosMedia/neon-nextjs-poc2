@@ -105,12 +105,12 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
     switch (viewStatus) {
       case 'PREVIEW':
         version =
-          history.versions?.find((version: NodeVersion) => version.live === false && version.versionTimestamp !== -1) ||
+          history.versions?.find((version: NodeVersion) => !version.live && version.versionTimestamp !== -1) ||
           history.versions?.[0];
         break;
       case 'LIVE':
         version =
-          history.versions?.find((version: NodeVersion) => version.live === true && version.versionTimestamp !== -1) ||
+          history.versions?.find((version: NodeVersion) => version.live && version.versionTimestamp !== -1) ||
           history.versions?.[0];
         break;
       default:
