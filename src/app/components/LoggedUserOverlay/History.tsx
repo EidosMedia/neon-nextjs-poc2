@@ -140,7 +140,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       historyData.versions.length > 0 &&
       latestEditNodeVersion.nodeId === data.model.data.version
     ) {
-      dispatch(setInspectItemsAction(true));
+      dispatch(setInspectItemsAction(false));
     } else if (inspectItems) {
       dispatch(setInspectItemsAction(false));
     }
