@@ -40,8 +40,10 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     return null;
   }
 
-  const liveWebPage =
-    'model' in data && data.model.data.sys.baseType === 'webpage' && data.siteData.viewStatus === 'LIVE';
+  const liveWebPageType =
+      'model' in data &&
+      ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
+      data.siteData.viewStatus === 'LIVE';
 
   return (
     <div
@@ -50,7 +52,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
-        {(liveWebPage || data.siteData.viewStatus === 'PREVIEW') && (
+        {(liveWebPageType || data.siteData.viewStatus === 'PREVIEW') && (
             <Switch
                 label={
                   data.siteData.viewStatus === 'LIVE'

@@ -116,7 +116,9 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     } as NodeVersion);
 
   const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
-    if (data.siteData.viewStatus !== 'PREVIEW') return null;
+    if (data.siteData.viewStatus !== 'PREVIEW') {
+      return null;
+    }
 
     try {
       const fetchUrl = data.model.data.url.replace(/(-\d{4})[^/]*(?=\/index\.html)/, '$1');
