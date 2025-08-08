@@ -45,6 +45,10 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
       ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
       data.siteData.viewStatus === 'LIVE';
 
+  const shouldShowInspectSwitch =
+      inspectItemsVisible &&
+      (liveWebPageType || data.siteData.viewStatus === 'PREVIEW');
+
   return (
     <div
       id="loggedUserBar"
@@ -52,7 +56,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
-        {(liveWebPageType || data.siteData.viewStatus === 'PREVIEW') && (
+        {(shouldShowInspectSwitch) && (
             <Switch
                 label={
                   data.siteData.viewStatus === 'LIVE'

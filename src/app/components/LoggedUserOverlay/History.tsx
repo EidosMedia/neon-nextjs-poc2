@@ -133,13 +133,13 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   };
 
   const liveWebPageType =
-      'model' in data &&
       ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
       data.siteData.viewStatus === 'LIVE';
 
   useEffect(() => {
     if (liveWebPageType) {
       setLoadingHistory(false);
+      dispatch(setInspectItemsVisibleAction(true)); 
       return;
     }
 
@@ -148,12 +148,12 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       historyData.versions.length > 0 &&
       latestEditNodeVersion.nodeId === data.model.data.version
     ) {
-      dispatch(setInspectItemsVisibleAction(true));
-      dispatch(setInspectItemsAction(false));
+      dispatch(setInspectItemsVisibleAction(true));      
     } else {
       dispatch(setInspectItemsVisibleAction(false));
-      dispatch(setInspectItemsAction(false));
     }
+
+    dispatch(setInspectItemsAction(false));
 
     fetchLatestPreviewSysData().then(sys => {
       if (sys) {
