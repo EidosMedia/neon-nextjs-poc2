@@ -116,7 +116,9 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     } as NodeVersion);
 
   const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
-    if (data.siteData.viewStatus !== 'PREVIEW') return null;
+    if (data.siteData.viewStatus !== 'PREVIEW') {
+      return null;
+    }
 
     try {
       const fetchUrl = data.model.data.url.replace(/(-\d{4})[^/]*(?=\/index\.html)/, '$1');
@@ -130,9 +132,14 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     }
   };
 
+  const liveWebPageType =
+      ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
+      data.siteData.viewStatus === 'LIVE';
+
   useEffect(() => {
-    if (data.model.data.sys.baseType === 'webpage' && data.siteData.viewStatus === 'LIVE') {
+    if (liveWebPageType) {
       setLoadingHistory(false);
+      dispatch(setInspectItemsVisibleAction(true)); 
       return;
     }
 
@@ -141,12 +148,12 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       historyData.versions.length > 0 &&
       latestEditNodeVersion.nodeId === data.model.data.version
     ) {
-      dispatch(setInspectItemsVisibleAction(true));
-      dispatch(setInspectItemsAction(false));
+      dispatch(setInspectItemsVisibleAction(true));      
     } else {
       dispatch(setInspectItemsVisibleAction(false));
-      dispatch(setInspectItemsAction(false));
     }
+
+    dispatch(setInspectItemsAction(false));
 
     fetchLatestPreviewSysData().then(sys => {
       if (sys) {

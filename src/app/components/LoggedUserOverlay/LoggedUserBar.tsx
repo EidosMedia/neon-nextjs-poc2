@@ -40,8 +40,14 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     return null;
   }
 
-  const liveWebPage =
-    'model' in data && data.model.data.sys.baseType === 'webpage' && data.siteData.viewStatus === 'LIVE';
+  const liveWebPageType =
+      'model' in data &&
+      ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
+      data.siteData.viewStatus === 'LIVE';
+
+  const shouldShowInspectSwitch =
+      inspectItemsVisible &&
+      (liveWebPageType || data.siteData.viewStatus === 'PREVIEW');
 
   return (
     <div
@@ -50,8 +56,16 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
-        {(liveWebPage || data.siteData.viewStatus === 'PREVIEW') && (
-          <Switch label="Inspect items" checked={inspectItemsEnabled} onChange={toggleInspectItems} />
+        {(shouldShowInspectSwitch) && (
+            <Switch
+                label={
+                  data.siteData.viewStatus === 'LIVE'
+                      ? 'View Additional Information'
+                      : 'Edit Content Items'
+                }
+                checked={inspectItemsEnabled}
+                onChange={toggleInspectItems}
+            />
         )}
         {/* <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} /> */}
       </div>
