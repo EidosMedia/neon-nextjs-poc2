@@ -139,12 +139,22 @@ export const renderContent = (
         </ContentEditable>
       );
     case 'inline-media-group':
-      return (
-        <div data-type="inline-media-group">
-          <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Wide" />
-          {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
-        </div>
-      );
+      if (content.elements[0].nodeType.startsWith('image')) {
+        return (
+          <div data-type="inline-media-group">
+            <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Wide" />
+            {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
+          </div>
+        );
+      } else if (content.elements[0].nodeType.startsWith('graphic')) {
+        return (
+          <div data-type="inline-media-group">
+            <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Wide" />
+            {renderContent(content.elements.filter(elem => elem.nodeType === 'graphic-caption')[0], data)}
+          </div>
+        );
+      }
+      return <div key={key} data-type="inline-media-group" {...buildAttributes(content)} />;
     case 'anchor':
       return (
         <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
