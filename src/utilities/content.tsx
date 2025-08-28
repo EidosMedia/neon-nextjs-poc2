@@ -17,7 +17,7 @@ export function findElementsInContentJson(elementNames: string | string[], json:
   if (json?.elements) {
     return json.elements.reduce(
       (acc: ContentElement[], elem: ContentElement) => [...acc, ...findElementsInContentJson(elementNames, elem)],
-      []
+      [],
     );
   }
   return [];
@@ -37,18 +37,18 @@ export const buildAttributes = (node: ContentElement): Record<string, any> => {
       key === 'class'
         ? 'className'
         : key === 'stroke-linecap'
-        ? 'strokeLinecap'
-        : key === 'stroke-linejoin'
-        ? 'strokeLinejoin'
-        : key === 'stroke-width'
-        ? 'strokeWidth'
-        : key === 'tabindex'
-        ? 'tabIndex'
-        : key === 'contenteditable'
-        ? 'contentEditable'
-        : key,
+          ? 'strokeLinecap'
+          : key === 'stroke-linejoin'
+            ? 'strokeLinejoin'
+            : key === 'stroke-width'
+              ? 'strokeWidth'
+              : key === 'tabindex'
+                ? 'tabIndex'
+                : key === 'contenteditable'
+                  ? 'contentEditable'
+                  : key,
       key === 'style' ? convertStyleToObject(value) : value,
-    ])
+    ]),
   );
 };
 
@@ -56,7 +56,7 @@ export const renderContent = (
   content: ContentElement,
   data?: ArticleModel,
   parent?: string,
-  styles?: string
+  styles?: string,
 ): ReactNode => {
   const key = content?.attributes?.id || new Date().toISOString() + Math.random().toString(36).substring(2, 15);
 
@@ -140,14 +140,10 @@ export const renderContent = (
       );
     case 'inline-media-group':
       return (
-        <Figure
-          key={key}
-          data={content}
-          alt="/public/file.svg"
-          {...content.attributes}
-          format={'Wide'}
-          data-type="inline-media-group"
-        />
+        <div data-type="inline-media-group">
+          <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Wide" />
+          {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
+        </div>
       );
     case 'anchor':
       return (
