@@ -165,6 +165,16 @@ export const renderContent = (
       return <br key={key} {...buildAttributes(content)} />;
     case 'image':
       return <img key={key} {...buildAttributes(content)} alt="No image available" />;
+
+    case 'oembedblock':
+      return (
+        <div
+          key={key}
+          {...buildAttributes(content)}
+          data-type="oembedblock"
+          dangerouslySetInnerHTML={{ __html: content.elements[0].value }}
+        />
+      );
     default:
       const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
 

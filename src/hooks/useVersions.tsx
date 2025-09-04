@@ -136,6 +136,7 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
     getVersionLabelFromVersion,
     getLatestViewVersion,
     changeEdited,
+    refetch,
   };
 };
 

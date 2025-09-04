@@ -25,12 +25,15 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
 
-  const { changeEdited } = useVersions({ currentNode: data as any, viewStatus: viewStatus || 'PREVIEW' }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
+  const { changeEdited, refetch: refetchVersions } = useVersions({
+    currentNode: data as any,
+    viewStatus: viewStatus || 'PREVIEW',
+  }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
   const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
   const [previousContentString, setPreviousContentString] = useState<string>(
-    ReactDOMServer.renderToStaticMarkup(children)
+    ReactDOMServer.renderToStaticMarkup(children),
   );
   const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
 
@@ -53,6 +56,8 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       });
       if (response.ok) {
         console.log('Content updated successfully');
+        await refetchVersions(); // Refresh versions after successful update
+        window.location.reload(); // Reload the page to reflect changes
       } else {
         alert('Failed to update content with articleId=' + articleId + '\nResponse status: ' + response.statusText);
         console.warn('Failed to update content - response:', response);
