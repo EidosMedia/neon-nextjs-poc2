@@ -8,7 +8,7 @@ type WebpageFragmentProps = {
 };
 
 const Context: React.FC<WebpageFragmentProps> = async ({ data, displayMainPicture = true }) => {
-  const linkedObjects = await connection.getDwxLinkedObjects(data, 'Context');
+  const linkedObjects = await connection.getDwxLinkedObjects(data, 'context');
 
   return <ArticleWebpage data={data} displayMainPicture={displayMainPicture} linkedObjects={linkedObjects} />;
 };
