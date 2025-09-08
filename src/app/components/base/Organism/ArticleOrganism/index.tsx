@@ -40,12 +40,22 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
         <div className="p-4 grid grid-cols-12">
           <div className="flex flex-col col-span-5">
             <span className="mt-2 subhead1 uppercase">{extractSectionFromUrl(url)}</span>
-            <ContentEditable showLockedByTooltip={linkedObject.sys?.lockedBy} viewStatus={data.siteData.viewStatus} data={linkedObject}>
+            <ContentEditable
+              showLockedByTooltip={linkedObject.sys?.lockedBy}
+              viewStatus={data.siteData.viewStatus}
+              data={linkedObject}
+              minimal
+            >
               <TitleComponent className="mt-2 " id={titleId}>
                 <p>{title}</p>
               </TitleComponent>
             </ContentEditable>
-            <ContentEditable showLockedByTooltip={linkedObject.sys?.lockedBy} viewStatus={data.siteData.viewStatus} data={linkedObject}>
+            <ContentEditable
+              showLockedByTooltip={linkedObject.sys?.lockedBy}
+              viewStatus={data.siteData.viewStatus}
+              data={linkedObject}
+              minimal
+            >
               <span className="mt-2" id={summaryId}>
                 <p>{summary}</p>
               </span>

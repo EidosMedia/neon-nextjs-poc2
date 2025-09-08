@@ -10,7 +10,15 @@ import { BaseModel, NodeHistory, NodeVersion } from '@eidosmedia/neon-frontoffic
 import { useQuery } from '@tanstack/react-query';
 import { getFamilyRef } from '@/utilities/content';
 
-const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; viewStatus?: string }) => {
+const useVersions = ({
+  currentNode,
+  viewStatus,
+  notLoadOnInit,
+}: {
+  currentNode?: BaseModel;
+  viewStatus?: string;
+  notLoadOnInit?: boolean;
+}) => {
   const dispatch = useDispatch();
 
   const fetchQueries = async () => {
@@ -26,7 +34,11 @@ const useVersions = ({ currentNode, viewStatus }: { currentNode?: BaseModel; vie
   const { data, refetch } = useQuery({
     queryKey: ['versions', getFamilyRef(currentNode?.id || ''), viewStatus],
     queryFn: fetchQueries,
-    enabled: !!currentNode?.id && currentNode.sys.baseType !== 'site' && currentNode.sys.baseType !== 'section',
+    enabled:
+      !!currentNode?.id &&
+      currentNode.sys.baseType !== 'site' &&
+      currentNode.sys.baseType !== 'section' &&
+      !notLoadOnInit,
     refetchOnReconnect: true,
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,

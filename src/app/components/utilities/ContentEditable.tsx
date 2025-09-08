@@ -12,6 +12,7 @@ type ContentEditableProps = {
   children?: React.ReactNode;
   showLockedByTooltip?: boolean;
   viewStatus?: 'LIVE' | 'PREVIEW';
+  minimal?: boolean;
 };
 
 const ContentEditable: React.FC<ContentEditableProps> = ({
@@ -19,15 +20,18 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   children,
   showLockedByTooltip = true,
   viewStatus,
+  minimal,
 }) => {
   const articleId = data?.id;
   const lockedBy = data?.sys?.lockedBy;
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
+  console.log('data in contentEditable', data);
 
   const { changeEdited, refetch: refetchVersions } = useVersions({
     currentNode: data as any,
     viewStatus: viewStatus || 'PREVIEW',
+    notLoadOnInit: minimal,
   }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
