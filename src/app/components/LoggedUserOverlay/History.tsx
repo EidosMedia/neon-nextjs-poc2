@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import Close from '../icons/close';
 import { useEffect, useState } from 'react';
+import { isEqual } from 'lodash';
 
 type SysData = {
   baseType: string;
@@ -133,13 +134,13 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   };
 
   const liveWebPageType =
-      ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
-      data.siteData.viewStatus === 'LIVE';
+    ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
+    data.siteData.viewStatus === 'LIVE';
 
   useEffect(() => {
     if (liveWebPageType) {
       setLoadingHistory(false);
-      dispatch(setInspectItemsVisibleAction(true)); 
+      dispatch(setInspectItemsVisibleAction(true));
       return;
     }
 
@@ -148,7 +149,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       historyData.versions.length > 0 &&
       latestEditNodeVersion.nodeId === data.model.data.version
     ) {
-      dispatch(setInspectItemsVisibleAction(true));      
+      dispatch(setInspectItemsVisibleAction(true));
     } else {
       dispatch(setInspectItemsVisibleAction(false));
     }
@@ -156,7 +157,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     dispatch(setInspectItemsAction(false));
 
     fetchLatestPreviewSysData().then(sys => {
-      if (sys) {
+      if (!isEqual(sys, latestPreviewSysData)) {
         setLatestPreviewSysData(sys);
       }
       setLoadingHistory(false);
