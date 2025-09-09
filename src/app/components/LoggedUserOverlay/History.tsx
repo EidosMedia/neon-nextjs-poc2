@@ -156,12 +156,19 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
 
     dispatch(setInspectItemsAction(false));
 
-    fetchLatestPreviewSysData().then(sys => {
-      if (!isEqual(sys, latestPreviewSysData)) {
-        setLatestPreviewSysData(sys);
-      }
-      setLoadingHistory(false);
-    });
+    const url = data.model.data.url;
+    const regex = /-n[0-9a-zA-Z]+/;
+    const match = url.match(regex);
+    const isVersion = match !== null;
+    if(isVersion){
+      fetchLatestPreviewSysData().then(sys => {
+        if (!isEqual(sys, latestPreviewSysData)) {
+          setLatestPreviewSysData(sys);
+        }
+      });
+    }
+    setLoadingHistory(false);
+    
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
   return (

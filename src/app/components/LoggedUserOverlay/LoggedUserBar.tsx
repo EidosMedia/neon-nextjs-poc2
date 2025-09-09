@@ -80,6 +80,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
               title={'View Model'}
               href={data.model.data.url + '?neon.outputMode=RAW'}
               target="_blank"
+              prefetch={false}
               className="flex items-center justify-center text-white"
             >
               <Braces />
