@@ -124,7 +124,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
     if (loggedUserInfo.inspectItems) {
       fetchData();
     }
-  }, [data.id]);
+  }, [data.id, loggedUserInfo.inspectItems]);
 
   if (objectNotFound) {
     return null;

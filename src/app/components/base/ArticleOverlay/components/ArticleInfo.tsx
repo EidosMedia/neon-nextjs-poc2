@@ -15,7 +15,7 @@ const ArticleInfo: React.FC<ArticleInfoProps> = ({ width, overlayData }) => {
 
   return (
     <div
-      className={`absolute top-2 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
+      className={`absolute top-2 left-1/2 transform -translate-x-1/2 z-100 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
            group-hover:grid group-hover:grid-cols-2 group-hover:gap-5 ${
              width === 'max' ? 'w-max max-w-screen' : 'w-[125%]'
            }`}
