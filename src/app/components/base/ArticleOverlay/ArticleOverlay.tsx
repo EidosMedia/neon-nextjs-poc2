@@ -83,6 +83,7 @@ export const priorityOptions = [
 
 const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', children }) => {
   const [overlayData, setOverlayData] = useState<OverlayDataObj>();
+  const [showActions, setShowActions] = useState(false);
   const [objectNotFound, setObjectNotFound] = useState(false);
 
   const { data: loggedUserInfo } = useLoggedUserInfo();
@@ -133,8 +134,14 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
   return (
     <>
       {loggedUserInfo.inspectItems && overlayData ? (
-        <div className="border border-transparent hover:border-gray-700 relative group">
-          <ArticleActions data={data} viewStatus={viewStatus} overlayData={overlayData} width={width} />
+        <div
+          className="border border-transparent hover:border-gray-700 relative group"
+          onMouseEnter={() => setShowActions(true)}
+          onMouseLeave={() => setShowActions(false)}
+        >
+          {showActions && (
+            <ArticleActions data={data} viewStatus={viewStatus} overlayData={overlayData} width={width} />
+          )}
           {children}
         </div>
       ) : (
