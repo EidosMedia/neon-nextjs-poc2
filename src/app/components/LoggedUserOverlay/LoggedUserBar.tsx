@@ -14,6 +14,7 @@ import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
 import { Braces, SquareArrowOutUpRight } from 'lucide-react';
 import EditedChip from './EditedChip';
+import { isNeonAppPreview } from '@/neon-frontoffice-ts-sdk/src';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const dispatch = useDispatch();
@@ -48,64 +49,66 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const shouldShowInspectSwitch = inspectItemsVisible && (liveWebPageType || data.siteData.viewStatus === 'PREVIEW');
 
   return (
-    <div
-      id="loggedUserBar"
-      className="flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm sticky top-0 z-100"
-    >
-      <div className="flex items-center">
-        <ViewStatus data={data} />
-        {shouldShowInspectSwitch && (
-          <Switch
-            label={data.siteData.viewStatus === 'LIVE' ? 'View Additional Information' : 'Edit Content Items'}
-            checked={inspectItemsEnabled}
-            onChange={toggleInspectItems}
-          />
-        )}
-        {/* <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} /> */}
-      </div>
-      <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center text-white">{siteName || data.siteData?.siteName}</div>
-        {'model' in data && (
-          <>
-            <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
-            <InfoTooltip pageData={data} />
-            <Link
-              aria-label="View Model"
-              title={'View Model'}
-              href={data.model.data.url + '?neon.outputMode=RAW'}
-              target="_blank"
-              prefetch={false}
-              className="flex items-center justify-center text-white"
-            >
-              <Braces />
-            </Link>
-            <Link
-              aria-label="Open in Editor"
-              title={'Open in Editor'}
-              href={data.editUrl}
-              target="_blank"
-              className="flex items-center justify-center text-white"
-            >
-              <SquareArrowOutUpRight />
-            </Link>
-            <History data={data} />
-            <VisibilityChip data={data} />
-            <EditedChip data={data} />
-          </>
-        )}
-        <div className="flex items-center justify-center text-white gap-3">
-          <img
-            className="w-10 h-10 rounded-full"
-            src={`/api/users/picture?id=${userData?.user.id}`}
-            alt="Rounded avatar"
-          />
-          {userData?.user?.alias}
+    !isNeonAppPreview() && (
+      <div
+        id="loggedUserBar"
+        className="flex items-center bg-(--color-toolbar-background) h-16 justify-between text-sm sticky top-0 z-100"
+      >
+        <div className="flex items-center">
+          <ViewStatus data={data} />
+          {shouldShowInspectSwitch && (
+            <Switch
+              label={data.siteData.viewStatus === 'LIVE' ? 'View Additional Information' : 'Edit Content Items'}
+              checked={inspectItemsEnabled}
+              onChange={toggleInspectItems}
+            />
+          )}
+          {/* <Switch label="Analytics" checked={analyticsEnabled} onChange={toggleAnalytics} /> */}
         </div>
-        <a>
-          <i></i>
-        </a>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center text-white">{siteName || data.siteData?.siteName}</div>
+          {'model' in data && (
+            <>
+              <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
+              <InfoTooltip pageData={data} />
+              <Link
+                aria-label="View Model"
+                title={'View Model'}
+                href={data.model.data.url + '?neon.outputMode=RAW'}
+                target="_blank"
+                prefetch={false}
+                className="flex items-center justify-center text-white"
+              >
+                <Braces />
+              </Link>
+              <Link
+                aria-label="Open in Editor"
+                title={'Open in Editor'}
+                href={data.editUrl}
+                target="_blank"
+                className="flex items-center justify-center text-white"
+              >
+                <SquareArrowOutUpRight />
+              </Link>
+              <History data={data} />
+              <VisibilityChip data={data} />
+              <EditedChip data={data} />
+            </>
+          )}
+          <div className="flex items-center justify-center text-white gap-3">
+            <img
+              className="w-10 h-10 rounded-full"
+              src={`/api/users/picture?id=${userData?.user.id}`}
+              alt="Rounded avatar"
+            />
+            {userData?.user?.alias}
+          </div>
+          <a>
+            <i></i>
+          </a>
+        </div>
       </div>
-    </div>
+    )
   );
 };
 
