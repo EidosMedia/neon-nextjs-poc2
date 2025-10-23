@@ -39,14 +39,16 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
       <Link className="no-underline" href={loggedUserInfo.inspectItems ? '' : url}>
         <div className="p-4 grid grid-cols-12">
           <div className="flex flex-col col-span-5">
-            <span className="mt-2 subhead1 uppercase">{extractSectionFromUrl(url)}</span>
+            <span className="mt-2 subhead1 uppercase" data-type="section">
+              {extractSectionFromUrl(url)}
+            </span>
             <ContentEditable
               showLockedByTooltip={linkedObject.sys?.lockedBy}
               viewStatus={data.siteData.viewStatus}
               data={linkedObject}
               minimal
             >
-              <TitleComponent className="mt-2 " id={titleId}>
+              <TitleComponent className="mt-2" id={titleId} data-type="title">
                 <p>{title}</p>
               </TitleComponent>
             </ContentEditable>
@@ -56,7 +58,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
               data={linkedObject}
               minimal
             >
-              <span className="mt-2" id={summaryId}>
+              <span className="mt-2" id={summaryId} data-type="summary">
                 <p>{summary}</p>
               </span>
             </ContentEditable>
