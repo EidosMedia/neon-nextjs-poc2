@@ -220,7 +220,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                               isVersionShown ? 'bg-gray-600' : 'bg-gray-300',
                             )}
                           ></div>
-                          <div className="relative flex flex-1 min-w-0">
+                          <div className="relative flex flex-1 min-w-xs">
                             <Link
                               href={rewrittenPath || '#'}
                               className="flex-1 min-w-0"
@@ -243,31 +243,35 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                                     })()}
                                   </h3>
 
-                                  {viewStatus === 'LIVE' ? (
-                                    <div
-                                      className={clsx(
-                                        'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5',
-                                        isLatestLiveVersion ? 'font-bold' : 'font-normal',
-                                      )}
-                                    >
-                                      {latestLiveVersionIndex === index ? 'LATEST' : 'LIVE version'}
-                                    </div>
-                                  ) : item.live ? (
-                                    <div className="text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-2 py-0.5 font-normal">
-                                      {'LIVE version'}
-                                    </div>
-                                  ) : (
-                                    isLatestPreviewVersion && (
-                                      <div
-                                        className={clsx(
-                                          'text-xs text-pink-300 bg-pink-100 border border-pink-300 rounded-full px-2 py-0.5',
-                                          'font-bold',
-                                        )}
-                                      >
-                                        {'LATEST'}
-                                      </div>
-                                    )
-                                  )}
+                                  {(() => {
+                                    const getBadgeConfig = () => {
+                                      const isLatest = latestLiveVersionIndex === index;
+                                      
+                                      if (item.live) {
+                                        return {
+                                          label: 'LIVE',
+                                          className: isLatest ? 
+                                            clsx(
+                                              'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-3 py-0.5',
+                                              isLatestLiveVersion ? 'font-bold' : 'font-normal',
+                                            ) :
+                                            'text-xs text-gray-600 bg-gray-100 border border-gray-600 rounded-full px-3 py-0.5 font-normal',
+                                        };
+                                      }
+
+                                      if (isLatestPreviewVersion) {
+                                        return {
+                                          label: 'LATEST',
+                                          className: 'text-xs text-blue-600 bg-blue-100 border border-blue-600 rounded-full px-3 py-0.5 font-bold',
+                                        };
+                                      }
+
+                                      return null;
+                                    };
+
+                                    const badge = getBadgeConfig();
+                                    return badge ? <div className={badge.className}>{badge.label}</div> : null;
+                                  })()}
                                 </div>
                                 <div className="flex items-center justify-between ">
                                   <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
