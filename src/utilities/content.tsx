@@ -141,7 +141,7 @@ export const renderContent = (
     case 'inline-media-group':
       if (content.elements[0].nodeType.startsWith('image')) {
         return (
-          <div data-type="inline-media-group">
+          <div key={'img-' + key} data-type="inline-media-group">
             <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Wide" />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
           </div>
@@ -174,6 +174,59 @@ export const renderContent = (
           data-type="oembedblock"
           dangerouslySetInnerHTML={{ __html: content.elements[0].value }}
         />
+      );
+    case 'adblock':
+      return (
+        <div key={key} className="flex justify-center my-6" data-type="ad">
+          <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
+        </div>
+      );
+    case 'mediagallery':
+      // Extract all images from inline-media-group and image elements
+      const slides = content.elements
+        .filter(elem => elem.nodeType === 'inline-media-group' || elem.nodeType.startsWith('image'))
+        .map(elem => {
+          if (elem.nodeType === 'inline-media-group') {
+            // Find the image element inside inline-media-group
+            const imageElem = elem.elements.find(e => e.nodeType.startsWith('image'));
+            const captionElem = elem.elements.find(
+              e => e.nodeType === 'image-caption' || e.nodeType === 'graphic-caption',
+            );
+            return imageElem ? { image: imageElem, caption: captionElem || null } : null;
+          } else if (elem.nodeType.startsWith('image')) {
+            return { image: elem, caption: null };
+          }
+          return null;
+        })
+        .filter((slide): slide is { image: ContentElement; caption: ContentElement | null } => slide !== null);
+
+      if (slides.length === 0) {
+        return null;
+      }
+
+      return (
+        <div key={key} className="media-gallery-slider" data-type="mediagallery">
+          {/* Navigation dots */}
+          {slides.map((_, index) => (
+            <a key={`nav-${key}-${index}`} href={`#slide-${key}-${index}`} className="media-gallery-nav">
+              {index + 1}
+            </a>
+          ))}
+
+          {/* Slides container */}
+          <div className="media-gallery-slides">
+            {slides.map((slide, index) => (
+              <div key={`slide-${key}-${index}`} id={`slide-${key}-${index}`} className="media-gallery-slide">
+                <Figure
+                  data={{ elements: [slide.image], attributes: {}, nodeType: 'inline-media-group', value: '' }}
+                  alt={slide.image?.attributes?.alt || 'Gallery image'}
+                  format="Wide"
+                />
+                {slide.caption && renderContent(slide.caption, data)}
+              </div>
+            ))}
+          </div>
+        </div>
       );
     default:
       const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default

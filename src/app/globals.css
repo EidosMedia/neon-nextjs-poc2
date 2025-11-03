@@ -306,5 +306,62 @@ ol ul {
   }
 }
 
+/* MEDIA GALLERY SLIDER */
+.media-gallery-slider {
+  @apply w-full text-center overflow-hidden;
+}
 
+.media-gallery-slides {
+  @apply flex overflow-x-auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.media-gallery-slides::-webkit-scrollbar {
+  @apply w-2.5 h-2.5;
+}
+
+.media-gallery-slides::-webkit-scrollbar-thumb {
+  @apply bg-black rounded-[10px];
+}
+
+.media-gallery-slides::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.media-gallery-slide {
+  scroll-snap-align: start;
+  @apply flex-shrink-0 w-full mr-12 rounded-[10px] bg-gray-100 relative flex justify-center items-center;
+  transform-origin: center center;
+  transform: scale(1);
+  transition: transform 0.5s;
+}
+
+.media-gallery-slide figure {
+  @apply w-full h-full;
+}
+
+.media-gallery-slide figcaption {
+  @apply bg-black/75 text-white p-3 text-center absolute bottom-0 left-0 w-full m-0;
+}
+
+.media-gallery-nav {
+  @apply inline-flex w-6 h-6 bg-white no-underline items-center justify-center rounded-full mr-0 mb-2 relative;
+}
+
+.media-gallery-nav:active {
+  @apply top-px;
+}
+
+.media-gallery-nav:focus {
+  @apply bg-black text-white;
+}
+
+/* Don't need button navigation on browsers that support scroll-snap */
+@supports (scroll-snap-type) {
+  .media-gallery-nav {
+    @apply hidden;
+  }
+}
 

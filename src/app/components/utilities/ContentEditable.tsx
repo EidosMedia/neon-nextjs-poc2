@@ -26,7 +26,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   const lockedBy = data?.sys?.lockedBy;
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
-  console.log('data in contentEditable', data);
+  //console.log('data in contentEditable', data);
 
   const { changeEdited, refetch: refetchVersions } = useVersions({
     currentNode: data as any,
