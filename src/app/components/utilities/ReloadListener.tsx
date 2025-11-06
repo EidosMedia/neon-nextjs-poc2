@@ -8,6 +8,14 @@ export function ReloadListener() {
     if (event.data.type === 'reload') {
       window.location.reload();
     }
+    if (event.data.type === 'showSelectedItem' &&
+      event.data.payload &&
+      (typeof event.data.payload) === 'string' &&
+      event.data.payload.length === 35
+    ) {
+      // quite sure that is a family id string
+      window.location.href = '#' + event.data.payload;
+    }
   };
 
   useEffect(() => {
