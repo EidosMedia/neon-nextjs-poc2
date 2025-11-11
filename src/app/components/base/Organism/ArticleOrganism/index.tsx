@@ -36,7 +36,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
 
   return (
     <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus} width="max" data-type={type}>
-      <Link className="no-underline" href={loggedUserInfo.inspectItems ? '' : url}>
+      <Link id={linkedObject.id.replaceAll('-', '_')} className="no-underline" href={loggedUserInfo.inspectItems ? '' : url}>
         <div className="p-4 grid grid-cols-12">
           <div className="flex flex-col col-span-5">
             <span className="mt-2 subhead1 uppercase" data-type="section">
