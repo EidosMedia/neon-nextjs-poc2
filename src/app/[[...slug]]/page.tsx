@@ -161,11 +161,12 @@ export async function generateMetadata({
   const currentHeaders = await headers();
 
   const hostname = currentHeaders.get('x-neon-backend-url');
+  const path = currentHeaders.get('x-neon-pathname') as string;
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
   const auth = await getAuthOptions();
 
-  const url = resolveUrl(hostname, slug, id as string);
+  const url = resolveUrl(hostname, path, id as string);
   try {
     const pageData = await connection.makePageRequest(url, auth, {
       redirect: 'manual',
@@ -188,7 +189,7 @@ export async function generateMetadata({
           break;
       }
     }
-    
+
     if (!title) {
       title = pageDataJSON.model.data.title;
     }
@@ -197,7 +198,6 @@ export async function generateMetadata({
       title: `${pageDataJSON.siteData.siteName} - ${title}`,
       description: pageDataJSON.model.data.summary,
     };
-  
   } catch (error) {
     console.warn('Error generating metadata:', error);
     return {
@@ -206,4 +206,3 @@ export async function generateMetadata({
     };
   }
 }
-
