@@ -26,6 +26,7 @@ export default async function Page({
   const hostname = currentHeaders.get('x-neon-backend-url');
   const siteName = currentHeaders.get('x-neon-site-name');
   const viewStatus = currentHeaders.get('x-neon-view-status') as string;
+  const path = currentHeaders.get('x-neon-pathname') as string;
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
 
@@ -67,7 +68,7 @@ export default async function Page({
   }
 
   const auth = await getAuthOptions();
-  const url = resolveUrl(hostname, slug, id as string);
+  const url = resolveUrl(hostname, path, id as string);
 
   const pageData = await connection.makePageRequest(url, auth, {
     redirect: 'manual',
@@ -145,8 +146,8 @@ export default async function Page({
   );
 }
 
-function resolveUrl(hostname: string | null, slug: string[], id?: string | null) {
-  const baseUrl = `${hostname}/${slug.join('/')}`;
+function resolveUrl(hostname: string | null, path: string, id?: string | null) {
+  const baseUrl = `${hostname}${path}`;
   return id !== undefined && id ? `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
 }
 
@@ -205,3 +206,4 @@ export async function generateMetadata({
     };
   }
 }
+
