@@ -14,22 +14,22 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
   return (
     <div className="container mx-auto">
       <Navbar data={data}></Navbar>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         <div className="col-span-1 relative group">
           <Main data={data} />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         <div className="col-span-1 relative group">
           <Context data={data} />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         <div className="col-span-1 relative group">
           <Insight1 data={data} />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         <div className="col-span-1 relative group">
           <Insight2 data={data} />
         </div>

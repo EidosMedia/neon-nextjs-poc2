@@ -21,7 +21,7 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture
             linkedObject={linkedObject}
             linkedObjects={linkedObjects}
             index={index}
-            type="article-xl"
+            type={ index === 0 ? "article-xl" : "article-md"}
           />
         );
       })}
