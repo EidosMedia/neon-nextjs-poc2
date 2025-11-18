@@ -40,7 +40,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
           {/* Left 70% content */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {footerMenu?.items?.map((item: any, idx: number) => (
-              <FooterMenu key={item.ref || idx} title={item.label} links={flattenLinks(item.items)} />
+              <FooterMenu key={item.ref || idx} url={item.url} title={item.label} links={flattenLinks(item.items)} />
             ))}
           </div>
         </div>
