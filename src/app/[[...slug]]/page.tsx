@@ -173,31 +173,39 @@ export async function generateMetadata({
       cache: 'no-cache',
     });
 
-    const pageDataJSON = await pageData.json();
-    let title;
+    if (pageData.status == 200) {
 
-    if (slug && slug.length === 1) {
-      switch (slug[0]) {
-        case 'search':
-          title = 'Search';
-          break;
-        case 'about':
-          title = 'About';
-          break;
-        case 'login':
-          title = 'Login';
-          break;
+      const pageDataJSON = await pageData.json();
+      let title
+
+      if (slug && slug.length === 1) {
+        switch (slug[0]) {
+          case 'search':
+            title = 'Search';
+            break;
+          case 'about':
+            title = 'About';
+            break;
+          case 'login':
+            title = 'Login';
+            break;
+        }
       }
-    }
 
-    if (!title) {
-      title = pageDataJSON.model.data.title;
-    }
+      if (!title) {
+        title = pageDataJSON.model.data.title;
+      }
 
-    return {
-      title: `${pageDataJSON.siteData.siteName} - ${title}`,
-      description: pageDataJSON.model.data.summary,
-    };
+      return {
+        title: `${pageDataJSON.siteData.siteName} - ${title}`,
+        description: pageDataJSON.model.data.summary,
+      };
+    } else {
+      return {
+        title: 'Error',
+        description: 'Failed to generate metadata.',
+      };
+    }
   } catch (error) {
     console.warn('Error generating metadata:', error);
     return {
