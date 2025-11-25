@@ -25,7 +25,7 @@ const Liveblog: React.FC<PageProps> = ({ data }) => {
           <span className="subhead1 pt-[3px]">Live</span>
         </div>
         <Grouphead data={articleData} />
-        <MainImage data={articleData} />
+        <MainImage data={articleData} preferredImage="main" />
         <div className="mb-8">
           {renderContent(
             findElementsInContentJson(['text'], articleData.files.content.data)[0],

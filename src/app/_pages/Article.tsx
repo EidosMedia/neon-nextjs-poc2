@@ -104,7 +104,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
       <Navbar data={data} />
       <div className="xl:px-52 mt-10 mb-12">
         <Grouphead data={articleData} />
-        <MainImage data={articleData} />
+        <MainImage data={articleData} preferredImage="main" />
         <div>
           {renderContent(
             textContentWithAds,
