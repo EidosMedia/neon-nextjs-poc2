@@ -16,7 +16,7 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
       : data.siteData.viewStatus === 'LIVE' && 'model' in data && data.model?.data?.id
         ? data.model.data.id
         : '',
-    data.siteData.viewStatus,
+    data.siteData.viewStatus ?? '',
   );
 
   const isLastPreview = version === 'PREVIEW';
@@ -57,7 +57,7 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
         ) : (
           <div className="flex flex-col justify-center items-center">
             <span className={clsx('font-normal', textClass())}>{version}</span>
-            <Link href={getLatestViewVersion(data.siteData.viewStatus).pubInfo.canonical}>
+            <Link href={getLatestViewVersion(data.siteData.viewStatus ?? '').pubInfo.canonical}>
               <span className={clsx('underline font-normal', textClass())}>Back to latest version</span>
             </Link>
           </div>

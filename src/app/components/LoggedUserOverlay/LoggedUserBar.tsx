@@ -69,7 +69,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
           <div className="flex items-center justify-center text-white">{siteName || data.siteData?.siteName}</div>
           {'model' in data && (
             <>
-              <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus} />
+              <PromotionButton data={data.model.data} viewStatus={data.siteData.viewStatus ?? ''} />
               <InfoTooltip pageData={data} />
               <Link
                 aria-label="View Model"

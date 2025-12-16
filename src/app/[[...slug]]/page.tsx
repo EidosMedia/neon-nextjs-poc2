@@ -70,18 +70,25 @@ export default async function Page({
   const auth = await getAuthOptions();
   const url = resolveUrl(hostname, path, id as string);
 
-  const pageData = await connection.makePageRequest(url, auth, {
-    redirect: 'manual',
-    cache: 'no-cache',
-  });
+  let pageData;
 
-  // handle 404 not found
-  if (pageData.status === 404) {
-    notFound();
+  try {
+    pageData = await connection.makePageRequest(url, auth, {
+      redirect: 'manual',
+      cache: 'no-cache',
+    });
+  } catch (error: any) {
+    if (error.status === 404) {
+      notFound();
+    }
+
+    // handle 401 and 403 unauthorized
+    if (error.status === 401 || error.status === 403 || error.status === 410) {
+      notFound();
+    }
   }
 
-  // handle 401 and 403 unauthorized
-  if (pageData.status === 401 || pageData.status === 403) {
+  if (!pageData) {
     notFound();
   }
 
@@ -93,10 +100,6 @@ export default async function Page({
 
   const pageDataJSON = await pageData.json();
   console.log('Current page model', pageDataJSON);
-
-  if (pageDataJSON.model.data.httpStatusCode === 410) {
-    notFound();
-  }
 
   if (process.env.NODE_ENV === 'development' && pageData.status >= 500) {
     throw new Error(pageDataJSON.model.data.trace);
@@ -174,9 +177,8 @@ export async function generateMetadata({
     });
 
     if (pageData.status == 200) {
-
       const pageDataJSON = await pageData.json();
-      let title
+      let title;
 
       if (slug && slug.length === 1) {
         switch (slug[0]) {

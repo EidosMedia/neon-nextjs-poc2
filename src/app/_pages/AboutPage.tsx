@@ -28,8 +28,7 @@ const AboutPage = ({ data }: { data: Site }) => {
             </li>
           </ul>
           <p className="text-base mt-3 mb-1">
-            The implemententation is provided under the BSD-3-Clause license, allowing usages as specified by the
-            license.
+            The implementation is provided under the BSD-3-Clause license, allowing usages as specified by the license.
           </p>
           <ul className="text-base mt-3 mb-1 list-disk list-inside">
             The source code is hosted on GitHub.
