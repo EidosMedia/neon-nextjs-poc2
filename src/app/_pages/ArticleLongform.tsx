@@ -100,11 +100,11 @@ const Article: React.FC<PageProps> = ({ data }) => {
   }, [textContent, adsDensity]);
 
   return (
-    <article className="container mx-auto">
+    <article>
       <Navbar data={data} />
-      <div className="px-5 xl:px-52 mt-10 mb-12">
+      <MainImage data={articleData} format="Ultrawide_large" preferredImage="main" />
+      <div className="container mx-auto px-5 xl:px-52 mt-10 mb-12">
         <Grouphead data={articleData} />
-        <MainImage data={articleData} preferredImage="main" />
         <div>
           {renderContent(
             textContentWithAds,

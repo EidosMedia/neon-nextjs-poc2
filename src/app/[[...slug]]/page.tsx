@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import AboutPage from '../_pages/AboutPage';
 import Article from '../_pages/Article';
+import ArticleLongform from '../_pages/ArticleLongform';
 import DefaultLanding from '../_pages/DefaultLanding';
 import DefaultSection from '../_pages/DefaultSection';
 import HomeWebPage from '../_pages/HomeWebPage';
@@ -112,7 +113,12 @@ export default async function Page({
   pageDataJSON.previewHost = sitePreview?.root.hostname;
 
   const resolvePage = () => {
-    switch (pageDataJSON.model?.data?.sys?.baseType) {
+    const baseType = pageDataJSON?.model?.data?.sys?.baseType as string;
+    const type = pageDataJSON?.model?.data?.sys?.type as string;
+    console.log('Resolving page for baseType:', baseType);
+    console.log('Resolving page for type:', type);
+    //console.log('Page Data JSON:', JSON.stringify(pageDataJSON));
+    switch (baseType) {
       case 'webpage':
         return <WebpageColumnsLayout data={pageDataJSON} />;
 
@@ -130,6 +136,14 @@ export default async function Page({
 
       case 'liveblog':
         return <Liveblog data={pageDataJSON} />;
+
+      case 'article':
+        switch (type) {
+          case 'longform':
+            return <ArticleLongform data={pageDataJSON} />;
+          default:
+            return <Article data={pageDataJSON} />;
+        }
 
       default:
         return <Article data={pageDataJSON} />;

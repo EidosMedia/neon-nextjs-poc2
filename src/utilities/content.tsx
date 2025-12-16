@@ -30,6 +30,103 @@ export const findText = (node: ContentElement): ReactNode => {
   return node.elements.map(elem => findText(elem)).join('');
 };
 
+/**
+ * Identifica il provider da un URL di oembed
+ */
+const identifyOembedProvider = (url: string): string | null => {
+  if (!url) return null;
+
+  // YouTube patterns
+  if (/(?:youtube\.com|youtu\.be)/i.test(url)) {
+    return 'youtube';
+  }
+
+  // Altri provider possono essere aggiunti qui
+  // if (/vimeo\.com/i.test(url)) return 'vimeo';
+  // if (/twitter\.com|x\.com/i.test(url)) return 'twitter';
+
+  return null;
+};
+
+/**
+ * Estrae attributi dall'HTML dell'iframe (width, height, style)
+ */
+const extractIframeAttributes = (iframeHtml: string): {
+  width?: string;
+  height?: string;
+  style?: string;
+} => {
+  const attrs: { width?: string; height?: string; style?: string } = {};
+
+  // Estrai width
+  const widthMatch = iframeHtml.match(/width=["']?(\d+)["']?/i);
+  if (widthMatch) attrs.width = widthMatch[1];
+
+  // Estrai height
+  const heightMatch = iframeHtml.match(/height=["']?(\d+)["']?/i);
+  if (heightMatch) attrs.height = heightMatch[1];
+
+  // Estrai style
+  const styleMatch = iframeHtml.match(/style=["']([^"']*)["']/i);
+  if (styleMatch) attrs.style = styleMatch[1];
+
+  return attrs;
+};
+
+/**
+ * Estrae video ID da URL YouTube
+ */
+const extractYoutubeId = (url: string): string | null => {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+    /youtube\.com\/embed\/([^&\n?#]+)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+
+  return null;
+};
+
+/**
+ * Renderizza un blocco oembed con personalizzazioni per provider
+ */
+const renderOembedBlock = (content: ContentElement, key: string): ReactNode => {
+  const oembedUrl = content.attributes?.oembed;
+  const provider = identifyOembedProvider(oembedUrl);
+  const iframeHtml = content.elements?.[0]?.value || '';
+  const iframeAttrs = extractIframeAttributes(iframeHtml);
+
+  // YouTube: rendering personalizzato
+  if (provider === 'youtube') {
+    const videoId = extractYoutubeId(oembedUrl);
+    if (videoId) {
+      const customStyle = 'aspect-ratio: 2; width: 100%; max-width: 100%; height: auto;';
+
+      return (
+        <div key={key} data-type="oembedblock" data-provider="youtube" {...buildAttributes(content)}>
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}?wmode=transparent`}
+            allowFullScreen
+            style={convertStyleToObject(customStyle)}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          />
+        </div>
+      );
+    }
+  }
+
+  // Default: mantieni rendering originale per provider non gestiti
+  return (
+    <div key={key} {...buildAttributes(content)} data-type="oembedblock" data-provider={provider || 'unknown'}>
+      <div dangerouslySetInnerHTML={{ __html: iframeHtml }} />
+    </div>
+  );
+};
+
 export const buildAttributes = (node: ContentElement): Record<string, any> => {
   // replace "class" with "className" and "stroke-linecap" with "strokeLinecap"
   return Object.fromEntries(
@@ -166,15 +263,33 @@ export const renderContent = (
     case 'image':
       return <img key={key} {...buildAttributes(content)} alt="No image available" />;
 
-    case 'oembedblock':
+    case 'table':
       return (
-        <div
-          key={key}
-          {...buildAttributes(content)}
-          data-type="oembedblock"
-          dangerouslySetInnerHTML={{ __html: content.elements[0].value }}
-        />
+        <table key={key} {...buildAttributes(content)} data-type="table" className="w-full border-collapse">
+          <tbody>{content.elements.map(elem => renderContent(elem, data))}</tbody>
+        </table>
       );
+    case 'tr':
+      return (
+        <tr key={key} {...buildAttributes(content)} className="border-b">
+          {content.elements.map(elem => renderContent(elem, data))}
+        </tr>
+      );
+    case 'td':
+      return (
+        <td key={key} {...buildAttributes(content)} className="px-4 py-2">
+          {content.elements.map(elem => renderContent(elem, data))}
+        </td>
+      );
+    case 'th':
+      return (
+        <th key={key} {...buildAttributes(content)} className="px-4 py-2 font-bold text-left">
+          {content.elements.map(elem => renderContent(elem, data))}
+        </th>
+      );
+    case 'oembedblock':
+      console.log('Rendering oembedblock with content:', content);
+      return renderOembedBlock(content, key);
     case 'adblock':
       return (
         <div key={key} className="flex justify-center my-6" data-type="ad">
