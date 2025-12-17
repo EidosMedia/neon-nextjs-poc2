@@ -3,8 +3,8 @@ import { ArticleModel } from '@/types/models';
 import { ContentElement, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from '../components/Navbar';
 import { renderContent, findElementsInContentJson } from '@/utilities/content';
-import Grouphead from '../components/contentElements/Grouphead';
-import MainImage from '../components/contentElements/MainImage';
+import HeroCoverImage from '../components/contentElements/HeroCoverImage';
+import Summary from '../components/contentElements/Summary';
 import Footer from '../components/Footer';
 
 type PageProps = {
@@ -102,9 +102,9 @@ const Article: React.FC<PageProps> = ({ data }) => {
   return (
     <article>
       <Navbar data={data} />
-      <MainImage data={articleData} format="Ultrawide_large" preferredImage="main" />
+      <HeroCoverImage data={articleData} format="Ultrawide_large" preferredImage="main" />
       <div className="container mx-auto px-5 xl:px-52 mt-10 mb-12">
-        <Grouphead data={articleData} />
+        <Summary data={articleData} />
         <div>
           {renderContent(
             textContentWithAds,

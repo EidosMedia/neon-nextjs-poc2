@@ -218,12 +218,12 @@ export const renderContent = (
             </p>
           </ContentEditable>
         ) : (
-          <p key={key} {...buildAttributes(content)}>
+          <p key={key} {...buildAttributes(content)} className={`${styles} body-large`}>
             {content.elements.map(elem => renderContent(elem, data))}
           </p>
         );
       } else {
-        return <p key={key}>{content.elements.map(elem => renderContent(elem, data))}</p>;
+        return <p key={key}>{content.elements.map(elem => renderContent(elem, data, undefined, styles))}</p>;
       }
     case 'plainText':
       return content.value;
@@ -231,7 +231,7 @@ export const renderContent = (
       return (
         <ContentEditable key={key} data={data}>
           <div key={key} data-type="summary" {...buildAttributes(content)} className={styles}>
-            {content.elements.map(elem => renderContent(elem, data))}
+            {content.elements.map(elem => renderContent(elem, data, undefined, styles))}
           </div>
         </ContentEditable>
       );
