@@ -29,8 +29,8 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
 
   return (
     <nav className="w-full h-max bg-white top-0">
-      <div className="container mx-auto px-4 h-full flex flex-col gap-3">
-        <div className="w-full rounded mt-8 flex justify-between items-center p-4">
+      <div className="container mx-auto px-4 h-full flex flex-col gap-1">
+        <div className="w-full rounded flex justify-between items-center p-4">
           <div className="flex gap-2">
             <Button variant="ghost">
               <Menu />
@@ -44,7 +44,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
             <LoginButton webauth={webauth} />
           </div>
         </div>
-        <div className="flex justify-center items-center gap-4">
+        <div className="flex justify-center items-center gap-4 mb-8">
           <Logo data={data} />
           <h1 className="text-2xl font-bold text-gray-800">{site.root.title}</h1>
         </div>

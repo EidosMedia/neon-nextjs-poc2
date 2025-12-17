@@ -14,7 +14,7 @@ const SiteLogo: React.FC<SiteLogoProps> = async ({ data, size = 'medium' }) => {
     throw new Error('Site not found');
   }
 
-  const height = size === 'small' ? 30 : size === 'large' ? 150 : 80; // default to medium
+  const height = size === 'small' ? 30 : size === 'large' ? 80 : 50; // default to medium
 
   return (
     <Link className="flex items-center" href="/">
