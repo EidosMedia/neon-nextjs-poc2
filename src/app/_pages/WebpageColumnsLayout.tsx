@@ -5,6 +5,7 @@ import ArticleWebpage from '../components/ArticleWebpage';
 import ArticleBanner from '../components/ArticleBanner';
 import React from 'react';
 import Main from '../components/webpage/Main';
+import MainWithHero from '../components/webpage/MainWithHero';
 import Context from '../components/webpage/Context';
 import Insight1 from '../components/webpage/Insight1';
 import Footer from '../components/Footer';
@@ -18,7 +19,8 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
       <Navbar data={data}></Navbar>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div className="p-4 rounded-lg col-span-12">
-          <Main data={data} />
+          {/* <Main data={data} /> */}
+          <MainWithHero data={data} />
         </div>
 
         <div className="p-4 rounded-lg col-span-12">

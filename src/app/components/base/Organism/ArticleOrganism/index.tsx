@@ -70,6 +70,9 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
   const TitleComponent = type === 'article-xl' ? 'h1' : 'h2';
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`].url;
+
+  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
+
   const titleId = linkedObject.attributes?.contentIds?.teaserTitle;
   const summaryId = linkedObject.attributes?.contentIds?.teaserSummary;
   const classes = getArticleClasses(type);
@@ -92,7 +95,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
         <div className={`p-4 grid grid-cols-12 ${classes.container}`}>
           <div className={`flex flex-col ${classes.textColumn}`}>
             <span className={`subhead1 uppercase ${classes.section}`} data-type="section">
-              {extractSectionFromUrl(url)}
+              {overhead}
             </span>
             <ContentEditable
               showLockedByTooltip={linkedObject.sys?.lockedBy}
