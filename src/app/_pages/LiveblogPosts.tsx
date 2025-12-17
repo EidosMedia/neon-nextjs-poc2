@@ -50,12 +50,16 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
       );
     };
 
+    // Fetch immediately on mount
+    getLiveblogPosts();
+
+    // Then set up interval for subsequent fetches
     const interval = setInterval(() => getLiveblogPosts(), 10000);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [liveblogId]);
 
   const topDivRef = useRef<HTMLDivElement>(null);
 
