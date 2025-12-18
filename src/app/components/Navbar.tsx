@@ -9,11 +9,12 @@ import AiSearchIcon from './icons/AiSearch';
 import LoginButton from './LoginButton';
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
-  if (!data.siteData || !data.siteData.siteName) {
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  if (!siteName) {
     throw new Error('Site node data is missing');
   }
 
-  const site = await connection.findSite(data.siteData.siteName);
+  const site = await connection.findSite(siteName);
 
   if (!site) {
     throw new Error('Site not found');

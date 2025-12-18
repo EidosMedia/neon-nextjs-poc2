@@ -34,8 +34,8 @@ export default async function NotFound() {
                 y2="380.945"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#3969AC" />
-                <stop offset="1" stop-color="#C1D58A" />
+                <stop stopColor="#3969AC" />
+                <stop offset="1" stopColor="#C1D58A" />
               </linearGradient>
             </defs>
           </svg>
@@ -54,8 +54,8 @@ export default async function NotFound() {
                 y2="380.945"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#3969AC" />
-                <stop offset="1" stop-color="#C1D58A" />
+                <stop stopColor="#3969AC" />
+                <stop offset="1" stopColor="#C1D58A" />
               </linearGradient>
             </defs>
           </svg>

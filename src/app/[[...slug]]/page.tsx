@@ -185,6 +185,18 @@ export async function generateMetadata({
 
   const url = resolveUrl(hostname, path, id as string);
   try {
+    let title;
+
+    if (slug && slug.length === 1) {
+      switch (slug[0]) {
+        case 'search':
+          return { title: 'Search' };
+        case 'about':
+          return { title: 'About' };
+        case 'login':
+          return { title: 'Login' };
+      }
+    }
     const pageData = await connection.makePageRequest(url, auth, {
       redirect: 'manual',
       cache: 'no-cache',
@@ -192,21 +204,6 @@ export async function generateMetadata({
 
     if (pageData.status == 200) {
       const pageDataJSON = await pageData.json();
-      let title;
-
-      if (slug && slug.length === 1) {
-        switch (slug[0]) {
-          case 'search':
-            title = 'Search';
-            break;
-          case 'about':
-            title = 'About';
-            break;
-          case 'login':
-            title = 'Login';
-            break;
-        }
-      }
 
       if (!title) {
         title = pageDataJSON.model.data.title;

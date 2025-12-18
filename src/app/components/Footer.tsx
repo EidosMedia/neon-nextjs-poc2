@@ -5,7 +5,11 @@ import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import FooterMenu from './FooterMenu';
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
-  const site = await connection.findSite(data.siteData?.siteName || '');
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  if (!siteName) {
+    throw new Error('Site node data is missing');
+  }
+  const site = await connection.findSite(siteName);
   if (!site) {
     throw new Error('Site not found');
   }
