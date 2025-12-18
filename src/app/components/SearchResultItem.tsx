@@ -85,7 +85,7 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
                     }
                   }}
                 >
-                  <h4>{convertToDateString(result.nodeData.pubInfo.publicationTime)}</h4>
+                  <h4>{convertToDateString(result.nodeData?.pubInfo?.publicationTime) || ''}</h4>
                   <h3>
                     <span dangerouslySetInnerHTML={{ __html: title }} />
                   </h3>
