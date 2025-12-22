@@ -3,10 +3,11 @@ import { NeonConnection, SiteNode, ErrorObject } from '@eidosmedia/neon-frontoff
 declare global {
   // eslint-disable-next-line no-var
   var connection: NeonConnection;
+  var cacheMap: Map<string, string>;
 }
 
 export const getAPIHostnameConfig = async (
-  request: NextRequest
+  request: NextRequest,
 ): Promise<{ apiHostname: string; viewStatus: string; root: SiteNode }> => {
   const protocol = request.headers.get('X-Forwarded-Proto') || 'http';
 
@@ -16,9 +17,12 @@ export const getAPIHostnameConfig = async (
     throw new Error('x-forwarded-host header not found');
   }
 
-  const apiHostnameConfig = await connection.resolveApiHostname(`${protocol}://${forwardedHostname}`);
+  const url = forwardedHostname.startsWith('http') ? forwardedHostname : `${protocol}://${forwardedHostname}`;
+  const apiHostnameConfig = await connection.resolveApiHostname(url);
 
-  apiHostnameConfig.apiHostname = `https://${apiHostnameConfig.apiHostname}`;
+  apiHostnameConfig.apiHostname = apiHostnameConfig.apiHostname.startsWith('https://')
+    ? apiHostnameConfig.apiHostname
+    : `https://${apiHostnameConfig.apiHostname}`;
   return apiHostnameConfig;
 };
 
@@ -26,10 +30,10 @@ export const handleServicesError = (error: unknown) => {
   const responseError = error as ErrorObject;
   return Response.json(
     {
-     ...responseError.cause,
+      ...responseError.cause,
     },
     {
       status: responseError.status,
-    }
+    },
   );
 };

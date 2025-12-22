@@ -45,9 +45,14 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
       return '';
     }
 
-    let host = isLastLive ? data.previewHost : data.liveHost;
-    return `${host}${data.model.data.url}`;
+    return `${data.model.data.url}?switch-view=${isLastLive ? 'preview' : 'live'}`;
   };
+
+  if (!('model' in data && data.model.data.url)) {
+    return '';
+  }
+
+  let host = isLastLive ? data.previewHost : data.liveHost;
 
   return (
     <>

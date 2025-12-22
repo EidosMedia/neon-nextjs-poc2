@@ -18,6 +18,46 @@ export async function middleware(request: NextRequest) {
 
   const urlObject = request.nextUrl;
   const urlParams = new URLSearchParams(urlObject.search);
+  const switchToken = urlParams.get('switch-token');
+  const viewParam = urlParams.get('switch-view');
+
+  if (viewParam === 'preview' || viewParam === 'live') {
+    if (switchToken) {
+      const domainValue = (headers.get('x-forwarded-host') || '/').replace(':3000', '');
+
+      const cookieOptions: ResponseCookie = {
+        path: '/',
+        maxAge: 14400,
+        httpOnly: true,
+        name: 'editorialauth',
+        value: switchToken,
+        sameSite: process.env.DEV_MODE === 'false' ? 'none' : false,
+        secure: process.env.DEV_MODE === 'false',
+        domain: domainValue,
+      };
+
+      // Create a clean URL without the preview query parameters
+      const cleanUrl = request.nextUrl.clone();
+      cleanUrl.searchParams.delete('switch-token');
+      cleanUrl.searchParams.delete('switch-view');
+
+      // Rewrite to the clean URL (no redirect, URL stays the same in browser)
+      const response = NextResponse.redirect(cleanUrl, { headers });
+      response.cookies.set('editorialauth', '', cookieOptions);
+
+      return response;
+    }
+    const cookie = request.cookies.get('editorialauth')?.value || '';
+    // const cookieObject = parseCookie(cookie);
+
+    const foundSiteToRedirect = await connection.findSite(foundsite.root.name, viewParam);
+
+    const response = NextResponse.redirect(
+      `${foundSiteToRedirect?.root.hostname}${request.nextUrl.pathname}${request.nextUrl.search}&switch-token=${cookie}`,
+    );
+
+    return response;
+  }
 
   if (urlParams.get('PreviewToken')) {
     const previewToken = urlParams.get('PreviewToken');
