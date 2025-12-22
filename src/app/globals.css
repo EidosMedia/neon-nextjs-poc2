@@ -358,6 +358,10 @@ ol ul {
   @apply bg-black text-white;
 }
 
+.search-ask-about-selected-item {
+  @apply mt-2 ml-5 text-left list-none
+}
+
 /* Don't need button navigation on browsers that support scroll-snap */
 @supports (scroll-snap-type) {
   .media-gallery-nav {

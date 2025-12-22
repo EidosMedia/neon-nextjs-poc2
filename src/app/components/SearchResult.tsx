@@ -329,7 +329,7 @@ const SearchResult = ({ data }: { data: Site }) => {
     console.log(
       `Selected results: ${Array.from(selectedResults.entries())
         .map(([key, value]) => `${key}: ${value}`)
-        .join(', ')}`
+        .join(', ')}`,
     );
   };
 
@@ -451,11 +451,11 @@ const SearchResult = ({ data }: { data: Site }) => {
             )}
             {authorized && selectedResults.size > 0 ? (
               <div className="grid w-full gap-2">
-                <ul className="flex flex-col align-left text-gray-800">
+                <ul className="flex flex-col align-left text-gray-800 list-none">
                   <h3>Using the set of selected results</h3>
                   {Array.from(selectedResults.entries()).map(([key, value], index) => {
                     return (
-                      <li key={index} className="mt-2 ml-5 text-left">
+                      <li key={index} className="search-ask-about-selected-item">
                         <p>
                           <span className="mr-2 text-black">•</span>
                           <i>{value}</i>
