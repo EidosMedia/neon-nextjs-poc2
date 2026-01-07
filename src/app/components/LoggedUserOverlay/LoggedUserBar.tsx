@@ -9,7 +9,6 @@ import VisibilityChip from './VisibilityChip';
 import Link from 'next/link';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 //import { loggedUserSlice } from '@/lib/features/loggedUserSlice';
-import { useDispatch } from 'react-redux';
 import PromotionButton from '../PromotionButton';
 import InfoTooltip from './InfoTooltip';
 import { Braces, SquareArrowOutUpRight } from 'lucide-react';
@@ -17,7 +16,6 @@ import EditedChip from './EditedChip';
 import { isNeonAppPreview } from '@/neon-frontoffice-ts-sdk/src';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
-  const dispatch = useDispatch();
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
 
   const inspectItemsVisible = loggedUserInfo.inspectItemsVisible;
