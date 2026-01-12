@@ -127,6 +127,33 @@ const renderOembedBlock = (content: ContentElement, key: string): ReactNode => {
   );
 };
 
+/**
+ * Selects the first image/graphic element from the list following prioritization logic:
+ * 1. First element with softcropenabled="enabled-preferred"
+ * 2. First element with softcropenabled="enabled"
+ * 3. First available element
+ */
+const selectPreferredElement = (elements: ContentElement[], nodeTypePrefix: string): ContentElement | undefined => {
+  const filteredElements = elements.filter(elem => elem.nodeType.startsWith(nodeTypePrefix));
+
+  if (filteredElements.length === 0) return undefined;
+
+  // 1. Look for the first "enabled-preferred"
+  const preferredElement = filteredElements.find(
+    elem => elem.attributes?.softcropenabled === 'enabled-preferred'
+  );
+  if (preferredElement) return preferredElement;
+
+  // 2. Look for the first "enabled"
+  const enabledElement = filteredElements.find(
+    elem => elem.attributes?.softcropenabled === 'enabled'
+  );
+  if (enabledElement) return enabledElement;
+
+  // 3. Return the first available
+  return filteredElements[0];
+};
+
 export const buildAttributes = (node: ContentElement): Record<string, any> => {
   // replace "class" with "className" and "stroke-linecap" with "strokeLinecap"
   return Object.fromEntries(
@@ -236,17 +263,30 @@ export const renderContent = (
         </ContentEditable>
       );
     case 'inline-media-group':
-      if (content.elements[0].nodeType.startsWith('image')) {
+      const selectedImage = selectPreferredElement(content.elements, 'image');
+      const selectedGraphic = selectPreferredElement(content.elements, 'graphic');
+
+      if (selectedImage) {
+        // Create a new content object with only the selected image element
+        const filteredContent = {
+          ...content,
+          elements: [selectedImage, ...content.elements.filter(elem => elem.nodeType === 'image-caption')]
+        };
         return (
           <div key={'img-' + key} data-type="inline-media-group">
-            <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Wide" />
+            <Figure key={key} data={filteredContent} alt="/public/file.svg" {...content.attributes} format="Wide" />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
           </div>
         );
-      } else if (content.elements[0].nodeType.startsWith('graphic')) {
+      } else if (selectedGraphic) {
+        // Create a new content object with only the selected graphic element
+        const filteredContent = {
+          ...content,
+          elements: [selectedGraphic, ...content.elements.filter(elem => elem.nodeType === 'graphic-caption')]
+        };
         return (
           <div data-type="inline-media-group">
-            <Figure key={key} data={content} alt="/public/file.svg" {...content.attributes} format="Wide" />
+            <Figure key={key} data={filteredContent} alt="/public/file.svg" {...content.attributes} format="Wide" />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'graphic-caption')[0], data)}
           </div>
         );
