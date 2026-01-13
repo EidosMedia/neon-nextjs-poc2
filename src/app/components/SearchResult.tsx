@@ -31,6 +31,8 @@ const SearchResult = ({ data }: { data: Site }) => {
   const [chat, setChat] = useState<ChatRoundTrip[]>([]);
   const [questionText, setQuestionText] = useState('');
   const lastSearchText = useRef<string>(searchText);
+  const showAiSearch = data.root.staticAttributes?.naturalSearchEnabled === 'true';
+  const showAiQuestion = data.root.staticAttributes?.ragSearchEnabled === 'true';
 
   const options = [
     // { value: '', text: 'Select a time frame' },
@@ -40,6 +42,21 @@ const SearchResult = ({ data }: { data: Site }) => {
     { value: 'Last Quarter', text: 'Last Quarter' },
     { value: 'Last Year', text: 'Last Year' },
   ];
+
+  const buildSearchOptions = () => {
+    const opts = [
+      { value: 'search', text: 'Search' },      
+    ];
+
+    if (showAiSearch) {
+      opts.push({ value: 'ai-search', text: 'AI Search' });
+    }
+    if (showAiQuestion) {
+      opts.push({ value: 'ai-question', text: 'AI Question' });
+    }
+    
+    return opts;
+  };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -341,11 +358,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             <div className="flex gap-4">
               <CustomSelect
                 placeholder=""
-                options={[
-                  { value: 'search', text: 'Search' },
-                  { value: 'ai-search', text: 'AI Search' },
-                  { value: 'ai-question', text: 'AI Question' },
-                ]}
+                options={buildSearchOptions()}
                 className="w-[120px] font-semibold"
                 value={selectedSearchOption}
                 onChange={handleSearchOptionChange}
