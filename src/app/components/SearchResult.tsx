@@ -76,6 +76,10 @@ const SearchResult = ({ data }: { data: Site }) => {
 
   function enableSearch(queryText: string, timeSlice: string) {}
 
+  const syncSelectedResults = (items?: PaginatedSearchRagResult['result']) => {
+    setSelectedResults(new Map((items ?? []).map(item => [item.nodeData.id, item.nodeData.title || ''])));
+  };
+
   /** route client to server api exposed for default search */
   const fetchSearch = async (queryParams: URLSearchParams) => {
     const queryCallParams = new URLSearchParams();
@@ -100,7 +104,7 @@ const SearchResult = ({ data }: { data: Site }) => {
 
         console.log('Fetched data:', search);
         setResult(search);
-        setSelectedResults(new Map(search.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
+        syncSelectedResults(search.result);
       } else {
         console.log('Fetched rag data error', response);
         setResult({} as PaginatedSearchRagResult);
@@ -134,7 +138,7 @@ const SearchResult = ({ data }: { data: Site }) => {
 
         console.log('Fetched rag data:', data);
         setResult(data);
-        setSelectedResults(new Map(data.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
+        syncSelectedResults(data.result);
       } else {
         console.log('Fetched rag data error', response);
         setResult({} as PaginatedSearchRagResult);
@@ -171,7 +175,7 @@ const SearchResult = ({ data }: { data: Site }) => {
 
         console.log('Fetched rag data:', data);
         setResult({ ...data });
-        setSelectedResults(new Map(data.result.map(item => [item.nodeData.id, item.nodeData.title || ''])));
+        syncSelectedResults(data.result);
       } else {
         console.log('Fetched rag data error', response);
         setResult({} as PaginatedSearchRagResult);
