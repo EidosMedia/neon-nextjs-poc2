@@ -46,7 +46,7 @@ const LoginForm: React.FC = () => {
         <p className="mb-4 text-gray-600">For information about how we use your data, see our privacy policy.</p>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="email">
-            Email
+            Username
           </label>
           <input
             id="email"
