@@ -369,3 +369,21 @@ ol ul {
   }
 }
 
+[data-type="inline-media-group"] {
+  .xsm-blockstyle-align-right {
+    @apply justify-end;
+  }
+
+  .xsm-blockstyle-align-left {
+    @apply text-left;
+  }
+
+  .xsm-blockstyle-align-center {
+    align-self: center;
+    justify-self: center;
+  }
+
+  .xsm-blockstyle-align-fullwidth {
+    @apply w-full;
+  }
+}

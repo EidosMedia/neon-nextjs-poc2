@@ -38,27 +38,24 @@ const getDimensionsFromUrl = (url: string): { width: number; height: number } | 
   return null;
 };
 
-const Figure: React.FC<FigureProps> = ({ data, alt, format }) => {
+const Figure: React.FC<FigureProps> = ({ data, alt, format, ...props }) => {
   const imageUrl = getSvgUrl(data) || getRasterUrl(data, format);
   const dimensions = imageUrl && getDimensionsFromUrl(imageUrl);
 
-  console.log('rendering figure');
-
   return (
-    <div>
-      <div>
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={alt}
-            width={dimensions ? dimensions.width : undefined}
-            height={dimensions ? dimensions.height : undefined}
-          />
-        ) : (
-          <p>No image available</p>
-        )}
-      </div>
-    </div>
+    <>
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={alt}
+          width={dimensions ? dimensions.width : undefined}
+          height={dimensions ? dimensions.height : undefined}
+          {...props}
+        />
+      ) : (
+        <p>No image available</p>
+      )}
+    </>
   );
 };
 

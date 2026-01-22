@@ -51,7 +51,9 @@ const identifyOembedProvider = (url: string): string | null => {
 /**
  * Estrae attributi dall'HTML dell'iframe (width, height, style)
  */
-const extractIframeAttributes = (iframeHtml: string): {
+const extractIframeAttributes = (
+  iframeHtml: string,
+): {
   width?: string;
   height?: string;
   style?: string;
@@ -77,10 +79,7 @@ const extractIframeAttributes = (iframeHtml: string): {
  * Estrae video ID da URL YouTube
  */
 const extractYoutubeId = (url: string): string | null => {
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
-    /youtube\.com\/embed\/([^&\n?#]+)/,
-  ];
+  const patterns = [/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/, /youtube\.com\/embed\/([^&\n?#]+)/];
 
   for (const pattern of patterns) {
     const match = url.match(pattern);
@@ -139,15 +138,11 @@ const selectPreferredElement = (elements: ContentElement[], nodeTypePrefix: stri
   if (filteredElements.length === 0) return undefined;
 
   // 1. Look for the first "enabled-preferred"
-  const preferredElement = filteredElements.find(
-    elem => elem.attributes?.softcropenabled === 'enabled-preferred'
-  );
+  const preferredElement = filteredElements.find(elem => elem.attributes?.softcropenabled === 'enabled-preferred');
   if (preferredElement) return preferredElement;
 
   // 2. Look for the first "enabled"
-  const enabledElement = filteredElements.find(
-    elem => elem.attributes?.softcropenabled === 'enabled'
-  );
+  const enabledElement = filteredElements.find(elem => elem.attributes?.softcropenabled === 'enabled');
   if (enabledElement) return enabledElement;
 
   // 3. Return the first available
@@ -265,16 +260,25 @@ export const renderContent = (
     case 'inline-media-group':
       const selectedImage = selectPreferredElement(content.elements, 'image');
       const selectedGraphic = selectPreferredElement(content.elements, 'graphic');
+      console.log('elements in inline-media-group:', content.elements);
+      console.log('selectedImage:', selectedImage);
+      console.log('selectedGraphic:', selectedGraphic);
 
       if (selectedImage) {
         // Create a new content object with only the selected image element
         const filteredContent = {
           ...content,
-          elements: [selectedImage, ...content.elements.filter(elem => elem.nodeType === 'image-caption')]
+          elements: [selectedImage, ...content.elements.filter(elem => elem.nodeType === 'image-caption')],
         };
         return (
           <div key={'img-' + key} data-type="inline-media-group">
-            <Figure key={key} data={filteredContent} alt="/public/file.svg" {...content.attributes} format="Wide" />
+            <Figure
+              key={key}
+              data={filteredContent}
+              alt="/public/file.svg"
+              {...selectedImage.attributes}
+              format="Wide"
+            />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
           </div>
         );
@@ -282,11 +286,17 @@ export const renderContent = (
         // Create a new content object with only the selected graphic element
         const filteredContent = {
           ...content,
-          elements: [selectedGraphic, ...content.elements.filter(elem => elem.nodeType === 'graphic-caption')]
+          elements: [selectedGraphic, ...content.elements.filter(elem => elem.nodeType === 'graphic-caption')],
         };
         return (
           <div data-type="inline-media-group">
-            <Figure key={key} data={filteredContent} alt="/public/file.svg" {...content.attributes} format="Wide" />
+            <Figure
+              key={key}
+              data={filteredContent}
+              alt="/public/file.svg"
+              format="Wide"
+              {...selectedGraphic.attributes}
+            />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'graphic-caption')[0], data)}
           </div>
         );
