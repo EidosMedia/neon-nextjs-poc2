@@ -5,7 +5,7 @@ import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { SiteNode } from './neon-frontoffice-ts-sdk/src/types/site';
 
 // This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const foundsite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
 
   // Passing the apiHostname resolved as header to the app router
