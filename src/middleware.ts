@@ -106,7 +106,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  if (request.nextUrl.pathname.startsWith('/resources') || request.nextUrl.pathname === '/robots.txt') {
+  if (
+    request.nextUrl.pathname.startsWith('/resources') ||
+    request.nextUrl.pathname.endsWith('/robots.txt') ||
+    request.nextUrl.pathname.endsWith('/sitemapindex.xml') ||
+    request.nextUrl.pathname.endsWith('/sitemap.xml')
+  ) {
     // calling internal api proxy
     const url = request.nextUrl.clone();
     url.pathname = `/api/proxy${url.pathname}`;
