@@ -1,5 +1,5 @@
 'use client';
-import { PaginatedSearchRagResult, RagOnItemsResponse, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PaginatedSearchRagResult, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { LoaderCircle, Search } from 'lucide-react';
@@ -302,14 +302,14 @@ const SearchResult = ({ data }: { data: Site }) => {
       });
 
       if (response.ok) {
-        const ragAnswer: RagOnItemsResponse = (await response.json()) as RagOnItemsResponse;
+        const data = await response.json();
 
         console.log('askabout response:', data);
 
         const newChatRoundTrip: ChatRoundTrip = {
           titles: Array.from(selectedResults.values()),
           question: questionText,
-          answer: ragAnswer.result.answer,
+          answer: data?.answer || 'No answer provided'
         };
 
         setChat(prevChat => [...prevChat, newChatRoundTrip]);

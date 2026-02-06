@@ -1,4 +1,3 @@
-import { RagOnItemsResponse } from '@/neon-frontoffice-ts-sdk/src';
 import { getAPIHostnameConfig } from '@/services/utils';
 import { NextRequest } from 'next/server';
 import { getAuthOptions } from '@/utilities/security';
@@ -12,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const { apiHostname } = await getAPIHostnameConfig(req);
 
-    const resp: RagOnItemsResponse = await connection.askAboutContents({
+    const resp = await connection.askAboutContents({
       query: req.nextUrl.searchParams.get('query') || '',
       ids: familyRefs,
       baseUrl: apiHostname,
