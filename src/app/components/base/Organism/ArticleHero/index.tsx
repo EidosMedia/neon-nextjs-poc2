@@ -17,11 +17,14 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
   const url = linkedObject.url;
 
   const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
-  
+
   const titleId = linkedObject.attributes?.contentIds?.teaserTitle;
   const title = linkedObject.attributes?.teaser?.title || linkedObject.title;
   const summaryId = linkedObject.attributes?.contentIds?.teaserSummary;
   const summary = linkedObject.attributes?.teaser?.summary || linkedObject.summary;
+
+  // NEON-2129
+  const lockedBy = data?.sys?.lockedBy?.userId === 'CollaborationEditor' ? null : data?.sys?.lockedBy;
 
   return (
     <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus} width="max" data-type="article-hero">
@@ -50,7 +53,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
 
                 {/* Title */}
                 <ContentEditable
-                  showLockedByTooltip={linkedObject.sys?.lockedBy}
+                  showLockedByTooltip={lockedBy}
                   viewStatus={data.siteData.viewStatus}
                   data={linkedObject}
                   minimal
@@ -66,7 +69,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
 
                 {/* Summary */}
                 <ContentEditable
-                  showLockedByTooltip={linkedObject.sys?.lockedBy}
+                  showLockedByTooltip={lockedBy}
                   viewStatus={data.siteData.viewStatus}
                   data={linkedObject}
                   minimal

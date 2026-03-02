@@ -23,7 +23,10 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   minimal,
 }) => {
   const articleId = data?.id;
-  const lockedBy = data?.sys?.lockedBy;
+
+  // NEON-2129
+  const lockedBy = data?.sys?.lockedBy === 'CollaborationEditor' ? null : data?.sys?.lockedBy;
+  showLockedByTooltip = lockedBy ? true : false;
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
   //console.log('data in contentEditable', data);

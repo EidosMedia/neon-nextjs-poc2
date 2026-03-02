@@ -89,16 +89,22 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
     summary = linkedObject.summary;
   }
 
+  const lockedBy = data?.sys?.lockedBy?.userId === 'CollaborationEditor' ? null : data?.sys?.lockedBy;
+
   return (
     <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus} width="max" data-type={type}>
-      <Link id={linkedObject.id.replaceAll('-', '_')} className="no-underline" href={loggedUserInfo.inspectItems ? '' : url}>
+      <Link
+        id={linkedObject.id.replaceAll('-', '_')}
+        className="no-underline"
+        href={loggedUserInfo.inspectItems ? '' : url}
+      >
         <div className={`p-4 grid grid-cols-12 ${classes.container}`}>
           <div className={`flex flex-col ${classes.textColumn}`}>
             <span className={`subhead1 uppercase ${classes.section}`} data-type="section">
               {overhead}
             </span>
             <ContentEditable
-              showLockedByTooltip={linkedObject.sys?.lockedBy}
+              showLockedByTooltip={lockedBy}
               viewStatus={data.siteData.viewStatus}
               data={linkedObject}
               minimal
@@ -108,7 +114,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
               </TitleComponent>
             </ContentEditable>
             <ContentEditable
-              showLockedByTooltip={linkedObject.sys?.lockedBy}
+              showLockedByTooltip={lockedBy}
               viewStatus={data.siteData.viewStatus}
               data={linkedObject}
               minimal
