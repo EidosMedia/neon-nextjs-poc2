@@ -9,6 +9,7 @@ import { Input } from './baseComponents/textInput';
 import CustomSelect from './baseComponents/select';
 import AiSearchIcon from './icons/AiSearch';
 import { chatResponse } from './mocks/mocks';
+import TestSharedComponent from './testComponent/TestSharedComponent';
 
 type ChatRoundTrip = {
   titles: string[];
@@ -44,9 +45,7 @@ const SearchResult = ({ data }: { data: Site }) => {
   ];
 
   const buildSearchOptions = () => {
-    const opts = [
-      { value: 'search', text: 'Search' },      
-    ];
+    const opts = [{ value: 'search', text: 'Search' }];
 
     if (showAiSearch) {
       opts.push({ value: 'ai-search', text: 'AI Search' });
@@ -54,7 +53,7 @@ const SearchResult = ({ data }: { data: Site }) => {
     if (showAiQuestion) {
       opts.push({ value: 'ai-question', text: 'AI Question' });
     }
-    
+
     return opts;
   };
 
@@ -309,7 +308,7 @@ const SearchResult = ({ data }: { data: Site }) => {
         const newChatRoundTrip: ChatRoundTrip = {
           titles: Array.from(selectedResults.values()),
           question: questionText,
-          answer: data?.answer || 'No answer provided'
+          answer: data?.answer || 'No answer provided',
         };
 
         setChat(prevChat => [...prevChat, newChatRoundTrip]);
@@ -356,6 +355,8 @@ const SearchResult = ({ data }: { data: Site }) => {
 
   return (
     <div className="grid items-center text-center max-w-5xl mx-auto">
+      <TestSharedComponent />
+
       <form className="text-center" onSubmit={handleOnSearchFormSubmit}>
         <div className="flex items-center justify-center mb-4 flex-col md:flex-row gap-2 mt-10">
           <div className="flex grow-1 flex-col gap-2">
