@@ -24,23 +24,20 @@ const resolveForcedLocalhostSiteConfig = async (
     return null;
   }
 
-  const forcedLiveSite = await connection.findSite(forcedSite, 'live');
-  const forcedPreviewSite = await connection.findSite(forcedSite, 'preview');
-  const forcedSiteConfig = forcedLiveSite || forcedPreviewSite;
+  const forcedSiteConfig =
+    (await connection.findSite(forcedSite, 'live')) ||
+    (await connection.findSite(forcedSite)) ||
+    (await connection.getSitesList()).find(site => site.root.name.toLowerCase() === forcedSite.toLowerCase());
 
   if (!forcedSiteConfig) {
-    throw new Error(`Could not resolve site by name from DEV_FORCE_SITE: ${forcedSite}`);
+    throw new Error(`Could not resolve live site by name from DEV_FORCE_SITE: ${forcedSite}`);
   }
 
-  const forcedViewStatus = forcedSiteConfig.viewStatus === 'live' ? 'LIVE' : 'PREVIEW';
-  const forcedApiHostname =
-    forcedSiteConfig.viewStatus === 'live'
-      ? forcedSiteConfig.apiHostnames.liveHostname
-      : forcedSiteConfig.apiHostnames.previewHostname;
-
   return {
-    apiHostname: forcedApiHostname.startsWith('https://') ? forcedApiHostname : `https://${forcedApiHostname}`,
-    viewStatus: forcedViewStatus,
+    apiHostname: forcedSiteConfig.apiHostnames.liveHostname.startsWith('https://')
+      ? forcedSiteConfig.apiHostnames.liveHostname
+      : `https://${forcedSiteConfig.apiHostnames.liveHostname}`,
+    viewStatus: 'LIVE',
     root: forcedSiteConfig.root,
   };
 };
