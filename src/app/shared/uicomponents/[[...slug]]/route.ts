@@ -14,6 +14,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
   const upstream = await fetch(upstreamUrl, {
     headers: {
       'User-Agent': req.headers.get('user-agent') ?? 'neon-nextjs-poc',
+      ...(process.env.NEON_FRONTOFFICE_SERVICE_KEY
+        ? { 'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY }
+        : {}),
     },
     cache: 'no-store',
   });
