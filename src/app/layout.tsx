@@ -22,6 +22,22 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Import map so ESM uicomponent bundles can resolve bare React specifiers
+            via the shims served by the upstream uicomponents service. */}
+        <script
+          type="importmap"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              imports: {
+                react: 'https://esm.sh/react@19',
+                'react/jsx-runtime': 'https://esm.sh/react@19/jsx-runtime',
+                'react-dom': 'https://esm.sh/react-dom@19',
+                'react-dom/client': 'https://esm.sh/react-dom@19/client',
+                '@eidosmedia/react-marvin-components': '/api/shims/marvin',
+              },
+            }),
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&display=swap" rel="stylesheet" />

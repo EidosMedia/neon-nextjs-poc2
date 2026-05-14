@@ -6,19 +6,28 @@ import { renderContent, findElementsInContentJson } from '@/utilities/content';
 import Grouphead from '../components/contentElements/Grouphead';
 import MainImage from '../components/contentElements/MainImage';
 import Footer from '../components/Footer';
+import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 
 type PageProps = {
   data: PageData<ArticleModel>;
 };
 
-const Article: React.FC<PageProps> = ({ data }) => {
+function findCustomComponentNodes(content: ContentElement): ContentElement[] {
+  const results: ContentElement[] = [];
+  if (content.nodeType?.match(/^[a-z]+-component/)) results.push(content);
+  for (const child of content.elements ?? []) results.push(...findCustomComponentNodes(child));
+  return results;
+}
+
+const Article = async ({ data }: PageProps) => {
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
-  // Insert ad elements every 3 paragraphs, considering existing adblocks
-  const textContentWithAds = React.useMemo(() => {
+  // Insert ad elements every 3 paragraphs, considering existing adblocks.
+  // Plain function — Server Components do not re-render so memoisation is unnecessary.
+  const textContentWithAds = (() => {
     if (!textContent?.elements || adsDensity === 0) {
       console.log('[AdBlock] No elements or adsDensity is 0');
       return textContent;
@@ -28,9 +37,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
     console.log('[AdBlock] adsDensity:', adsDensity);
 
     // Count existing adblocks
-    const existingAdsCount = textContent.elements.filter(
-      element => element.nodeType === 'adblock'
-    ).length;
+    const existingAdsCount = textContent.elements.filter(element => element.nodeType === 'adblock').length;
 
     console.log('[AdBlock] Existing adblocks:', existingAdsCount);
 
@@ -60,10 +67,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
       }
 
       // Insert ad after every 3 paragraphs
-      if (element.nodeType === 'p' &&
-          paragraphsSinceLastAd === 3 &&
-          adsAdded < maxNewAds) {
-
+      if (element.nodeType === 'p' && paragraphsSinceLastAd === 3 && adsAdded < maxNewAds) {
         console.log(`[AdBlock] Reached 3 paragraphs at index ${index}, checking if we can add ad...`);
 
         // Check if we have at least 3 more paragraphs ahead or an existing adblock
@@ -80,7 +84,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
             nodeType: 'adblock',
             attributes: {},
             elements: [],
-            value: ''
+            value: '',
           });
           paragraphsSinceLastAd = 0;
           adsAdded++;
@@ -95,9 +99,30 @@ const Article: React.FC<PageProps> = ({ data }) => {
 
     return {
       ...textContent,
-      elements: newElements
+      elements: newElements,
     };
-  }, [textContent, adsDensity]);
+  })();
+
+  // Pre-resolve custom components server-side so renderContent can render them
+  // without any client-side JS. Falls back to CustomComponentClient for unknowns.
+  const customComponents = new Map<string, React.ComponentType<Record<string, unknown>>>();
+  const customNodes = findCustomComponentNodes(
+    textContentWithAds ?? { nodeType: '', elements: [], attributes: {}, value: '' },
+  );
+  console.log(
+    '[Article] custom component nodes found:',
+    customNodes.map(n => n.attributes?.componentname),
+  );
+  await Promise.all(
+    [...new Set(customNodes.map(n => n.attributes?.componentname).filter(Boolean))].map(async name => {
+      console.log('[Article] resolving server component:', name);
+      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<
+        Record<string, unknown>
+      > | null;
+      console.log('[Article] resolved:', name, '->', Comp ? 'OK' : 'null');
+      if (Comp) customComponents.set(name, Comp);
+    }),
+  );
 
   return (
     <article className="container mx-auto">
@@ -105,14 +130,7 @@ const Article: React.FC<PageProps> = ({ data }) => {
       <div className="px-5 xl:px-52 mt-10 mb-12">
         <Grouphead data={articleData} />
         <MainImage data={articleData} preferredImage="main" />
-        <div>
-          {renderContent(
-            textContentWithAds,
-            articleData,
-            undefined,
-            'flex flex-col gap-4'
-          )}
-        </div>
+        <div>{renderContent(textContentWithAds, articleData, undefined, 'flex flex-col gap-4', customComponents)}</div>
       </div>
       <div className="flex justify-center mb-24">
         {/* Placeholder for advertisement */}
