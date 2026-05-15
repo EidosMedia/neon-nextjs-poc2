@@ -5,6 +5,7 @@ import './globals.css';
 import { ReloadListener } from './components/utilities/ReloadListener';
 import StoreProvider from './StoreProvider';
 import QueryProvider from './components/utilities/QueryProvider';
+import { ReactShimExposer } from './components/utilities/ReactShimExposer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,16 +24,17 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         {/* Import map so ESM uicomponent bundles can resolve bare React specifiers
-            via the shims served by the upstream uicomponents service. */}
+            via self-hosted shim routes. The shims re-export the React instance
+            that Next.js already loads, so no duplicate copies of React exist. */}
         <script
           type="importmap"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               imports: {
-                react: 'https://esm.sh/react@19',
-                'react/jsx-runtime': 'https://esm.sh/react@19/jsx-runtime',
-                'react-dom': 'https://esm.sh/react-dom@19',
-                'react-dom/client': 'https://esm.sh/react-dom@19/client',
+                react: '/api/shims/react',
+                'react/jsx-runtime': '/api/shims/react-jsx-runtime',
+                'react-dom': '/api/shims/react-dom',
+                'react-dom/client': '/api/shims/react-dom-client',
                 '@eidosmedia/react-marvin-components': '/api/shims/marvin',
               },
             }),
@@ -53,6 +55,7 @@ export default async function RootLayout({
 
       <body className={inter.className}>
         <WebVitals />
+        <ReactShimExposer />
         <ReloadListener />
         <StoreProvider>
           <QueryProvider>{children}</QueryProvider>

@@ -3,23 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest, { params }: { params: Promise<{ slug?: string[] }> }) {
   const { slug } = await params;
   const filePath = slug ? slug.join('/') : '';
-  const baseUrl = process.env.BASE_NEON_FO_URL;
 
-  if (!baseUrl) {
-    return new NextResponse('BASE_NEON_FO_URL is not configured', { status: 500 });
-  }
-
-  const upstreamUrl = `${baseUrl}/shared/uicomponents/${filePath}`;
-
-  const upstream = await fetch(upstreamUrl, {
-    headers: {
-      'User-Agent': req.headers.get('user-agent') ?? 'neon-nextjs-poc',
-      ...(process.env.NEON_FRONTOFFICE_SERVICE_KEY
-        ? { 'neon-fo-access-key': process.env.NEON_FRONTOFFICE_SERVICE_KEY }
-        : {}),
-    },
-    cache: 'no-store',
-  });
+  const upstream = await connection.fetchUiComponent(filePath);
 
   if (!upstream.ok) {
     return new NextResponse(`Upstream error: ${upstream.statusText}`, {
