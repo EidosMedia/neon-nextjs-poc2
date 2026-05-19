@@ -2,19 +2,37 @@ import React from 'react';
 import { ArticleModel } from '@/types/models';
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from '../components/Navbar';
-import { renderContent, findElementsInContentJson } from '@/utilities/content';
+import { renderContent, findElementsInContentJson, findCustomComponentNodes } from '@/utilities/content';
 import Grouphead from '../components/contentElements/Grouphead';
 import MainImage from '../components/contentElements/MainImage';
 import LiveblogPosts from './LiveblogPosts';
 import Footer from '../components/Footer';
 import { CircleDot } from 'lucide-react';
+import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 
 type PageProps = {
   data: PageData<ArticleModel>;
 };
 
-const Liveblog: React.FC<PageProps> = ({ data }) => {
+const Liveblog = async ({ data }: PageProps) => {
   const articleData = data.model.data;
+
+  const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
+
+  // Pre-resolve custom components server-side so renderContent can render them
+  // without any client-side JS.
+  const customComponents = new Map<string, React.ComponentType<Record<string, unknown>>>();
+  const customNodes = findCustomComponentNodes(
+    textContent ?? { nodeType: '', elements: [], attributes: {}, value: '' },
+  );
+  await Promise.all(
+    [...new Set(customNodes.map(n => n.attributes?.componentname).filter(Boolean))].map(async name => {
+      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<
+        Record<string, unknown>
+      > | null;
+      if (Comp) customComponents.set(name, Comp);
+    }),
+  );
 
   return (
     <article className="container mx-auto">
@@ -27,12 +45,7 @@ const Liveblog: React.FC<PageProps> = ({ data }) => {
         <Grouphead data={articleData} />
         <MainImage data={articleData} preferredImage="main" />
         <div className="mb-8">
-          {renderContent(
-            findElementsInContentJson(['text'], articleData.files.content.data)[0],
-            articleData,
-            undefined,
-            'flex flex-col gap-4'
-          )}
+          {renderContent(textContent, articleData, undefined, 'flex flex-col gap-4', customComponents)}
         </div>
         <LiveblogPosts data={data} />
       </div>

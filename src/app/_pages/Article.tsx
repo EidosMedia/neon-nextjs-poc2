@@ -1,8 +1,8 @@
 import React from 'react';
 import { ArticleModel } from '@/types/models';
-import { ContentElement, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from '../components/Navbar';
-import { renderContent, findElementsInContentJson } from '@/utilities/content';
+import { renderContent, findElementsInContentJson, findCustomComponentNodes } from '@/utilities/content';
 import Grouphead from '../components/contentElements/Grouphead';
 import MainImage from '../components/contentElements/MainImage';
 import Footer from '../components/Footer';
@@ -11,13 +11,6 @@ import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 type PageProps = {
   data: PageData<ArticleModel>;
 };
-
-function findCustomComponentNodes(content: ContentElement): ContentElement[] {
-  const results: ContentElement[] = [];
-  if (content.nodeType?.match(/^[a-z]+-component/)) results.push(content);
-  for (const child of content.elements ?? []) results.push(...findCustomComponentNodes(child));
-  return results;
-}
 
 const Article = async ({ data }: PageProps) => {
   const articleData = data.model.data;

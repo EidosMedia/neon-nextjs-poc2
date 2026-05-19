@@ -86,9 +86,55 @@ async function importFromTempDir(
     // and named imports (e.g. `import { n } from './Chunk.js'`) break.
     writeFileSync(join(tmpDir, 'package.json'), JSON.stringify({ type: 'module' }), 'utf8');
 
-    // Stub packages that are not installed in this Next.js project.
-    // ESM named imports are statically verified, so we parse which names each
-    // chunk uses and generate a stub that exports exactly those names as no-ops.
+    // In development, Next.js uses react/jsx-dev-runtime (jsxDEV) while the
+    // upstream bundle is built against the production jsx-runtime. The two
+    // runtimes produce incompatible element objects in dev mode, causing React
+    // to throw "Attempted to render element without development properties".
+    //
+    // Fix: rewrite every `from 'react/jsx-runtime'` bare-specifier in the
+    // bundle and chunk texts to a relative import pointing at a local shim
+    // that re-exports jsx/jsxs/Fragment by delegating to jsxDEV.
+    // Using a relative path avoids all Node.js ESM package-resolution
+    // complexity (package.json exports fields, subpath resolution, etc.).
+    let patchText = (t: string) => t;
+    if (process.env.NODE_ENV !== 'production') {
+      const shimFilename = '_shim_react_jsx_runtime.mjs';
+      // In dev mode, the React Server Components renderer (react-server-dom-webpack)
+      // checks that every element has _debugStack and _debugTask (React 19 RSC
+      // debug instrumentation). These are only set by Next.js's compiled React
+      // build, NOT by the standard node_modules/react jsx-runtime.
+      //
+      // The elements produced by the upstream bundle are frozen by jsx() before
+      // we can mutate them. To inject _debugStack/_debugTask before the freeze
+      // we temporarily replace Object.freeze with an interceptor that adds the
+      // two properties when it detects a React element ($$typeof is a Symbol).
+      // This runs synchronously inside the (synchronous) jsx() call, so it is
+      // safe in Node.js's single-threaded JS runtime.
+      const shimBody = [
+        "import { jsx as _j, jsxs as _js, Fragment } from 'react/jsx-runtime';",
+        'function _patch(fn, type, props, key) {',
+        '  const orig = Object.freeze;',
+        '  Object.freeze = function(o) {',
+        '    if (o !== null && typeof o === "object" && typeof o.$$typeof === "symbol") {',
+        '      if (o._debugStack === undefined)',
+        '        try { Object.defineProperty(o, "_debugStack", { configurable: false, enumerable: false, writable: true, value: new Error("react-stack-top-frame") }); } catch {}',
+        '      if (o._debugTask === undefined)',
+        '        try { Object.defineProperty(o, "_debugTask", { configurable: false, enumerable: false, writable: true, value: null }); } catch {}',
+        '    }',
+        '    return orig.call(Object, o);',
+        '  };',
+        '  try { return fn(type, props, key); } finally { Object.freeze = orig; }',
+        '}',
+        'export function jsx(type, props, key) { return _patch(_j, type, props, key); }',
+        'export function jsxs(type, props, key) { return _patch(_js, type, props, key); }',
+        'export { Fragment };',
+      ].join('\n');
+      writeFileSync(join(tmpDir, shimFilename), shimBody, 'utf8');
+      // Replace bare 'react/jsx-runtime' imports with the local shim path.
+      patchText = (t: string) =>
+        t.replace(/(['"])react\/jsx-runtime\1/g, `'./${shimFilename}'`);
+    }
+
     const STUB_PACKAGES = ['@eidosmedia/react-marvin-components'];
     const stubExports = new Map<string, Set<string>>();
     for (const pkg of STUB_PACKAGES) stubExports.set(pkg, new Set());
@@ -130,13 +176,13 @@ async function importFromTempDir(
     // Write chunks first (they must exist when the entry is imported).
     for (const [specifier, text] of chunks) {
       const filename = specifier.replace(/^\.\//, '');
-      writeFileSync(join(tmpDir, filename), text, 'utf8');
+      writeFileSync(join(tmpDir, filename), patchText(text), 'utf8');
     }
 
     // Write the entry bundle.
     const entryFilename = `${category}.mjs`;
     const entryPath = join(tmpDir, entryFilename);
-    writeFileSync(entryPath, entryText, 'utf8');
+    writeFileSync(entryPath, patchText(entryText), 'utf8');
 
     // Use new Function to prevent webpack/Turbopack from statically analysing
     // the import() specifier at build time.
@@ -211,13 +257,6 @@ export async function resolveServerComponent(
   category: UiComponentCategory,
   componentname: string,
 ): Promise<React.ComponentType<Record<string, unknown>> | null> {
-  // In development Next.js uses react/jsx-dev-runtime (jsxDEV) while the
-  // upstream bundle uses the production jsx-runtime (jsx). Elements created
-  // by the two runtimes are incompatible in dev mode, causing React to throw
-  // "Attempted to render element without development properties".
-  // Fall back to CustomComponentClient (client-side) in dev; SSR works in prod.
-  if (process.env.NODE_ENV !== 'production') return null;
-
   try {
     const mod = await loadServerBundle(category);
     const comp = mod[componentname];

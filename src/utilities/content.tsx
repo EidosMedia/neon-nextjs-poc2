@@ -7,6 +7,17 @@ import ContentEditable from '@/app/components/utilities/ContentEditable';
 import CustomComponent from '@/app/components/base/CustomComponentClient';
 
 /**
+ * Recursively collects all `*-component` nodes from a content tree.
+ * Used by server components to pre-resolve custom components before rendering.
+ */
+export function findCustomComponentNodes(content: ContentElement): ContentElement[] {
+  const results: ContentElement[] = [];
+  if (content.nodeType?.match(/^[a-z]+-component/)) results.push(content);
+  for (const child of content.elements ?? []) results.push(...findCustomComponentNodes(child));
+  return results;
+}
+
+/**
  *
  * @param elementNames
  * @param json
