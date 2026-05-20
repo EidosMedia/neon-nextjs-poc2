@@ -5,8 +5,7 @@ const nextConfig: NextConfig = {
 
   output: 'standalone',
   trailingSlash: true,
-
-  allowedDevOrigins: ['theglobe-test-region-a.neon.test'],
+  allowedDevOrigins: ['*.neon.test'],
 };
 
 export default nextConfig;

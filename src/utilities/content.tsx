@@ -163,8 +163,11 @@ const selectPreferredElement = (elements: ContentElement[], nodeTypePrefix: stri
 
 export const buildAttributes = (node: ContentElement): Record<string, any> => {
   // replace "class" with "className" and "stroke-linecap" with "strokeLinecap"
+  // exclude "key" as it is a reserved React prop and must not be spread into JSX
   return Object.fromEntries(
-    Object.entries(node.attributes || {}).map(([key, value]) => [
+    Object.entries(node.attributes || {})
+      .filter(([key]) => key !== 'key')
+      .map(([key, value]) => [
       key === 'class'
         ? 'className'
         : key === 'stroke-linecap'
