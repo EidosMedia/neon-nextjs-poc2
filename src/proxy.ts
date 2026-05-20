@@ -43,7 +43,7 @@ export async function proxy(request: NextRequest) {
 
       // Rewrite to the clean URL (no redirect, URL stays the same in browser)
       const response = NextResponse.redirect(cleanUrl, { headers });
-      response.cookies.set('editorialauth', '', cookieOptions);
+      response.cookies.set(cookieOptions);
 
       return response;
     }
@@ -94,7 +94,7 @@ export async function proxy(request: NextRequest) {
       };
 
       const response = NextResponse.next({ headers });
-      response.cookies.set('editorialauth', '', cookieOptions);
+      response.cookies.set(cookieOptions);
 
       return response;
     }

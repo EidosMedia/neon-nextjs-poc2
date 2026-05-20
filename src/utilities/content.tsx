@@ -4,6 +4,18 @@ import Link from 'next/link';
 import { JSX, ReactNode } from 'react';
 import { ArticleModel } from '@/types/models';
 import ContentEditable from '@/app/components/utilities/ContentEditable';
+import CustomComponent from '@/app/components/base/CustomComponentClient';
+
+/**
+ * Recursively collects all `*-component` nodes from a content tree.
+ * Used by server components to pre-resolve custom components before rendering.
+ */
+export function findCustomComponentNodes(content: ContentElement): ContentElement[] {
+  const results: ContentElement[] = [];
+  if (content.nodeType?.match(/^[a-z]+-component/)) results.push(content);
+  for (const child of content.elements ?? []) results.push(...findCustomComponentNodes(child));
+  return results;
+}
 
 /**
  *
@@ -179,8 +191,12 @@ export const renderContent = (
   data?: ArticleModel,
   parent?: string,
   styles?: string,
+  customComponents?: Map<string, React.ComponentType<Record<string, unknown>>>,
 ): ReactNode => {
-  const key = content?.attributes?.id || new Date().toISOString() + Math.random().toString(36).substring(2, 15);
+  // Use a stable key derived from content structure — never random — so
+  // components are not remounted on every client re-render.
+  const key =
+    content?.attributes?.id || `${content.nodeType}-${content.value ?? ''}-${JSON.stringify(content.attributes ?? {})}`;
 
   switch (content.nodeType) {
     case 'headline':
@@ -206,7 +222,7 @@ export const renderContent = (
             .filter(elem => elem)
             .map(elem => {
               console.log('Grouphead Element:', elem);
-              return renderContent(elem, data);
+              return renderContent(elem, data, undefined, undefined, customComponents);
             })}
         </div>
       );
@@ -219,7 +235,7 @@ export const renderContent = (
     case 'text':
       return (
         <div id="text" key={key} {...buildAttributes(content)} className={styles} data-type="text">
-          {content.elements.map(elem => renderContent(elem, data, 'text'))}
+          {content.elements.map(elem => renderContent(elem, data, 'text', undefined, customComponents))}
         </div>
       );
     case 'caption':
@@ -396,9 +412,43 @@ export const renderContent = (
           </div>
         </div>
       );
-    default:
-      const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
 
+    default:
+      if (content.nodeType.match(/^[a-z]+-component/)?.[0]) {
+        const componentname = content.attributes?.componentname ?? '';
+        const Resolved = customComponents?.get(componentname);
+        if (Resolved) {
+          const raw = { ...content.attributes };
+          for (const child of content.elements ?? []) {
+            if (child.nodeType.endsWith('-params')) {
+              for (const entry of child.elements ?? []) {
+                if (entry.nodeType === 'entry' && entry.attributes?.key) {
+                  raw[entry.attributes.key] = entry.attributes.value ?? '';
+                }
+              }
+            }
+          }
+          const attrs: Record<string, string | number | boolean> = {};
+          for (const [k, v] of Object.entries(raw)) {
+            if (v === 'true') attrs[k] = true;
+            else if (v === 'false') attrs[k] = false;
+            else if (v !== '' && !Number.isNaN(Number(v))) attrs[k] = Number(v);
+            else attrs[k] = v;
+          }
+          return (
+            <Resolved
+              key={key}
+              attributes={attrs}
+              content={content as Record<string, unknown>}
+              nodeType={content.nodeType}
+            />
+          );
+        }
+        return (
+          <CustomComponent key={key} nodeType={content.nodeType} content={content} componentname={componentname} />
+        );
+      }
+      const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
       return (
         <CustomElement key={key} {...buildAttributes(content)}>
           {content.elements.length > 0 && content.elements.map(elem => renderContent(elem, data))}
