@@ -7,6 +7,8 @@ import HeroCoverImage from '../components/contentElements/HeroCoverImage';
 import Summary from '../components/contentElements/Summary';
 import Footer from '../components/Footer';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
+import { headers } from 'next/headers';
+import { getAuthOptions } from '@/utilities/security';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -110,13 +112,48 @@ const Article = async ({ data }: PageProps) => {
     }),
   );
 
+  // Pre-fetch embed node data for any custom component nodes that reference a CMS node via href.
+  // Neon node IDs follow the pattern: {hex4}-{hex12}-{hex12}-{digits} appearing as a path segment.
+  const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
+  const nodeDataMap = new Map<string, unknown>();
+  const currentHeaders = await headers();
+  const apiHostname = currentHeaders.get('x-neon-backend-url') ?? '';
+  const auth = await getAuthOptions();
+  await Promise.all(
+    customNodes
+      .filter(n => NEON_ID_RE.test(n.attributes?.href ?? ''))
+      .map(async n => {
+        const neonId = n.attributes!.href.match(NEON_ID_RE)?.[1] ?? '';
+        if (!neonId) return;
+        try {
+          const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
+          if (resp.ok) {
+            nodeDataMap.set(neonId, await resp.json());
+          } else {
+            console.warn('[ArticleLongform] embed fetch failed:', resp.status, 'for node', neonId);
+          }
+        } catch (err) {
+          console.error('[ArticleLongform] embed fetch error for node', neonId, ':', err);
+        }
+      }),
+  );
+
   return (
     <article>
       <Navbar data={data} />
       <HeroCoverImage data={articleData} format="Ultrawide_large" preferredImage="main" />
       <div className="container mx-auto px-5 xl:px-52 mt-10 mb-12">
         <Summary data={articleData} />
-        <div>{renderContent(textContentWithAds, articleData, undefined, 'flex flex-col gap-4', customComponents)}</div>
+        <div>
+          {renderContent(
+            textContentWithAds,
+            articleData,
+            undefined,
+            'flex flex-col gap-4',
+            customComponents,
+            nodeDataMap,
+          )}
+        </div>
       </div>
       <div className="flex justify-center mb-24">
         {/* Placeholder for advertisement */}

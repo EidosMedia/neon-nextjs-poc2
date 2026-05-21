@@ -63,10 +63,13 @@ type Props = {
   nodeType: string;
   componentname: string;
   content: ContentElement;
+  /** Pre-fetched embed node data (resolved server-side from a neon://{id} href). */
+  model?: unknown;
 };
 
-export default function CustomComponent({ nodeType, componentname, content }: Props) {
+export default function CustomComponent({ nodeType, componentname, content, model: modelProp }: Props) {
   const [state, setState] = useState<LoadState>({ status: 'step', label: 'mounting…' });
+  const [model, setModel] = useState<unknown>(modelProp);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,6 +78,21 @@ export default function CustomComponent({ nodeType, componentname, content }: Pr
       if (!componentname) {
         setState({ status: 'not-found', reason: 'componentname attribute is empty' });
         return;
+      }
+
+      // Resolve neon://{id} href: fetch embed node data if not already provided server-side.
+      const href = content.attributes?.href ?? '';
+      const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
+      const neonMatch = href.match(NEON_ID_RE);
+      if (neonMatch && modelProp === undefined) {
+        const embedId = neonMatch[1];
+        try {
+          const r = await fetch(`/api/embed/${encodeURIComponent(embedId)}`);
+          if (!cancelled && r.ok) setModel(await r.json());
+          else if (!cancelled) console.warn('[CustomComponent] embed fetch failed:', r.status, 'for node', embedId);
+        } catch (err) {
+          console.error('[CustomComponent] embed fetch error for node', embedId, ':', err);
+        }
       }
 
       const category = categoryFromNodeType(nodeType);
@@ -126,7 +144,7 @@ export default function CustomComponent({ nodeType, componentname, content }: Pr
     return () => {
       cancelled = true;
     };
-  }, [nodeType, componentname]);
+  }, [nodeType, componentname, content.attributes?.href, modelProp]);
 
   if (state.status === 'step') {
     return (
@@ -173,5 +191,12 @@ export default function CustomComponent({ nodeType, componentname, content }: Pr
   console.log('coerceAttributes', content, '->', coerceAttributes(content.attributes ?? {}));
 
   const { Component } = state;
-  return <Component attributes={extractAttributes(content)} content={content} nodeType={nodeType} />;
+  return (
+    <Component
+      attributes={extractAttributes(content)}
+      content={content}
+      nodeType={nodeType}
+      {...(model !== undefined ? { model } : {})}
+    />
+  );
 }

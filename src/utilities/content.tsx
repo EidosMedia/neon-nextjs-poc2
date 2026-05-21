@@ -168,21 +168,21 @@ export const buildAttributes = (node: ContentElement): Record<string, any> => {
     Object.entries(node.attributes || {})
       .filter(([key]) => key !== 'key')
       .map(([key, value]) => [
-      key === 'class'
-        ? 'className'
-        : key === 'stroke-linecap'
-          ? 'strokeLinecap'
-          : key === 'stroke-linejoin'
-            ? 'strokeLinejoin'
-            : key === 'stroke-width'
-              ? 'strokeWidth'
-              : key === 'tabindex'
-                ? 'tabIndex'
-                : key === 'contenteditable'
-                  ? 'contentEditable'
-                  : key,
-      key === 'style' ? convertStyleToObject(value) : value,
-    ]),
+        key === 'class'
+          ? 'className'
+          : key === 'stroke-linecap'
+            ? 'strokeLinecap'
+            : key === 'stroke-linejoin'
+              ? 'strokeLinejoin'
+              : key === 'stroke-width'
+                ? 'strokeWidth'
+                : key === 'tabindex'
+                  ? 'tabIndex'
+                  : key === 'contenteditable'
+                    ? 'contentEditable'
+                    : key,
+        key === 'style' ? convertStyleToObject(value) : value,
+      ]),
   );
 };
 
@@ -192,6 +192,7 @@ export const renderContent = (
   parent?: string,
   styles?: string,
   customComponents?: Map<string, React.ComponentType<Record<string, unknown>>>,
+  nodeDataMap?: Map<string, unknown>,
 ): ReactNode => {
   // Use a stable key derived from content structure — never random — so
   // components are not remounted on every client re-render.
@@ -222,7 +223,7 @@ export const renderContent = (
             .filter(elem => elem)
             .map(elem => {
               console.log('Grouphead Element:', elem);
-              return renderContent(elem, data, undefined, undefined, customComponents);
+              return renderContent(elem, data, undefined, undefined, customComponents, nodeDataMap);
             })}
         </div>
       );
@@ -235,7 +236,7 @@ export const renderContent = (
     case 'text':
       return (
         <div id="text" key={key} {...buildAttributes(content)} className={styles} data-type="text">
-          {content.elements.map(elem => renderContent(elem, data, 'text', undefined, customComponents))}
+          {content.elements.map(elem => renderContent(elem, data, 'text', undefined, customComponents, nodeDataMap))}
         </div>
       );
     case 'caption':
@@ -417,6 +418,10 @@ export const renderContent = (
       if (content.nodeType.match(/^[a-z]+-component/)?.[0]) {
         const componentname = content.attributes?.componentname ?? '';
         const Resolved = customComponents?.get(componentname);
+        const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
+        const neonEmbedId = (content.attributes?.href ?? '').match(NEON_ID_RE)?.[1];
+        const model = neonEmbedId ? nodeDataMap?.get(neonEmbedId) : undefined;
+
         if (Resolved) {
           const raw = { ...content.attributes };
           for (const child of content.elements ?? []) {
@@ -441,11 +446,18 @@ export const renderContent = (
               attributes={attrs}
               content={content as Record<string, unknown>}
               nodeType={content.nodeType}
+              {...(model !== undefined ? { model } : {})}
             />
           );
         }
         return (
-          <CustomComponent key={key} nodeType={content.nodeType} content={content} componentname={componentname} />
+          <CustomComponent
+            key={key}
+            nodeType={content.nodeType}
+            content={content}
+            componentname={componentname}
+            model={model}
+          />
         );
       }
       const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default

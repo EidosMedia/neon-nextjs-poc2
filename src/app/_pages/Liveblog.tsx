@@ -9,6 +9,8 @@ import LiveblogPosts from './LiveblogPosts';
 import Footer from '../components/Footer';
 import { CircleDot } from 'lucide-react';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
+import { headers } from 'next/headers';
+import { getAuthOptions } from '@/utilities/security';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -34,6 +36,32 @@ const Liveblog = async ({ data }: PageProps) => {
     }),
   );
 
+  // Pre-fetch embed node data for any custom component nodes that reference a CMS node via href.
+  // Neon node IDs follow the pattern: {hex4}-{hex12}-{hex12}-{digits} appearing as a path segment.
+  const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
+  const nodeDataMap = new Map<string, unknown>();
+  const currentHeaders = await headers();
+  const apiHostname = currentHeaders.get('x-neon-backend-url') ?? '';
+  const auth = await getAuthOptions();
+  await Promise.all(
+    customNodes
+      .filter(n => NEON_ID_RE.test(n.attributes?.href ?? ''))
+      .map(async n => {
+        const neonId = n.attributes!.href.match(NEON_ID_RE)?.[1] ?? '';
+        if (!neonId) return;
+        try {
+          const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
+          if (resp.ok) {
+            nodeDataMap.set(neonId, await resp.json());
+          } else {
+            console.warn('[Liveblog] embed fetch failed:', resp.status, 'for node', neonId);
+          }
+        } catch (err) {
+          console.error('[Liveblog] embed fetch error for node', neonId, ':', err);
+        }
+      }),
+  );
+
   return (
     <article className="container mx-auto">
       <Navbar data={data} />
@@ -45,7 +73,7 @@ const Liveblog = async ({ data }: PageProps) => {
         <Grouphead data={articleData} />
         <MainImage data={articleData} preferredImage="main" />
         <div className="mb-8">
-          {renderContent(textContent, articleData, undefined, 'flex flex-col gap-4', customComponents)}
+          {renderContent(textContent, articleData, undefined, 'flex flex-col gap-4', customComponents, nodeDataMap)}
         </div>
         <LiveblogPosts data={data} />
       </div>
