@@ -1,0 +1,134 @@
+/* ADNKronos Theme — data-theme="adn" */
+
+/* ─── CSS Variable Overrides ─────────────────────────────────────────────── */
+.root[data-theme="adn"] {
+  --color-primary: #E30613;
+  --color-primary-dark: #A80010;
+  --color-primary-light: #F5606A;
+  --color-primary-lightest: #FDE8E9;
+
+  --color-neutral-primary: #1A1A1A;
+  --color-neutral-light-2: #888888;
+  --color-neutral-light: #CCCCCC;
+  --color-neutral-lightest: #FFFFFF;
+
+  --color-feedback-red: #E30613;
+  --color-feedback-red-dark: #A80010;
+}
+
+/* ─── Navbar ─────────────────────────────────────────────────────────────── */
+.root[data-theme="adn"] nav {
+  background-color: #0D0D0D;
+  color: white;
+}
+
+.root[data-theme="adn"] nav a,
+.root[data-theme="adn"] nav span,
+.root[data-theme="adn"] nav li,
+.root[data-theme="adn"] nav h3,
+.root[data-theme="adn"] nav h1 {
+  color: white;
+}
+
+.root[data-theme="adn"] nav button {
+  color: white;
+}
+
+.root[data-theme="adn"] nav button:hover {
+  color: #E30613;
+  background-color: transparent;
+}
+
+/* Active nav link */
+.root[data-theme="adn"] nav a:hover h3,
+.root[data-theme="adn"] nav a:hover span {
+  color: #E30613;
+}
+
+/* Site title in navbar */
+.root[data-theme="adn"] nav .text-gray-800 {
+  color: white;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.root[data-theme="adn"] [data-section="footer"] {
+  background-color: #0D0D0D;
+  color: #CCCCCC;
+}
+
+.root[data-theme="adn"] [data-section="footer"] a,
+.root[data-theme="adn"] [data-section="footer"] span,
+.root[data-theme="adn"] [data-section="footer"] li,
+.root[data-theme="adn"] [data-section="footer"] p,
+.root[data-theme="adn"] [data-section="footer"] div {
+  color: #CCCCCC;
+}
+
+.root[data-theme="adn"] [data-section="footer"] a:hover {
+  color: #E30613;
+}
+
+.root[data-theme="adn"] [data-section="footer"] .font-bold,
+.root[data-theme="adn"] [data-section="footer"] .font-semibold {
+  color: white;
+}
+
+/* Vertical divider line in footer */
+.root[data-theme="adn"] [data-section="footer"] .w-px {
+  background-color: #333333;
+}
+
+/* ─── Article Cards — section label (overhead) ───────────────────────────── */
+.root[data-theme="adn"] [data-type="section"] {
+  color: #E30613;
+}
+
+/* Card title hover */
+.root[data-theme="adn"] [data-type^="article"] a:hover h1,
+.root[data-theme="adn"] [data-type^="article"] a:hover h2 {
+  color: #E30613;
+}
+
+/* ─── Article Hero ───────────────────────────────────────────────────────── */
+.root[data-theme="adn"] [data-type="overhead"] {
+  color: #E30613;
+}
+
+/* Keep hero title white (on dark gradient bg) */
+.root[data-theme="adn"] [data-type="article-hero"] h1 {
+  color: white;
+}
+
+/* ─── Article & Liveblog Pages ───────────────────────────────────────────── */
+.root[data-theme="adn"] article {
+  background-color: #FFFFFF;
+}
+
+/* Article body: headings in near-black */
+.root[data-theme="adn"] article h1,
+.root[data-theme="adn"] article h2,
+.root[data-theme="adn"] article h3,
+.root[data-theme="adn"] article h4 {
+  color: #1A1A1A;
+}
+
+/* Section label in article grouphead */
+.root[data-theme="adn"] article [data-type="section"],
+.root[data-theme="adn"] article [data-type="overhead"] {
+  color: #E30613;
+}
+
+/* Author/byline color */
+.root[data-theme="adn"] article [data-type="author"],
+.root[data-theme="adn"] article .author-medium,
+.root[data-theme="adn"] article .author-small {
+  color: #888888;
+}
+
+/* ─── Liveblog Live badge ────────────────────────────────────────────────── */
+/* Already uses --color-feedback-red which maps to #E30613 via var override ✓ */
+
+/* ─── Scrollbar (media gallery) ─────────────────────────────────────────── */
+.root[data-theme="adn"] .media-gallery-slides::-webkit-scrollbar-thumb {
+  background-color: #E30613;
+}

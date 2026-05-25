@@ -5,6 +5,7 @@
 @tailwind utilities;
 
 @import "./themes/variant-a.css";
+@import "./themes/adn.css";
 
 @custom-variant dark (&:is(.dark *));
 
