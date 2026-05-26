@@ -1,0 +1,240 @@
+/* New York Times Theme — data-theme="nyt" */
+/* Cheltenham (serif) approximated via Georgia; Franklin Gothic via system-ui */
+
+/* ─── CSS Variable Overrides ─────────────────────────────────────────────── */
+.root[data-theme="nyt"] {
+  --font-headline: 'Cheltenham', 'Georgia', 'Times New Roman', serif;
+  --font-nav: 'NYT Franklin', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  --font-body: 'Georgia', 'Times New Roman', serif;
+
+  --color-primary:          #000000;
+  --color-primary-dark:     #000000;
+  --color-primary-light:    #333333;
+  --color-primary-lightest: #F7F7F5;
+
+  --color-neutral-primary:  #121212;
+  --color-neutral-secondary:#363636;
+  --color-neutral-light-2:  #666666;
+  --color-neutral-light:    #DFDFDF;
+  --color-neutral-lightest: #FFFFFF;
+  --color-neutral-bg:       #F7F7F5;
+
+  --color-nav-bg:           #FFFFFF;
+  --color-footer-bg:        #F7F7F5;
+
+  --border-card:            1px solid #DFDFDF;
+  --radius-card:            0px;
+}
+
+/* ─── Global ──────────────────────────────────────────────────────────────── */
+.root[data-theme="nyt"] {
+  background-color: #FFFFFF;
+  color: #121212;
+  font-family: var(--font-body);
+}
+
+/* ─── Navbar ──────────────────────────────────────────────────────────────── */
+.root[data-theme="nyt"] .nyt-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #FFFFFF;
+  border-bottom: 1px solid #DFDFDF;
+}
+
+/* Utility bar */
+.root[data-theme="nyt"] .nyt-utility-bar {
+  border-bottom: 1px solid #DFDFDF;
+}
+.root[data-theme="nyt"] .nyt-utility-link {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  color: #363636;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+}
+.root[data-theme="nyt"] .nyt-utility-link:hover {
+  text-decoration: underline;
+}
+
+/* Logo masthead */
+.root[data-theme="nyt"] .nyt-masthead {
+  font-family: 'Old English Text MT', 'UnifrakturMaguntia', 'Times New Roman', serif;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000000;
+  text-decoration: none;
+  line-height: 1;
+}
+
+/* Section nav */
+.root[data-theme="nyt"] .nyt-section-nav,
+.root[data-theme="nyt"] .nyt-section-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.root[data-theme="nyt"] .nyt-section-list li {
+  list-style: none;
+}
+.root[data-theme="nyt"] .nyt-section-link {
+  font-family: var(--font-nav);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #121212;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.root[data-theme="nyt"] .nyt-section-link:hover,
+.root[data-theme="nyt"] .nyt-section-link--active {
+  color: #000000;
+  border-bottom: 2px solid #000000;
+}
+
+/* ─── Article Cards ──────────────────────────────────────────────────────── */
+.root[data-theme="nyt"] [data-type="section"],
+.root[data-theme="nyt"] [data-type="overhead"] {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #363636;
+}
+
+.root[data-theme="nyt"] [data-type^="article"] h2,
+.root[data-theme="nyt"] [data-type^="article"] h3 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: #121212;
+  line-height: 1.2;
+}
+
+.root[data-theme="nyt"] [data-type^="article"] a:hover h2,
+.root[data-theme="nyt"] [data-type^="article"] a:hover h3 {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.root[data-theme="nyt"] [data-type^="article"] img {
+  border-radius: 0;
+}
+
+/* Section rule separator (horizontal rule NYT style) */
+.root[data-theme="nyt"] .nyt-rule {
+  border: none;
+  border-top: 3px solid #000000;
+  margin: 0 0 6px;
+}
+.root[data-theme="nyt"] .nyt-section-label {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #121212;
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ─── Article page ───────────────────────────────────────────────────────── */
+.root[data-theme="nyt"] article h1 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  color: #121212;
+}
+
+.root[data-theme="nyt"] article h2,
+.root[data-theme="nyt"] article h3 {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  color: #121212;
+}
+
+.root[data-theme="nyt"] article p {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.75;
+  color: #121212;
+}
+
+.root[data-theme="nyt"] article [data-type="section"],
+.root[data-theme="nyt"] article [data-type="overhead"] {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #363636;
+}
+
+.root[data-theme="nyt"] article [data-type="author"],
+.root[data-theme="nyt"] article .author-medium,
+.root[data-theme="nyt"] article .author-small {
+  font-family: var(--font-nav);
+  font-size: 13px;
+  font-weight: 700;
+  color: #121212;
+}
+
+/* Summary / deck */
+.root[data-theme="nyt"] article .nyt-deck {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 400;
+  color: #363636;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  border-left: none;
+}
+
+/* Byline rule */
+.root[data-theme="nyt"] article .nyt-byline-rule {
+  border-top: 1px solid #DFDFDF;
+  border-bottom: 1px solid #DFDFDF;
+  padding: 6px 0;
+  margin: 12px 0 20px;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.root[data-theme="nyt"] [data-section="footer"] {
+  background-color: #F7F7F5;
+  color: #363636;
+  border-top: 3px solid #000000;
+  font-family: var(--font-nav);
+  font-size: 12px;
+}
+
+.root[data-theme="nyt"] [data-section="footer"] a {
+  color: #363636;
+  text-decoration: none;
+}
+.root[data-theme="nyt"] [data-section="footer"] a:hover {
+  text-decoration: underline;
+}
+
+.root[data-theme="nyt"] [data-section="footer"] .footer-col-title {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #121212;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #DFDFDF;
+}
+
+.root[data-theme="nyt"] [data-section="footer"] .footer-legal {
+  color: #666666;
+  font-size: 11px;
+}
+
+.root[data-theme="nyt"] a:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}

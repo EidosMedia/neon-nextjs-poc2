@@ -1,20 +1,11 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import AboutPage from '../_pages/AboutPage';
-import Article from '../_pages/Article';
-import ArticleLongform from '../_pages/ArticleLongform';
-import DefaultLanding from '../_pages/DefaultLanding';
-import DefaultSection from '../_pages/DefaultSection';
-import HomeWebPage from '../_pages/HomeWebPage';
-import Liveblog from '../_pages/Liveblog';
-import SearchPage from '../_pages/SearchPage';
-import SectionWebPage from '../_pages/SectionWebPage';
-import WebpageColumnsLayout from '../_pages/WebpageColumnsLayout';
+import { resolvePageComponent } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
 import TempEntryPage from '../components/baseComponents/TempEntryPage';
-import LoginPage from '../_pages/LoginPage';
+import * as DefaultPages from '../_pages';
 
 export default async function Page({
   params,
@@ -43,7 +34,7 @@ export default async function Page({
           return (
             <div className="root" data-theme={site.root.attributes?.theme}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
-              <SearchPage data={site} />
+              <DefaultPages.SearchPage data={site} />
             </div>
           );
         }
@@ -52,7 +43,7 @@ export default async function Page({
           return (
             <div className="root" data-theme={site.root.attributes?.theme}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
-              <AboutPage data={site} />
+              <DefaultPages.AboutPage data={site} />
             </div>
           );
         }
@@ -61,7 +52,7 @@ export default async function Page({
           return (
             <div className="root" data-theme={site.root.attributes?.theme}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
-              <LoginPage data={site} />
+              <DefaultPages.LoginPage data={site} />
             </div>
           );
         }
@@ -112,55 +103,43 @@ export default async function Page({
   pageDataJSON.liveHost = siteLive?.root.hostname;
   pageDataJSON.previewHost = sitePreview?.root.hostname;
 
-  const resolvePage = () => {
-    const baseType = pageDataJSON?.model?.data?.sys?.baseType as string;
-    const type = pageDataJSON?.model?.data?.sys?.type as string;
-    console.log('Resolving page for baseType:', baseType);
-    console.log('Resolving page for type:', type);
-    //console.log('Page Data JSON:', JSON.stringify(pageDataJSON));
-    switch (baseType) {
-      case 'webpage':
-        return <WebpageColumnsLayout data={pageDataJSON} />;
+  const theme: string = pageDataJSON?.siteNode?.attributes?.theme ?? 'default';
+  const baseType = pageDataJSON?.model?.data?.sys?.baseType as string;
+  const type = pageDataJSON?.model?.data?.sys?.type as string;
+  console.log('Resolving page for baseType:', baseType, 'type:', type, 'theme:', theme);
 
-      case 'sectionwebpage':
-        return <SectionWebPage data={pageDataJSON} />;
-
-      case 'homewebpage':
-        return <HomeWebPage data={pageDataJSON} />;
-
-      case 'section':
-        return <DefaultSection data={pageDataJSON} />;
-
-      case 'site':
-        return <DefaultLanding data={pageDataJSON} />;
-
-      case 'liveblog':
-        return <Liveblog data={pageDataJSON} />;
-
-      case 'article':
-        switch (type) {
-          case 'longform':
-            return <ArticleLongform data={pageDataJSON} />;
-          default:
-            return <Article data={pageDataJSON} />;
-        }
-
-      default:
-        return <Article data={pageDataJSON} />;
-    }
-  };
+  // For article longform, use a sub-type key so themes can differentiate
+  const componentKey = baseType === 'article' && type === 'longform' ? 'ArticleLongform' : resolveBaseTypeKey(baseType);
+  const PageComponent = resolvePageComponent(componentKey, theme);
 
   return (
-    <div className="root" data-theme={pageDataJSON.siteNode.attributes.theme}>
+    <div className="root" data-theme={theme}>
       <LoggedUserBar
         data={{
           ...pageDataJSON,
           editUrl: `${process.env.NEON_APP_URL}/neon/app/neon.html#open/${pageDataJSON.model.data.id}`,
         }}
       />
-      {resolvePage()}
+      {PageComponent ? (
+        <PageComponent data={pageDataJSON} />
+      ) : (
+        <DefaultPages.Article data={pageDataJSON} />
+      )}
     </div>
   );
+}
+
+function resolveBaseTypeKey(baseType: string): string {
+  const map: Record<string, string> = {
+    webpage: 'WebpageColumnsLayout',
+    sectionwebpage: 'SectionWebPage',
+    homewebpage: 'HomeWebPage',
+    section: 'DefaultSection',
+    site: 'DefaultLanding',
+    liveblog: 'Liveblog',
+    article: 'Article',
+  };
+  return map[baseType] ?? 'Article';
 }
 
 function resolveUrl(hostname: string | null, path: string, id?: string | null) {

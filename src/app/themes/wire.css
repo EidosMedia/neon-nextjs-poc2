@@ -1,0 +1,394 @@
+/* Wire Agency Theme — data-theme="wire" */
+/* Functional, information-dense layout for API/data consumers */
+
+/* ─── CSS Variable Overrides ─────────────────────────────────────────────── */
+.root[data-theme="wire"] {
+  --font-headline: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+  --font-nav:      'IBM Plex Mono', 'Fira Mono', 'Courier New', monospace;
+  --font-body:     'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+  --font-meta:     'IBM Plex Mono', 'Fira Mono', monospace;
+
+  --color-primary:          #0050FF;
+  --color-primary-dark:     #0035CC;
+  --color-primary-light:    #3375FF;
+  --color-primary-lightest: #EEF2FF;
+
+  --color-neutral-primary:  #0A0A0A;
+  --color-neutral-secondary:#2C2C2C;
+  --color-neutral-light-2:  #6B6B6B;
+  --color-neutral-light:    #D4D4D4;
+  --color-neutral-lightest: #FFFFFF;
+  --color-neutral-bg:       #F5F5F5;
+
+  --color-urgent:           #CC0000;
+  --color-flash:            #FF6B00;
+  --color-normal:           #2C2C2C;
+  --color-low:              #6B6B6B;
+
+  --color-nav-bg:           #FFFFFF;
+  --color-footer-bg:        #F5F5F5;
+
+  --border-card:            1px solid #D4D4D4;
+  --radius-card:            2px;
+
+  --wire-row-border:        1px solid #E8E8E8;
+  --wire-header-height:     40px;
+}
+
+/* ─── Global ──────────────────────────────────────────────────────────────── */
+.root[data-theme="wire"] {
+  background-color: #F5F5F5;
+  color: #0A0A0A;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+/* ─── Navbar ──────────────────────────────────────────────────────────────── */
+.root[data-theme="wire"] .wire-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #FFFFFF;
+  border-bottom: 2px solid #0A0A0A;
+  box-shadow: none;
+}
+
+.root[data-theme="wire"] .wire-brand {
+  font-family: var(--font-meta);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0A0A0A;
+  text-decoration: none;
+}
+
+.root[data-theme="wire"] .wire-brand-service {
+  font-family: var(--font-meta);
+  font-size: 10px;
+  font-weight: 400;
+  color: #6B6B6B;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.root[data-theme="wire"] .wire-status-live {
+  font-family: var(--font-meta);
+  font-size: 10px;
+  font-weight: 700;
+  color: #CC0000;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.root[data-theme="wire"] .wire-status-live::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #CC0000;
+  animation: wire-blink 1.2s step-end infinite;
+}
+
+@keyframes wire-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.root[data-theme="wire"] .wire-clock {
+  font-family: var(--font-meta);
+  font-size: 11px;
+  color: #2C2C2C;
+  letter-spacing: 0.04em;
+}
+
+/* Section tabs */
+.root[data-theme="wire"] .wire-tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-top: 1px solid #E8E8E8;
+}
+.root[data-theme="wire"] .wire-tabs li { list-style: none; }
+.root[data-theme="wire"] .wire-tab-link {
+  font-family: var(--font-meta);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6B6B6B;
+  text-decoration: none;
+  display: block;
+  padding: 6px 14px;
+  border-right: 1px solid #E8E8E8;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.1s, border-color 0.1s;
+}
+.root[data-theme="wire"] .wire-tab-link:hover {
+  color: #0050FF;
+  border-bottom-color: #0050FF;
+}
+.root[data-theme="wire"] .wire-tab-link--active {
+  color: #0050FF;
+  border-bottom-color: #0050FF;
+  background: #EEF2FF;
+}
+
+/* ─── Feed table (homepage) ──────────────────────────────────────────────── */
+.root[data-theme="wire"] .wire-feed-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #FFFFFF;
+  border: var(--border-card);
+}
+
+.root[data-theme="wire"] .wire-feed-table thead tr {
+  border-bottom: 2px solid #0A0A0A;
+  background: #F5F5F5;
+}
+
+.root[data-theme="wire"] .wire-feed-table thead th {
+  font-family: var(--font-meta);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6B6B6B;
+  padding: 6px 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.root[data-theme="wire"] .wire-feed-table tbody tr {
+  border-bottom: var(--wire-row-border);
+  transition: background 0.08s;
+}
+.root[data-theme="wire"] .wire-feed-table tbody tr:hover {
+  background: #F0F4FF;
+}
+
+.root[data-theme="wire"] .wire-feed-table tbody td {
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+
+/* Priority badges */
+.root[data-theme="wire"] .wire-priority {
+  font-family: var(--font-meta);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.root[data-theme="wire"] .wire-priority--urgent {
+  background: #FFE5E5;
+  color: #CC0000;
+  border: 1px solid #CC0000;
+}
+.root[data-theme="wire"] .wire-priority--flash {
+  background: #FFF3E5;
+  color: #FF6B00;
+  border: 1px solid #FF6B00;
+}
+.root[data-theme="wire"] .wire-priority--normal {
+  background: #F5F5F5;
+  color: #2C2C2C;
+  border: 1px solid #D4D4D4;
+}
+
+/* Headline in table row */
+.root[data-theme="wire"] .wire-row-headline {
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 600;
+  color: #0A0A0A;
+  text-decoration: none;
+  display: block;
+  line-height: 1.3;
+}
+.root[data-theme="wire"] .wire-row-headline:hover {
+  color: #0050FF;
+  text-decoration: underline;
+}
+
+.root[data-theme="wire"] .wire-row-deck {
+  font-size: 11px;
+  color: #6B6B6B;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.root[data-theme="wire"] .wire-row-meta {
+  font-family: var(--font-meta);
+  font-size: 10px;
+  color: #6B6B6B;
+  white-space: nowrap;
+}
+
+.root[data-theme="wire"] .wire-row-section {
+  font-family: var(--font-meta);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0050FF;
+  white-space: nowrap;
+}
+
+/* ─── Article page ───────────────────────────────────────────────────────── */
+.root[data-theme="wire"] .wire-article-panel {
+  background: #FFFFFF;
+  border: var(--border-card);
+}
+
+.root[data-theme="wire"] .wire-article-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #E8E8E8;
+  background: #F5F5F5;
+}
+
+.root[data-theme="wire"] .wire-article-toolbar-label {
+  font-family: var(--font-meta);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6B6B6B;
+}
+
+.root[data-theme="wire"] .wire-article-toolbar-value {
+  font-family: var(--font-meta);
+  font-size: 10px;
+  color: #0A0A0A;
+}
+
+.root[data-theme="wire"] article h1 {
+  font-family: var(--font-headline);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #0A0A0A;
+  margin-bottom: 8px;
+}
+
+.root[data-theme="wire"] article h2,
+.root[data-theme="wire"] article h3 {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  color: #0A0A0A;
+}
+
+.root[data-theme="wire"] article p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #2C2C2C;
+}
+
+.root[data-theme="wire"] article [data-type="section"],
+.root[data-theme="wire"] article [data-type="overhead"] {
+  font-family: var(--font-meta);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0050FF;
+}
+
+.root[data-theme="wire"] article [data-type="author"],
+.root[data-theme="wire"] article .author-medium,
+.root[data-theme="wire"] article .author-small {
+  font-family: var(--font-meta);
+  font-size: 11px;
+  color: #6B6B6B;
+}
+
+/* Metadata sidebar panel */
+.root[data-theme="wire"] .wire-meta-panel {
+  background: #F5F5F5;
+  border: var(--border-card);
+  padding: 12px 14px;
+  font-family: var(--font-meta);
+  font-size: 11px;
+}
+
+.root[data-theme="wire"] .wire-meta-panel-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6B6B6B;
+  border-bottom: 1px solid #D4D4D4;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.root[data-theme="wire"] .wire-meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px dotted #E8E8E8;
+  color: #2C2C2C;
+}
+
+.root[data-theme="wire"] .wire-meta-key {
+  color: #6B6B6B;
+  flex-shrink: 0;
+}
+
+.root[data-theme="wire"] .wire-meta-val {
+  text-align: right;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* ─── Section panels ─────────────────────────────────────────────────────── */
+.root[data-theme="wire"] .wire-panel-header {
+  font-family: var(--font-meta);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6B6B6B;
+  background: #F5F5F5;
+  border: var(--border-card);
+  border-bottom: 2px solid #0A0A0A;
+  padding: 6px 10px;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.root[data-theme="wire"] [data-section="footer"] {
+  background: #F5F5F5;
+  border-top: 2px solid #0A0A0A;
+  font-family: var(--font-meta);
+  font-size: 11px;
+  color: #6B6B6B;
+}
+
+.root[data-theme="wire"] [data-section="footer"] a {
+  color: #6B6B6B;
+  text-decoration: none;
+}
+.root[data-theme="wire"] [data-section="footer"] a:hover {
+  color: #0050FF;
+  text-decoration: underline;
+}
+
+.root[data-theme="wire"] a:focus-visible {
+  outline: 2px solid #0050FF;
+  outline-offset: 2px;
+}

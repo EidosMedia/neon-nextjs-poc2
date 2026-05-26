@@ -1,134 +1,437 @@
 /* ADNKronos Theme — data-theme="adn" */
+/* Nunito Sans is loaded via <link> in layout.tsx */
 
 /* ─── CSS Variable Overrides ─────────────────────────────────────────────── */
 .root[data-theme="adn"] {
-  --color-primary: #E30613;
-  --color-primary-dark: #A80010;
-  --color-primary-light: #F5606A;
-  --color-primary-lightest: #FDE8E9;
+  --font-headline: 'Barlow Condensed', sans-serif;
+  --font-nav: 'Nunito Sans', sans-serif;
 
-  --color-neutral-primary: #1A1A1A;
-  --color-neutral-light-2: #888888;
-  --color-neutral-light: #CCCCCC;
+  --color-primary:         #E30613;
+  --color-primary-dark:    #A80010;
+  --color-primary-light:   #F5606A;
+  --color-primary-lightest:#FDE8E9;
+
+  --color-neutral-primary:  #1A1A1A;
+  --color-neutral-secondary:#444444;
+  --color-neutral-light-2:  #888888;
+  --color-neutral-light:    #CCCCCC;
   --color-neutral-lightest: #FFFFFF;
+  --color-neutral-bg:       #F4F4F4;
 
-  --color-feedback-red: #E30613;
-  --color-feedback-red-dark: #A80010;
+  --color-feedback-red:     #E30613;
+  --color-feedback-red-dark:#A80010;
+
+  --color-nav-bg:           #0D0D0D;
+  --color-footer-bg:        #111111;
+
+  --border-card:            1px solid #E8E8E8;
+  --radius-card:            0px;
 }
 
-/* ─── Navbar ─────────────────────────────────────────────────────────────── */
-.root[data-theme="adn"] nav {
-  background-color: #0D0D0D;
-  color: white;
-}
-
-.root[data-theme="adn"] nav a,
-.root[data-theme="adn"] nav span,
-.root[data-theme="adn"] nav li,
-.root[data-theme="adn"] nav h3,
-.root[data-theme="adn"] nav h1 {
-  color: white;
-}
-
-.root[data-theme="adn"] nav button {
-  color: white;
-}
-
-.root[data-theme="adn"] nav button:hover {
-  color: #E30613;
-  background-color: transparent;
-}
-
-/* Active nav link */
-.root[data-theme="adn"] nav a:hover h3,
-.root[data-theme="adn"] nav a:hover span {
-  color: #E30613;
-}
-
-/* Site title in navbar */
-.root[data-theme="adn"] nav .text-gray-800 {
-  color: white;
-}
-
-/* ─── Footer ─────────────────────────────────────────────────────────────── */
-.root[data-theme="adn"] [data-section="footer"] {
-  background-color: #0D0D0D;
-  color: #CCCCCC;
-}
-
-.root[data-theme="adn"] [data-section="footer"] a,
-.root[data-theme="adn"] [data-section="footer"] span,
-.root[data-theme="adn"] [data-section="footer"] li,
-.root[data-theme="adn"] [data-section="footer"] p,
-.root[data-theme="adn"] [data-section="footer"] div {
-  color: #CCCCCC;
-}
-
-.root[data-theme="adn"] [data-section="footer"] a:hover {
-  color: #E30613;
-}
-
-.root[data-theme="adn"] [data-section="footer"] .font-bold,
-.root[data-theme="adn"] [data-section="footer"] .font-semibold {
-  color: white;
-}
-
-/* Vertical divider line in footer */
-.root[data-theme="adn"] [data-section="footer"] .w-px {
-  background-color: #333333;
-}
-
-/* ─── Article Cards — section label (overhead) ───────────────────────────── */
-.root[data-theme="adn"] [data-type="section"] {
-  color: #E30613;
-}
-
-/* Card title hover */
-.root[data-theme="adn"] [data-type^="article"] a:hover h1,
-.root[data-theme="adn"] [data-type^="article"] a:hover h2 {
-  color: #E30613;
-}
-
-/* ─── Article Hero ───────────────────────────────────────────────────────── */
-.root[data-theme="adn"] [data-type="overhead"] {
-  color: #E30613;
-}
-
-/* Keep hero title white (on dark gradient bg) */
-.root[data-theme="adn"] [data-type="article-hero"] h1 {
-  color: white;
-}
-
-/* ─── Article & Liveblog Pages ───────────────────────────────────────────── */
-.root[data-theme="adn"] article {
-  background-color: #FFFFFF;
-}
-
-/* Article body: headings in near-black */
-.root[data-theme="adn"] article h1,
-.root[data-theme="adn"] article h2,
-.root[data-theme="adn"] article h3,
-.root[data-theme="adn"] article h4 {
+/* ─── Global page background ─────────────────────────────────────────────── */
+.root[data-theme="adn"] {
+  background-color: #F4F4F4;
   color: #1A1A1A;
 }
 
-/* Section label in article grouphead */
-.root[data-theme="adn"] article [data-type="section"],
-.root[data-theme="adn"] article [data-type="overhead"] {
+/* ─── Navbar / Header ────────────────────────────────────────────────────── */
+.root[data-theme="adn"] .adn-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+}
+
+/* Row 1: utility bar */
+.root[data-theme="adn"] .adn-utility-bar {
+  background-color: #E8E8E8;
+  border-bottom: 1px solid #D0D0D0;
+}
+.root[data-theme="adn"] .adn-hamburger {
+  color: #1A1A1A;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.root[data-theme="adn"] .adn-verify-badge {
+  background-color: #E30613;
+  color: #FFFFFF;
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 2px 7px;
+  text-decoration: none;
+}
+.root[data-theme="adn"] .adn-utility-link {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 400;
+  color: #333333;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.root[data-theme="adn"] .adn-utility-link:hover {
+  color: #E30613;
+}
+.root[data-theme="adn"] .adn-utility-search {
+  color: #333333;
+  transition: color 0.15s;
+}
+.root[data-theme="adn"] .adn-utility-search:hover {
   color: #E30613;
 }
 
-/* Author/byline color */
+/* Row 2: logo bar */
+.root[data-theme="adn"] .adn-logo-bar {
+  background-color: #EBEBEB;
+  border-bottom: 1px solid #D0D0D0;
+}
+.root[data-theme="adn"] .adn-logo {
+  height: 56px;
+  width: auto;
+}
+.root[data-theme="adn"] .adn-date-label {
+  font-family: var(--font-nav);
+  font-size: 12px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+.root[data-theme="adn"] .adn-time-label {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 400;
+  color: #888888;
+}
+
+/* Row 3: main nav bar */
+.root[data-theme="adn"] .adn-nav-bar {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+/* Reset list bullets on nav <ul> */
+.root[data-theme="adn"] .adn-main-nav,
+.root[data-theme="adn"] .adn-topics-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.root[data-theme="adn"] .adn-main-nav li,
+.root[data-theme="adn"] .adn-topics-list li {
+  list-style: none;
+}
+
+.root[data-theme="adn"] .adn-main-nav-link {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1A1A1A;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.root[data-theme="adn"] .adn-main-nav-link:hover,
+.root[data-theme="adn"] .adn-main-nav-link--active {
+  color: #E30613;
+}
+.root[data-theme="adn"] .adn-main-nav-link--active {
+  border-bottom: 2px solid #E30613;
+}
+
+.root[data-theme="adn"] .adn-ultimora-btn {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background-color: #E30613;
+  color: #FFFFFF;
+  padding: 8px 14px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.root[data-theme="adn"] .adn-ultimora-btn:hover {
+  opacity: 0.88;
+}
+
+/* Row 4: Temi Caldi bar */
+.root[data-theme="adn"] .adn-topics-bar {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E0E0E0;
+}
+.root[data-theme="adn"] .adn-topic-link {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #E30613;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.root[data-theme="adn"] .adn-topic-link:hover {
+  text-decoration: underline;
+}
+
+/* ─── Article Cards ──────────────────────────────────────────────────────── */
+
+/* Section label above card title */
+.root[data-theme="adn"] [data-type="section"],
+.root[data-theme="adn"] [data-type="overhead"] {
+  color: #E30613;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Card titles */
+.root[data-theme="adn"] [data-type^="article"] h2,
+.root[data-theme="adn"] [data-type^="article"] h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  color: #1A1A1A;
+  line-height: 1.2;
+}
+
+/* Card hover */
+.root[data-theme="adn"] [data-type^="article"] a:hover h2,
+.root[data-theme="adn"] [data-type^="article"] a:hover h3 {
+  color: #E30613;
+}
+
+/* Card image: no border-radius, clean edges */
+.root[data-theme="adn"] [data-type^="article"] img {
+  border-radius: 0;
+}
+
+/* Card border / background */
+.root[data-theme="adn"] [data-type^="article-card"] {
+  background: #FFFFFF;
+  border: var(--border-card);
+}
+
+/* Separators between cards / sections */
+.root[data-theme="adn"] .section-divider,
+.root[data-theme="adn"] hr {
+  border-color: #E8E8E8;
+}
+
+/* Section heading bar (red left border style) */
+.root[data-theme="adn"] .section-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #E30613;
+  border-left: 3px solid #E30613;
+  padding-left: 8px;
+  margin-bottom: 12px;
+}
+
+/* ─── Article Hero ───────────────────────────────────────────────────────── */
+.root[data-theme="adn"] [data-type="article-hero"] {
+  position: relative;
+  background: #0D0D0D;
+}
+.root[data-theme="adn"] [data-type="article-hero"] h1 {
+  color: #FFFFFF;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+}
+.root[data-theme="adn"] [data-type="article-hero"] [data-type="section"],
+.root[data-theme="adn"] [data-type="article-hero"] [data-type="overhead"] {
+  color: #E30613;
+}
+
+/* ─── Article page ───────────────────────────────────────────────────────── */
+.root[data-theme="adn"] article {
+  background-color: #FFFFFF;
+  padding: 24px;
+}
+
+.root[data-theme="adn"] article h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1.15;
+  color: #1A1A1A;
+}
+.root[data-theme="adn"] article h2,
+.root[data-theme="adn"] article h3,
+.root[data-theme="adn"] article h4 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.root[data-theme="adn"] article p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #222222;
+}
+
+/* Section / overhead label in article header */
+.root[data-theme="adn"] article [data-type="section"],
+.root[data-theme="adn"] article [data-type="overhead"] {
+  color: #E30613;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Author byline */
 .root[data-theme="adn"] article [data-type="author"],
 .root[data-theme="adn"] article .author-medium,
 .root[data-theme="adn"] article .author-small {
   color: #888888;
+  font-size: 12px;
 }
 
-/* ─── Liveblog Live badge ────────────────────────────────────────────────── */
-/* Already uses --color-feedback-red which maps to #E30613 via var override ✓ */
+/* Article breadcrumb */
+.root[data-theme="adn"] article nav a {
+  color: #888888;
+  font-size: 11px;
+}
+.root[data-theme="adn"] article nav a:hover {
+  color: #E30613;
+}
+
+/* ─── Liveblog ───────────────────────────────────────────────────────────── */
+.root[data-theme="adn"] .adn-live-badge {
+  background-color: #E30613;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Post entries in liveblog */
+.root[data-theme="adn"] .liveblog-post {
+  border-left: 3px solid #E30613;
+  padding-left: 12px;
+  margin-bottom: 20px;
+}
+.root[data-theme="adn"] .liveblog-post-time {
+  color: #E30613;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ─── Section / Special pages ────────────────────────────────────────────── */
+.root[data-theme="adn"] .section-page-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #1A1A1A;
+  border-bottom: 3px solid #E30613;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+/* ─── Sidebar boxes ──────────────────────────────────────────────────────── */
+.root[data-theme="adn"] .adn-sidebar-box {
+  background: #FFFFFF;
+  border: var(--border-card);
+  padding: 14px;
+}
+.root[data-theme="adn"] .adn-sidebar-box-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #1A1A1A;
+  border-bottom: 2px solid #E30613;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+/* ─── Ad slots ───────────────────────────────────────────────────────────── */
+.root[data-theme="adn"] .adn-adslot {
+  background: #F4F4F4;
+  border: 1px dashed #CCCCCC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90px;
+  font-size: 11px;
+  color: #AAAAAA;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.root[data-theme="adn"] [data-section="footer"] {
+  background-color: #111111;
+  color: #AAAAAA;
+  font-size: 12px;
+}
+
+.root[data-theme="adn"] [data-section="footer"] a {
+  color: #AAAAAA;
+  transition: color 0.15s;
+}
+.root[data-theme="adn"] [data-section="footer"] a:hover {
+  color: #FFFFFF;
+}
+
+.root[data-theme="adn"] [data-section="footer"] .footer-col-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #333333;
+  padding-bottom: 6px;
+}
+
+.root[data-theme="adn"] [data-section="footer"] .footer-logo {
+  opacity: 0.85;
+}
+
+.root[data-theme="adn"] [data-section="footer"] .footer-divider {
+  border-color: #333333;
+}
+
+.root[data-theme="adn"] [data-section="footer"] .footer-legal {
+  color: #666666;
+  font-size: 11px;
+}
+.root[data-theme="adn"] [data-section="footer"] .footer-legal a {
+  color: #666666;
+}
+.root[data-theme="adn"] [data-section="footer"] .footer-legal a:hover {
+  color: #AAAAAA;
+}
+
+/* Social icons in footer */
+.root[data-theme="adn"] [data-section="footer"] .footer-social-icon {
+  color: #666666;
+  transition: color 0.15s;
+}
+.root[data-theme="adn"] [data-section="footer"] .footer-social-icon:hover {
+  color: #FFFFFF;
+}
 
 /* ─── Scrollbar (media gallery) ─────────────────────────────────────────── */
 .root[data-theme="adn"] .media-gallery-slides::-webkit-scrollbar-thumb {
   background-color: #E30613;
+}
+
+/* ─── Links (generic) ────────────────────────────────────────────────────── */
+.root[data-theme="adn"] a:focus-visible {
+  outline: 2px solid #E30613;
+  outline-offset: 2px;
 }

@@ -28,6 +28,7 @@ export default async function RootLayout({
             that Next.js already loads, so no duplicate copies of React exist. */}
         <script
           type="importmap"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               imports: {
@@ -51,6 +52,25 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
           rel="stylesheet"
         ></link>
+        {/* Wire theme fonts */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        {/* NYT theme fonts */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap"
+          rel="stylesheet"
+        />
+        {/* ADN theme fonts */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700;900&display=swap"
+          rel="stylesheet"
+        />
       </head>
 
       <body className={inter.className}>

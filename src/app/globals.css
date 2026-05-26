@@ -6,6 +6,8 @@
 
 @import "./themes/variant-a.css";
 @import "./themes/adn.css";
+@import "./themes/nyt.css";
+@import "./themes/wire.css";
 
 @custom-variant dark (&:is(.dark *));
 
