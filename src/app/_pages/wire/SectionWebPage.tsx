@@ -13,6 +13,8 @@ type PageProps = {
 };
 
 const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
+  console.log('[NEON] render: wire/SectionWebPage');
+
   const pathname = (await headers()).get('x-neon-pathname') ?? '';
   const sectionLabel = pathname.replace(/^\//, '').toUpperCase() || 'SECTION';
 

@@ -4,6 +4,8 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const SearchPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: default/SearchPage');
+
   return (
     <div className="container mx-auto">
       <Navbar data={{ siteNode: data.root }} />

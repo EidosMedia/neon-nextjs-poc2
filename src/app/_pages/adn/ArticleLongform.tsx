@@ -16,6 +16,8 @@ type PageProps = {
 };
 
 const Article = async ({ data }: PageProps) => {
+  console.log('[NEON] render: adn/ArticleLongform');
+
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
 

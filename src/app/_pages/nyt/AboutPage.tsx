@@ -5,6 +5,8 @@ import Footer from './Footer';
 import Link from 'next/link';
 
 const AboutPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: nyt/AboutPage');
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
       <Navbar data={{ siteNode: data.root }} />

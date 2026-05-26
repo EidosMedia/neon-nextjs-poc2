@@ -12,3 +12,4 @@ export { default as SearchPage } from './SearchPage';
 export { default as SectionWebPage } from './SectionWebPage';
 export { default as WebpageColumnsLayout } from './WebpageColumnsLayout';
 export { default as UIStyleGuide } from '../../components/baseComponents/UIStyleGuide';
+export { default as ArticleOrganism } from '../../components/base/Organism/ArticleOrganism';

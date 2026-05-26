@@ -9,6 +9,8 @@ type PageProps = {
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
+  console.log('[NEON] render: wire/DefaultSection');
+
   const sectionTitle = (data.siteNode?.title || data.siteNode?.name || '').toUpperCase();
 
   return (

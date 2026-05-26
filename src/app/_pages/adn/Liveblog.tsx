@@ -17,6 +17,8 @@ type PageProps = {
 };
 
 const Liveblog = async ({ data }: PageProps) => {
+  console.log('[NEON] render: adn/Liveblog');
+
   const articleData = data.model.data;
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];

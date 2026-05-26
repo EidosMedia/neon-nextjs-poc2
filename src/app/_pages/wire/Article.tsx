@@ -26,6 +26,8 @@ function MetaRow({ label, value }: { label: string; value: string }) {
 }
 
 const Article = async ({ data }: PageProps) => {
+  console.log('[NEON] render: wire/Article');
+
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
   const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';

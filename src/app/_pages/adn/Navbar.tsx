@@ -14,7 +14,9 @@ const UTILITY_LINKS = [
   { label: 'Gruppo Adnkronos', href: '/gruppo' },
 ];
 
-export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
+export default async function Navbar({
+ data }: { data: Partial<PageData<BaseModel>> }) {
+  console.log('[NEON] render: adn/Navbar');
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   if (!siteName) throw new Error('Site node data is missing');
 

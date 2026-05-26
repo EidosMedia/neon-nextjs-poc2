@@ -5,6 +5,8 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const NotFound = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: wire/NotFound');
+
   const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   return (

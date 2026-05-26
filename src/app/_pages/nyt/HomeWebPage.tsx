@@ -12,6 +12,8 @@ type PageProps = {
 };
 
 const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
+  console.log('[NEON] render: nyt/HomeWebPage');
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
       <Navbar data={data} />

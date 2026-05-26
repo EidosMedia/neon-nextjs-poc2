@@ -14,6 +14,8 @@ type PageProps = {
 };
 
 const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
+  console.log('[NEON] render: nyt/WebpageColumnsLayout');
+
   return (
     <div className="container mx-auto p-4">
       <Navbar data={data}></Navbar>

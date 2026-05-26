@@ -4,7 +4,9 @@ import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { InstagramIcon, FacebookIcon, TwitterIcon, YoutubeIcon, LinkedinIcon, RssIcon } from 'lucide-react';
 import FooterMenu from '../../components/FooterMenu';
 
-export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
+export default async function Footer({
+ data }: { data: Partial<PageData<BaseModel>> }) {
+  console.log('[NEON] render: adn/Footer');
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   if (!siteName) {
     throw new Error('Site node data is missing');

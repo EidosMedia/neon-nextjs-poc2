@@ -9,6 +9,8 @@ type PageProps = {
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
+  console.log('[NEON] render: adn/DefaultSection');
+
   const sectionTitle = (
     data.model?.data?.title ||
     data.siteNode?.title ||

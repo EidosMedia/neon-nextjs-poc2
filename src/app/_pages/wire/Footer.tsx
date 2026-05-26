@@ -17,7 +17,9 @@ const LEGAL_LINKS = [
   { label: 'Contact', href: '/contact' },
 ];
 
-export default async function Footer({ data: _ }: { data: Partial<PageData<BaseModel>> }) {
+export default async function Footer({
+ data: _ }: { data: Partial<PageData<BaseModel>> }) {
+  console.log('[NEON] render: wire/Footer');
   const now = new Date();
   const utcString = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 

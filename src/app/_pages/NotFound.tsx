@@ -6,6 +6,8 @@ import Footer from '../components/Footer';
 import Logo from '../components/Logo';
 
 const NotFound = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: default/NotFound');
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar data={{ siteNode: data.root }} />

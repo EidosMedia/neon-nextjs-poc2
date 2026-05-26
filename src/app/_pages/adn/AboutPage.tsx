@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const AboutPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: adn/AboutPage');
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar data={{ siteNode: data.root }} />

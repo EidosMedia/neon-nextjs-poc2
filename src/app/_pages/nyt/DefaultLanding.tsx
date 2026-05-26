@@ -9,6 +9,8 @@ type PageProps = {
 };
 
 const Landing: React.FC<PageProps> = ({ data }) => {
+  console.log('[NEON] render: nyt/DefaultLanding');
+
   const landingTitle = data.siteNode?.title || data.siteNode?.name || '';
 
   return (

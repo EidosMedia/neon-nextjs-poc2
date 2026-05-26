@@ -5,6 +5,8 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const NotFound = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: nyt/NotFound');
+
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#FFFFFF' }}>
       <Navbar data={{ siteNode: data.root }} />

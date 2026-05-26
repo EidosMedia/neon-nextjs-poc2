@@ -12,6 +12,8 @@ type PageProps = {
 };
 
 const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
+  console.log('[NEON] render: adn/WebpageColumnsLayout');
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar data={data} />

@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const AboutPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: wire/AboutPage');
+
   const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   const META = [

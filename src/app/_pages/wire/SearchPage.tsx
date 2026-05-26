@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const SearchPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: wire/SearchPage');
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <Navbar data={{ siteNode: data.root }} />

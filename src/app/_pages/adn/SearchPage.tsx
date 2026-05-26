@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const SearchPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: adn/SearchPage');
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F4F4F4' }}>
       <Navbar data={{ siteNode: data.root }} />

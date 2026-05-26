@@ -17,6 +17,8 @@ type PageProps = {
 };
 
 const Article = async ({ data }: PageProps) => {
+  console.log('[NEON] render: adn/Article');
+
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
   const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';

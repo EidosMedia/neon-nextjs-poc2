@@ -25,7 +25,9 @@ const FOOTER_COLUMNS = [
   },
 ];
 
-export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
+export default async function Footer({
+ data }: { data: Partial<PageData<BaseModel>> }) {
+  console.log('[NEON] render: nyt/Footer');
   return (
     <footer data-section="footer" className="w-full mt-10">
 

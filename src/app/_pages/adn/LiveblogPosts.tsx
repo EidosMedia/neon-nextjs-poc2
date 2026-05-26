@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { PageData } from '@/neon-frontoffice-ts-sdk/src';
 import { ArticleModel } from '@/types/models';
 import { renderContent } from '@/utilities/content';
@@ -18,6 +19,8 @@ type PageProps = {
 };
 
 const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
+  React.useEffect(() => { console.log('[NEON] mount: adn/LiveblogPosts'); }, []);
+
   const lastLoadedPostId = useRef<string>(null);
 
   const initialLiveblogPosts = Array.isArray(data.model.children)

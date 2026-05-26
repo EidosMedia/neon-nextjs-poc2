@@ -54,13 +54,22 @@ export default function <Name>({ data }: Props) {
 }
 ```
 
-### 3. Export from the `_pages` barrel
+### 3. Export from the `_pages` barrel and all theme barrels
 
-Add the export to `src/app/_pages/index.ts`:
+Add the export to `src/app/_pages/index.ts` (default barrel):
 
 ```ts
 export { default as <Name> } from './<Name>';
 ```
+
+Then add a matching export to every theme barrel (`_pages/adn/index.ts`, `_pages/nyt/index.ts`, `_pages/wire/index.ts`). If a theme does not need a custom layout, re-export the default version:
+
+```ts
+// src/app/_pages/<theme>/index.ts
+export { default as <Name> } from '../<Name>';   // re-exports default
+```
+
+All theme barrels must export the same set of keys as the default barrel — the TypeScript type of `THEME_MAP` enforces this. If a theme needs a custom layout, create `src/app/_pages/<theme>/<Name>.tsx` and export that instead.
 
 ### 4. Register the componentKey in the catch-all route
 
@@ -84,21 +93,26 @@ For each additional theme (e.g. `adn`) that needs a different layout for this co
 
 ### 6. (Optional) Register a single-slug special route
 
-If the content type has a fixed URL (e.g. `/podcast`), add a case before the CMS lookup in `[[...slug]]/page.tsx`:
+If the content type has a fixed URL (e.g. `/podcast`), add a case inside the `switch (slug[0])` block in `[[...slug]]/page.tsx`. Use `resolvePageComponent` so the route respects the active theme, with `DefaultPages.<Name>` as the fallback:
 
 ```ts
-case '<slug>':
+case '<slug>': {
   if (site) {
+    const theme = site.root.attributes?.theme ?? 'default';
+    const <Name>Page =
+      (resolvePageComponent('<Name>', theme) as React.ComponentType<{ data: typeof site }>) ??
+      DefaultPages.<Name>;
     return (
-      <div className="root" data-theme={site.root.attributes?.theme}>
+      <div className="root" data-theme={theme}>
         <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
-        <DefaultPages.<Name> data={site} />
+        <<Name>Page data={site} />
       </div>
     );
   }
+}
 ```
 
-Note: fixed-URL pages receive a bare `Site` object, not `PageData`.
+Note: fixed-URL pages receive a bare `Site` object (not `PageData`), so the component must accept `{ data: Site }`.
 
 ## Checklist
 
@@ -106,6 +120,9 @@ Note: fixed-URL pages receive a bare `Site` object, not `PageData`.
 - [ ] Default template created at `src/app/_pages/<Name>.tsx`
   - imports `Navbar` from `'../components/Navbar'`
   - imports `Footer` from `'../components/Footer'`
-- [ ] Export added to `src/app/_pages/index.ts`
+- [ ] Export added to `src/app/_pages/index.ts` (default barrel)
+- [ ] Matching export added to every theme barrel (`_pages/adn/index.ts`, `_pages/nyt/index.ts`, `_pages/wire/index.ts`) — re-export from default if no custom layout
 - [ ] `baseType` → `componentKey` mapping added to `resolveBaseTypeKey()` in `[[...slug]]/page.tsx`
+- [ ] `npx tsc --noEmit` passes (all barrels must have the same exported key set)
 - [ ] (Optional) Per-theme overrides added to each relevant `_pages/<theme>/` directory and its `index.ts`
+- [ ] (Optional) Fixed-URL slug case uses `resolvePageComponent` with `DefaultPages.<Name>` fallback

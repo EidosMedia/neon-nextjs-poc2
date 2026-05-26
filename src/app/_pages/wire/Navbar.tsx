@@ -5,7 +5,9 @@ import { headers, cookies } from 'next/headers';
 import { Search } from 'lucide-react';
 import LoginButton from '../../components/LoginButton';
 
-export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
+export default async function Navbar({
+ data }: { data: Partial<PageData<BaseModel>> }) {
+  console.log('[NEON] render: wire/Navbar');
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   if (!siteName) throw new Error('Site node data is missing');
 

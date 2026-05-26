@@ -16,6 +16,8 @@ type PageProps = {
 };
 
 const Liveblog = async ({ data }: PageProps) => {
+  console.log('[NEON] render: wire/Liveblog');
+
   const articleData = data.model.data;
   const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';
   const slug = articleData?.sys?.id ?? '—';

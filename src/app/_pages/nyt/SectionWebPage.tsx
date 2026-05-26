@@ -12,6 +12,8 @@ type PageProps = {
 };
 
 const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
+  console.log('[NEON] render: nyt/SectionWebPage');
+
   const sectionTitle = data?.siteNode?.title ?? data?.model?.data?.title ?? '';
 
   return (

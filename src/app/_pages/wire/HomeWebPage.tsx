@@ -1,11 +1,10 @@
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import Main from '../../components/webpage/Main';
-import Context from '../../components/webpage/Context';
 import Insight1 from '../../components/webpage/Insight1';
 import Insight2 from '../../components/webpage/Insight2';
+import WireArticleOrganism from './components/ArticleOrganism';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -26,6 +25,13 @@ function WirePanel({ label, count, children }: { label: string; count?: string; 
 }
 
 const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
+  console.log('[NEON] render: wire/HomeWebPage');
+
+  const [mainItems, contextItems] = await Promise.all([
+    connection.getDwxLinkedObjects(data, 'main'),
+    connection.getDwxLinkedObjects(data, 'context'),
+  ]);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <Navbar data={data} />
@@ -38,11 +44,29 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
           {/* ── Main feed column ────────────────────────────────────────── */}
           <div className="flex-1 min-w-0">
             <WirePanel label="TOP STORIES" count="MAIN">
-              <Main data={data} />
+              {mainItems.map((item: WebpageNodeModel, i: number) => (
+                <WireArticleOrganism
+                  key={(item as any).id}
+                  data={data}
+                  linkedObject={item}
+                  linkedObjects={mainItems}
+                  index={i}
+                  type={i === 0 ? 'article-xl' : 'article-md'}
+                />
+              ))}
             </WirePanel>
 
             <WirePanel label="LATEST" count="CONTEXT">
-              <Context data={data} />
+              {contextItems.map((item: WebpageNodeModel, i: number) => (
+                <WireArticleOrganism
+                  key={(item as any).id}
+                  data={data}
+                  linkedObject={item}
+                  linkedObjects={contextItems}
+                  index={i}
+                  type="article-md"
+                />
+              ))}
             </WirePanel>
           </div>
 
