@@ -10,3 +10,4 @@ export { default as LoginPage } from './LoginPage';
 export { default as SearchPage } from './SearchPage';
 export { default as Liveblog } from './Liveblog';
 export { default as NotFound } from './NotFound';
+export { default as UIStyleGuide } from '../components/baseComponents/UIStyleGuide';

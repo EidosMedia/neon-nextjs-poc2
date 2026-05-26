@@ -9,7 +9,12 @@ type PageProps = {
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
-  const sectionTitle = (data.siteNode?.title || data.siteNode?.name || '').toUpperCase();
+  const sectionTitle = (
+    data.model?.data?.title ||
+    data.siteNode?.title ||
+    data.siteNode?.name || 
+    ''
+  ).toUpperCase();
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F4F4F4' }}>

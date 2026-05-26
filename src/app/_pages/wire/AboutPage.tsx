@@ -1,54 +1,72 @@
 import React from 'react';
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const AboutPage = ({ data }: { data: Site }) => {
+  const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+
+  const META = [
+    { key: 'service',   value: 'Wire Feed API' },
+    { key: 'site',      value: data.root.name },
+    { key: 'title',     value: data.root.title },
+    { key: 'version',   value: 'v2.4.1' },
+    { key: 'license',   value: 'BSD-3-Clause' },
+    { key: 'retrieved', value: now },
+  ];
+
   return (
-    <div className="container mx-auto text-center flex flex-col items-center justify-center">
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <Navbar data={{ siteNode: data.root }} />
-      <div className="max-w-2xl">
-        <h1 className="text-3xl font-bold my-2">
-          Neon NextJS POC v2 {data.root.title} site's About Page
-          <br />
-          Eidosmedia® 2025©
-        </h1>
-        <div className="text-left text-base">
-          <p className="text-base mt-3 mb-1">
-            This is the about page of this example of a "front-end" NextJs© application able to render NEON's multiple
-            headless SaaS sites. Now is rendering the <strong>{data.root.name}</strong> site that has title:{' '}
-            <em>{data.root.title}</em>.
-          </p>
-          <ul className="text-base mt-3 mb-1 list-disc list-inside">
-            The scope of this proof of concept is to show how to implement:
-            <li>Secure Server-side rendered UI, able to be a front-end application over the NEON multi-sites CMS.</li>
-            <li>
-              Implement a secure preview front end and secure live admin client-side addons, capable of allowing NeonApp
-              users to inspect, modify, and access extra information of the rendered content.
-            </li>
-          </ul>
-          <p className="text-base mt-3 mb-1">
-            The implementation is provided under the BSD-3-Clause license, allowing usages as specified by the license.
-          </p>
-          <ul className="text-base mt-3 mb-1 list-disk list-inside">
-            The source code is hosted on GitHub.
-            <li>
-              <a className="text-base" href="https://github.com/EidosMedia/neon-nextjs-poc2">
-                NEON NextJS Poc2
-              </a>
-            </li>
-            <li>
-              <a className="text-base" href="https://github.com/EidosMedia/neon-frontoffice-ts-sdk">
-                NEON Front Office TypeScript library
-              </a>
-            </li>
-          </ul>
-          <p className="text-base mt-3 mb-1">
-            It is provided as-is, with no warranties, for any legal use and can be forked and modified, in conjunction
-            with the Neon public TypeScript front-office SDK library, to implement your front-end application.
-          </p>
+
+      <div className="w-full max-w-[1440px] mx-auto px-4 py-4">
+        <div className="wire-panel-header mb-0">ABOUT — SERVICE INFORMATION</div>
+
+        <div className="flex gap-4 bg-white border border-t-0 border-[#D4D4D4]">
+
+          {/* Metadata panel */}
+          <div className="wire-meta-panel border-0 border-r border-[#D4D4D4] rounded-none" style={{ minWidth: 280 }}>
+            <div className="wire-meta-panel-title">Endpoint Metadata</div>
+            {META.map(({ key, value }) => (
+              <div key={key} className="wire-meta-row">
+                <span className="wire-meta-key">{key}</span>
+                <span className="wire-meta-val">{value}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Description */}
+          <div className="flex-1 p-6">
+            <h1 style={{
+              fontFamily: 'var(--font-headline)',
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              color: '#0A0A0A',
+              marginBottom: 16,
+            }}>
+              Wire Feed — Content Distribution Platform
+            </h1>
+            <div className="flex flex-col gap-4" style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.65, color: '#2C2C2C' }}>
+              <p>
+                This is a Next.js front-office application demonstrating multi-site headless rendering
+                on top of the NEON CMS platform. Currently serving the{' '}
+                <strong>{data.root.name}</strong> site — <em>{data.root.title}</em>.
+              </p>
+              <p>
+                The Wire theme presents content in a functional, data-first layout suited for API
+                consumers, editorial integrations, and wire agency workflows.
+              </p>
+              <div style={{ fontFamily: 'var(--font-meta)', fontSize: 11, color: '#6B6B6B', marginTop: 8 }}>
+                <div>Source: <a href="https://github.com/EidosMedia/neon-nextjs-poc2" style={{ color: '#0050FF' }}>github.com/EidosMedia/neon-nextjs-poc2</a></div>
+                <div style={{ marginTop: 4 }}>SDK: <a href="https://github.com/EidosMedia/neon-frontoffice-ts-sdk" style={{ color: '#0050FF' }}>neon-frontoffice-ts-sdk</a></div>
+                <div style={{ marginTop: 4 }}>License: BSD-3-Clause · Eidosmedia® 2025©</div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
+
       <Footer data={{ siteNode: data.root }} />
     </div>
   );

@@ -1,13 +1,12 @@
 import React from 'react';
 import { ArticleModel } from '@/types/models';
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbar from '../../components/Navbar';
+import Navbar from './Navbar';
 import { renderContent, findElementsInContentJson, findCustomComponentNodes } from '@/utilities/content';
 import Grouphead from '../../components/contentElements/Grouphead';
 import MainImage from '../../components/contentElements/MainImage';
 import LiveblogPosts from './LiveblogPosts';
-import Footer from '../../components/Footer';
-import { CircleDot } from 'lucide-react';
+import Footer from './Footer';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
@@ -21,23 +20,17 @@ const Liveblog = async ({ data }: PageProps) => {
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
-  // Pre-resolve custom components server-side so renderContent can render them
-  // without any client-side JS.
   const customComponents = new Map<string, React.ComponentType<Record<string, unknown>>>();
   const customNodes = findCustomComponentNodes(
     textContent ?? { nodeType: '', elements: [], attributes: {}, value: '' },
   );
   await Promise.all(
     [...new Set(customNodes.map(n => n.attributes?.componentname).filter(Boolean))].map(async name => {
-      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<
-        Record<string, unknown>
-      > | null;
+      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<Record<string, unknown>> | null;
       if (Comp) customComponents.set(name, Comp);
     }),
   );
 
-  // Pre-fetch embed node data for any custom component nodes that reference a CMS node via href.
-  // Neon node IDs follow the pattern: {hex4}-{hex12}-{hex12}-{digits} appearing as a path segment.
   const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
   const nodeDataMap = new Map<string, unknown>();
   const currentHeaders = await headers();
@@ -51,38 +44,60 @@ const Liveblog = async ({ data }: PageProps) => {
         if (!neonId) return;
         try {
           const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
-          if (resp.ok) {
-            nodeDataMap.set(neonId, await resp.json());
-          } else {
-            console.warn('[Liveblog] embed fetch failed:', resp.status, 'for node', neonId);
-          }
+          if (resp.ok) nodeDataMap.set(neonId, await resp.json());
+          else console.warn('[NYT/Liveblog] embed fetch failed:', resp.status, neonId);
         } catch (err) {
-          console.error('[Liveblog] embed fetch error for node', neonId, ':', err);
+          console.error('[NYT/Liveblog] embed fetch error:', neonId, err);
         }
       }),
   );
 
   return (
-    <article className="container mx-auto">
+    <div className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
       <Navbar data={data} />
-      <div className="xl:px-52 mt-10 mb-12">
-        <div className="flex items-center gap-1 mb-4 w-fit max-h-[30px] p-2 rounded-xs bg-feedback-red text-neutral-lightest">
-          <CircleDot className="w-4 h-4" />
-          <span className="subhead1 pt-[3px]">Live</span>
+
+      {/* Narrow reading column — same as Article */}
+      <div className="w-full max-w-[720px] mx-auto px-4 py-8">
+
+        {/* LIVE badge */}
+        <div className="mb-4 flex items-center gap-2">
+          <span style={{
+            fontFamily: 'var(--font-nav)',
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: '#CC0000',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+          }}>
+            <span style={{
+              display: 'inline-block',
+              width: 7,
+              height: 7,
+              borderRadius: '50%',
+              background: '#CC0000',
+              animation: 'wire-blink 1.2s step-end infinite',
+            }} />
+            Live Updates
+          </span>
         </div>
-        <Grouphead data={articleData} />
-        <MainImage data={articleData} preferredImage="main" />
-        <div className="mb-8">
-          {renderContent(textContent, articleData, undefined, 'flex flex-col gap-4', customComponents, nodeDataMap)}
-        </div>
-        <LiveblogPosts data={data} />
+
+        <article>
+          <Grouphead data={articleData} />
+          <MainImage data={articleData} preferredImage="main" />
+          <div className="mt-6 mb-8">
+            {renderContent(textContent, articleData, undefined, 'flex flex-col gap-5', customComponents, nodeDataMap)}
+          </div>
+          <hr style={{ border: 'none', borderTop: '3px solid #000', marginBottom: 24 }} />
+          <LiveblogPosts data={data} />
+        </article>
+
       </div>
-      <div className="flex justify-center mb-24">
-        {/* Placeholder for advertisement */}
-        <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
-      </div>
+
       <Footer data={data} />
-    </article>
+    </div>
   );
 };
 
