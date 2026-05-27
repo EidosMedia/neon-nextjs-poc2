@@ -269,9 +269,12 @@
 }
 
 .root[data-theme="adn"] article p {
-  font-size: 15px;
+  /* font-size: 15px;
   line-height: 1.7;
-  color: #222222;
+  color: #222222; */
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
 /* Section / overhead label in article header */

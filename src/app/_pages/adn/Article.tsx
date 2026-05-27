@@ -20,8 +20,9 @@ const Article = async ({ data }: PageProps) => {
   console.log('[NEON] render: adn/Article');
 
   const articleData = data.model.data;
+  console.log('Article data pubInfo:', articleData.pubInfo);
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
-  const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';
+  const section = articleData?.url?.split?.('/')?.[1] ?? '';
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
@@ -106,10 +107,10 @@ const Article = async ({ data }: PageProps) => {
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1 text-xs mb-3" style={{ color: '#888888' }}>
           <Link href="/" className="hover:text-red-600 transition-colors">Home</Link>
-          {category && (
+          {section && (
             <>
               <ChevronRight className="w-3 h-3" />
-              <span className="font-semibold uppercase" style={{ color: '#E30613' }}>{category}</span>
+              <span className="font-semibold uppercase" style={{ color: '#E30613' }}>{section}</span>
             </>
           )}
         </nav>

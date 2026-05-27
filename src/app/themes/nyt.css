@@ -157,9 +157,12 @@
 
 .root[data-theme="nyt"] article p {
   font-family: var(--font-body);
-  font-size: 18px;
+  /* font-size: 18px;
   line-height: 1.75;
-  color: #121212;
+  color: #121212; */
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
 .root[data-theme="nyt"] article [data-type="section"],

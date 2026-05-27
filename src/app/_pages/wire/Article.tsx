@@ -30,7 +30,7 @@ const Article = async ({ data }: PageProps) => {
 
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
-  const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';
+    const section = articleData?.url?.split?.('/')?.[1] ?? '';
   const wordCount = articleData?.attributes?.wordCount ?? '—';
   const priority = (articleData?.attributes as any)?.priority ?? 'NORMAL';
   const slug = articleData?.sys?.id ?? '—';
@@ -111,10 +111,10 @@ const Article = async ({ data }: PageProps) => {
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1 mb-3" style={{ fontFamily: 'var(--font-meta)', fontSize: 10, color: '#6B6B6B', letterSpacing: '0.06em' }}>
           <Link href="/" className="hover:text-[#0050FF]">FEED</Link>
-          {category && (
+          {section && (
             <>
               <ChevronRight className="w-3 h-3" />
-              <Link href={`/${category.toLowerCase()}`} className="uppercase hover:text-[#0050FF]">{category}</Link>
+              <Link href={`/${section.toLowerCase()}`} className="uppercase hover:text-[#0050FF]">{section}</Link>
             </>
           )}
           <ChevronRight className="w-3 h-3" />
@@ -129,9 +129,9 @@ const Article = async ({ data }: PageProps) => {
             {/* Toolbar: priority + metadata chips */}
             <div className="wire-article-toolbar flex-wrap gap-y-2">
               <span className={`wire-priority ${priorityClass}`}>{priority}</span>
-              {category && (
+              {section && (
                 <span className="wire-article-toolbar-label">
-                  SECTION:&nbsp;<span className="wire-article-toolbar-value uppercase">{category}</span>
+                  SECTION:&nbsp;<span className="wire-article-toolbar-value uppercase">{section}</span>
                 </span>
               )}
               <span className="wire-article-toolbar-label">
@@ -166,7 +166,7 @@ const Article = async ({ data }: PageProps) => {
               <div className="wire-meta-panel-title">Item Metadata</div>
               <MetaRow label="id" value={String(slug)} />
               <MetaRow label="priority" value={priority} />
-              <MetaRow label="section" value={category || '—'} />
+              <MetaRow label="section" value={section || '—'} />
               <MetaRow label="words" value={String(wordCount)} />
               <MetaRow label="format" value="NITF / JSON" />
               <MetaRow label="language" value="en" />

@@ -21,7 +21,7 @@ const Article = async ({ data }: PageProps) => {
 
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
-  const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';
+  const section = articleData?.url?.split?.('/')?.[1] ?? '';
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
@@ -95,14 +95,14 @@ const Article = async ({ data }: PageProps) => {
       <div className="w-full max-w-[720px] mx-auto px-4 py-8">
 
         {/* Section breadcrumb */}
-        {category && (
+        {section && (
           <div className="mb-4">
             <Link
-              href={`/${category.toLowerCase()}`}
+              href={`/${section.toLowerCase()}`}
               className="text-xs font-bold uppercase tracking-widest"
               style={{ fontFamily: 'var(--font-nav)', color: '#121212', textDecoration: 'none' }}
             >
-              {category}
+              {section}
             </Link>
           </div>
         )}
