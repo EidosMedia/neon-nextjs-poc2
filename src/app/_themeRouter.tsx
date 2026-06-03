@@ -2,6 +2,7 @@ import * as Default from './_pages';
 import * as Adn from './_pages/adn';
 import * as Nyt from './_pages/nyt';
 import * as Wire from './_pages/wire';
+import * as Guardian from './_pages/guardian';
 
 type PageComponents = typeof Default;
 
@@ -10,6 +11,7 @@ const THEME_MAP: Record<string, PageComponents> = {
   adn: Adn,
   nyt: Nyt,
   wire: Wire,
+  guardian: Guardian,
 };
 
 // componentKey must match a named export from the theme's index.ts barrel
