@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
-  console.log('[NEON] render: guardian/SectionWebPage');
+  console.log('[NEON] render: foghorn/SectionWebPage');
 
   const sectionTitle = data?.siteNode?.title ?? data?.model?.data?.title ?? '';
 
@@ -39,19 +39,19 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
       <div className="w-full max-w-[1300px] mx-auto px-4 py-6">
         <div className="flex flex-col gap-6">
           <section>
-            <div className="guardian-section-header">Top Stories</div>
+            <div className="foghorn-section-header">Top Stories</div>
             <Main data={data} />
           </section>
           <section>
-            <div className="guardian-section-header">Latest</div>
+            <div className="foghorn-section-header">Latest</div>
             <Context data={data} />
           </section>
           <section>
-            <div className="guardian-section-header">Opinion</div>
+            <div className="foghorn-section-header">Opinion</div>
             <Insight1 data={data} />
           </section>
           <section>
-            <div className="guardian-section-header">More</div>
+            <div className="foghorn-section-header">More</div>
             <Insight2 data={data} />
           </section>
         </div>

@@ -1,8 +1,8 @@
-/* New York Times Theme — data-theme="nyt" */
+/* Oldtown Tribune Theme — data-theme="oldtown" */
 /* Cheltenham (serif) approximated via Georgia; Franklin Gothic via system-ui */
 
 /* ─── CSS Variable Overrides ─────────────────────────────────────────────── */
-.root[data-theme="nyt"] {
+.root[data-theme="oldtown"] {
   --font-headline: 'Cheltenham', 'Georgia', 'Times New Roman', serif;
   --font-nav: 'NYT Franklin', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   --font-body: 'Georgia', 'Times New Roman', serif;
@@ -27,14 +27,14 @@
 }
 
 /* ─── Global ──────────────────────────────────────────────────────────────── */
-.root[data-theme="nyt"] {
+.root[data-theme="oldtown"] {
   background-color: #FFFFFF;
   color: #121212;
   font-family: var(--font-body);
 }
 
 /* ─── Navbar ──────────────────────────────────────────────────────────────── */
-.root[data-theme="nyt"] .nyt-header {
+.root[data-theme="oldtown"] .oldtown-header {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -43,22 +43,22 @@
 }
 
 /* Utility bar */
-.root[data-theme="nyt"] .nyt-utility-bar {
+.root[data-theme="oldtown"] .oldtown-utility-bar {
   border-bottom: 1px solid #DFDFDF;
 }
-.root[data-theme="nyt"] .nyt-utility-link {
+.root[data-theme="oldtown"] .oldtown-utility-link {
   font-family: var(--font-nav);
   font-size: 11px;
   color: #363636;
   text-decoration: none;
   letter-spacing: 0.03em;
 }
-.root[data-theme="nyt"] .nyt-utility-link:hover {
+.root[data-theme="oldtown"] .oldtown-utility-link:hover {
   text-decoration: underline;
 }
 
 /* Logo masthead */
-.root[data-theme="nyt"] .nyt-masthead {
+.root[data-theme="oldtown"] .oldtown-masthead {
   font-family: 'Old English Text MT', 'UnifrakturMaguntia', 'Times New Roman', serif;
   font-size: clamp(1.6rem, 4vw, 2.6rem);
   font-weight: 400;
@@ -69,16 +69,16 @@
 }
 
 /* Section nav */
-.root[data-theme="nyt"] .nyt-section-nav,
-.root[data-theme="nyt"] .nyt-section-list {
+.root[data-theme="oldtown"] .oldtown-section-nav,
+.root[data-theme="oldtown"] .oldtown-section-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.root[data-theme="nyt"] .nyt-section-list li {
+.root[data-theme="oldtown"] .oldtown-section-list li {
   list-style: none;
 }
-.root[data-theme="nyt"] .nyt-section-link {
+.root[data-theme="oldtown"] .oldtown-section-link {
   font-family: var(--font-nav);
   font-size: 12px;
   font-weight: 700;
@@ -87,15 +87,15 @@
   text-decoration: none;
   white-space: nowrap;
 }
-.root[data-theme="nyt"] .nyt-section-link:hover,
-.root[data-theme="nyt"] .nyt-section-link--active {
+.root[data-theme="oldtown"] .oldtown-section-link:hover,
+.root[data-theme="oldtown"] .oldtown-section-link--active {
   color: #000000;
   border-bottom: 2px solid #000000;
 }
 
 /* ─── Article Cards ──────────────────────────────────────────────────────── */
-.root[data-theme="nyt"] [data-type="section"],
-.root[data-theme="nyt"] [data-type="overhead"] {
+.root[data-theme="oldtown"] [data-type="section"],
+.root[data-theme="oldtown"] [data-type="overhead"] {
   font-family: var(--font-nav);
   font-size: 10px;
   font-weight: 700;
@@ -104,31 +104,31 @@
   color: #363636;
 }
 
-.root[data-theme="nyt"] [data-type^="article"] h2,
-.root[data-theme="nyt"] [data-type^="article"] h3 {
+.root[data-theme="oldtown"] [data-type^="article"] h2,
+.root[data-theme="oldtown"] [data-type^="article"] h3 {
   font-family: var(--font-headline);
   font-weight: 700;
   color: #121212;
   line-height: 1.2;
 }
 
-.root[data-theme="nyt"] [data-type^="article"] a:hover h2,
-.root[data-theme="nyt"] [data-type^="article"] a:hover h3 {
+.root[data-theme="oldtown"] [data-type^="article"] a:hover h2,
+.root[data-theme="oldtown"] [data-type^="article"] a:hover h3 {
   color: #000000;
   text-decoration: underline;
 }
 
-.root[data-theme="nyt"] [data-type^="article"] img {
+.root[data-theme="oldtown"] [data-type^="article"] img {
   border-radius: 0;
 }
 
 /* Section rule separator (horizontal rule NYT style) */
-.root[data-theme="nyt"] .nyt-rule {
+.root[data-theme="oldtown"] .oldtown-rule {
   border: none;
   border-top: 3px solid #000000;
   margin: 0 0 6px;
 }
-.root[data-theme="nyt"] .nyt-section-label {
+.root[data-theme="oldtown"] .oldtown-section-label {
   font-family: var(--font-nav);
   font-size: 10px;
   font-weight: 700;
@@ -140,7 +140,7 @@
 }
 
 /* ─── Article page ───────────────────────────────────────────────────────── */
-.root[data-theme="nyt"] article h1 {
+.root[data-theme="oldtown"] article h1 {
   font-family: var(--font-headline);
   font-weight: 700;
   font-size: clamp(1.6rem, 4vw, 2.6rem);
@@ -148,14 +148,14 @@
   color: #121212;
 }
 
-.root[data-theme="nyt"] article h2,
-.root[data-theme="nyt"] article h3 {
+.root[data-theme="oldtown"] article h2,
+.root[data-theme="oldtown"] article h3 {
   font-family: var(--font-headline);
   font-weight: 600;
   color: #121212;
 }
 
-.root[data-theme="nyt"] article p {
+.root[data-theme="oldtown"] article p {
   font-family: var(--font-body);
   /* font-size: 18px;
   line-height: 1.75;
@@ -165,8 +165,8 @@
   color: inherit;
 }
 
-.root[data-theme="nyt"] article [data-type="section"],
-.root[data-theme="nyt"] article [data-type="overhead"] {
+.root[data-theme="oldtown"] article [data-type="section"],
+.root[data-theme="oldtown"] article [data-type="overhead"] {
   font-family: var(--font-nav);
   font-size: 11px;
   font-weight: 700;
@@ -175,9 +175,9 @@
   color: #363636;
 }
 
-.root[data-theme="nyt"] article [data-type="author"],
-.root[data-theme="nyt"] article .author-medium,
-.root[data-theme="nyt"] article .author-small {
+.root[data-theme="oldtown"] article [data-type="author"],
+.root[data-theme="oldtown"] article .author-medium,
+.root[data-theme="oldtown"] article .author-small {
   font-family: var(--font-nav);
   font-size: 13px;
   font-weight: 700;
@@ -185,7 +185,7 @@
 }
 
 /* Summary / deck */
-.root[data-theme="nyt"] article .nyt-deck {
+.root[data-theme="oldtown"] article .oldtown-deck {
   font-family: var(--font-body);
   font-size: 20px;
   font-weight: 400;
@@ -196,7 +196,7 @@
 }
 
 /* Byline rule */
-.root[data-theme="nyt"] article .nyt-byline-rule {
+.root[data-theme="oldtown"] article .oldtown-byline-rule {
   border-top: 1px solid #DFDFDF;
   border-bottom: 1px solid #DFDFDF;
   padding: 6px 0;
@@ -204,7 +204,7 @@
 }
 
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
-.root[data-theme="nyt"] [data-section="footer"] {
+.root[data-theme="oldtown"] [data-section="footer"] {
   background-color: #F7F7F5;
   color: #363636;
   border-top: 3px solid #000000;
@@ -212,15 +212,15 @@
   font-size: 12px;
 }
 
-.root[data-theme="nyt"] [data-section="footer"] a {
+.root[data-theme="oldtown"] [data-section="footer"] a {
   color: #363636;
   text-decoration: none;
 }
-.root[data-theme="nyt"] [data-section="footer"] a:hover {
+.root[data-theme="oldtown"] [data-section="footer"] a:hover {
   text-decoration: underline;
 }
 
-.root[data-theme="nyt"] [data-section="footer"] .footer-col-title {
+.root[data-theme="oldtown"] [data-section="footer"] .footer-col-title {
   font-family: var(--font-nav);
   font-size: 10px;
   font-weight: 700;
@@ -232,12 +232,12 @@
   border-bottom: 1px solid #DFDFDF;
 }
 
-.root[data-theme="nyt"] [data-section="footer"] .footer-legal {
+.root[data-theme="oldtown"] [data-section="footer"] .footer-legal {
   color: #666666;
   font-size: 11px;
 }
 
-.root[data-theme="nyt"] a:focus-visible {
+.root[data-theme="oldtown"] a:focus-visible {
   outline: 2px solid #000000;
   outline-offset: 2px;
 }

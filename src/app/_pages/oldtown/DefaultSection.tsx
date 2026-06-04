@@ -9,7 +9,7 @@ type PageProps = {
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
-  console.log('[NEON] render: nyt/DefaultSection');
+  console.log('[NEON] render: oldtown/DefaultSection');
 
   const sectionTitle = (
     data.model?.data?.title ||
@@ -24,7 +24,7 @@ const Section: React.FC<PageProps> = ({ data }) => {
       <div className="w-full max-w-[1280px] mx-auto px-4 py-6">
         {sectionTitle && (
           <div className="mb-6">
-            <hr className="nyt-rule" />
+            <hr className="oldtown-rule" />
             <h1 style={{
               fontFamily: 'var(--font-nav)',
               fontSize: 20,

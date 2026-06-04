@@ -17,7 +17,7 @@ type PageProps = {
 };
 
 const Article = async ({ data }: PageProps) => {
-  console.log('[NEON] render: nyt/Article');
+  console.log('[NEON] render: oldtown/Article');
 
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
@@ -80,9 +80,9 @@ const Article = async ({ data }: PageProps) => {
       try {
         const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
         if (resp.ok) nodeDataMap.set(neonId, await resp.json());
-        else console.warn('[NYT/Article] embed fetch failed:', resp.status, 'for node', neonId);
+        else console.warn('[oldtown/Article] embed fetch failed:', resp.status, 'for node', neonId);
       } catch (err) {
-        console.error('[NYT/Article] embed fetch error for node', neonId, ':', err);
+        console.error('[oldtown/Article] embed fetch error for node', neonId, ':', err);
       }
     }),
   );
@@ -112,7 +112,7 @@ const Article = async ({ data }: PageProps) => {
           <Grouphead data={articleData} />
 
           {/* Byline / share rule */}
-          <div className="nyt-byline-rule flex items-center justify-between">
+          <div className="oldtown-byline-rule flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 aria-label="Share"

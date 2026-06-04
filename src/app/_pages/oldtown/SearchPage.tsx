@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const SearchPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: nyt/SearchPage');
+  console.log('[NEON] render: oldtown/SearchPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
@@ -13,7 +13,7 @@ const SearchPage = ({ data }: { data: Site }) => {
       <div className="w-full max-w-[1280px] mx-auto px-4 py-8">
         {/* NYT-style section header */}
         <div className="mb-8">
-          <hr className="nyt-rule" />
+          <hr className="oldtown-rule" />
           <h1 style={{
             fontFamily: 'var(--font-headline)',
             fontSize: 'clamp(1.4rem, 3vw, 2rem)',

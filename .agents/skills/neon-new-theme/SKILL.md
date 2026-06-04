@@ -178,7 +178,7 @@ Add a Google Fonts `<link>` in `src/app/layout.tsx` and reference the font via `
 | Theme | Key patterns |
 |---|---|
 | `adn` | Three-layer Navbar, 70/30 article body/sidebar, dark footer, ad slots |
-| `nyt` | Blackletter masthead, 720px serif column, NYT-rule `<hr>`, no sidebar |
+| `oldtown` | Blackletter masthead, 720px serif column, Oldtown-rule `<hr>`, no sidebar |
 | `wire` | Monospace IBM Plex, feed-row ArticleOrganism with priority badges, panel-header chrome |
 
 `wire` is the reference for component-level overrides (`_pages/wire/components/ArticleOrganism.tsx`).

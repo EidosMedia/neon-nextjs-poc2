@@ -13,7 +13,7 @@ const PILLARS = [
 ];
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
-  console.log('[NEON] render: guardian/Navbar');
+  console.log('[NEON] render: foghorn/Navbar');
 
   const cookieStore = await cookies();
   const webauth = cookieStore.get('webauth')?.value;
@@ -24,21 +24,21 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
   });
 
   return (
-    <header className="guardian-header w-full">
+    <header className="foghorn-header w-full">
 
       {/* ── Row 1: Pillars bar ────────────────────────────────────────────── */}
       <div className="w-full" style={{ height: 36 }}>
         <div className="w-full max-w-[1300px] mx-auto px-4 flex items-center justify-between h-full">
           <nav className="flex items-center h-full">
             {PILLARS.map(({ label, href }) => (
-              <Link key={href} href={href} className="guardian-pillar-link flex items-center h-full">
+              <Link key={href} href={href} className="foghorn-pillar-link flex items-center h-full">
                 {label}
               </Link>
             ))}
           </nav>
           <div className="flex items-center gap-4">
-            <Link href="/subscribe" className="guardian-subscribe-link">Subscribe</Link>
-            <a href="/support" className="guardian-support-btn">Support us</a>
+            <Link href="/subscribe" className="foghorn-subscribe-link">Subscribe</Link>
+            <a href="/support" className="foghorn-support-btn">Support us</a>
           </div>
         </div>
       </div>
@@ -46,8 +46,8 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       {/* ── Row 2: Masthead row ───────────────────────────────────────────── */}
       <div className="w-full" style={{ borderTop: '1px solid rgba(255,255,255,.15)', minHeight: 60 }}>
         <div className="w-full max-w-[1300px] mx-auto px-4 flex items-center justify-between" style={{ minHeight: 60 }}>
-          <Link href="/" className="guardian-masthead">
-            The Guardian
+          <Link href="/" className="foghorn-masthead">
+            The Foghorn
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/search" aria-label="Search" style={{ color: 'rgba(255,255,255,.85)' }}>
@@ -59,7 +59,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       </div>
 
       {/* ── Date line ─────────────────────────────────────────────────────── */}
-      <div className="guardian-date-line hidden sm:block">
+      <div className="foghorn-date-line hidden sm:block">
         {dateLabel}
       </div>
 

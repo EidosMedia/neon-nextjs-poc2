@@ -5,14 +5,14 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const NotFound = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: nyt/NotFound');
+  console.log('[NEON] render: oldtown/NotFound');
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#FFFFFF' }}>
       <Navbar data={{ siteNode: data.root }} />
 
       <main className="flex-1 w-full max-w-[720px] mx-auto px-4 py-20">
-        <hr className="nyt-rule" />
+        <hr className="oldtown-rule" />
 
         {/* Section label */}
         <span style={{

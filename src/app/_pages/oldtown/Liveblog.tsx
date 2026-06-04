@@ -16,7 +16,7 @@ type PageProps = {
 };
 
 const Liveblog = async ({ data }: PageProps) => {
-  console.log('[NEON] render: nyt/Liveblog');
+  console.log('[NEON] render: oldtown/Liveblog');
 
   const articleData = data.model.data;
 
@@ -47,9 +47,9 @@ const Liveblog = async ({ data }: PageProps) => {
         try {
           const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
           if (resp.ok) nodeDataMap.set(neonId, await resp.json());
-          else console.warn('[NYT/Liveblog] embed fetch failed:', resp.status, neonId);
+          else console.warn('[oldtown/Liveblog] embed fetch failed:', resp.status, neonId);
         } catch (err) {
-          console.error('[NYT/Liveblog] embed fetch error:', neonId, err);
+          console.error('[oldtown/Liveblog] embed fetch error:', neonId, err);
         }
       }),
   );

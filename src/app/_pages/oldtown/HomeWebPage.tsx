@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
-  console.log('[NEON] render: nyt/HomeWebPage');
+  console.log('[NEON] render: oldtown/HomeWebPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
@@ -22,7 +22,7 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
 
         {/* Top rule + section label */}
         <div className="mb-4">
-          <hr className="nyt-rule" />
+          <hr className="oldtown-rule" />
         </div>
 
         {/* Main zone: hero articles — 2/3 + 1/3 split */}
@@ -35,7 +35,7 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
 
         {/* Context zone */}
         <section className="mb-6">
-          <span className="nyt-section-label">More News</span>
+          <span className="oldtown-section-label">More News</span>
           <Context data={data} />
         </section>
 
@@ -43,12 +43,12 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
 
         {/* Insight zones */}
         <section className="mb-6">
-          <span className="nyt-section-label">Opinion</span>
+          <span className="oldtown-section-label">Opinion</span>
           <Insight1 data={data} />
         </section>
 
         <section className="mb-6">
-          <span className="nyt-section-label">Arts</span>
+          <span className="oldtown-section-label">Arts</span>
           <Insight2 data={data} />
         </section>
 

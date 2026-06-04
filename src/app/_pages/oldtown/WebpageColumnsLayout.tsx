@@ -14,7 +14,7 @@ type PageProps = {
 };
 
 const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
-  console.log('[NEON] render: nyt/WebpageColumnsLayout');
+  console.log('[NEON] render: oldtown/WebpageColumnsLayout');
 
   return (
     <div className="container mx-auto p-4">

@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
-  console.log('[NEON] render: guardian/WebpageColumnsLayout');
+  console.log('[NEON] render: foghorn/WebpageColumnsLayout');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f6f6f6' }}>

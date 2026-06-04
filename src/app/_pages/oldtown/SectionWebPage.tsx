@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
-  console.log('[NEON] render: nyt/SectionWebPage');
+  console.log('[NEON] render: oldtown/SectionWebPage');
 
   const sectionTitle = data?.siteNode?.title ?? data?.model?.data?.title ?? '';
 
@@ -24,7 +24,7 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
       {sectionTitle && (
         <div className="w-full border-b border-[#DFDFDF]" style={{ backgroundColor: '#FFFFFF' }}>
           <div className="w-full max-w-[1280px] mx-auto px-4 py-4">
-            <hr className="nyt-rule mb-2" />
+            <hr className="oldtown-rule mb-2" />
             <h1 style={{
               fontFamily: 'var(--font-nav)',
               fontSize: 22,
@@ -44,23 +44,23 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
           {/* Main content column */}
           <main className="flex-1 min-w-0 flex flex-col gap-8">
             <section>
-              <hr className="nyt-rule" />
-              <span className="nyt-section-label">Top Stories</span>
+              <hr className="oldtown-rule" />
+              <span className="oldtown-section-label">Top Stories</span>
               <Main data={data} />
             </section>
             <section>
-              <hr className="nyt-rule" />
-              <span className="nyt-section-label">Latest</span>
+              <hr className="oldtown-rule" />
+              <span className="oldtown-section-label">Latest</span>
               <Context data={data} />
             </section>
             <section>
-              <hr className="nyt-rule" />
-              <span className="nyt-section-label">Opinion</span>
+              <hr className="oldtown-rule" />
+              <span className="oldtown-section-label">Opinion</span>
               <Insight1 data={data} />
             </section>
             <section>
-              <hr className="nyt-rule" />
-              <span className="nyt-section-label">More</span>
+              <hr className="oldtown-rule" />
+              <span className="oldtown-section-label">More</span>
               <Insight2 data={data} />
             </section>
           </main>

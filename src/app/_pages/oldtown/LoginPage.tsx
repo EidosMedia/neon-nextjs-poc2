@@ -5,14 +5,14 @@ import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import LoginForm from '../../components/LoginForm';
 
 const LoginPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: nyt/LoginPage');
+  console.log('[NEON] render: oldtown/LoginPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
       <Navbar data={{ siteNode: data.root }} />
 
       <div className="w-full max-w-[400px] mx-auto px-4 py-12">
-        <hr className="nyt-rule" />
+        <hr className="oldtown-rule" />
         <h1 style={{
           fontFamily: 'var(--font-headline)',
           fontSize: '1.5rem',

@@ -9,7 +9,7 @@ type PageProps = {
 };
 
 const Landing: React.FC<PageProps> = ({ data }) => {
-  console.log('[NEON] render: nyt/DefaultLanding');
+  console.log('[NEON] render: oldtown/DefaultLanding');
 
   const landingTitle = data.siteNode?.title || data.siteNode?.name || '';
 
@@ -19,7 +19,7 @@ const Landing: React.FC<PageProps> = ({ data }) => {
       <div className="w-full max-w-[1280px] mx-auto px-4 py-6">
         {landingTitle && (
           <div className="mb-6">
-            <hr className="nyt-rule" />
+            <hr className="oldtown-rule" />
             <h1 style={{
               fontFamily: 'var(--font-nav)',
               fontSize: 20,

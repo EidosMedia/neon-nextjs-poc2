@@ -26,16 +26,16 @@ const FOOTER_COLUMNS = [
 ];
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
-  console.log('[NEON] render: guardian/Footer');
+  console.log('[NEON] render: foghorn/Footer');
   return (
-    <footer data-section="footer" className="guardian-footer w-full">
+    <footer data-section="footer" className="foghorn-footer w-full">
 
       {/* Columns */}
       <div className="w-full max-w-[1300px] mx-auto px-4 pt-8 pb-6">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
           {FOOTER_COLUMNS.map(col => (
             <div key={col.title}>
-              <div className="guardian-footer-col-title">{col.title}</div>
+              <div className="foghorn-footer-col-title">{col.title}</div>
               <ul className="flex flex-col gap-1.5">
                 {col.links.map(label => (
                   <li key={label}>
@@ -63,7 +63,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
             textDecoration: 'none',
           }}
         >
-          The Guardian
+          The Foghorn
         </a>
 
         <div className="flex items-center gap-5">
@@ -73,8 +73,8 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
           <a href="#" aria-label="YouTube" style={{ color: 'rgba(255,255,255,.7)' }}><YoutubeIcon size={16} /></a>
         </div>
 
-        <div className="guardian-footer-legal flex flex-wrap justify-center gap-x-3 gap-y-1 text-center">
-          <a href="#">© {new Date().getFullYear()} Guardian News &amp; Media Limited</a>
+        <div className="foghorn-footer-legal flex flex-wrap justify-center gap-x-3 gap-y-1 text-center">
+          <a href="#">© {new Date().getFullYear()} Foghorn News &amp; Media Limited</a>
           <span>·</span>
           <a href="#">Privacy policy</a>
           <span>·</span>

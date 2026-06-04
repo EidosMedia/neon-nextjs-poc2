@@ -5,14 +5,14 @@ import Footer from './Footer';
 import Link from 'next/link';
 
 const AboutPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: guardian/AboutPage');
+  console.log('[NEON] render: foghorn/AboutPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <Navbar data={{ siteNode: data.root }} />
 
       <div className="w-full max-w-[740px] mx-auto px-4 py-10">
-        <div className="guardian-section-header">About</div>
+        <div className="foghorn-section-header">About</div>
         <h1 style={{
           fontFamily: 'var(--font-headline)',
           fontSize: 'clamp(1.4rem, 3vw, 2rem)',

@@ -5,14 +5,14 @@ import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import LoginForm from '../../components/LoginForm';
 
 const LoginPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: guardian/LoginPage');
+  console.log('[NEON] render: foghorn/LoginPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <Navbar data={{ siteNode: data.root }} />
 
       <div className="w-full max-w-[400px] mx-auto px-4 py-12">
-        <div className="guardian-section-header">Sign in</div>
+        <div className="foghorn-section-header">Sign in</div>
         <h1 style={{
           fontFamily: 'var(--font-headline)',
           fontSize: '1.5rem',

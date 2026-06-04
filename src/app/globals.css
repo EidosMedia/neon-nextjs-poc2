@@ -6,9 +6,9 @@
 
 @import "./themes/variant-a.css";
 @import "./themes/adn.css";
-@import "./themes/nyt.css";
+@import "./themes/oldtown.css";
 @import "./themes/wire.css";
-@import "./themes/guardian.css";
+@import "./themes/foghorn.css";
 
 @custom-variant dark (&:is(.dark *));
 

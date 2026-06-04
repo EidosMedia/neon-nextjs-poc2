@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
-  console.log('[NEON] render: guardian/HomeWebPage');
+  console.log('[NEON] render: foghorn/HomeWebPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f6f6f6' }}>
@@ -21,20 +21,20 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
       <div className="w-full max-w-[1300px] mx-auto px-4 py-4">
 
         {/* ── Hero zone: 2/3 + 1/3 ─────────────────────────────────────── */}
-        <div className="guardian-hero-grid">
-          <div className="guardian-hero-main">
+        <div className="foghorn-hero-grid">
+          <div className="foghorn-hero-main">
             <Main data={data} />
           </div>
-          <div className="guardian-hero-stack">
+          <div className="foghorn-hero-stack">
             <Context data={data} />
           </div>
         </div>
 
         {/* ── Section divider ───────────────────────────────────────────── */}
-        <div className="guardian-section-header">More stories</div>
+        <div className="foghorn-section-header">More stories</div>
 
         {/* ── 4-col second row ──────────────────────────────────────────── */}
-        <div className="guardian-4col-grid">
+        <div className="foghorn-4col-grid">
           <Insight1 data={data} />
           <Insight2 data={data} />
         </div>

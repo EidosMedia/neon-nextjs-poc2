@@ -10,7 +10,7 @@ type PageProps = {
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
-  console.log('[NEON] render: guardian/DefaultSection');
+  console.log('[NEON] render: foghorn/DefaultSection');
 
   const sectionTitle = (
     data.model?.data?.title ||
@@ -25,7 +25,7 @@ const Section: React.FC<PageProps> = ({ data }) => {
       <div className="w-full max-w-[1300px] mx-auto px-4 py-6">
         {sectionTitle && (
           <div className="mb-6">
-            <div className="guardian-section-header">{sectionTitle}</div>
+            <div className="foghorn-section-header">{sectionTitle}</div>
           </div>
         )}
         <DefaultSectionItemsRenderer data={data} />

@@ -17,7 +17,7 @@ type PageProps = {
 };
 
 const Article = async ({ data }: PageProps) => {
-  console.log('[NEON] render: guardian/Article');
+  console.log('[NEON] render: foghorn/Article');
 
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
@@ -81,9 +81,9 @@ const Article = async ({ data }: PageProps) => {
       try {
         const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
         if (resp.ok) nodeDataMap.set(neonId, await resp.json());
-        else console.warn('[Guardian/Article] embed fetch failed:', resp.status, 'for node', neonId);
+        else console.warn('[Foghorn/Article] embed fetch failed:', resp.status, 'for node', neonId);
       } catch (err) {
-        console.error('[Guardian/Article] embed fetch error for node', neonId, ':', err);
+        console.error('[Foghorn/Article] embed fetch error for node', neonId, ':', err);
       }
     }),
   );
@@ -99,7 +99,7 @@ const Article = async ({ data }: PageProps) => {
           <div className="mb-3">
             <Link
               href={`/${section.toLowerCase()}`}
-              className="guardian-section-label"
+              className="foghorn-section-label"
               style={{ textDecoration: 'none' }}
             >
               {section}
@@ -112,11 +112,11 @@ const Article = async ({ data }: PageProps) => {
 
           {/* Standfirst — only render if field present */}
           {standfirst && (
-            <div className="guardian-standfirst">{standfirst}</div>
+            <div className="foghorn-standfirst">{standfirst}</div>
           )}
 
           {/* Byline / share row */}
-          <div className="guardian-byline-rule">
+          <div className="foghorn-byline-rule">
             <button
               aria-label="Share"
               className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide"

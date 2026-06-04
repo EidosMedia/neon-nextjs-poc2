@@ -16,7 +16,7 @@ type PageProps = {
 };
 
 const Liveblog = async ({ data }: PageProps) => {
-  console.log('[NEON] render: guardian/Liveblog');
+  console.log('[NEON] render: foghorn/Liveblog');
 
   const articleData = data.model.data;
 
@@ -47,9 +47,9 @@ const Liveblog = async ({ data }: PageProps) => {
         try {
           const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
           if (resp.ok) nodeDataMap.set(neonId, await resp.json());
-          else console.warn('[Guardian/Liveblog] embed fetch failed:', resp.status, neonId);
+          else console.warn('[Foghorn/Liveblog] embed fetch failed:', resp.status, neonId);
         } catch (err) {
-          console.error('[Guardian/Liveblog] embed fetch error:', neonId, err);
+          console.error('[Foghorn/Liveblog] embed fetch error:', neonId, err);
         }
       }),
   );

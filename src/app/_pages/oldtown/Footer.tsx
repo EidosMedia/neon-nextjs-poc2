@@ -27,7 +27,7 @@ const FOOTER_COLUMNS = [
 
 export default async function Footer({
  data }: { data: Partial<PageData<BaseModel>> }) {
-  console.log('[NEON] render: nyt/Footer');
+  console.log('[NEON] render: oldtown/Footer');
   return (
     <footer data-section="footer" className="w-full mt-10">
 
@@ -63,7 +63,7 @@ export default async function Footer({
           textDecoration: 'none',
           letterSpacing: '-0.01em',
         }}>
-          The New York Times
+          The Oldtown Tribune
         </a>
 
         {/* Social icons */}
@@ -76,7 +76,7 @@ export default async function Footer({
 
         {/* Legal */}
         <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 footer-legal text-center">
-          <a href="#">© {new Date().getFullYear()} The New York Times Company</a>
+          <a href="#">© {new Date().getFullYear()} The Oldtown Tribune</a>
           <span>·</span>
           <a href="#">NYTCo</a>
           <span>·</span>

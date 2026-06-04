@@ -5,14 +5,14 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const NotFound = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: guardian/NotFound');
+  console.log('[NEON] render: foghorn/NotFound');
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#ffffff' }}>
       <Navbar data={{ siteNode: data.root }} />
 
       <main className="flex-1 w-full max-w-[740px] mx-auto px-4 py-20">
-        <div className="guardian-section-header">Error 404</div>
+        <div className="foghorn-section-header">Error 404</div>
 
         <div style={{
           fontFamily: 'var(--font-headline)',

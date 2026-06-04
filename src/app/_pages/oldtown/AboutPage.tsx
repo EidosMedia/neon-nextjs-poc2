@@ -5,14 +5,14 @@ import Footer from './Footer';
 import Link from 'next/link';
 
 const AboutPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: nyt/AboutPage');
+  console.log('[NEON] render: oldtown/AboutPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
       <Navbar data={{ siteNode: data.root }} />
 
       <div className="w-full max-w-[720px] mx-auto px-4 py-10">
-        <hr className="nyt-rule" />
+        <hr className="oldtown-rule" />
         <h1 style={{
           fontFamily: 'var(--font-headline)',
           fontSize: 'clamp(1.4rem, 3vw, 2rem)',

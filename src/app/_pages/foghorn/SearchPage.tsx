@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const SearchPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: guardian/SearchPage');
+  console.log('[NEON] render: foghorn/SearchPage');
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f6f6f6' }}>
@@ -12,7 +12,7 @@ const SearchPage = ({ data }: { data: Site }) => {
 
       <div className="w-full max-w-[1300px] mx-auto px-4 py-8">
         <div className="mb-8">
-          <div className="guardian-section-header">Search</div>
+          <div className="foghorn-section-header">Search</div>
           <h1 style={{
             fontFamily: 'var(--font-headline)',
             fontSize: 'clamp(1.4rem, 3vw, 2rem)',

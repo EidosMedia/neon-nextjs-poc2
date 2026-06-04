@@ -15,7 +15,7 @@ type PageProps = {
 };
 
 const Article = async ({ data }: PageProps) => {
-  console.log('[NEON] render: guardian/ArticleLongform');
+  console.log('[NEON] render: foghorn/ArticleLongform');
 
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
@@ -78,9 +78,9 @@ const Article = async ({ data }: PageProps) => {
         try {
           const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
           if (resp.ok) nodeDataMap.set(neonId, await resp.json());
-          else console.warn('[Guardian/ArticleLongform] embed fetch failed:', resp.status, 'for node', neonId);
+          else console.warn('[Foghorn/ArticleLongform] embed fetch failed:', resp.status, 'for node', neonId);
         } catch (err) {
-          console.error('[Guardian/ArticleLongform] embed fetch error for node', neonId, ':', err);
+          console.error('[Foghorn/ArticleLongform] embed fetch error for node', neonId, ':', err);
         }
       }),
   );
