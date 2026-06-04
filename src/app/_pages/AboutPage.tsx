@@ -4,6 +4,8 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const AboutPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: default/AboutPage');
+
   return (
     <div className="container mx-auto text-center flex flex-col items-center justify-center">
       <Navbar data={{ siteNode: data.root }} />

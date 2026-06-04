@@ -9,6 +9,8 @@ type PageProps = {
 };
 
 const Landing: React.FC<PageProps> = ({ data }) => {
+  console.log('[NEON] render: default/DefaultLanding');
+
   return (
     <div className="container mx-auto">
       <Navbar data={data} />

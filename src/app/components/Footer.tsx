@@ -15,7 +15,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
   }
 
   const menus = site.menus;
-  console.log('Menus:', menus);
+  //console.log('Menus:', menus);
 
   // Helper to flatten children for links
   function flattenLinks(items: any[]): any[] {

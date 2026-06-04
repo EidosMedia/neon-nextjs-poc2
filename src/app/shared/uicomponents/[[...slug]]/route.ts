@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthOptions } from '@/utilities/security';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ slug?: string[] }> }) {
   const { slug } = await params;
   const filePath = slug ? slug.join('/') : '';
 
-  const upstream = await connection.fetchUiComponent(filePath);
+  const apiHostname = req.headers.get('x-neon-backend-url') ?? '';
+  const auth = await getAuthOptions();
+  const upstream = await connection.makeApiRequest(`/shared/uicomponents/${filePath}`, auth, {}, apiHostname);
 
   if (!upstream.ok) {
     return new NextResponse(`Upstream error: ${upstream.statusText}`, {

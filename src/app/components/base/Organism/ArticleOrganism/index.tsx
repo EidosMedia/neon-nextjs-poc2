@@ -67,6 +67,10 @@ const getArticleClasses = (type: string) => {
 };
 
 const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, linkedObjects, index, type }) => {
+  console.log('[NEON] render: ArticleOrganism');
+  //console.log('ArticleOrganism Props:', { linkedObject, linkedObjects, index, type });
+  console.log('linkedObject ID:', linkedObject?.id);
+  
   const TitleComponent = type === 'article-xl' ? 'h1' : 'h2';
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`].url;

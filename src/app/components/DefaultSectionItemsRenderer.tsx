@@ -8,7 +8,11 @@ type DefaultSectionItemsRendererProps = {
 };
 
 const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = ({ data }) => {
+  console.log('[NEON] render: DefaultSectionItemsRenderer');
+  
   const linkedObjects = data.model.data.children ? data.model.data.children.map(item => data.model.nodes[item]) : [];
+
+  //console.log('Linked Objects:', linkedObjects);
 
   if (linkedObjects.length === 0) {
     return <div className="container mx-auto flex align-center justify-center">No articles found.</div>;
@@ -18,7 +22,7 @@ const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = 
     <>
       <ArticleOrganism
         linkedObjects={linkedObjects}
-        linkedObject={linkedObjects.pop()}
+        linkedObject={linkedObjects.shift()}
         index={0}
         data={data}
         type="article-xl"

@@ -11,6 +11,8 @@ type PageProps = {
 };
 
 const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
+  console.log('[NEON] render: default/HomeWebPage');
+
   return (
     <div className="container mx-auto">
       <Navbar data={data}></Navbar>

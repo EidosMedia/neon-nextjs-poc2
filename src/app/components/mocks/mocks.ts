@@ -225,7 +225,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -241,7 +241,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/02/trump-new-tariffs-liberation-day',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/02/trump-new-tariffs-liberation-day',
                               },
                               elements: [
                                 {
@@ -257,7 +257,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/02/trump-tariffs-new-york-reaction',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/02/trump-tariffs-new-york-reaction',
                               },
                               elements: [
                                 {
@@ -292,7 +292,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/03/trump-tariffs-stock-market',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/03/trump-tariffs-stock-market',
                               },
                               elements: [
                                 {
@@ -309,7 +309,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/politics/eu-referendum',
+                                href: 'https://www.thefoghorn.com/politics/eu-referendum',
                               },
                               elements: [
                                 {
@@ -335,7 +335,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -352,7 +352,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/trump-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/trump-tariffs',
                               },
                               elements: [
                                 {
@@ -379,7 +379,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/02/trump-tariffs-analysis',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/02/trump-tariffs-analysis',
                               },
                               elements: [
                                 {
@@ -395,7 +395,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/03/trumps-idiotic-and-flawed-tariff-calculations-stun-economists',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/03/trumps-idiotic-and-flawed-tariff-calculations-stun-economists',
                               },
                               elements: [
                                 {
@@ -411,7 +411,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/03/republicans-rebuke-trump-tariffs-canada',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/03/republicans-rebuke-trump-tariffs-canada',
                               },
                               elements: [
                                 {
@@ -427,7 +427,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/03/donald-trump-tariffs-antarctica-uninhabited-heard-mcdonald-islands',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/03/donald-trump-tariffs-antarctica-uninhabited-heard-mcdonald-islands',
                               },
                               elements: [
                                 {
@@ -541,7 +541,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/jan/31/trump-tariffs-canada-mexico-china',
+                                href: 'https://www.thefoghorn.com/us-news/2025/jan/31/trump-tariffs-canada-mexico-china',
                               },
                               elements: [
                                 {
@@ -568,7 +568,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/11/trump-double-canada-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/11/trump-double-canada-tariffs',
                               },
                               elements: [
                                 {
@@ -650,7 +650,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2017/jan/29/smoot-hawley-tariffs-protectionism-donald-trump',
+                                href: 'https://www.thefoghorn.com/us-news/2017/jan/29/smoot-hawley-tariffs-protectionism-donald-trump',
                               },
                               elements: [
                                 {
@@ -1293,7 +1293,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -1309,7 +1309,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/09/trump-tariffs-pause-china',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/09/trump-tariffs-pause-china',
                               },
                               elements: [
                                 {
@@ -1326,7 +1326,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/08/trump-global-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/08/trump-global-tariffs',
                               },
                               elements: [
                                 {
@@ -1363,7 +1363,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/apr/03/trumps-tariffs-the-full-list',
+                                href: 'https://www.thefoghorn.com/business/2025/apr/03/trumps-tariffs-the-full-list',
                               },
                               elements: [
                                 {
@@ -1552,7 +1552,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/technology/2025/apr/09/trump-tariffs-electronics-repair',
+                                href: 'https://www.thefoghorn.com/technology/2025/apr/09/trump-tariffs-electronics-repair',
                               },
                               elements: [
                                 {
@@ -1681,7 +1681,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/useconomy',
+                                href: 'https://www.thefoghorn.com/business/useconomy',
                               },
                               elements: [
                                 {
@@ -2292,7 +2292,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/may/12/china-us-agree-pause-trade-war-trump',
+                                href: 'https://www.thefoghorn.com/us-news/2025/may/12/china-us-agree-pause-trade-war-trump',
                               },
                               elements: [
                                 {
@@ -2319,7 +2319,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/politics/2025/apr/29/trump-makes-trade-deal-with-uk-second-order-priority-in-blow-to-ministers',
+                                href: 'https://www.thefoghorn.com/politics/2025/apr/29/trump-makes-trade-deal-with-uk-second-order-priority-in-blow-to-ministers',
                               },
                               elements: [
                                 {
@@ -2358,7 +2358,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/wal-mart',
+                                href: 'https://www.thefoghorn.com/business/wal-mart',
                               },
                               elements: [
                                 {
@@ -2375,7 +2375,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/trump-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/trump-tariffs',
                               },
                               elements: [
                                 {
@@ -2402,7 +2402,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/technology/2025/may/15/trump-little-problem-tim-cook-apple-india-production-iphones',
+                                href: 'https://www.thefoghorn.com/technology/2025/may/15/trump-little-problem-tim-cook-apple-india-production-iphones',
                               },
                               elements: [
                                 {
@@ -2430,7 +2430,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/politics/2025/may/14/china-issues-warning-to-uk-over-terms-of-us-trade-deal',
+                                href: 'https://www.thefoghorn.com/politics/2025/may/14/china-issues-warning-to-uk-over-terms-of-us-trade-deal',
                               },
                               elements: [
                                 {
@@ -2943,7 +2943,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/10/trump-tariff-pause-brings-relief-for-global-stock-markets',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/10/trump-tariff-pause-brings-relief-for-global-stock-markets',
                               },
                               elements: [
                                 {
@@ -3003,7 +3003,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/09/trump-tariffs-pause-china',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/09/trump-tariffs-pause-china',
                               },
                               elements: [
                                 {
@@ -3031,7 +3031,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/apr/09/dramatic-sell-off-of-us-government-bonds-as-tariff-war-panic-deepens',
+                                href: 'https://www.thefoghorn.com/business/2025/apr/09/dramatic-sell-off-of-us-government-bonds-as-tariff-war-panic-deepens',
                               },
                               elements: [
                                 {
@@ -3059,7 +3059,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/09/trump-tariffs-pause-china',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/09/trump-tariffs-pause-china',
                               },
                               elements: [
                                 {
@@ -3118,7 +3118,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/live/2025/apr/10/trump-tariffs-us-china-eu-trade-war-markets-latest-news-updates?page=with%3Ablock-67f7e1c98f0861692b423e20#block-67f7e1c98f0861692b423e20',
+                                href: 'https://www.thefoghorn.com/business/live/2025/apr/10/trump-tariffs-us-china-eu-trade-war-markets-latest-news-updates?page=with%3Ablock-67f7e1c98f0861692b423e20#block-67f7e1c98f0861692b423e20',
                               },
                               elements: [
                                 {
@@ -3134,7 +3134,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/apr/09/donald-trump-unleashes-new-wave-of-tariffs-against-dozens-of-countries-china',
+                                href: 'https://www.thefoghorn.com/business/2025/apr/09/donald-trump-unleashes-new-wave-of-tariffs-against-dozens-of-countries-china',
                               },
                               elements: [
                                 {
@@ -3172,7 +3172,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/10/donald-trump-ignites-insider-trading-accusations-after-global-tariffs-u-turn',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/10/donald-trump-ignites-insider-trading-accusations-after-global-tariffs-u-turn',
                               },
                               elements: [
                                 {
@@ -3286,7 +3286,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/apr/05/rachel-reeves-must-break-her-fiscal-rules-better-now-than-later',
+                                href: 'https://www.thefoghorn.com/business/2025/apr/05/rachel-reeves-must-break-her-fiscal-rules-better-now-than-later',
                               },
                               elements: [
                                 {
@@ -3770,7 +3770,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -3786,7 +3786,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/trump-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/trump-tariffs',
                               },
                               elements: [
                                 {
@@ -3924,7 +3924,7 @@ export const ragData = {
                             {
                               nodeType: 'plainText',
                               value:
-                                '“This was his strategy all along. President Trump created maximum negotiating leverage for himself,” said Scott Bessent, the US treasury secretary, who had been locked in urgent discussions with the president onboard Air Force One on Sunday about the effect of last week’s “liberation day” tariffs, according to the New York Times.',
+                                '“This was his strategy all along. President Trump created maximum negotiating leverage for himself,” said Scott Bessent, the US treasury secretary, who had been locked in urgent discussions with the president onboard Air Force One on Sunday about the effect of last week’s “liberation day” tariffs, according to the Oldtown Tribune.',
                             },
                           ],
                         },
@@ -4545,7 +4545,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/26/trump-new-car-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/26/trump-new-car-tariffs',
                               },
                               elements: [
                                 {
@@ -4638,7 +4638,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/05/trump-tariffs-canada-mexico',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/05/trump-tariffs-canada-mexico',
                               },
                               elements: [
                                 {
@@ -4655,7 +4655,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/06/trump-canada-mexico-tariff-delay-exemptions',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/06/trump-canada-mexico-tariff-delay-exemptions',
                               },
                               elements: [
                                 {
@@ -4692,7 +4692,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/jan/31/trump-tariffs-canada-mexico-china',
+                                href: 'https://www.thefoghorn.com/us-news/2025/jan/31/trump-tariffs-canada-mexico-china',
                               },
                               elements: [
                                 {
@@ -4708,7 +4708,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/feb/13/trump-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/feb/13/trump-tariffs',
                               },
                               elements: [
                                 {
@@ -4724,7 +4724,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/04/trump-congress-speech-key-takeaways',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/04/trump-congress-speech-key-takeaways',
                               },
                               elements: [
                                 {
@@ -4750,7 +4750,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/06/trump-tariffs-prices-scott-bessent',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/06/trump-tariffs-prices-scott-bessent',
                               },
                               elements: [
                                 {
@@ -4778,7 +4778,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/15/bourbon-makers-trump-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/15/bourbon-makers-trump-tariffs',
                               },
                               elements: [
                                 {
@@ -4827,7 +4827,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2017/jan/29/smoot-hawley-tariffs-protectionism-donald-trump',
+                                href: 'https://www.thefoghorn.com/us-news/2017/jan/29/smoot-hawley-tariffs-protectionism-donald-trump',
                               },
                               elements: [
                                 {
@@ -4865,7 +4865,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/24/journalist-trump-yemen-war-chat',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/24/journalist-trump-yemen-war-chat',
                               },
                               elements: [
                                 {
@@ -5409,7 +5409,7 @@ export const ragData = {
                                   elements: [
                                     {
                                       nodeType: 'plainText',
-                                      value: 'Composite: The Guardian/Getty Images',
+                                      value: 'Composite: The Foghorn/Getty Images',
                                     },
                                   ],
                                 },
@@ -5522,7 +5522,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/may/15/walmart-raise-prices-trump-tariffs',
+                                href: 'https://www.thefoghorn.com/business/2025/may/15/walmart-raise-prices-trump-tariffs',
                               },
                               elements: [
                                 {
@@ -5538,7 +5538,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/apr/30/economy-gdp-q1-trump-tariffs',
+                                href: 'https://www.thefoghorn.com/business/2025/apr/30/economy-gdp-q1-trump-tariffs',
                               },
                               elements: [
                                 {
@@ -5554,7 +5554,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/may/16/trump-us-tariff-rates-trading-partners',
+                                href: 'https://www.thefoghorn.com/us-news/2025/may/16/trump-us-tariff-rates-trading-partners',
                               },
                               elements: [
                                 {
@@ -5603,7 +5603,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/global-development/2025/apr/04/lesotho-garment-workers-reel-trump-tariffs',
+                                href: 'https://www.thefoghorn.com/global-development/2025/apr/04/lesotho-garment-workers-reel-trump-tariffs',
                               },
                               elements: [
                                 {
@@ -5641,7 +5641,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/03/donald-trump-tariffs-antarctica-uninhabited-heard-mcdonald-islands',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/03/donald-trump-tariffs-antarctica-uninhabited-heard-mcdonald-islands',
                               },
                               elements: [
                                 {
@@ -5668,7 +5668,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/03/trump-tariffs-stock-market',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/03/trump-tariffs-stock-market',
                               },
                               elements: [
                                 {
@@ -5858,7 +5858,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/may/12/americans-economy-trump-poll',
+                                href: 'https://www.thefoghorn.com/business/2025/may/12/americans-economy-trump-poll',
                               },
                               elements: [
                                 {
@@ -5906,7 +5906,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/apr/30/economy-gdp-q1-trump-tariffs',
+                                href: 'https://www.thefoghorn.com/business/2025/apr/30/economy-gdp-q1-trump-tariffs',
                               },
                               elements: [
                                 {
@@ -6004,7 +6004,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/politics/2025/may/08/trump-and-starmer-confirm-breakthrough-us-uk-trade-deal',
+                                href: 'https://www.thefoghorn.com/politics/2025/may/08/trump-and-starmer-confirm-breakthrough-us-uk-trade-deal',
                               },
                               elements: [
                                 {
@@ -6124,7 +6124,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/may/12/china-us-agree-pause-trade-war-trump',
+                                href: 'https://www.thefoghorn.com/us-news/2025/may/12/china-us-agree-pause-trade-war-trump',
                               },
                               elements: [
                                 {
@@ -6259,7 +6259,7 @@ export const ragData = {
                                   elements: [
                                     {
                                       nodeType: 'plainText',
-                                      value: 'Composite: The Guardian/Getty Images',
+                                      value: 'Composite: The Foghorn/Getty Images',
                                     },
                                   ],
                                 },
@@ -6651,7 +6651,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -6723,7 +6723,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/may/23/donald-trump-threatens-25-percent-tariff-iphones-not-made-in-us',
+                                href: 'https://www.thefoghorn.com/us-news/2025/may/23/donald-trump-threatens-25-percent-tariff-iphones-not-made-in-us',
                               },
                               elements: [
                                 {
@@ -6783,7 +6783,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/02/trump-new-tariffs-liberation-day',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/02/trump-new-tariffs-liberation-day',
                               },
                               elements: [
                                 {
@@ -6833,7 +6833,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/may/12/china-us-agree-pause-trade-war-trump',
+                                href: 'https://www.thefoghorn.com/us-news/2025/may/12/china-us-agree-pause-trade-war-trump',
                               },
                               elements: [
                                 {
@@ -6861,7 +6861,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/may/16/trump-us-tariff-rates-trading-partners',
+                                href: 'https://www.thefoghorn.com/us-news/2025/may/16/trump-us-tariff-rates-trading-partners',
                               },
                               elements: [
                                 {
@@ -6888,7 +6888,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/may/23/donald-trump-threatens-25-percent-tariff-iphones-not-made-in-us',
+                                href: 'https://www.thefoghorn.com/us-news/2025/may/23/donald-trump-threatens-25-percent-tariff-iphones-not-made-in-us',
                               },
                               elements: [
                                 {
@@ -7412,7 +7412,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -7428,7 +7428,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/world/canada',
+                                href: 'https://www.thefoghorn.com/world/canada',
                               },
                               elements: [
                                 {
@@ -7449,7 +7449,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/world/mexico',
+                                href: 'https://www.thefoghorn.com/world/mexico',
                               },
                               elements: [
                                 {
@@ -7498,7 +7498,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/05/trump-tariffs-canada-mexico',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/05/trump-tariffs-canada-mexico',
                               },
                               elements: [
                                 {
@@ -7514,7 +7514,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/04/higher-prices-trump-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/04/higher-prices-trump-tariffs',
                               },
                               elements: [
                                 {
@@ -7584,7 +7584,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/04/trump-congress-speech-key-takeaways',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/04/trump-congress-speech-key-takeaways',
                               },
                               elements: [
                                 {
@@ -7622,7 +7622,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/mar/04/trump-tariffs-canada-mexico-china',
+                                href: 'https://www.thefoghorn.com/us-news/2025/mar/04/trump-tariffs-canada-mexico-china',
                               },
                               elements: [
                                 {
@@ -7660,7 +7660,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2024/nov/27/trump-tariffs-policies-prices',
+                                href: 'https://www.thefoghorn.com/business/2024/nov/27/trump-tariffs-policies-prices',
                               },
                               elements: [
                                 {
@@ -7676,7 +7676,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/jan/26/trump-tariffs-businesses-global-worldwide',
+                                href: 'https://www.thefoghorn.com/business/2025/jan/26/trump-tariffs-businesses-global-worldwide',
                               },
                               elements: [
                                 {
@@ -7692,7 +7692,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/trump-administration',
+                                href: 'https://www.thefoghorn.com/us-news/trump-administration',
                               },
                               elements: [
                                 {
@@ -8227,7 +8227,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/08/trump-global-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/08/trump-global-tariffs',
                               },
                               elements: [
                                 {
@@ -8319,7 +8319,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/05/trump-tariffs-come-into-effect-in-seismic-shift-to-global-trade',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/05/trump-tariffs-come-into-effect-in-seismic-shift-to-global-trade',
                               },
                               elements: [
                                 {
@@ -8389,7 +8389,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/apr/03/trumps-idiotic-and-flawed-tariff-calculations-stun-economists',
+                                href: 'https://www.thefoghorn.com/us-news/2025/apr/03/trumps-idiotic-and-flawed-tariff-calculations-stun-economists',
                               },
                               elements: [
                                 {
@@ -8455,7 +8455,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2024/nov/22/scott-bessent-trump-treasury',
+                                href: 'https://www.thefoghorn.com/us-news/2024/nov/22/scott-bessent-trump-treasury',
                               },
                               elements: [
                                 {
@@ -9044,7 +9044,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -9785,7 +9785,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/donaldtrump',
+                                href: 'https://www.thefoghorn.com/us-news/donaldtrump',
                               },
                               elements: [
                                 {
@@ -9854,7 +9854,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/australia-news/2025/feb/11/australian-tariffs-exemption-under-consideration-after-positive-call-between-pm-and-trump',
+                                href: 'https://www.thefoghorn.com/australia-news/2025/feb/11/australian-tariffs-exemption-under-consideration-after-positive-call-between-pm-and-trump',
                               },
                               elements: [
                                 {
@@ -10000,7 +10000,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/world/2025/feb/10/eu-says-it-will-retaliate-immediately-if-trump-imposes-new-tariffs',
+                                href: 'https://www.thefoghorn.com/world/2025/feb/10/eu-says-it-will-retaliate-immediately-if-trump-imposes-new-tariffs',
                               },
                               elements: [
                                 {
@@ -10060,7 +10060,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/feb/04/trump-china-tariffs',
+                                href: 'https://www.thefoghorn.com/us-news/2025/feb/04/trump-china-tariffs',
                               },
                               elements: [
                                 {
@@ -10077,7 +10077,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/us-news/2025/feb/09/trump-tariffs-canada-mexico-china',
+                                href: 'https://www.thefoghorn.com/us-news/2025/feb/09/trump-tariffs-canada-mexico-china',
                               },
                               elements: [
                                 {
@@ -10147,7 +10147,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/business/2025/jan/31/trump-tariffs-us-economy',
+                                href: 'https://www.thefoghorn.com/business/2025/jan/31/trump-tariffs-us-economy',
                               },
                               elements: [
                                 {
@@ -10751,7 +10751,7 @@ export const ragData = {
                             {
                               nodeType: 'anchor',
                               attributes: {
-                                href: 'https://www.theguardian.com/world/2025/feb/03/mexican-president-announces-one-month-pause-on-trump-us-tariffs',
+                                href: 'https://www.thefoghorn.com/world/2025/feb/03/mexican-president-announces-one-month-pause-on-trump-us-tariffs',
                               },
                               elements: [
                                 {

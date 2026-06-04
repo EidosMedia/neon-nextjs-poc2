@@ -6,7 +6,7 @@ import { Input } from './textInput';
 import Select from './select';
 import { ReactNode } from 'react';
 
-const TempEntryPage = () => {
+const UIStyleGuide = () => {
   if (process.env.NODE_ENV !== 'development') {
     notFound();
   }
@@ -199,4 +199,4 @@ export const ComponentsContainer = ({ className = '', children, title }: Compone
   );
 };
 
-export default TempEntryPage;
+export default UIStyleGuide;

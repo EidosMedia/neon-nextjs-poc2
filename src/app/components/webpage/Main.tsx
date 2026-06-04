@@ -10,6 +10,8 @@ type WebpageFragmentProps = {
 };
 
 const Main: React.FC<WebpageFragmentProps> = async ({ data, displayMainPicture = true }) => {
+  console.log('[NEON] render: Webpage/Main');
+  
   const linkedObjects = await connection.getDwxLinkedObjects(data, 'main');
 
   return <ArticleWebpage data={data} displayMainPicture={displayMainPicture} linkedObjects={linkedObjects} />;

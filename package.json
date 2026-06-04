@@ -10,6 +10,7 @@
     "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 next start",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
+    "scaffold:theme": "node scripts/scaffold-theme.mjs",
     "prepare": "husky"
   },
   "dependencies": {

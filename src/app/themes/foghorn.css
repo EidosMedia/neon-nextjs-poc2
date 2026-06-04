@@ -1,0 +1,225 @@
+/* Guardian Theme — data-theme="foghorn" */
+/* Guardian Egyptian → Georgia; Guardian Sans → system-ui */
+
+/* ─── CSS Variable Overrides ─────────────────────────────────────────────── */
+.root[data-theme="foghorn"] {
+  --font-headline: 'Georgia', 'Times New Roman', serif;
+  --font-body:     'Georgia', 'Times New Roman', serif;
+  --font-nav:      system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+
+  --color-primary:          #052962;
+  --color-primary-dark:     #041f4a;
+  --color-primary-light:    #005689;
+  --color-primary-lightest: #e3f0f9;
+
+  --color-neutral-primary:  #121212;
+  --color-neutral-secondary:#333333;
+  --color-neutral-light-2:  #666666;
+  --color-neutral-light:    #dcdcdc;
+  --color-neutral-lightest: #ffffff;
+  --color-neutral-bg:       #f6f6f6;
+
+  --color-nav-bg:           #052962;
+  --color-footer-bg:        #052962;
+
+  --border-card:            none;
+  --radius-card:            0px;
+}
+
+/* ─── Global ──────────────────────────────────────────────────────────────── */
+.root[data-theme="foghorn"] {
+  background-color: #f6f6f6;
+  color: #121212;
+  font-family: var(--font-body);
+}
+
+/* ─── Layout Helpers ──────────────────────────────────────────────────────── */
+.root[data-theme="foghorn"] .foghorn-hero-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1px;
+  background: #dcdcdc;
+  align-items: start;
+}
+
+.root[data-theme="foghorn"] .foghorn-hero-main,
+.root[data-theme="foghorn"] .foghorn-hero-stack > * {
+  background: #f6f6f6;
+}
+
+.root[data-theme="foghorn"] .foghorn-hero-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: #dcdcdc;
+}
+
+.root[data-theme="foghorn"] .foghorn-4col-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #dcdcdc;
+}
+
+.root[data-theme="foghorn"] .foghorn-4col-grid > * {
+  background: #f6f6f6;
+}
+
+.root[data-theme="foghorn"] .foghorn-section-header {
+  border-top: 3px solid #052962;
+  padding-top: 6px;
+  margin: 16px 0 8px;
+  font-family: var(--font-nav);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #052962;
+}
+
+/* ─── Section Labels & Standfirst ────────────────────────────────────────── */
+.root[data-theme="foghorn"] .foghorn-section-label {
+  display: inline-block;
+  font-family: var(--font-nav);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #c70000;
+  margin-bottom: 4px;
+}
+
+.root[data-theme="foghorn"] .foghorn-standfirst {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #333333;
+  border-left: 3px solid #c70000;
+  padding-left: 12px;
+  margin: 12px 0;
+}
+
+.root[data-theme="foghorn"] .foghorn-byline-rule {
+  border-bottom: 1px dotted #dcdcdc;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ─── Navbar ──────────────────────────────────────────────────────────────── */
+.root[data-theme="foghorn"] .foghorn-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #052962;
+}
+
+.root[data-theme="foghorn"] .foghorn-pillar-link {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0 10px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+.root[data-theme="foghorn"] .foghorn-pillar-link:first-child {
+  padding-left: 0;
+}
+.root[data-theme="foghorn"] .foghorn-pillar-link:last-of-type {
+  border-right: none;
+}
+.root[data-theme="foghorn"] .foghorn-pillar-link:hover {
+  color: #ffbb00;
+}
+
+.root[data-theme="foghorn"] .foghorn-masthead {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: clamp(1.2rem, 3vw, 1.7rem);
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.root[data-theme="foghorn"] .foghorn-support-btn {
+  background: #c70000;
+  color: #ffffff;
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.root[data-theme="foghorn"] .foghorn-support-btn:hover {
+  background: #a30000;
+}
+
+.root[data-theme="foghorn"] .foghorn-subscribe-link {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffbb00;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.root[data-theme="foghorn"] .foghorn-subscribe-link:hover {
+  text-decoration: underline;
+}
+
+.root[data-theme="foghorn"] .foghorn-date-line {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 3px 12px;
+  background: #052962;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Footer ──────────────────────────────────────────────────────────────── */
+.root[data-theme="foghorn"] .foghorn-footer {
+  background: #052962;
+  color: #ffffff;
+  margin-top: 40px;
+}
+
+.root[data-theme="foghorn"] .foghorn-footer-col-title {
+  font-family: var(--font-nav);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.root[data-theme="foghorn"] .foghorn-footer a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.75rem;
+}
+.root[data-theme="foghorn"] .foghorn-footer a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.root[data-theme="foghorn"] .foghorn-footer-legal {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.root[data-theme="foghorn"] .foghorn-footer-legal a {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.65rem;
+}

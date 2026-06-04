@@ -5,6 +5,10 @@
 @tailwind utilities;
 
 @import "./themes/variant-a.css";
+@import "./themes/adn.css";
+@import "./themes/oldtown.css";
+@import "./themes/wire.css";
+@import "./themes/foghorn.css";
 
 @custom-variant dark (&:is(.dark *));
 

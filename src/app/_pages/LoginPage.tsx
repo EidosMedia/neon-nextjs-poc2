@@ -5,6 +5,8 @@ import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import LoginForm from '../components/LoginForm';
 
 const LoginPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: default/LoginPage');
+
   return (
     <div className="container mx-auto">
       <Navbar data={{ siteNode: data.root }} />

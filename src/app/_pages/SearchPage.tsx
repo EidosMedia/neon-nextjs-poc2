@@ -3,6 +3,8 @@ import SearchResult from '../components/SearchResult';
 import NavbarSearch from '../components/NavbarSearch';
 
 const SearchPage = ({ data }: { data: Site }) => {
+  console.log('[NEON] render: default/SearchPage');
+
   return (
     <div className="container mx-auto">
       <NavbarSearch data={{ siteNode: data.root }} />
