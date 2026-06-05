@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
-  console.log('[NEON] render: default/SectionWebPage');
+  console.log('[NEON] render: sportsarena/SectionWebPage');
 
   return (
     <div className="container mx-auto">

@@ -9,7 +9,7 @@ type PageProps = {
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
-  console.log('[NEON] render: default/DefaultSection');
+  console.log('[NEON] render: sportsarena/DefaultSection');
 
   return (
     <div className="container mx-auto">

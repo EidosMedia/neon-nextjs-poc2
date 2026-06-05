@@ -9,7 +9,7 @@ type PageProps = {
 };
 
 const Landing: React.FC<PageProps> = ({ data }) => {
-  console.log('[NEON] render: default/DefaultLanding');
+  console.log('[NEON] render: sportsarena/DefaultLanding');
 
   return (
     <div className="container mx-auto">

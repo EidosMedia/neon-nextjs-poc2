@@ -6,7 +6,7 @@ import Footer from '../../components/Footer';
 import Logo from '../../components/Logo';
 
 const NotFound = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: default/NotFound');
+  console.log('[NEON] render: sportsarena/NotFound');
 
   return (
     <div className="min-h-screen flex flex-col">

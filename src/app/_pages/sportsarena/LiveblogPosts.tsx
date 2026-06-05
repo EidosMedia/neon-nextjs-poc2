@@ -19,7 +19,7 @@ type PageProps = {
 };
 
 const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
-  React.useEffect(() => { console.log('[NEON] mount: default/LiveblogPosts'); }, []);
+  React.useEffect(() => { console.log('[NEON] mount: sportsarena/LiveblogPosts'); }, []);
 
   const lastLoadedPostId = useRef<string>(null);
 

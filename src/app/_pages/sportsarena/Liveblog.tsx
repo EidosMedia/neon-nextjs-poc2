@@ -17,7 +17,7 @@ type PageProps = {
 };
 
 const Liveblog = async ({ data }: PageProps) => {
-  console.log('[NEON] render: default/Liveblog');
+  console.log('[NEON] render: sportsarena/Liveblog');
 
   const articleData = data.model.data;
 

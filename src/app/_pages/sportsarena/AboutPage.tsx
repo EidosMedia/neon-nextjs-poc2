@@ -4,7 +4,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 const AboutPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: default/AboutPage');
+  console.log('[NEON] render: sportsarena/AboutPage');
 
   return (
     <div className="container mx-auto text-center flex flex-col items-center justify-center">

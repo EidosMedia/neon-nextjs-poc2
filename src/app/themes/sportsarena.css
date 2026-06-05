@@ -261,6 +261,8 @@
   right: 0;
   padding: 20px 24px;
   max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .root[data-theme="sportsarena"] .sa-article-sport-badge {
