@@ -3,6 +3,7 @@ import * as Adn from './_pages/adn';
 import * as Oldtown from './_pages/oldtown';
 import * as Wire from './_pages/wire';
 import * as Foghorn from './_pages/foghorn';
+import * as Sportsarena from './_pages/sportsarena';
 
 type PageComponents = typeof Default;
 
@@ -11,7 +12,8 @@ const THEME_MAP: Record<string, PageComponents> = {
   adn: Adn,
   oldtown: Oldtown,
   wire: Wire,
-  foghorn: Foghorn,
+  foghorn:      Foghorn,
+  sportsarena:  Sportsarena,
 };
 
 // componentKey must match a named export from the theme's index.ts barrel

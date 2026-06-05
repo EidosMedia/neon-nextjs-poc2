@@ -9,6 +9,7 @@
 @import "./themes/oldtown.css";
 @import "./themes/wire.css";
 @import "./themes/foghorn.css";
+@import "./themes/sportsarena.css";
 
 @custom-variant dark (&:is(.dark *));
 
