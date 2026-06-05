@@ -14,4 +14,4 @@ export { default as WebpageColumnsLayout } from './WebpageColumnsLayout';
 
 // Required by PageComponents type shape
 export { default as UIStyleGuide }    from '../../components/baseComponents/UIStyleGuide';
-export { default as ArticleOrganism } from '../../components/base/Organism/ArticleOrganism';
+export { default as ArticleOrganism } from './components/ArticleOrganism';
