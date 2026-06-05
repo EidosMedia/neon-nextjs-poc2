@@ -1,6 +1,6 @@
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbar from '../../components/Navbar';
+import Navbar from './Navbar';
 import ArticleWebpage from '../../components/ArticleWebpage';
 import ArticleBanner from '../../components/ArticleBanner';
 import React from 'react';
@@ -8,7 +8,7 @@ import Main from '../../components/webpage/Main';
 import MainWithHero from '../../components/webpage/MainWithHero';
 import Context from '../../components/webpage/Context';
 import Insight1 from '../../components/webpage/Insight1';
-import Footer from '../../components/Footer';
+import Footer from './Footer';
 type PageProps = {
   data: PageData<WebpageModel>;
 };

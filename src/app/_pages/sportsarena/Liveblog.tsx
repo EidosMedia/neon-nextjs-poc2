@@ -1,12 +1,12 @@
 import React from 'react';
 import { ArticleModel } from '@/types/models';
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbar from '../../components/Navbar';
+import Navbar from './Navbar';
 import { renderContent, findElementsInContentJson, findCustomComponentNodes } from '@/utilities/content';
 import Grouphead from '../../components/contentElements/Grouphead';
 import MainImage from '../../components/contentElements/MainImage';
 import LiveblogPosts from './LiveblogPosts';
-import Footer from '../../components/Footer';
+import Footer from './Footer';
 import { CircleDot } from 'lucide-react';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';

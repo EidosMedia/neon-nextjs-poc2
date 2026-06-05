@@ -1,7 +1,7 @@
 import React from 'react';
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const AboutPage = ({ data }: { data: Site }) => {
   console.log('[NEON] render: sportsarena/AboutPage');

@@ -1,8 +1,8 @@
 import { WebpageModel } from '@/types/models/WebpageModel';
-import Navbar from '../../components/Navbar';
+import Navbar from './Navbar';
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import DefaultSectionItemsRenderer from '../../components/DefaultSectionItemsRenderer';
-import Footer from '../../components/Footer';
+import Footer from './Footer';
 
 type PageProps = {
   data: PageData<WebpageModel>;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { ArticleModel } from '@/types/models';
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbar from '../../components/Navbar';
+import Navbar from './Navbar';
 import { renderContent, findElementsInContentJson, findCustomComponentNodes } from '@/utilities/content';
 import HeroCoverImage from '../../components/contentElements/HeroCoverImage';
 import Summary from '../../components/contentElements/Summary';
-import Footer from '../../components/Footer';
+import Footer from './Footer';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';

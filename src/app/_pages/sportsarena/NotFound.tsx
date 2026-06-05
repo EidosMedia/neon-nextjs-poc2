@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import Navbar from './Navbar';
+import Footer from './Footer';
 import Logo from '../../components/Logo';
 
 const NotFound = ({ data }: { data: Site }) => {
