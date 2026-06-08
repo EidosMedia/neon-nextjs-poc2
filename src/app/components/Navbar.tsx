@@ -8,7 +8,8 @@ import LoginButton from './LoginButton';
 import MenuToggle from './MenuToggle';
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) {
     throw new Error('Site node data is missing');
   }
@@ -54,7 +55,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
         </div>
         <div className="flex justify-center items-center gap-4 mb-8">
           <Logo data={data} />
-          <h1 className="text-2xl font-bold text-gray-800">{siteName}</h1>
+          <h1 className="text-2xl font-bold text-gray-800">{siteLabel}</h1>
         </div>
         <div className="flex justify-center items-center">
           <ul className="hidden md:flex gap-x-6">

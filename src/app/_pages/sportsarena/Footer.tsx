@@ -13,7 +13,9 @@ function flattenLinks(items: any[]): any[] {
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: sportsarena/Footer');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
+  if (!siteName) throw new Error('Site node data is missing');
   const year = new Date().getFullYear();
 
   // Footer is non-critical chrome — fetch menus but never throw if the site lookup fails.
@@ -25,7 +27,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
     <footer className="sa-footer w-full">
       <div className="w-full max-w-[1280px] mx-auto px-4 flex flex-col items-center" style={{ minHeight: 56 }}>
         <div className="w-full flex items-center justify-between" style={{ height: 56 }}>
-          <span className="sa-footer-brand">{siteName}</span>
+          <span className="sa-footer-brand">{siteLabel}</span>
           <span className="sa-footer-copy">© {year} · All rights reserved</span>
         </div>
         {footerLinks.length > 0 && (

@@ -6,7 +6,7 @@ import LoginButton from '../../components/LoginButton';
 
 const PILLARS = [
   { label: 'News',      href: '/news' },
-  { label: 'Opinion',   href: '/opinion' },
+  { label: 'Economy',  href: '/business' },
   { label: 'Sport',     href: '/sport' },
   { label: 'Culture',   href: '/culture' },
   { label: 'Lifestyle', href: '/lifestyle' },
@@ -15,7 +15,9 @@ const PILLARS = [
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: foghorn/Navbar');
 
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
+  if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
   const menus = site?.menus;
@@ -53,7 +55,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
                   </Link>
                 ))}
           </nav>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 hidden">
             <Link href="/subscribe" className="foghorn-subscribe-link">Subscribe</Link>
             <a href="/support" className="foghorn-support-btn">Support us</a>
           </div>
@@ -64,7 +66,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       <div className="w-full" style={{ borderTop: '1px solid rgba(255,255,255,.15)', minHeight: 60 }}>
         <div className="w-full max-w-[1300px] mx-auto px-4 flex items-center justify-between" style={{ minHeight: 60 }}>
           <Link href="/" className="foghorn-masthead">
-            {siteName}
+            {siteLabel}
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/search" aria-label="Search" style={{ color: 'rgba(255,255,255,.85)' }}>
@@ -93,8 +95,8 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       )}
 
       {/* ── Date line ─────────────────────────────────────────────────────── */}
-      <div className="foghorn-date-line hidden sm:block">
-        {dateLabel}
+      <div className="foghorn-date-line w-full sm:block">
+        <div className="fw-full max-w-[1300px] mx-auto px-4">{dateLabel}</div>
       </div>
 
     </header>

@@ -27,7 +27,9 @@ const FOOTER_COLUMNS = [
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: foghorn/Footer');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
+  if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
   const menus = site?.menus;
@@ -88,7 +90,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
             textDecoration: 'none',
           }}
         >
-          {siteName}
+          {siteLabel}
         </a>
 
         <div className="flex items-center gap-5">

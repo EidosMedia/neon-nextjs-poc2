@@ -19,7 +19,8 @@ const UTILITY_LINKS = [
 export default async function Navbar({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: oldtown/Navbar');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
@@ -73,7 +74,7 @@ export default async function Navbar({
       <div className="w-full border-b border-[#DFDFDF]">
         <div className="w-full max-w-[1280px] mx-auto px-4 flex items-center justify-center" style={{ minHeight: 72 }}>
           <Link href="/" className="oldtown-masthead">
-            {siteName}
+            {siteLabel}
           </Link>
         </div>
       </div>

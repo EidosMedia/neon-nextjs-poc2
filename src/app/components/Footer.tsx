@@ -5,7 +5,8 @@ import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import FooterMenu from './FooterMenu';
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) {
     throw new Error('Site node data is missing');
   }
@@ -36,7 +37,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
       {/* Logo and site name */}
       <div className="flex items-center space-x-2 py-4">
         <Logo data={data} size="small" />
-        <span className="font-semibold text-lg">{siteName}</span>
+        <span className="font-semibold text-lg">{siteLabel}</span>
       </div>
       {/* 70% - 30% split section */}
       <div className="flex w-full">
@@ -84,7 +85,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
               </ul>
             </div>
             <div>
-              <div className="font-bold mb-2">Follow {siteName}</div>
+              <div className="font-bold mb-2">Follow {siteLabel}</div>
               <ul className="list-none pl-0 space-y-3" style={{ listStyle: 'none', paddingLeft: 0 }}>
                 <li>
                   <a href="#" className="hover:underline flex items-center space-x-2">

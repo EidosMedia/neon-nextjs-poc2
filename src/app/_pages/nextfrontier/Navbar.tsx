@@ -8,7 +8,8 @@ const FALLBACK_SECTIONS = ['Tech', 'Reviews', 'AI', 'Science', 'Policy', 'Entert
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: nextfrontier/Navbar');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
@@ -32,7 +33,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       {/* Header: logo + nav + icons */}
       <div className="nf-header w-full">
         <Link href="/" className="nf-logo">
-          {siteName}
+          {siteLabel}
         </Link>
 
         <nav className="nf-nav">

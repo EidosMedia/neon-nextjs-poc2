@@ -16,7 +16,8 @@ const FALLBACK_SECTIONS = ['World', 'Companies', 'Markets', 'Tech', 'Opinion', '
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: business-globe/Navbar');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
@@ -54,7 +55,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
           <span aria-label="Search">🔍</span>
         </div>
         <Link href="/" className="bgl-masthead-logo">
-          {siteName}
+          {siteLabel}
         </Link>
         <div className="bgl-masthead-side" style={{ justifyContent: 'flex-end' }}>
           <a href="#" className="bgl-subscribe-btn">Subscribe</a>

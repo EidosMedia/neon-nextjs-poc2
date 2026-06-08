@@ -13,7 +13,9 @@ function flattenLinks(items: any[]): any[] {
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: business-globe/Footer');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
+  if (!siteName) throw new Error('Site node data is missing');
   const year = new Date().getFullYear();
 
   // Footer is non-critical chrome — fetch menus but never throw if the site lookup fails;
@@ -25,7 +27,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
   return (
     <footer className="bgl-footer w-full">
       <div className="bgl-footer-inner">
-        <span className="bgl-footer-brand">{siteName}</span>
+        <span className="bgl-footer-brand">{siteLabel}</span>
         <div className="bgl-footer-links">
           <span>© {year} BusinessGlobe Ltd.</span>
           {footerLinks.length

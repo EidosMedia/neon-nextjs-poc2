@@ -13,7 +13,9 @@ function flattenLinks(items: any[]): any[] {
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: nextfrontier/Footer');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
+  if (!siteName) throw new Error('Site node data is missing');
   const year = new Date().getFullYear();
 
   // Footer is non-critical chrome — fetch menus but never throw if the site lookup fails;
@@ -29,7 +31,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
           NEXT<br /><span style={{ color: 'var(--nf-accent)' }}>FRONT</span><br />IER
         </span>
         <div className="nf-footer-links">
-          <span>© {year} {siteName}</span>
+          <span>© {year} {siteLabel}</span>
           {footerLinks.length
             ? footerLinks.map((link, idx) => (
                 <a key={link.href || idx} href={link.href}>{link.label}</a>

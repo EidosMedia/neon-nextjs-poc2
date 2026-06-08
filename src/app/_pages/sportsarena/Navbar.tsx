@@ -15,7 +15,8 @@ const TICKER_ITEMS = [
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: sportsarena/Navbar');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
@@ -49,7 +50,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       <div className="sa-nav-row1 w-full">
         <div className="w-full max-w-[1280px] mx-auto px-4 flex items-center justify-between" style={{ height: 52 }}>
           <Link href="/" className="sa-logo">
-            {siteName}
+            {siteLabel}
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/search" aria-label="Search" className="sa-nav-search">
