@@ -49,7 +49,7 @@ const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({ data, linkedObject,
             </ContentEditable>
             <span className="mt-2">{linkedObject.author}</span>
             <div className="mt-4">
-              <LiveblogOrganismPosts liveblogId={linkedObject.id} initialPosts={[]} />
+              <LiveblogOrganismPosts liveblogId={linkedObject.id} />
             </div>
           </div>
           <div className="flex justify-end items-end col-span-7 max-[1024px]:col-span-12">

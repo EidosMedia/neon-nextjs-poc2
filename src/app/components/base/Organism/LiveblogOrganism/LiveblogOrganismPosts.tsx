@@ -11,19 +11,10 @@ type LiveblogPost = {
 
 type LiveblogOrganismPostsProps = {
   liveblogId: string;
-  initialPosts: any[];
 };
 
-const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogId, initialPosts }) => {
-  const initialLiveblogPosts: LiveblogPost[] = Array.isArray(initialPosts)
-    ? initialPosts.map(post => ({
-        id: post.id,
-        content: post.files?.content?.data,
-        publicationTime: post.sys?.updateTime,
-      }))
-    : [];
-
-  const [liveblogPosts, setLiveblogPosts] = useState<LiveblogPost[]>(initialLiveblogPosts);
+const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogId }) => {
+  const [liveblogPosts, setLiveblogPosts] = useState<LiveblogPost[]>([]);
 
   useEffect(() => {
     const getLiveblogPosts = async () => {
@@ -49,18 +40,24 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
 
   return (
     <div className="flex flex-col gap-3">
-      {liveblogPosts.slice(0, 3).map(post => (
-        <div key={post.id} className="liveblog-organism-post bg-neutral-lightest p-3 rounded-sm">
-          <span className="caption text-feedback-red-dark">
-            {new Date(post.publicationTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}{' '}
-            -{' '}
-            {new Date(post.publicationTime)
-              .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-              .replace(/(\d+)(?=,)/, match => `${match}th`)}
-          </span>
-          <div className="text-sm">{renderContent(post.content)}</div>
-        </div>
-      ))}
+      {liveblogPosts.length > 0 ? (
+        liveblogPosts.slice(0, 3).map(post => (
+          <div key={post.id} className="liveblog-organism-post bg-neutral-lightest p-3 rounded-sm">
+            <span className="caption text-feedback-red-dark">
+              {new Date(post.publicationTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}{' '}
+              -{' '}
+              {new Date(post.publicationTime)
+                .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                .replace(/(\d+)(?=,)/, match => `${match}th`)}
+            </span>
+            <div className="text-sm">{renderContent(post.content)}</div>
+          </div>
+        ))
+      ) : (
+        <p key="loading" className="text-sm text-neutral-light-2">
+          No posts yet — check back soon.
+        </p>
+      )}
     </div>
   );
 };
