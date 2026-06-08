@@ -42,6 +42,14 @@ const NEWSLETTER_THEME_STYLES: Record<string, NewsletterThemePalette> = {
     headlineFont: "'Barlow Condensed', system-ui, sans-serif",
     bodyFont: "'Inter', system-ui, sans-serif",
   },
+  'business-globe': {
+    bg: '#FFF1E5',
+    text: '#1A1A1A',
+    muted: '#807060',
+    accent: '#990F3D',
+    headlineFont: 'Georgia, serif',
+    bodyFont: 'Inter, system-ui, sans-serif',
+  },
 };
 
 const getThemePalette = (theme: string): NewsletterThemePalette =>
