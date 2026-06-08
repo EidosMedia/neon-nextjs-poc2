@@ -38,7 +38,7 @@ const getDimensionsFromUrl = (url: string): { width: number; height: number } | 
   return null;
 };
 
-const Figure: React.FC<FigureProps> = ({ data, alt, format, ...props }) => {
+const Figure: React.FC<FigureProps> = ({ data, alt, format }) => {
   const imageUrl = getSvgUrl(data) || getRasterUrl(data, format);
   const dimensions = imageUrl && getDimensionsFromUrl(imageUrl);
 
@@ -50,7 +50,6 @@ const Figure: React.FC<FigureProps> = ({ data, alt, format, ...props }) => {
           alt={alt}
           width={dimensions ? dimensions.width : undefined}
           height={dimensions ? dimensions.height : undefined}
-          {...props}
         />
       ) : (
         <p>No image available</p>
