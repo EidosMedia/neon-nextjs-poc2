@@ -54,7 +54,7 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
           </div>
         ))
       ) : (
-        <p key="loading" className="text-sm text-neutral-light-2">
+        <p className="text-sm text-neutral-light-2">
           No posts yet — check back soon.
         </p>
       )}
