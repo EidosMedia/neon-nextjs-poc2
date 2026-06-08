@@ -18,8 +18,9 @@ const LEGAL_LINKS = [
 ];
 
 export default async function Footer({
- data: _ }: { data: Partial<PageData<BaseModel>> }) {
+ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: wire/Footer');
+  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name || 'Wire Feed';
   const now = new Date();
   const utcString = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
@@ -29,7 +30,7 @@ export default async function Footer({
 
         {/* Brand + build info */}
         <div className="flex flex-col gap-1">
-          <span className="wire-brand">Wire Feed</span>
+          <span className="wire-brand">{siteName}</span>
           <span style={{ fontFamily: 'var(--font-meta)', fontSize: 10, color: '#6B6B6B', letterSpacing: '0.06em' }}>
             Content Distribution Platform · v2.4.1 · {utcString}
           </span>

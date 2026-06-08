@@ -17,7 +17,7 @@ const UTILITY_LINKS = [
 export default async function Navbar({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: adn/Navbar');
-  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
@@ -86,7 +86,7 @@ export default async function Navbar({
           <Link href="/" className="flex items-center justify-center">
             <Image
               src="/adn/Adn_Logo.svg"
-              alt="ADNKronos"
+              alt={siteName}
               width={260}
               height={60}
               priority

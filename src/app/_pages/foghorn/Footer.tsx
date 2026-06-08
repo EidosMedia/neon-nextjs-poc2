@@ -27,6 +27,7 @@ const FOOTER_COLUMNS = [
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: foghorn/Footer');
+  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
   return (
     <footer data-section="footer" className="foghorn-footer w-full">
 
@@ -63,7 +64,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
             textDecoration: 'none',
           }}
         >
-          The Foghorn
+          {siteName}
         </a>
 
         <div className="flex items-center gap-5">

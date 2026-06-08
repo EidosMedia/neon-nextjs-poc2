@@ -15,6 +15,8 @@ const PILLARS = [
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: foghorn/Navbar');
 
+  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+
   const cookieStore = await cookies();
   const webauth = cookieStore.get('webauth')?.value;
 
@@ -47,7 +49,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       <div className="w-full" style={{ borderTop: '1px solid rgba(255,255,255,.15)', minHeight: 60 }}>
         <div className="w-full max-w-[1300px] mx-auto px-4 flex items-center justify-between" style={{ minHeight: 60 }}>
           <Link href="/" className="foghorn-masthead">
-            The Foghorn
+            {siteName}
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/search" aria-label="Search" style={{ color: 'rgba(255,255,255,.85)' }}>

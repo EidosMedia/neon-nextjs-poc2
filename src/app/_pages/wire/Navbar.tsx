@@ -8,7 +8,7 @@ import LoginButton from '../../components/LoginButton';
 export default async function Navbar({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: wire/Navbar');
-  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
@@ -34,7 +34,7 @@ export default async function Navbar({
 
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="wire-brand">Wire Feed</Link>
+          <Link href="/" className="wire-brand">{siteName}</Link>
           <span className="wire-brand-service">/ API Preview</span>
           <span className="wire-status-live">LIVE</span>
         </div>

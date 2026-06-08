@@ -9,7 +9,7 @@ import AiSearchIcon from './icons/AiSearch';
 import LoginButton from './LoginButton';
 
 export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
-  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
   if (!siteName) {
     throw new Error('Site node data is missing');
   }
@@ -47,7 +47,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
         </div>
         <div className="flex justify-center items-center gap-4 mb-8">
           <Logo data={data} />
-          <h1 className="text-2xl font-bold text-gray-800">{site.root.title}</h1>
+          <h1 className="text-2xl font-bold text-gray-800">{siteName}</h1>
         </div>
         <div className="flex justify-center items-center">
           <ul className="hidden md:flex gap-x-6">
