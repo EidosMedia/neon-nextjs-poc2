@@ -79,9 +79,9 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
                   </span>
                 )}
                 <div className="relative">
-                  <span className="absolute -left-[18px] top-[6px] w-2 h-2 rounded-full bg-feedback-red-dark" aria-hidden="true" />
-                  <span className="caption text-feedback-red-dark block">{formatPostTime(post.publicationTime)}</span>
-                  <span className="text-sm block">{title || 'No title available'}</span>
+                  <span className="absolute -left-[14px] top-[6px] w-2 h-2 rounded-full bg-feedback-red-dark" aria-hidden="true" />
+                  <span className="caption text-feedback-red-dark">{formatPostTime(post.publicationTime)} - </span>
+                  <span className="text-sm">{title || 'No title available'}</span>
                 </div>
               </div>
             );
@@ -89,7 +89,7 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
         </div>
       ) : (
         <p className="text-sm text-neutral-light-2">
-          No posts yet — check back soon.
+          Live
         </p>
       )}
     </div>

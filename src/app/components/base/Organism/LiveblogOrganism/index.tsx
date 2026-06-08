@@ -48,12 +48,12 @@ const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({ data, linkedObject,
               <span className="mt-2" id={summaryId} data-type="summary"><p>{summary}</p></span>
             </ContentEditable>
             <span className="mt-2">{linkedObject.author}</span>
-            <span className="subhead1 uppercase mt-2">Latest updates</span>
+            <span className="subhead1 uppercase mt-2 hidden">Latest updates</span>
             <div className="mt-4">
               <LiveblogOrganismPosts liveblogId={linkedObject.id} />
             </div>
           </div>
-          <div className="flex justify-end items-end col-span-7 max-[1024px]:col-span-12">
+          <div className="flex justify-end items-end col-span-7 max-[1024px]:col-span-6 max-[1024px]:col-span-12 max-[1024px]:order-2 max-[1024px]:justify-start">
             <MainImage data={linkedObject} format={imageFormat} hideCaptions />
           </div>
         </div>

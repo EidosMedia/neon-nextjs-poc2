@@ -28,7 +28,7 @@ const FOOTER_COLUMNS = [
 export default async function Footer({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: oldtown/Footer');
-  const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
