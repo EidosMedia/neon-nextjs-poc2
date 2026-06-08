@@ -48,6 +48,7 @@ const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({ data, linkedObject,
               <span className="mt-2" id={summaryId} data-type="summary"><p>{summary}</p></span>
             </ContentEditable>
             <span className="mt-2">{linkedObject.author}</span>
+            <span className="subhead1 uppercase mt-2">Latest updates</span>
             <div className="mt-4">
               <LiveblogOrganismPosts liveblogId={linkedObject.id} />
             </div>
