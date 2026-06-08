@@ -15,7 +15,7 @@ export default async function Navbar({
   if (!site) throw new Error('Site not found');
 
   const menus = site.menus;
-  const mainMenuItems: any[] = menus?.MenuPrincipale1?.items ?? [];
+  const mainMenuItems: any[] = menus?.MainMenu?.items ?? menus?.MenuPrincipale1?.items ?? []; // TODO: drop legacy MenuPrincipale1 fallback once CMS menus renamed
 
   const pathname = (await headers()).get('x-neon-pathname');
   const isActive = (url: string) => url && pathname === url.replace(/\/$/, '');
