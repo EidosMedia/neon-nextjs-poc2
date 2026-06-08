@@ -196,7 +196,9 @@ export const renderContent = (
   index?: number,
 ): ReactNode => {
   // Use a stable key derived from content structure — never random — so
-  // components are not remounted on every client re-render.
+  // components are not remounted on every client re-render. The structural
+  // fallback also folds in the sibling index to disambiguate same-shape
+  // siblings (e.g. empty <p> wrappers); the attributes.id branch stays purely id-based.
   const key =
     content?.attributes?.id ||
     `${content?.nodeType}-${content?.value ?? ''}-${JSON.stringify(content?.attributes ?? {})}-${index ?? 0}`;
