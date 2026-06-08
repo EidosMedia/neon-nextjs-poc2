@@ -193,18 +193,20 @@ export const renderContent = (
   styles?: string,
   customComponents?: Map<string, React.ComponentType<Record<string, unknown>>>,
   nodeDataMap?: Map<string, unknown>,
+  index?: number,
 ): ReactNode => {
   // Use a stable key derived from content structure — never random — so
   // components are not remounted on every client re-render.
   const key =
-    content?.attributes?.id || `${content?.nodeType}-${content?.value ?? ''}-${JSON.stringify(content?.attributes ?? {})}`;
+    content?.attributes?.id ||
+    `${content?.nodeType}-${content?.value ?? ''}-${JSON.stringify(content?.attributes ?? {})}-${index ?? 0}`;
 
   switch (content?.nodeType) {
     case 'headline':
       return (
         <ContentEditable key={key} data={data}>
           <h1 key={key} data-type="headline" {...buildAttributes(content)}>
-            {content.elements.map(elem => renderContent(elem, data))}
+            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
           </h1>
         </ContentEditable>
       );
@@ -212,7 +214,7 @@ export const renderContent = (
       return (
         <ContentEditable key={key} data={data}>
           <h5 key={key} data-type="overhead" {...buildAttributes(content)} className="uppercase">
-            {content.elements.map(elem => renderContent(elem, data))}
+            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
           </h5>
         </ContentEditable>
       );
@@ -221,34 +223,34 @@ export const renderContent = (
         <div key={key} {...buildAttributes(content)} className={styles} data-type="grouphead">
           {content.elements
             .filter(elem => elem)
-            .map(elem => {
+            .map((elem, idx) => {
               console.log('Grouphead Element:', elem);
-              return renderContent(elem, data, undefined, undefined, customComponents, nodeDataMap);
+              return renderContent(elem, data, undefined, undefined, customComponents, nodeDataMap, idx);
             })}
         </div>
       );
     case 'byline':
       return (
         <div key={key} data-type="byline" {...buildAttributes(content)} className={styles}>
-          {content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </div>
       );
     case 'text':
       return (
         <div id="text" key={key} {...buildAttributes(content)} className={styles} data-type="text">
-          {content.elements.map(elem => renderContent(elem, data, 'text', undefined, customComponents, nodeDataMap))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, 'text', undefined, customComponents, nodeDataMap, idx))}
         </div>
       );
     case 'caption':
       return (
         <figcaption key={key} {...buildAttributes(content)} className="body-large italic" data-type="caption">
-          {content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </figcaption>
       );
     case 'credit':
       return (
         <span key={key} data-type="credit" {...buildAttributes(content)} className="body-large italic text-gray-500">
-          {content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </span>
       );
     case 'p':
@@ -256,16 +258,16 @@ export const renderContent = (
         return data?.id ? (
           <ContentEditable key={key} data={data}>
             <p key={key} {...buildAttributes(content)} className={`${styles} body-large`}>
-              {content.elements.map(elem => renderContent(elem, data))}
+              {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
             </p>
           </ContentEditable>
         ) : (
           <p key={key} {...buildAttributes(content)} className={`${styles} body-large`}>
-            {content.elements.map(elem => renderContent(elem, data))}
+            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
           </p>
         );
       } else {
-        return <p key={key}>{content.elements.map(elem => renderContent(elem, data, undefined, styles))}</p>;
+        return <p key={key}>{content.elements.map((elem, idx) => renderContent(elem, data, undefined, styles, undefined, undefined, idx))}</p>;
       }
     case 'plainText':
       return content.value;
@@ -273,7 +275,7 @@ export const renderContent = (
       return (
         <ContentEditable key={key} data={data}>
           <div key={key} data-type="summary" {...buildAttributes(content)} className={styles}>
-            {content.elements.map(elem => renderContent(elem, data, undefined, styles))}
+            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, styles, undefined, undefined, idx))}
           </div>
         </ContentEditable>
       );
@@ -323,7 +325,7 @@ export const renderContent = (
     case 'anchor':
       return (
         <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
-          {content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </Link>
       );
     case 'br':
@@ -334,25 +336,25 @@ export const renderContent = (
     case 'table':
       return (
         <table key={key} {...buildAttributes(content)} data-type="table" className="w-full border-collapse">
-          <tbody>{content.elements.map(elem => renderContent(elem, data))}</tbody>
+          <tbody>{content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}</tbody>
         </table>
       );
     case 'tr':
       return (
         <tr key={key} {...buildAttributes(content)} className="border-b">
-          {content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </tr>
       );
     case 'td':
       return (
         <td key={key} {...buildAttributes(content)} className="px-4 py-2">
-          {content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </td>
       );
     case 'th':
       return (
         <th key={key} {...buildAttributes(content)} className="px-4 py-2 font-bold text-left">
-          {content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </th>
       );
     case 'oembedblock':
@@ -461,7 +463,8 @@ export const renderContent = (
       const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
       return (
         <CustomElement key={key} {...buildAttributes(content)}>
-          {content.elements.length > 0 && content.elements.map(elem => renderContent(elem, data))}
+          {content.elements.length > 0 &&
+            content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
         </CustomElement>
       );
   }
