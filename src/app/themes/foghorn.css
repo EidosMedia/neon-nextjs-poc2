@@ -76,6 +76,36 @@
   background: #f6f6f6;
 }
 
+/* ─── Compact article format — Context sidebar & Insight1 zone ───────────
+   Keeps the wrapper out of the grid box tree (display: contents) so the
+   Insight1 cards still lay out as regular 4-col-grid items, while letting
+   us scope smaller titles/summaries/images to just these two zones. ────── */
+.root[data-theme="foghorn"] .foghorn-4col-grid > .foghorn-compact-articles {
+  display: contents;
+}
+
+.root[data-theme="foghorn"] .foghorn-compact-articles [data-type="title"],
+.root[data-theme="foghorn"] .foghorn-compact-articles [data-type="title"] p {
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.root[data-theme="foghorn"] .foghorn-compact-articles [data-type="summary"] {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.root[data-theme="foghorn"] .foghorn-compact-articles img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+}
+
+.root[data-theme="foghorn"] .foghorn-square-images img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
 .root[data-theme="foghorn"] .foghorn-section-header {
   border-top: 3px solid #052962;
   padding-top: 6px;

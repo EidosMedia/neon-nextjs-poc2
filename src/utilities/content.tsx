@@ -197,9 +197,9 @@ export const renderContent = (
   // Use a stable key derived from content structure — never random — so
   // components are not remounted on every client re-render.
   const key =
-    content?.attributes?.id || `${content.nodeType}-${content.value ?? ''}-${JSON.stringify(content.attributes ?? {})}`;
+    content?.attributes?.id || `${content?.nodeType}-${content?.value ?? ''}-${JSON.stringify(content?.attributes ?? {})}`;
 
-  switch (content.nodeType) {
+  switch (content?.nodeType) {
     case 'headline':
       return (
         <ContentEditable key={key} data={data}>

@@ -1,0 +1,620 @@
+/* ═══════════════════════════════════════════════════════
+   BusinessGlobe theme — all rules scoped to:
+   .root[data-theme="business-globe"]
+═══════════════════════════════════════════════════════ */
+
+.root[data-theme="business-globe"] {
+  /* ── Design tokens ── */
+  --bgl-cream:   #FFF1E5;
+  --bgl-nav:     #262A33;
+  --bgl-accent:  #990F3D;
+  --bgl-teal:    #0D7680;
+  --bgl-text:    #1A1A1A;
+  --bgl-muted:   #807060;
+  --bgl-border:  #CCC0B3;
+  --bgl-pink:    #F2DFCE;
+  --bgl-caption: #262A33;
+  --bgl-up:      #1A7A1A;
+  --bgl-down:    #CC2200;
+
+  /* ── Global reset ── */
+  background: var(--bgl-cream);
+  color: var(--bgl-text);
+  font-family: Georgia, serif;
+}
+
+/* ─────────────────────────────────────────────────────
+   Ticker strip
+───────────────────────────────────────────────────── */
+.root[data-theme="business-globe"] .bgl-ticker {
+  background: var(--bgl-nav);
+  color: #ccc;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.72rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+
+.root[data-theme="business-globe"] .bgl-ticker::-webkit-scrollbar {
+  display: none;
+}
+
+.root[data-theme="business-globe"] .bgl-ticker-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.3rem 1rem;
+  min-width: max-content;
+}
+
+.root[data-theme="business-globe"] .bgl-tick-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.root[data-theme="business-globe"] .bgl-tick-badge {
+  display: inline-block;
+  padding: 0 0.3rem;
+  border-radius: 2px;
+  font-weight: 600;
+  font-size: 0.68rem;
+  color: #fff;
+}
+
+.root[data-theme="business-globe"] .bgl-tick-badge--up {
+  background: var(--bgl-up);
+}
+
+.root[data-theme="business-globe"] .bgl-tick-badge--down {
+  background: var(--bgl-down);
+}
+
+.root[data-theme="business-globe"] .bgl-tick-link {
+  color: var(--bgl-accent);
+  font-weight: 600;
+  margin-left: auto;
+  padding-left: 1.5rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.root[data-theme="business-globe"] .bgl-tick-link:hover {
+  text-decoration: underline;
+}
+
+/* ─────────────────────────────────────────────────────
+   Masthead
+───────────────────────────────────────────────────── */
+.root[data-theme="business-globe"] .bgl-masthead {
+  background: var(--bgl-cream);
+  border-bottom: 1px solid var(--bgl-border);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.root[data-theme="business-globe"] .bgl-masthead-logo {
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bgl-text);
+  text-decoration: none;
+  flex: 1;
+  text-align: center;
+}
+
+.root[data-theme="business-globe"] .bgl-masthead-side {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.8rem;
+}
+
+.root[data-theme="business-globe"] .bgl-masthead-icons {
+  display: flex;
+  gap: 0.75rem;
+  color: var(--bgl-text);
+  cursor: pointer;
+}
+
+.root[data-theme="business-globe"] .bgl-subscribe-btn {
+  background: var(--bgl-text);
+  color: var(--bgl-cream);
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  font-family: Inter, system-ui, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.root[data-theme="business-globe"] .bgl-signin-link {
+  color: var(--bgl-text);
+  font-size: 0.75rem;
+  font-family: Inter, system-ui, sans-serif;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+}
+
+/* ─── Login/Subscribe controls (LoginButton hooks) ─────────── */
+.root[data-theme="business-globe"] .theme-login-subscribe,
+.root[data-theme="business-globe"] .theme-login-account {
+  background: var(--bgl-text) !important;
+  color: var(--bgl-cream) !important;
+  border: none !important;
+  border-radius: 3px !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  font-family: Inter, system-ui, sans-serif !important;
+  padding: 0.2rem 0.6rem !important;
+}
+
+.root[data-theme="business-globe"] .theme-login-signin,
+.root[data-theme="business-globe"] .theme-login-logout {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--bgl-text) !important;
+  font-size: 0.75rem !important;
+  font-family: Inter, system-ui, sans-serif !important;
+  padding: 0 !important;
+}
+.root[data-theme="business-globe"] .theme-login-signin:hover,
+.root[data-theme="business-globe"] .theme-login-logout:hover {
+  text-decoration: underline;
+}
+
+/* ─────────────────────────────────────────────────────
+   Section nav
+───────────────────────────────────────────────────── */
+.root[data-theme="business-globe"] .bgl-section-nav {
+  background: var(--bgl-cream);
+  border-bottom: 1px solid var(--bgl-border);
+  padding: 0 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.root[data-theme="business-globe"] .bgl-section-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.root[data-theme="business-globe"] .bgl-section-nav ul {
+  display: flex;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: max-content;
+}
+
+.root[data-theme="business-globe"] .bgl-nav-item {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bgl-text);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.root[data-theme="business-globe"] .bgl-nav-item:hover {
+  color: var(--bgl-teal);
+}
+
+.root[data-theme="business-globe"] .bgl-nav-item--active {
+  color: var(--bgl-teal);
+  border-bottom-color: var(--bgl-teal);
+}
+
+/* ─────────────────────────────────────────────────────
+   Shared: tag, divider
+───────────────────────────────────────────────────── */
+.root[data-theme="business-globe"] .bgl-tag {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bgl-accent);
+  text-decoration: none;
+}
+
+.root[data-theme="business-globe"] .bgl-divider {
+  border: none;
+  border-top: 1px solid var(--bgl-border);
+  margin: 0.5rem 0;
+}
+
+/* ─────────────────────────────────────────────────────
+   Homepage 3-column grid
+───────────────────────────────────────────────────── */
+.root[data-theme="business-globe"] .bgl-home-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+}
+
+.root[data-theme="business-globe"] .bgl-home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 0.75fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .root[data-theme="business-globe"] .bgl-home-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .root[data-theme="business-globe"] .bgl-picks-rail {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .root[data-theme="business-globe"] .bgl-home-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left column */
+.root[data-theme="business-globe"] .bgl-left-lead {
+  border-right: 1px solid var(--bgl-border);
+  padding-right: 1.25rem;
+}
+
+.root[data-theme="business-globe"] .bgl-lead-title {
+  font-family: Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: bold;
+  line-height: 1.2;
+  color: var(--bgl-text);
+  margin: 0.3rem 0 0.4rem;
+  text-decoration: none;
+  display: block;
+}
+
+.root[data-theme="business-globe"] .bgl-lead-title:hover {
+  color: var(--bgl-accent);
+}
+
+.root[data-theme="business-globe"] .bgl-lead-deck {
+  font-family: Georgia, serif;
+  font-size: 0.88rem;
+  color: var(--bgl-muted);
+  line-height: 1.45;
+  margin-bottom: 0.5rem;
+}
+
+.root[data-theme="business-globe"] .bgl-updated {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bgl-accent);
+  margin-bottom: 0.75rem;
+}
+
+.root[data-theme="business-globe"] .bgl-stub-title {
+  font-family: Georgia, serif;
+  font-size: 0.88rem;
+  font-weight: bold;
+  color: var(--bgl-text);
+  line-height: 1.3;
+  text-decoration: none;
+  display: block;
+}
+
+.root[data-theme="business-globe"] .bgl-stub-title:hover {
+  color: var(--bgl-accent);
+}
+
+/* Centre column */
+.root[data-theme="business-globe"] .bgl-centre-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.root[data-theme="business-globe"] .bgl-caption-card {
+  background: var(--bgl-caption);
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.root[data-theme="business-globe"] .bgl-caption-tag {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #F09862;
+}
+
+.root[data-theme="business-globe"] .bgl-caption-title {
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1.25;
+  margin-top: 0.2rem;
+  text-decoration: none;
+  display: block;
+}
+
+.root[data-theme="business-globe"] .bgl-caption-title:hover {
+  color: #F09862;
+}
+
+.root[data-theme="business-globe"] .bgl-secondary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.root[data-theme="business-globe"] .bgl-secondary-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  background: var(--bgl-border);
+}
+
+.root[data-theme="business-globe"] .bgl-secondary-title {
+  font-family: Georgia, serif;
+  font-size: 0.82rem;
+  font-weight: bold;
+  color: var(--bgl-text);
+  line-height: 1.3;
+  margin-top: 0.25rem;
+  text-decoration: none;
+  display: block;
+}
+
+.root[data-theme="business-globe"] .bgl-secondary-title:hover {
+  color: var(--bgl-accent);
+}
+
+/* Right rail — Editor's picks */
+.root[data-theme="business-globe"] .bgl-picks-rail {
+  border-left: 1px solid var(--bgl-border);
+  padding-left: 1rem;
+}
+
+.root[data-theme="business-globe"] .bgl-picks-header {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bgl-accent);
+  margin-bottom: 0.6rem;
+}
+
+.root[data-theme="business-globe"] .bgl-pick-card {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  text-decoration: none;
+  color: inherit;
+}
+
+.root[data-theme="business-globe"] .bgl-pick-thumb {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: var(--bgl-border);
+}
+
+.root[data-theme="business-globe"] .bgl-pick-title {
+  font-family: Georgia, serif;
+  font-size: 0.82rem;
+  font-weight: bold;
+  line-height: 1.3;
+  color: var(--bgl-text);
+}
+
+.root[data-theme="business-globe"] .bgl-pick-card:hover .bgl-pick-title {
+  color: var(--bgl-accent);
+}
+
+/* ─────────────────────────────────────────────────────
+   Article page
+───────────────────────────────────────────────────── */
+.root[data-theme="business-globe"] .bgl-article-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .root[data-theme="business-globe"] .bgl-article-wrap {
+    grid-template-columns: 1fr;
+  }
+  .root[data-theme="business-globe"] .bgl-right-rail {
+    display: none;
+  }
+}
+
+/* Article body */
+.root[data-theme="business-globe"] .bgl-article-headline {
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.18;
+  color: var(--bgl-text);
+  margin: 0.35rem 0 0.5rem;
+}
+
+.root[data-theme="business-globe"] .bgl-article-deck {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--bgl-muted);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.root[data-theme="business-globe"] .bgl-byline {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.78rem;
+  color: var(--bgl-muted);
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--bgl-border);
+  margin-bottom: 1rem;
+}
+
+.root[data-theme="business-globe"] .bgl-article-img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.root[data-theme="business-globe"] .bgl-article-body {
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--bgl-text);
+}
+
+.root[data-theme="business-globe"] .bgl-article-body p {
+  margin-bottom: 1.1rem;
+}
+
+.root[data-theme="business-globe"] .bgl-article-body blockquote {
+  border-left: 3px solid var(--bgl-accent);
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  background: var(--bgl-pink);
+  font-style: italic;
+  font-weight: bold;
+  color: var(--bgl-text);
+}
+
+.root[data-theme="business-globe"] .bgl-article-body h2,
+.root[data-theme="business-globe"] .bgl-article-body h3 {
+  font-family: Georgia, serif;
+  font-weight: bold;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--bgl-text);
+}
+
+/* Right rail */
+.root[data-theme="business-globe"] .bgl-right-rail {
+  border-left: 1px solid var(--bgl-border);
+  padding-left: 1.25rem;
+}
+
+.root[data-theme="business-globe"] .bgl-rail-header {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bgl-accent);
+  margin-bottom: 0.6rem;
+}
+
+.root[data-theme="business-globe"] .bgl-rail-stub {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.root[data-theme="business-globe"] .bgl-rail-stub-title {
+  font-family: Georgia, serif;
+  font-size: 0.88rem;
+  font-weight: bold;
+  line-height: 1.3;
+  color: var(--bgl-text);
+}
+
+.root[data-theme="business-globe"] .bgl-rail-stub:hover .bgl-rail-stub-title {
+  color: var(--bgl-accent);
+}
+
+.root[data-theme="business-globe"] .bgl-author-bio {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--bgl-border);
+}
+
+.root[data-theme="business-globe"] .bgl-author-name {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--bgl-text);
+  margin-bottom: 0.25rem;
+}
+
+.root[data-theme="business-globe"] .bgl-author-desc {
+  font-family: Georgia, serif;
+  font-size: 0.8rem;
+  color: var(--bgl-muted);
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────
+   Footer
+───────────────────────────────────────────────────── */
+.root[data-theme="business-globe"] .bgl-footer {
+  background: var(--bgl-cream);
+  border-top: 2px solid var(--bgl-nav);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.78rem;
+  color: var(--bgl-muted);
+}
+
+.root[data-theme="business-globe"] .bgl-footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.root[data-theme="business-globe"] .bgl-footer-brand {
+  font-family: Georgia, serif;
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: var(--bgl-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.root[data-theme="business-globe"] .bgl-footer-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.root[data-theme="business-globe"] .bgl-footer-links a {
+  color: var(--bgl-muted);
+  text-decoration: none;
+}
+
+.root[data-theme="business-globe"] .bgl-footer-links a:hover {
+  color: var(--bgl-accent);
+  text-decoration: underline;
+}

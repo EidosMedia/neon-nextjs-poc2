@@ -8,9 +8,10 @@ type ArticleWepageProps = {
   data: PageData<WebpageModel>;
   displayMainPicture: boolean;
   linkedObjects: WebpageNodeModel[];
+  imageFormat?: string;
 };
 
-const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture, linkedObjects }) => {
+const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture, linkedObjects, imageFormat }) => {
   return (
     <>
       {linkedObjects.map((linkedObject: any, index: number) => {
@@ -22,6 +23,7 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({ data, displayMainPicture
             linkedObjects={linkedObjects}
             index={index}
             type={ index === 0 ? "article-xl" : "article-md"}
+            imageFormat={imageFormat}
           />
         );
       })}

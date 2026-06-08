@@ -4,6 +4,8 @@ import * as Oldtown from './_pages/oldtown';
 import * as Wire from './_pages/wire';
 import * as Foghorn from './_pages/foghorn';
 import * as Sportsarena from './_pages/sportsarena';
+import * as BusinessGlobe from './_pages/business-globe';
+import * as Nextfrontier from './_pages/nextfrontier';
 
 type PageComponents = typeof Default;
 
@@ -14,6 +16,8 @@ const THEME_MAP: Record<string, PageComponents> = {
   wire: Wire,
   foghorn:      Foghorn,
   sportsarena:  Sportsarena,
+  'business-globe': BusinessGlobe,
+  'nextfrontier': Nextfrontier,
 };
 
 // componentKey must match a named export from the theme's index.ts barrel

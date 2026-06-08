@@ -32,6 +32,7 @@ const MainImage: React.FC<MainImageProps> = ({ data, format, hideCaptions, prefe
           <div className="flex flex-col gap-2 mb-8">
             <img src={imageUrl} alt="" />
             {!hideCaptions &&
+              findElementsInContentJson(['web-image-caption'], data.files.content.data)[0] &&
               renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
           </div>
         ) : (
