@@ -237,6 +237,16 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.root[data-theme="foghorn"] .foghorn-hot-topics {
+  background: #052962;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 0;
+}
+.root[data-theme="foghorn"] .foghorn-hot-topics .foghorn-pillar-link {
+  border-right: none;
+  padding: 0 10px;
+}
+
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
 .root[data-theme="foghorn"] .foghorn-footer {
   background: #052962;

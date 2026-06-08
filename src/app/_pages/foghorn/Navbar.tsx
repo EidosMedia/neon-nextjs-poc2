@@ -17,6 +17,11 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
 
   const siteName = data.siteData?.siteName || data.siteNode?.attributes?.sitename || data.siteNode?.name;
 
+  const site = await connection.findSite(siteName);
+  const menus = site?.menus;
+  const mainMenuItems: any[] = menus?.MainMenu?.items ?? [];
+  const hotTopicsItems: any[] = menus?.HotTopics?.items ?? [];
+
   const cookieStore = await cookies();
   const webauth = cookieStore.get('webauth')?.value;
 
@@ -32,11 +37,21 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       <div className="w-full" style={{ height: 36 }}>
         <div className="w-full max-w-[1300px] mx-auto px-4 flex items-center justify-between h-full">
           <nav className="flex items-center h-full">
-            {PILLARS.map(({ label, href }) => (
-              <Link key={href} href={href} className="foghorn-pillar-link flex items-center h-full">
-                {label}
-              </Link>
-            ))}
+            {mainMenuItems.length > 0
+              ? mainMenuItems.map((item: any, idx: number) => (
+                  <Link
+                    key={item.ref || item.url || idx}
+                    href={item.url || item.ref || '#'}
+                    className="foghorn-pillar-link flex items-center h-full"
+                  >
+                    {item.label}
+                  </Link>
+                ))
+              : PILLARS.map(({ label, href }) => (
+                  <Link key={href} href={href} className="foghorn-pillar-link flex items-center h-full">
+                    {label}
+                  </Link>
+                ))}
           </nav>
           <div className="flex items-center gap-4">
             <Link href="/subscribe" className="foghorn-subscribe-link">Subscribe</Link>
@@ -59,6 +74,23 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
           </div>
         </div>
       </div>
+
+      {/* ── Hot topics bar — driven by HotTopics menu ─────────────────────── */}
+      {hotTopicsItems.length > 0 && (
+        <div className="foghorn-hot-topics w-full overflow-x-auto">
+          <div className="w-full max-w-[1300px] mx-auto px-4 flex items-center gap-1">
+            {hotTopicsItems.map((item: any, idx: number) => (
+              <Link
+                key={item.ref || item.url || idx}
+                href={item.url || item.ref || '#'}
+                className="foghorn-pillar-link flex items-center h-full"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Date line ─────────────────────────────────────────────────────── */}
       <div className="foghorn-date-line hidden sm:block">
