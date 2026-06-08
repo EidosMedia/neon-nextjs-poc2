@@ -296,7 +296,6 @@ export const renderContent = (
               key={key}
               data={filteredContent}
               alt="/public/file.svg"
-              {...selectedImage.attributes}
               format="Wide"
             />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
@@ -315,7 +314,6 @@ export const renderContent = (
               data={filteredContent}
               alt="/public/file.svg"
               format="Wide"
-              {...selectedGraphic.attributes}
             />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'graphic-caption')[0], data)}
           </div>
