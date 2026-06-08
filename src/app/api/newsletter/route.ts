@@ -30,8 +30,10 @@ export async function GET(req: NextRequest) {
     // pipeline to catch its thrown digest error, which Route Handlers don't
     // provide, so we build the redirect Response directly instead.
     if (pageData.status > 300 && pageData.status < 400) {
-      const newLocation = pageData.headers.get('Location') as string;
-      return Response.redirect(newLocation, pageData.status);
+      const location = pageData.headers.get('Location');
+      if (location) {
+        return Response.redirect(new URL(location, req.url), pageData.status);
+      }
     }
 
     const pageDataJSON = await pageData.json();
