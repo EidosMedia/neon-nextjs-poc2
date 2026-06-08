@@ -177,6 +177,46 @@
   text-decoration: underline;
 }
 
+/* ─── Login/Subscribe controls (LoginButton hooks) ─────────── */
+.root[data-theme="foghorn"] .theme-login-subscribe {
+  background: #c70000 !important;
+  color: #ffffff !important;
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 4px 12px !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+.root[data-theme="foghorn"] .theme-login-subscribe:hover {
+  background: #a30000 !important;
+}
+
+.root[data-theme="foghorn"] .theme-login-account,
+.root[data-theme="foghorn"] .theme-login-signin {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #ffbb00 !important;
+}
+.root[data-theme="foghorn"] .theme-login-account:hover,
+.root[data-theme="foghorn"] .theme-login-signin:hover {
+  text-decoration: underline;
+}
+
+.root[data-theme="foghorn"] .theme-login-logout {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #052962 !important;
+}
+
 .root[data-theme="foghorn"] .foghorn-date-line {
   font-family: var(--font-nav);
   font-size: 10px;

@@ -111,6 +111,43 @@
   border-bottom-color: var(--color-sa-primary);
 }
 
+/* ─── Login/Subscribe controls (LoginButton hooks) ─────────── */
+.root[data-theme="sportsarena"] .theme-login-subscribe,
+.root[data-theme="sportsarena"] .theme-login-account {
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  background: var(--color-sa-primary) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 6px 14px !important;
+}
+.root[data-theme="sportsarena"] .theme-login-subscribe:hover,
+.root[data-theme="sportsarena"] .theme-login-account:hover {
+  background: var(--color-sa-primary-hover) !important;
+}
+
+.root[data-theme="sportsarena"] .theme-login-signin,
+.root[data-theme="sportsarena"] .theme-login-logout {
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--color-sa-text) !important;
+  padding: 0 !important;
+}
+.root[data-theme="sportsarena"] .theme-login-signin:hover,
+.root[data-theme="sportsarena"] .theme-login-logout:hover {
+  color: var(--color-sa-primary-hover) !important;
+}
+
 /* ─── Homepage hero ──────────────────────────────────────────────── */
 .root[data-theme="sportsarena"] .sa-hero {
   position: relative;
