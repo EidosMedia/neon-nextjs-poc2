@@ -13,7 +13,7 @@ const MenuToggle: React.FC<MenuToggleProps> = ({ items }) => {
 
   return (
     <>
-      <button className="flex items-center gap-1.5 oldtown-utility-link font-bold" aria-label="Sections" onClick={() => setOpen(true)}>
+      <button type="button" className="flex items-center gap-1.5 oldtown-utility-link font-bold" aria-label="Sections" onClick={() => setOpen(true)}>
         <Menu className="w-4 h-4" />
         <span className="hidden sm:inline text-xs tracking-widest uppercase">Sections</span>
       </button>

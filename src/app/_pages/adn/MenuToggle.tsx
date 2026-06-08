@@ -13,7 +13,7 @@ const MenuToggle: React.FC<MenuToggleProps> = ({ items }) => {
 
   return (
     <>
-      <button className="adn-hamburger flex items-center" aria-label="Menu" onClick={() => setOpen(true)}>
+      <button type="button" className="adn-hamburger flex items-center" aria-label="Menu" onClick={() => setOpen(true)}>
         <Menu className="w-5 h-5" />
       </button>
       <FullMenuOverlay items={items} open={open} onClose={() => setOpen(false)} />
