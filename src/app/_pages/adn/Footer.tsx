@@ -26,7 +26,7 @@ export default async function Footer({
     }));
   }
 
-  const footerMenu = menus?.MenuFooter;
+  const footerMenu = menus?.Footer ?? menus?.MenuFooter; // TODO: drop legacy MenuFooter fallback once CMS menus renamed
 
   return (
     <footer data-section="footer" className="w-full mt-8" style={{ backgroundColor: '#111111' }}>
