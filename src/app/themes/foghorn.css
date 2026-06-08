@@ -61,6 +61,17 @@
   background: #dcdcdc;
 }
 
+/* Mobile-first collapse — 768px (Tailwind `md`) is the standard layout-collapse
+   breakpoint across theme CSS; keep new breakpoints aligned to it. */
+@media (max-width: 768px) {
+  .root[data-theme="foghorn"] .foghorn-hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .root[data-theme="foghorn"] .foghorn-4col-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .root[data-theme="foghorn"] .foghorn-4col-grid > * {
   background: #f6f6f6;
 }
