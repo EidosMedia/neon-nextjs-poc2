@@ -15,6 +15,7 @@ const NewsletterWebpage: React.FC<PageProps> = async ({ data }) => {
   return (
     <div className="container mx-auto p-4">
       <Navbar data={data} />
+      {/* minHeight is an approximate preview height; newsletters vary in length and content scrolls within the iframe. */}
       <iframe
         srcDoc={html}
         title="Newsletter preview"
