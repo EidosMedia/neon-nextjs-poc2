@@ -19,7 +19,8 @@ export async function GET(req: NextRequest) {
     const path = req.nextUrl.searchParams.get('path') ?? '/';
     const id = req.nextUrl.searchParams.get('id');
 
-    const url = `${apiHostname}${path}${id ? `/${id}` : ''}`;
+    const baseUrl = `${apiHostname}${path}`;
+    const url = id ? `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
     const pageData = await connection.makePageRequest(url, auth, { redirect: 'manual', cache: 'no-cache' });
 
     // handle redirection (matches page.tsx — `redirect: 'manual'` means the
