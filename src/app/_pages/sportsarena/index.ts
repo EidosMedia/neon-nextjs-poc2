@@ -1,6 +1,7 @@
 export { default as AboutPage } from './AboutPage';
 export { default as Article } from './Article';
 export { default as ArticleLongform } from './ArticleLongform';
+export { default as NewsletterWebpage } from '../NewsletterWebpage';
 export { default as DefaultLanding } from './DefaultLanding';
 export { default as DefaultSection } from './DefaultSection';
 export { default as HomeWebPage } from './HomeWebPage';

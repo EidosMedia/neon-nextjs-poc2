@@ -1,5 +1,6 @@
 export { default as Article } from './Article';
 export { default as ArticleLongform } from './ArticleLongform';
+export { default as NewsletterWebpage } from './NewsletterWebpage';
 export { default as HomeWebPage } from './HomeWebPage';
 export { default as SectionWebPage } from './SectionWebPage';
 export { default as WebpageColumnsLayout } from './WebpageColumnsLayout';
