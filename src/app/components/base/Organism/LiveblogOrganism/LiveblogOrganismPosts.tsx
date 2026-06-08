@@ -28,7 +28,7 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
   useEffect(() => {
     const getLiveblogPosts = async () => {
       const response = await fetch(`/api/liveblogs/${liveblogId}`, { cache: 'no-store' });
-      const { posts } = await response.json();
+      const posts = await response.json();
       setLiveblogPosts(oldResults =>
         _.uniqBy([...posts, ...oldResults], 'id').map(post => ({
           id: post.id,
