@@ -127,7 +127,10 @@ export default async function Page({
   console.log('Resolving page for baseType:', baseType, 'type:', type, 'theme:', theme);
 
   // For article longform, use a sub-type key so themes can differentiate
-  const componentKey = baseType === 'article' && type === 'longform' ? 'ArticleLongform' : resolveBaseTypeKey(baseType);
+  const componentKey =
+    baseType === 'article' && type === 'longform' ? 'ArticleLongform'
+    : baseType === 'webpage' && type === 'newsletter' ? 'NewsletterWebpage'
+    : resolveBaseTypeKey(baseType);
   const PageComponent = resolvePageComponent(componentKey, theme);
 
   return (

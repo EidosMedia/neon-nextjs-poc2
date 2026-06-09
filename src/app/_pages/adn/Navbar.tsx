@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { headers, cookies } from 'next/headers';
 import { Menu, Search } from 'lucide-react';
 import LoginButton from '../../components/LoginButton';
+import MenuToggle from './MenuToggle';
 
 const UTILITY_LINKS = [
   { label: 'Meteo', href: '/meteo' },
@@ -18,14 +19,16 @@ export default async function Navbar({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: adn/Navbar');
   const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
   if (!site) throw new Error('Site not found');
 
   const menus = site.menus;
-  const mainMenuItems: any[] = menus?.MenuPrincipale1?.items ?? [];
-  const temiCaldiItems: any[] = menus?.TemiCaldi?.items ?? [];
+  const mainMenuItems: any[] = menus?.MainMenu?.items ?? menus?.MenuPrincipale1?.items ?? []; // TODO: drop legacy MenuPrincipale1 fallback once CMS menus renamed
+  const hotTopicsItems: any[] = menus?.HotTopics?.items ?? menus?.TemiCaldi?.items ?? []; // TODO: drop legacy TemiCaldi fallback once CMS menus renamed
+  const fullMenuItems: any[] = menus?.FullMenu?.items ?? [];
 
   const pathname = (await headers()).get('x-neon-pathname');
   const isActive = (url: string) => url && pathname === url.replace(/\/$/, '');
@@ -46,9 +49,7 @@ export default async function Navbar({
       <div className="adn-utility-bar w-full">
         <div className="adn-utility-inner w-full max-w-[1280px] mx-auto px-3 flex items-center justify-between" style={{ height: 36 }}>
           {/* Left: hamburger */}
-          <button className="adn-hamburger flex items-center" aria-label="Menu">
-            <Menu className="w-5 h-5" />
-          </button>
+          <MenuToggle items={fullMenuItems} />
 
           {/* Center: adnverify badge + utility links */}
           <div className="flex items-center gap-5">
@@ -86,7 +87,7 @@ export default async function Navbar({
           <Link href="/" className="flex items-center justify-center">
             <Image
               src="/adn/Adn_Logo.svg"
-              alt="ADNKronos"
+              alt={siteLabel}
               width={260}
               height={60}
               priority
@@ -135,11 +136,11 @@ export default async function Navbar({
       </div>
 
       {/* ── Row 4: Temi Caldi bar — hidden when menu is absent or empty ───── */}
-      {temiCaldiItems.length > 0 && (
+      {hotTopicsItems.length > 0 && (
         <div className="adn-topics-bar w-full">
           <div className="w-full max-w-[1280px] mx-auto px-3 flex items-center gap-5 overflow-x-auto" style={{ minHeight: 32 }}>
             <ul className="adn-topics-list flex items-center gap-5 overflow-x-auto">
-              {temiCaldiItems.map((item: any, idx: number) => {
+              {hotTopicsItems.map((item: any, idx: number) => {
                 const href = item.url || item.ref || '#';
                 return (
                   <li key={item.ref || idx}>

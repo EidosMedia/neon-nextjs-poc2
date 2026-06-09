@@ -28,26 +28,59 @@ const FOOTER_COLUMNS = [
 export default async function Footer({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: oldtown/Footer');
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  if (!siteName) throw new Error('Site node data is missing');
+
+  const site = await connection.findSite(siteName);
+  if (!site) throw new Error('Site not found');
+
+  const menus = site.menus;
+  const footerMenu = menus?.Footer; // TODO: add legacy fallback name here if/when one is identified for oldtown
+  const footerColumns = footerMenu?.items?.length
+    ? footerMenu.items.map((item: any) => ({
+      title: item.label,
+      links: (item.items ?? []).map((subItem: any) => ({
+        label: subItem.label,
+        href: subItem.url || subItem.ref || '#',
+      })),
+    }))
+    : null;
+
   return (
     <footer data-section="footer" className="w-full mt-10">
 
       {/* Main columns */}
       <div className="w-full max-w-[1280px] mx-auto px-4 pt-8 pb-6">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-          {FOOTER_COLUMNS.map(col => (
-            <div key={col.title}>
-              <div className="footer-col-title">{col.title}</div>
-              <ul className="flex flex-col gap-1.5">
-                {col.links.map(label => (
-                  <li key={label}>
-                    <a href="#" className="text-xs hover:underline" style={{ color: '#363636' }}>
-                      {label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {footerColumns
+            ? footerColumns.map((col: { title: string; links: { label: string; href: string }[] }) => (
+              <div key={col.title}>
+                <div className="footer-col-title">{col.title}</div>
+                <ul className="flex flex-col gap-1.5">
+                  {col.links.map(link => (
+                    <li key={link.label}>
+                      <a href={link.href} className="text-xs hover:underline" style={{ color: '#363636' }}>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+            : FOOTER_COLUMNS.map(col => (
+              <div key={col.title}>
+                <div className="footer-col-title">{col.title}</div>
+                <ul className="flex flex-col gap-1.5">
+                  {col.links.map(label => (
+                    <li key={label}>
+                      <a href="#" className="text-xs hover:underline" style={{ color: '#363636' }}>
+                        {label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
         </div>
       </div>
 

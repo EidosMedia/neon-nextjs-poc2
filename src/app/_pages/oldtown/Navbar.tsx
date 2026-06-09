@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import clsx from 'clsx';
 import { headers, cookies } from 'next/headers';
-import { Search, Menu } from 'lucide-react';
+import { Search } from 'lucide-react';
 import LoginButton from '../../components/LoginButton';
+import MenuToggle from './MenuToggle';
 
 const UTILITY_LINKS = [
   { label: 'Today\'s Paper', href: '/todays-paper' },
@@ -19,13 +20,15 @@ export default async function Navbar({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: oldtown/Navbar');
   const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
   if (!site) throw new Error('Site not found');
 
   const menus = site.menus;
-  const mainMenuItems: any[] = menus?.MenuPrincipale1?.items ?? [];
+  const mainMenuItems: any[] = menus?.MainMenu?.items ?? menus?.MenuPrincipale1?.items ?? []; // TODO: drop legacy MenuPrincipale1 fallback once CMS menus renamed
+  const fullMenuItems: any[] = menus?.FullMenu?.items ?? [];
 
   const pathname = (await headers()).get('x-neon-pathname');
   const isActive = (url: string) => url && pathname === url.replace(/\/$/, '');
@@ -46,10 +49,7 @@ export default async function Navbar({
         <div className="w-full max-w-[1280px] mx-auto px-4 flex items-center justify-between" style={{ height: 34 }}>
           {/* Left: hamburger + sections */}
           <div className="flex items-center gap-4">
-            <button className="flex items-center gap-1.5 oldtown-utility-link font-bold" aria-label="Sections">
-              <Menu className="w-4 h-4" />
-              <span className="hidden sm:inline text-xs tracking-widest uppercase">Sections</span>
-            </button>
+            <MenuToggle items={fullMenuItems} />
             <nav className="hidden lg:flex items-center gap-5">
               {UTILITY_LINKS.map(link => (
                 <Link key={link.href} href={link.href} className="oldtown-utility-link">
@@ -74,7 +74,7 @@ export default async function Navbar({
       <div className="w-full border-b border-[#DFDFDF]">
         <div className="w-full max-w-[1280px] mx-auto px-4 flex items-center justify-center" style={{ minHeight: 72 }}>
           <Link href="/" className="oldtown-masthead">
-            The Oldtown Tribune
+            {siteLabel}
           </Link>
         </div>
       </div>

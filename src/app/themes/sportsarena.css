@@ -1,0 +1,397 @@
+/* SportsArena Theme — data-theme="sportsarena" */
+/* Dark-mode sports portal inspired by ESPN */
+
+/* ─── CSS Variable Overrides ─────────────────────────────────────── */
+.root[data-theme="sportsarena"] {
+  --font-headline: 'Barlow Condensed', system-ui, sans-serif;
+  --font-nav:      'Inter', system-ui, sans-serif;
+  --font-body:     'Inter', system-ui, sans-serif;
+
+  --color-sa-bg:             #0d0d0d;
+  --color-sa-nav-bg:         #0f0f0f;
+  --color-sa-tabs-bg:        #1a1a1a;
+  --color-sa-card-bg:        #181818;
+  --color-sa-primary:        #e31837;
+  --color-sa-primary-hover:  #ff4444;
+  --color-sa-text:           #f0f0f0;
+  --color-sa-muted:          #888888;
+  --color-sa-border:         #2a2a2a;
+}
+
+/* ─── Global ─────────────────────────────────────────────────────── */
+.root[data-theme="sportsarena"] {
+  background-color: var(--color-sa-bg);
+  color: var(--color-sa-text);
+  font-family: var(--font-body);
+}
+
+/* ─── Navbar ─────────────────────────────────────────────────────── */
+.root[data-theme="sportsarena"] .sa-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.root[data-theme="sportsarena"] .sa-ticker {
+  background: var(--color-sa-primary);
+  padding: 4px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.root[data-theme="sportsarena"] .sa-ticker::-webkit-scrollbar { display: none; }
+
+.root[data-theme="sportsarena"] .sa-tick-item {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.root[data-theme="sportsarena"] .sa-tick-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+}
+
+.root[data-theme="sportsarena"] .sa-nav-row1 {
+  background: var(--color-sa-nav-bg);
+  border-bottom: 1px solid var(--color-sa-border);
+}
+
+.root[data-theme="sportsarena"] .sa-logo {
+  font-family: var(--font-headline);
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #fff;
+  text-decoration: none;
+}
+.root[data-theme="sportsarena"] .sa-logo em {
+  color: var(--color-sa-primary);
+  font-style: normal;
+}
+
+.root[data-theme="sportsarena"] .sa-nav-search {
+  color: var(--color-sa-muted);
+  transition: color 0.15s;
+}
+.root[data-theme="sportsarena"] .sa-nav-search:hover {
+  color: var(--color-sa-text);
+}
+
+.root[data-theme="sportsarena"] .sa-nav-row2 {
+  background: var(--color-sa-tabs-bg);
+  border-bottom: 1px solid var(--color-sa-border);
+}
+
+.root[data-theme="sportsarena"] .sa-tab {
+  display: inline-block;
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999;
+  padding: 8px 12px;
+  border-bottom: 2px solid transparent;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.root[data-theme="sportsarena"] .sa-tab:hover {
+  color: #fff;
+}
+.root[data-theme="sportsarena"] .sa-tab--active {
+  color: #fff;
+  border-bottom-color: var(--color-sa-primary);
+}
+
+/* ─── Login/Subscribe controls (LoginButton hooks) ─────────── */
+.root[data-theme="sportsarena"] .theme-login-subscribe,
+.root[data-theme="sportsarena"] .theme-login-account {
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  background: var(--color-sa-primary) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 6px 14px !important;
+}
+.root[data-theme="sportsarena"] .theme-login-subscribe:hover,
+.root[data-theme="sportsarena"] .theme-login-account:hover {
+  background: var(--color-sa-primary-hover) !important;
+}
+
+.root[data-theme="sportsarena"] .theme-login-signin,
+.root[data-theme="sportsarena"] .theme-login-logout {
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--color-sa-text) !important;
+  padding: 0 !important;
+}
+.root[data-theme="sportsarena"] .theme-login-signin:hover,
+.root[data-theme="sportsarena"] .theme-login-logout:hover {
+  color: var(--color-sa-primary-hover) !important;
+}
+
+/* ─── Homepage hero ──────────────────────────────────────────────── */
+.root[data-theme="sportsarena"] .sa-hero {
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px 20px 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 60%, #0a0a0a 100%);
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+.root[data-theme="sportsarena"] .sa-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.92) 100%);
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .root[data-theme="sportsarena"] .sa-hero { min-height: 200px; }
+}
+
+.root[data-theme="sportsarena"] .sa-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.root[data-theme="sportsarena"] .sa-hero-sport {
+  display: inline-block;
+  background: var(--color-sa-primary);
+  color: #fff;
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 2px 7px;
+  border-radius: 1px;
+  margin-bottom: 8px;
+}
+
+.root[data-theme="sportsarena"] .sa-hero-title {
+  font-family: var(--font-headline);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #fff;
+  max-width: 75%;
+  margin-bottom: 8px;
+}
+
+.root[data-theme="sportsarena"] .sa-hero-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* ─── Feed card ──────────────────────────────────────────────────── */
+.root[data-theme="sportsarena"] .sa-card {
+  display: flex;
+  gap: 12px;
+  padding: 10px 10px;
+  background: var(--color-sa-card-bg);
+  border-radius: 3px;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.root[data-theme="sportsarena"] .sa-card:hover {
+  border-left-color: var(--color-sa-primary);
+}
+
+.root[data-theme="sportsarena"] .sa-card-img {
+  width: 80px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #2a2a2a;
+}
+.root[data-theme="sportsarena"] .sa-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.root[data-theme="sportsarena"] .sa-card-sport {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-sa-primary);
+  margin-bottom: 4px;
+}
+
+.root[data-theme="sportsarena"] .sa-card-title {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-sa-text);
+  line-height: 1.3;
+  margin-bottom: 5px;
+}
+
+.root[data-theme="sportsarena"] .sa-card-meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-sa-muted);
+}
+
+/* ─── Article hero ───────────────────────────────────────────────── */
+.root[data-theme="sportsarena"] .sa-article-hero-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  max-height: 600px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a2a4a 0%, #0a0a0a 100%);
+}
+@media (max-width: 768px) {
+  .root[data-theme="sportsarena"] .sa-article-hero-wrap { min-height: 260px; }
+}
+
+.root[data-theme="sportsarena"] .sa-article-hero-wrap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.root[data-theme="sportsarena"] .sa-article-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.92) 100%);
+}
+
+.root[data-theme="sportsarena"] .sa-article-hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 24px;
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.root[data-theme="sportsarena"] .sa-article-sport-badge {
+  display: inline-block;
+  background: var(--color-sa-primary);
+  color: #fff;
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 2px 8px;
+  border-radius: 1px;
+  margin-bottom: 10px;
+}
+
+.root[data-theme="sportsarena"] .sa-article-title {
+  font-family: var(--font-headline);
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  max-width: 80%;
+  margin-bottom: 8px;
+}
+
+.root[data-theme="sportsarena"] .sa-article-subtitle {
+  font-size: 15px;
+  color: #ccc;
+  line-height: 1.4;
+  max-width: 70%;
+}
+
+/* ─── Article body ───────────────────────────────────────────────── */
+.root[data-theme="sportsarena"] .sa-article-body {
+  background: #fff;
+  color: #111;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
+.root[data-theme="sportsarena"] .sa-article-byline {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #666;
+  border-bottom: 2px solid #0f0f0f;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.root[data-theme="sportsarena"] .sa-article-body blockquote {
+  border-left: 3px solid var(--color-sa-primary);
+  padding: 10px 14px;
+  margin: 20px 0;
+  background: #f9f9f9;
+}
+.root[data-theme="sportsarena"] .sa-article-body blockquote p {
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.45;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────── */
+.root[data-theme="sportsarena"] .sa-footer {
+  background: var(--color-sa-nav-bg);
+  border-top: 1px solid var(--color-sa-border);
+  margin-top: 40px;
+}
+.root[data-theme="sportsarena"] .sa-footer-brand {
+  font-family: var(--font-headline);
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-sa-text);
+}
+.root[data-theme="sportsarena"] .sa-footer-copy {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-sa-muted);
+}
+.root[data-theme="sportsarena"] .sa-footer-links a {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-sa-muted);
+}
+.root[data-theme="sportsarena"] .sa-footer-links a:hover {
+  color: var(--color-sa-primary);
+}

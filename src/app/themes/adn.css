@@ -156,6 +156,43 @@
   opacity: 0.88;
 }
 
+/* ─── Login/Subscribe controls (LoginButton hooks) ─────────── */
+.root[data-theme="adn"] .theme-login-subscribe,
+.root[data-theme="adn"] .theme-login-account {
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  background-color: #E30613 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 8px 14px !important;
+}
+.root[data-theme="adn"] .theme-login-subscribe:hover,
+.root[data-theme="adn"] .theme-login-account:hover {
+  opacity: 0.88;
+}
+
+.root[data-theme="adn"] .theme-login-signin,
+.root[data-theme="adn"] .theme-login-logout {
+  font-family: var(--font-nav) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: #1A1A1A !important;
+  padding: 0 !important;
+}
+.root[data-theme="adn"] .theme-login-signin:hover,
+.root[data-theme="adn"] .theme-login-logout:hover {
+  color: #E30613 !important;
+}
+
 /* Row 4: Temi Caldi bar */
 .root[data-theme="adn"] .adn-topics-bar {
   background-color: #FFFFFF;

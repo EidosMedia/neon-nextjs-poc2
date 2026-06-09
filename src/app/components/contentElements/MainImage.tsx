@@ -8,7 +8,7 @@ type MainImageProps = {
   preferredImage?: string;
 };
 
-const getTeaserOrMainImageUrl = (data: ArticleModel, format: string, preferredImage?: string): string | undefined => {
+export const getTeaserOrMainImageUrl = (data: ArticleModel, format: string, preferredImage?: string): string | undefined => {
   const teaserPicture = data?.links?.system?.teaserPicture?.[0];
   const teaserPictureFormat = teaserPicture?.dynamicCropsResourceUrls?.[format];
   
@@ -32,6 +32,7 @@ const MainImage: React.FC<MainImageProps> = ({ data, format, hideCaptions, prefe
           <div className="flex flex-col gap-2 mb-8">
             <img src={imageUrl} alt="" />
             {!hideCaptions &&
+              findElementsInContentJson(['web-image-caption'], data.files.content.data)[0] &&
               renderContent(findElementsInContentJson(['web-image-caption'], data.files.content.data)[0])}
           </div>
         ) : (

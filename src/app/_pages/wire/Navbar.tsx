@@ -9,13 +9,14 @@ export default async function Navbar({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: wire/Navbar');
   const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
 
   const site = await connection.findSite(siteName);
   if (!site) throw new Error('Site not found');
 
   const menus = site.menus;
-  const mainMenuItems: any[] = menus?.MenuPrincipale1?.items ?? [];
+  const mainMenuItems: any[] = menus?.MainMenu?.items ?? menus?.MenuPrincipale1?.items ?? []; // TODO: drop legacy MenuPrincipale1 fallback once CMS menus renamed
 
   const pathname = (await headers()).get('x-neon-pathname');
   const isActive = (url: string) => url && pathname === url.replace(/\/$/, '');
@@ -34,7 +35,7 @@ export default async function Navbar({
 
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="wire-brand">Wire Feed</Link>
+          <Link href="/" className="wire-brand">{siteLabel}</Link>
           <span className="wire-brand-service">/ API Preview</span>
           <span className="wire-status-live">LIVE</span>
         </div>

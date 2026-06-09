@@ -27,24 +27,51 @@ const FOOTER_COLUMNS = [
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: foghorn/Footer');
+  const siteName = data.siteData?.siteName || data.siteNode?.name;
+  const siteLabel = data.siteNode?.attributes?.sitename || siteName;
+  if (!siteName) throw new Error('Site node data is missing');
+
+  const site = await connection.findSite(siteName);
+  const menus = site?.menus;
+  const footerMenu = menus?.Footer;
+  const footerColumns = footerMenu?.items?.length
+    ? footerMenu.items.map((item: any) => ({
+        title: item.label,
+        links: (item.items ?? []).map((sub: any) => ({ label: sub.label, href: sub.url || sub.ref || '#' })),
+      }))
+    : null;
+
   return (
     <footer data-section="footer" className="foghorn-footer w-full">
 
       {/* Columns */}
       <div className="w-full max-w-[1300px] mx-auto px-4 pt-8 pb-6">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-          {FOOTER_COLUMNS.map(col => (
-            <div key={col.title}>
-              <div className="foghorn-footer-col-title">{col.title}</div>
-              <ul className="flex flex-col gap-1.5">
-                {col.links.map(label => (
-                  <li key={label}>
-                    <a href="#">{label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {footerColumns
+            ? footerColumns.map((col: { title: string; links: { label: string; href: string }[] }) => (
+                <div key={col.title}>
+                  <div className="foghorn-footer-col-title">{col.title}</div>
+                  <ul className="flex flex-col gap-1.5">
+                    {col.links.map(link => (
+                      <li key={link.href}>
+                        <a href={link.href}>{link.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            : FOOTER_COLUMNS.map(col => (
+                <div key={col.title}>
+                  <div className="foghorn-footer-col-title">{col.title}</div>
+                  <ul className="flex flex-col gap-1.5">
+                    {col.links.map(label => (
+                      <li key={label}>
+                        <a href="#">{label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
         </div>
       </div>
 
@@ -63,7 +90,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
             textDecoration: 'none',
           }}
         >
-          The Foghorn
+          {siteLabel}
         </a>
 
         <div className="flex items-center gap-5">

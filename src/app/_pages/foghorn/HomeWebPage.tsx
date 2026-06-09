@@ -25,7 +25,7 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
           <div className="foghorn-hero-main">
             <Main data={data} />
           </div>
-          <div className="foghorn-hero-stack">
+          <div className="foghorn-hero-stack foghorn-compact-articles">
             <Context data={data} />
           </div>
         </div>
@@ -35,7 +35,9 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
 
         {/* ── 4-col second row ──────────────────────────────────────────── */}
         <div className="foghorn-4col-grid">
-          <Insight1 data={data} />
+          <div className="foghorn-compact-articles foghorn-square-images">
+            <Insight1 data={data} imageFormat="Square_small" />
+          </div>
           <Insight2 data={data} />
         </div>
 

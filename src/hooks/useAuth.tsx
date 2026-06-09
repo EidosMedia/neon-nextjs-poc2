@@ -1,11 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
 const getUserFromBackend = async () => {
-  console.log('calling getUserFromBackend');
   const response = await fetch('/api/users');
-  console.log('getUserFromBackend response', response);
   if (!response.ok) {
-    return undefined;
+    throw new Error(`Failed to fetch user: ${response.status}`);
   }
   return await response.json();
 };

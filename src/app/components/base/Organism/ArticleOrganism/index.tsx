@@ -11,6 +11,7 @@ type ArticleOrganismProps = {
   linkedObjects: any; // Adjust type as needed
   index: number;
   type: string;
+  imageFormat?: string;
 };
 
 const extractSectionFromUrl = (url: string): string => url.split('/')[1];
@@ -66,7 +67,7 @@ const getArticleClasses = (type: string) => {
   return classMap[type] || classMap['article-md']; // fallback to article-md if type not found
 };
 
-const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, linkedObjects, index, type }) => {
+const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, linkedObjects, index, type, imageFormat = 'Wide_small' }) => {
   console.log('[NEON] render: ArticleOrganism');
   //console.log('ArticleOrganism Props:', { linkedObject, linkedObjects, index, type });
   console.log('linkedObject ID:', linkedObject?.id);
@@ -113,7 +114,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
               data={linkedObject}
               minimal
             >
-              <TitleComponent className="mt-2" id={titleId} data-type="title">
+              <TitleComponent className="py-2" id={titleId} data-type="title">
                 <p>{title}</p>
               </TitleComponent>
             </ContentEditable>
@@ -123,14 +124,14 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
               data={linkedObject}
               minimal
             >
-              <span className="mt-2" id={summaryId} data-type="summary">
+              <div className="py-4" id={summaryId} data-type="summary">
                 <p>{summary}</p>
-              </span>
+              </div>
             </ContentEditable>
-            <span className="mt-2">{linkedObject.author}</span>
+            <div className="py-2">{linkedObject.author}</div>
           </div>
           <div className={`flex justify-end items-end ${classes.imageColumn}`}>
-            <MainImage data={linkedObject} format="Wide_small" hideCaptions />
+            <MainImage data={linkedObject} format={imageFormat} hideCaptions />
           </div>
         </div>
       </Link>

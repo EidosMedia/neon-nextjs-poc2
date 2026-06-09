@@ -43,7 +43,7 @@ const HeroCoverImage: React.FC<HeroCoverImageProps> = ({ data, format, preferred
           <div className="absolute inset-0 flex items-end">
             <div className="container mx-auto px-5 xl:px-52 pb-12">
               <div className="text-white [&_h1]:text-white [&_h5]:text-white [&_h5]:text-gray-200">
-                {renderContent(groupheadContent, data, undefined, 'flex flex-col gap-4')}
+                {groupheadContent && renderContent(groupheadContent, data, undefined, 'flex flex-col gap-4')}
               </div>
             </div>
           </div>

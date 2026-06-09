@@ -39,7 +39,7 @@ theme = pageDataJSON.siteNode.attributes.theme ?? 'default'
 PageComponent = resolvePageComponent(componentKey, theme)
 ```
 
-`resolvePageComponent` and `resolveComponent` both fall back to the default theme for unknown theme names or missing keys, so new themes only need to override what differs.
+`resolvePageComponent` and `resolveComponent` fall back to the default theme for unknown theme names or missing keys. However, **scaffold-copied pages hardcode their own `Navbar`/`Footer` imports** — the fallback only applies to the `THEME_MAP` lookup, not to what the scaffold copies reference. Fix those imports explicitly (see Step 1).
 
 ## Steps
 
@@ -50,6 +50,15 @@ npm run scaffold:theme -- <theme-name>
 ```
 
 This copies all `_pages/*.tsx` files into `_pages/<theme-name>/`, rewrites their import paths from `../components/` to `../../components/`, and generates `index.ts`.
+
+**After scaffolding, immediately fix Navbar/Footer imports.** The scaffold copies reference `../../components/Navbar` and `../../components/Footer` (the default shared components), NOT the theme's own `./Navbar` and `./Footer`. Every page that renders a nav/footer will silently use the default ones until you fix this:
+
+```bash
+sed -i '' "s|from '../../components/Navbar'|from './Navbar'|g" src/app/_pages/<theme-name>/*.tsx
+sed -i '' "s|from '../../components/Footer'|from './Footer'|g" src/app/_pages/<theme-name>/*.tsx
+```
+
+Verify with `grep -rn "from '../../components/Navbar'" src/app/_pages/<theme-name>/` — should return nothing.
 
 ### 2. Register in `_themeRouter.tsx`
 
@@ -156,6 +165,8 @@ Add a CSS file at `src/app/themes/<theme-name>.css` and import it in `src/app/gl
 
 Scope all rules with `.root[data-theme="<theme-name>"] { … }` to avoid leaking into other themes. Prefer CSS variable overrides for visual differences (color, font, spacing) — save structural component overrides for layout changes that CSS cannot express.
 
+**Absolute-positioned overlay content** (e.g. title overlaid on hero image): always add `margin-left: auto; margin-right: auto;` alongside `max-width` so the block centres on wide viewports and aligns with the body column beneath it.
+
 ### 8. (Optional) Add theme fonts
 
 Add a Google Fonts `<link>` in `src/app/layout.tsx` and reference the font via `--font-headline` or a new CSS variable in your theme CSS file.
@@ -163,6 +174,7 @@ Add a Google Fonts `<link>` in `src/app/layout.tsx` and reference the font via `
 ## Checklist
 
 - [ ] `npm run scaffold:theme -- <theme-name>` ran successfully
+- [ ] **Navbar/Footer import paths fixed** in all scaffold-copied pages (`../../components/Navbar` → `./Navbar`, same for Footer) — verify with `grep -rn "from '../../components/Navbar'" src/app/_pages/<theme-name>/`
 - [ ] Theme registered in `src/app/_themeRouter.tsx` (`import` + `THEME_MAP` entry)
 - [ ] `UIStyleGuide` and `ArticleOrganism` re-exports added to `index.ts` (match default barrel shape)
 - [ ] `Navbar.tsx` customised for the new brand
@@ -180,5 +192,7 @@ Add a Google Fonts `<link>` in `src/app/layout.tsx` and reference the font via `
 | `adn` | Three-layer Navbar, 70/30 article body/sidebar, dark footer, ad slots |
 | `oldtown` | Blackletter masthead, 720px serif column, Oldtown-rule `<hr>`, no sidebar |
 | `wire` | Monospace IBM Plex, feed-row ArticleOrganism with priority badges, panel-header chrome |
+| `sportsarena` | Dark mode ESPN-style: red ticker Navbar, gradient hero, image-left feed cards, immersive article hero with gradient scrim |
 
 `wire` is the reference for component-level overrides (`_pages/wire/components/ArticleOrganism.tsx`).
+`sportsarena` is the reference for dark-mode full-page themes with immersive article heroes.

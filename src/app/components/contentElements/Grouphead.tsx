@@ -8,28 +8,32 @@ type GroupheadProps = {
 };
 
 const Grouphead: React.FC<GroupheadProps> = ({ data }) => {
+  console.log('Rendering Grouphead with data:', data);
   const publicationTime = data?.pubInfo?.publicationTime;
   return (
     <div className="flex flex-col gap-4 mb-8">
       {/* OVERHEAD & TITLE */}
-      {renderContent(
-        findElementsInContentJson(['grouphead'], data.files.content.data)[0],
-        data,
-        undefined,
-        'flex flex-col gap-4'
-      )}
+      {findElementsInContentJson(['grouphead'], data. files.content.data)[0] &&
+        renderContent(
+          findElementsInContentJson(['grouphead'], data.files.content.data)[0],
+          data,
+          undefined,
+          'flex flex-col gap-4'
+        )}
       {/* SUMMARY */}
-      {renderContent(findElementsInContentJson(['summary'], data.files.content.data)[0], data)}
+      {findElementsInContentJson(['summary'], data.files.content.data)[0] &&
+        renderContent(findElementsInContentJson(['summary'], data.files.content.data)[0], data)}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           {/* AUTHOR */}
           <span className="author-medium font-semibold whitespace-pre">By </span>
-          {renderContent(
-            findElementsInContentJson(['byline'], data.files.content.data)[0],
-            data,
-            undefined,
-            'author-medium [&>p]:font-semibold'
-          )}
+          {findElementsInContentJson(['byline'], data.files.content.data)[0] &&
+            renderContent(
+              findElementsInContentJson(['byline'], data.files.content.data)[0],
+              data,
+              undefined,
+              'author-medium [&>p]:font-semibold'
+            )}
           {/* DATE */}
           <span className="author-medium font-semibold whitespace-pre">
             {' '}
