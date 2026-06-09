@@ -14,16 +14,16 @@ const NewsletterWebpage: React.FC<PageProps> = async ({ data }) => {
   const html = await renderNewsletterHtml(data);
   return (
     <div className="container mx-auto p-4">
-      <Navbar data={data} />
+      {/* <Navbar data={data} /> */}
       {/* minHeight is an approximate preview height; newsletters vary in length and content scrolls within the iframe. */}
       <iframe
         srcDoc={html}
         title="Newsletter preview"
         style={{ width: '100%', minHeight: '1200px', border: '1px solid var(--color-neutral-light)' }}
       />
-      <footer className="p-4 rounded-b-lg mt-4">
+      {/* <footer className="p-4 rounded-b-lg mt-4">
         <Footer data={data} />
-      </footer>
+      </footer> */}
     </div>
   );
 };

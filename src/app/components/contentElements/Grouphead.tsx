@@ -8,11 +8,12 @@ type GroupheadProps = {
 };
 
 const Grouphead: React.FC<GroupheadProps> = ({ data }) => {
+  console.log('Rendering Grouphead with data:', data);
   const publicationTime = data?.pubInfo?.publicationTime;
   return (
     <div className="flex flex-col gap-4 mb-8">
       {/* OVERHEAD & TITLE */}
-      {findElementsInContentJson(['grouphead'], data.files.content.data)[0] &&
+      {findElementsInContentJson(['grouphead'], data. files.content.data)[0] &&
         renderContent(
           findElementsInContentJson(['grouphead'], data.files.content.data)[0],
           data,

@@ -8,7 +8,7 @@ type MainImageProps = {
   preferredImage?: string;
 };
 
-const getTeaserOrMainImageUrl = (data: ArticleModel, format: string, preferredImage?: string): string | undefined => {
+export const getTeaserOrMainImageUrl = (data: ArticleModel, format: string, preferredImage?: string): string | undefined => {
   const teaserPicture = data?.links?.system?.teaserPicture?.[0];
   const teaserPictureFormat = teaserPicture?.dynamicCropsResourceUrls?.[format];
   

@@ -114,7 +114,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
               data={linkedObject}
               minimal
             >
-              <TitleComponent className="mt-2" id={titleId} data-type="title">
+              <TitleComponent className="py-2" id={titleId} data-type="title">
                 <p>{title}</p>
               </TitleComponent>
             </ContentEditable>
@@ -124,11 +124,11 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
               data={linkedObject}
               minimal
             >
-              <span className="mt-2" id={summaryId} data-type="summary">
+              <div className="py-4" id={summaryId} data-type="summary">
                 <p>{summary}</p>
-              </span>
+              </div>
             </ContentEditable>
-            <span className="mt-2">{linkedObject.author}</span>
+            <div className="py-2">{linkedObject.author}</div>
           </div>
           <div className={`flex justify-end items-end ${classes.imageColumn}`}>
             <MainImage data={linkedObject} format={imageFormat} hideCaptions />

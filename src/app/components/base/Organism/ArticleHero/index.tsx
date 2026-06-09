@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import ArticleOverlay from '../../ArticleOverlay';
-import MainImage from '@/app/components/contentElements/MainImage';
+import { getTeaserOrMainImageUrl } from '@/app/components/contentElements/MainImage';
 import ContentEditable from '@/app/components/utilities/ContentEditable';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import React from 'react';
@@ -15,6 +15,7 @@ const extractSectionFromUrl = (url: string): string => url.split('/')[1];
 const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url;
+  const imageUrl = getTeaserOrMainImageUrl(linkedObject, 'Ultrawide_large');
 
   const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
 
@@ -35,9 +36,10 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
       >
         <div className="relative w-full h-[60vh] min-h-[400px] max-h-[500px] overflow-hidden group">
           {/* Background Image */}
-          <div className="absolute inset-0">
-            <MainImage data={linkedObject} format="Ultrawide_large" hideCaptions />
-          </div>
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: imageUrl ? `url('${imageUrl}')` : undefined }}
+          />
 
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />

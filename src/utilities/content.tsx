@@ -165,7 +165,7 @@ export const buildAttributes = (node: ContentElement): Record<string, any> => {
   // replace "class" with "className" and "stroke-linecap" with "strokeLinecap"
   // exclude "key" as it is a reserved React prop and must not be spread into JSX
   return Object.fromEntries(
-    Object.entries(node.attributes || {})
+    Object.entries(node?.attributes || {})
       .filter(([key]) => key !== 'key')
       .map(([key, value]) => [
         key === 'class'
@@ -417,7 +417,7 @@ export const renderContent = (
       );
 
     default:
-      if (content.nodeType.match(/^[a-z]+-component/)?.[0]) {
+      if (content?.nodeType?.match?.(/^[a-z]+-component/)?.[0]) {
         const componentname = content.attributes?.componentname ?? '';
         const Resolved = customComponents?.get(componentname);
         const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
@@ -462,12 +462,14 @@ export const renderContent = (
           />
         );
       }
-      const CustomElement = content.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
-      return (
-        <CustomElement key={key} {...buildAttributes(content)}>
-          {content.elements.length > 0 &&
-            content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
-        </CustomElement>
+      const CustomElement = content?.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
+      return ( 
+        CustomElement ? (  
+          <CustomElement key={key} {...buildAttributes(content)}>
+            {content.elements.length > 0 &&
+              content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          </CustomElement>
+        ) : null
       );
   }
 };
