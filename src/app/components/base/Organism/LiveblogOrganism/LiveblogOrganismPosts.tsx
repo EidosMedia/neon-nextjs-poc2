@@ -16,9 +16,11 @@ type LiveblogOrganismPostsProps = {
 const TITLE_MAX_LENGTH = 70;
 
 const getPostTitle = (content: any): string => {
-  const paragraph = findElementsInContentJson(['p'], content)[0];
-  if (!paragraph) return '';
-  const text = String(findText(paragraph) ?? '').trim();
+  const element =
+    findElementsInContentJson(['h1'], content)[0] ??
+    findElementsInContentJson(['p'], content)[0];
+  if (!element) return '';
+  const text = String(findText(element) ?? '').trim();
   if (!text) return '';
   return text.length > TITLE_MAX_LENGTH ? `${text.slice(0, TITLE_MAX_LENGTH)}…` : text;
 };
@@ -60,6 +62,7 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
   }, [liveblogId]);
 
   const visiblePosts = liveblogPosts.slice(0, 3);
+  console.log('LiveblogOrganismPosts - visiblePosts:', visiblePosts);
 
   return (
     <div className="flex flex-col">
