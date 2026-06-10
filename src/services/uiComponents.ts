@@ -53,26 +53,15 @@ let _manifestLastModified: string | null = null;
  * Must be called from a Server Component or API route.
  */
 export async function fetchUiComponentsManifest(): Promise<UiComponentsManifest> {
-  const baseUrl = process.env.BASE_NEON_FO_URL;
-  if (!baseUrl) {
-    console.warn('[uicomponents] BASE_NEON_FO_URL is not set — skipping manifest fetch');
-    return _cachedManifest ?? NULL_MANIFEST;
-  }
-
   try {
     const headers: HeadersInit = {};
     if (_manifestEtag) headers['If-None-Match'] = _manifestEtag;
     else if (_manifestLastModified) headers['If-Modified-Since'] = _manifestLastModified;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-    const r = await fetch(`${baseUrl}/shared/uicomponents/manifest.json`, {
+    const r = await connection.makeApiRequest('/shared/uicomponents/manifest.json', undefined, {
       headers,
-      signal: controller.signal,
       cache: 'no-store',
     });
-    clearTimeout(timeoutId);
 
     if (r.status === 304) {
       return _cachedManifest ?? NULL_MANIFEST;

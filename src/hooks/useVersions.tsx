@@ -26,6 +26,9 @@ const useVersions = ({
       viewStatus === 'LIVE' ? `/api/nodes/${currentNode?.id}/versions/live` : `/api/nodes/${currentNode?.id}/versions`;
 
     const response = await fetch(versionFetchUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch versions: ${response.status}`);
+    }
     const jsonResp = await response.json();
     return { versions: jsonResp.result as NodeVersion[], count: jsonResp.count as number };
   };

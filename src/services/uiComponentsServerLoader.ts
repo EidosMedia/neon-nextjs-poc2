@@ -48,7 +48,8 @@ async function collectChunks(
 
     const chunkUrl = new URL(specifier, baseUrl).toString();
     try {
-      const res = await fetch(chunkUrl, { cache: 'no-store' });
+      const chunkPath = specifier.replace(/^\.?\//, '');
+      const res = await connection.fetchUiComponent(chunkPath);
       if (!res.ok) {
         console.warn(`[uiComponentsServerLoader] chunk fetch failed ${chunkUrl}: ${res.status}`);
         continue;
@@ -131,8 +132,7 @@ async function importFromTempDir(
       ].join('\n');
       writeFileSync(join(tmpDir, shimFilename), shimBody, 'utf8');
       // Replace bare 'react/jsx-runtime' imports with the local shim path.
-      patchText = (t: string) =>
-        t.replace(/(['"])react\/jsx-runtime\1/g, `'./${shimFilename}'`);
+      patchText = (t: string) => t.replace(/(['"])react\/jsx-runtime\1/g, `'./${shimFilename}'`);
     }
 
     const STUB_PACKAGES = ['@eidosmedia/react-marvin-components'];
@@ -211,7 +211,7 @@ async function _fetchAndEvaluate(category: UiComponentCategory): Promise<Module>
   if (!baseUrl) throw new Error('[uiComponentsServerLoader] BASE_NEON_FO_URL is not set');
 
   const bundleUrl = `${baseUrl}/shared/uicomponents/${category}.js`;
-  const res = await fetch(bundleUrl, { cache: 'no-store' });
+  const res = await connection.fetchUiComponent(`${category}.js`);
   if (!res.ok) {
     throw new Error(
       `[uiComponentsServerLoader] bundle fetch failed for "${category}": ${res.status} ${res.statusText}`,
