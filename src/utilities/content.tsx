@@ -208,7 +208,9 @@ export const renderContent = (
       return (
         <ContentEditable key={key} data={data}>
           <h1 key={key} data-type="headline" {...buildAttributes(content)}>
-            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+            {content.elements.map((elem, idx) =>
+              renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+            )}
           </h1>
         </ContentEditable>
       );
@@ -216,7 +218,9 @@ export const renderContent = (
       return (
         <ContentEditable key={key} data={data}>
           <h5 key={key} data-type="overhead" {...buildAttributes(content)} className="uppercase">
-            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+            {content.elements.map((elem, idx) =>
+              renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+            )}
           </h5>
         </ContentEditable>
       );
@@ -234,25 +238,33 @@ export const renderContent = (
     case 'byline':
       return (
         <div key={key} data-type="byline" {...buildAttributes(content)} className={styles}>
-          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+          )}
         </div>
       );
     case 'text':
       return (
         <div id="text" key={key} {...buildAttributes(content)} className={styles} data-type="text">
-          {content.elements.map((elem, idx) => renderContent(elem, data, 'text', undefined, customComponents, nodeDataMap, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, 'text', undefined, customComponents, nodeDataMap, idx),
+          )}
         </div>
       );
     case 'caption':
       return (
         <figcaption key={key} {...buildAttributes(content)} className="body-large italic" data-type="caption">
-          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+          )}
         </figcaption>
       );
     case 'credit':
       return (
         <span key={key} data-type="credit" {...buildAttributes(content)} className="body-large italic text-gray-500">
-          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+          )}
         </span>
       );
     case 'p':
@@ -260,16 +272,26 @@ export const renderContent = (
         return data?.id ? (
           <ContentEditable key={key} data={data}>
             <p key={key} {...buildAttributes(content)} className={`${styles} body-large`}>
-              {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+              {content.elements.map((elem, idx) =>
+                renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+              )}
             </p>
           </ContentEditable>
         ) : (
           <p key={key} {...buildAttributes(content)} className={`${styles} body-large`}>
-            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+            {content.elements.map((elem, idx) =>
+              renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+            )}
           </p>
         );
       } else {
-        return <p key={key}>{content.elements.map((elem, idx) => renderContent(elem, data, undefined, styles, undefined, undefined, idx))}</p>;
+        return (
+          <p key={key}>
+            {content.elements.map((elem, idx) =>
+              renderContent(elem, data, undefined, styles, undefined, undefined, idx),
+            )}
+          </p>
+        );
       }
     case 'plainText':
       return content.value;
@@ -277,7 +299,9 @@ export const renderContent = (
       return (
         <ContentEditable key={key} data={data}>
           <div key={key} data-type="summary" {...buildAttributes(content)} className={styles}>
-            {content.elements.map((elem, idx) => renderContent(elem, data, undefined, styles, undefined, undefined, idx))}
+            {content.elements.map((elem, idx) =>
+              renderContent(elem, data, undefined, styles, undefined, undefined, idx),
+            )}
           </div>
         </ContentEditable>
       );
@@ -296,12 +320,7 @@ export const renderContent = (
         };
         return (
           <div key={'img-' + key} data-type="inline-media-group">
-            <Figure
-              key={key}
-              data={filteredContent}
-              alt="/public/file.svg"
-              format="Wide"
-            />
+            <Figure key={key} data={filteredContent} alt="/public/file.svg" format="Wide" />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'image-caption')[0], data)}
           </div>
         );
@@ -313,12 +332,7 @@ export const renderContent = (
         };
         return (
           <div data-type="inline-media-group">
-            <Figure
-              key={key}
-              data={filteredContent}
-              alt="/public/file.svg"
-              format="Wide"
-            />
+            <Figure key={key} data={filteredContent} alt="/public/file.svg" format="Wide" />
             {renderContent(content.elements.filter(elem => elem.nodeType === 'graphic-caption')[0], data)}
           </div>
         );
@@ -327,7 +341,9 @@ export const renderContent = (
     case 'anchor':
       return (
         <Link {...buildAttributes(content)} href={content.attributes.href} key={key} data-type="anchor">
-          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+          )}
         </Link>
       );
     case 'br':
@@ -338,25 +354,35 @@ export const renderContent = (
     case 'table':
       return (
         <table key={key} {...buildAttributes(content)} data-type="table" className="w-full border-collapse">
-          <tbody>{content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}</tbody>
+          <tbody>
+            {content.elements.map((elem, idx) =>
+              renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+            )}
+          </tbody>
         </table>
       );
     case 'tr':
       return (
         <tr key={key} {...buildAttributes(content)} className="border-b">
-          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+          )}
         </tr>
       );
     case 'td':
       return (
         <td key={key} {...buildAttributes(content)} className="px-4 py-2">
-          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+          )}
         </td>
       );
     case 'th':
       return (
         <th key={key} {...buildAttributes(content)} className="px-4 py-2 font-bold text-left">
-          {content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
+          {content.elements.map((elem, idx) =>
+            renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+          )}
         </th>
       );
     case 'oembedblock':
@@ -424,6 +450,9 @@ export const renderContent = (
         const neonEmbedId = (content.attributes?.href ?? '').match(NEON_ID_RE)?.[1];
         const model = neonEmbedId ? nodeDataMap?.get(neonEmbedId) : undefined;
 
+        const isNavigable = content.nodeType === 'story-component' || content.nodeType === 'liveblog-component';
+        const itemHref = content.attributes?.href ?? null;
+
         if (Resolved) {
           const raw = { ...content.attributes };
           for (const child of content.elements ?? []) {
@@ -442,7 +471,8 @@ export const renderContent = (
             else if (v !== '' && !Number.isNaN(Number(v))) attrs[k] = Number(v);
             else attrs[k] = v;
           }
-          return (
+
+          const resolved = (
             <Resolved
               key={key}
               attributes={attrs}
@@ -451,8 +481,15 @@ export const renderContent = (
               {...(model !== undefined ? { model } : {})}
             />
           );
+          return isNavigable && itemHref ? (
+            <Link key={key} href={itemHref}>
+              {resolved}
+            </Link>
+          ) : (
+            resolved
+          );
         }
-        return (
+        const customComponent = (
           <CustomComponent
             key={key}
             nodeType={content.nodeType}
@@ -461,16 +498,23 @@ export const renderContent = (
             model={model}
           />
         );
+        return isNavigable && itemHref ? (
+          <Link key={key} href={itemHref}>
+            {customComponent}
+          </Link>
+        ) : (
+          customComponent
+        );
       }
       const CustomElement = content?.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
-      return ( 
-        CustomElement ? (  
-          <CustomElement key={key} {...buildAttributes(content)}>
-            {content.elements.length > 0 &&
-              content.elements.map((elem, idx) => renderContent(elem, data, undefined, undefined, undefined, undefined, idx))}
-          </CustomElement>
-        ) : null
-      );
+      return CustomElement ? (
+        <CustomElement key={key} {...buildAttributes(content)}>
+          {content.elements.length > 0 &&
+            content.elements.map((elem, idx) =>
+              renderContent(elem, data, undefined, undefined, undefined, undefined, idx),
+            )}
+        </CustomElement>
+      ) : null;
   }
 };
 
