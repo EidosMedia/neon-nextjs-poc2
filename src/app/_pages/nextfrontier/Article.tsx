@@ -7,6 +7,7 @@ import { renderContent, findElementsInContentJson, findCustomComponentNodes } fr
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
+import { getTeaserOrMainImageUrl } from '../../components/contentElements/MainImage';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -30,11 +31,7 @@ const Article = async ({ data }: PageProps) => {
   const tag = ((articleData as any)?.attributes?.overhead as string | undefined)
     || (articleData?.url?.split?.('/')?.[1] ?? '').toUpperCase();
 
-  const teaserPic = articleData?.links?.system?.teaserPicture?.[0];
-  const mainPic = articleData?.links?.system?.mainPicture?.[0];
-  const articleImageUrl =
-    teaserPic?.dynamicCropsResourceUrls?.['Landscape_large'] ??
-    mainPic?.dynamicCropsResourceUrls?.['Landscape_large'];
+  const articleImageUrl = getTeaserOrMainImageUrl(articleData, 'Wide_large', 'main');
 
   const title = (articleData as any)?.attributes?.teaser?.title ?? articleData?.title ?? '';
   const deck = (articleData as any)?.attributes?.teaser?.summary ?? '';

@@ -50,6 +50,38 @@ const NEWSLETTER_THEME_STYLES: Record<string, NewsletterThemePalette> = {
     headlineFont: 'Georgia, serif',
     bodyFont: 'Inter, system-ui, sans-serif',
   },
+  adn: {
+    bg: '#FFFFFF',
+    text: '#1A1A1A',
+    muted: '#888888',
+    accent: '#E30613',
+    headlineFont: "'Barlow Condensed', sans-serif",
+    bodyFont: "'Nunito Sans', sans-serif",
+  },
+  foghorn: {
+    bg: '#ffffff',
+    text: '#121212',
+    muted: '#666666',
+    accent: '#052962',
+    headlineFont: "'Georgia', 'Times New Roman', serif",
+    bodyFont: "'Georgia', 'Times New Roman', serif",
+  },
+  wire: {
+    bg: '#FFFFFF',
+    text: '#0A0A0A',
+    muted: '#6B6B6B',
+    accent: '#0050FF',
+    headlineFont: "'IBM Plex Sans', 'Inter', system-ui, sans-serif",
+    bodyFont: "'IBM Plex Sans', 'Inter', system-ui, sans-serif",
+  },
+  oldtown: {
+    bg: '#F7F7F5',
+    text: '#121212',
+    muted: '#666666',
+    accent: '#000000',
+    headlineFont: "'Cheltenham', 'Georgia', 'Times New Roman', serif",
+    bodyFont: "'Georgia', 'Times New Roman', serif",
+  },
 };
 
 const getThemePalette = (theme: string): NewsletterThemePalette =>
@@ -128,16 +160,16 @@ const renderTeaserRow = (linkedObject: any, palette: NewsletterThemePalette): st
 };
 
 /**
- * Renders a complete, mail-client-compatible HTML document for a webpage's
- * newsletter representation. This is the SINGLE source of truth for newsletter
- * markup: both the in-browser preview (<iframe srcDoc>) and the raw-HTML export
- * API endpoint call this function verbatim and must receive byte-identical output.
+ * Renders the mail-client-compatible newsletter markup for a webpage as a
+ * standalone HTML fragment (no <html>/<head>/<body> wrapper). This is the
+ * SINGLE source of truth for newsletter markup: both the in-page preview
+ * (rendered directly into the page via dangerouslySetInnerHTML) and
+ * `renderNewsletterHtml` (used for raw-HTML export) build on this fragment.
  *
  * Table-based layout, inline styles only — no flexbox/grid/CSS variables/Tailwind
- * classes, since Outlook/Gmail strip those. Any <style> block is progressive
- * enhancement only (e.g. mobile @media tweaks) and never load-bearing.
+ * classes, since Outlook/Gmail strip those.
  */
-export async function renderNewsletterHtml(data: PageData<WebpageModel>): Promise<string> {
+export async function renderNewsletterFragment(data: PageData<WebpageModel>): Promise<string> {
   const theme = (data.siteNode?.attributes?.theme as string | undefined) ?? 'default';
   const palette = getThemePalette(theme);
 
@@ -160,23 +192,7 @@ export async function renderNewsletterHtml(data: PageData<WebpageModel>): Promis
 
   const year = new Date().getFullYear();
 
-  return `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      /* Progressive enhancement only — every element below must already look
-         correct with this block stripped (Gmail strips <style> tags). */
-      @media only screen and (max-width: 620px) {
-        #neon-newsletter-table {
-          width: 100% !important;
-        }
-      }
-    </style>
-  </head>
-  <body style="margin: 0; padding: 0; background: ${palette.bg};">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background: ${palette.bg};">
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background: ${palette.bg};">
       <tr>
         <td align="center" style="padding: 24px 16px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center" id="neon-newsletter-table" style="width: 600px; max-width: 600px; background: ${palette.bg};">
@@ -201,7 +217,36 @@ export async function renderNewsletterHtml(data: PageData<WebpageModel>): Promis
           </table>
         </td>
       </tr>
-    </table>
+    </table>`;
+}
+
+/**
+ * Wraps `renderNewsletterFragment` in a complete HTML document for the
+ * raw-HTML export endpoint (`/api/newsletter`). Any <style> block is
+ * progressive enhancement only (e.g. mobile @media tweaks) and never
+ * load-bearing — every element must already look correct with it stripped,
+ * since Gmail strips <style> tags.
+ */
+export async function renderNewsletterHtml(data: PageData<WebpageModel>): Promise<string> {
+  const theme = (data.siteNode?.attributes?.theme as string | undefined) ?? 'default';
+  const palette = getThemePalette(theme);
+  const fragment = await renderNewsletterFragment(data);
+
+  return `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      @media only screen and (max-width: 620px) {
+        #neon-newsletter-table {
+          width: 100% !important;
+        }
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background: ${palette.bg};">
+    ${fragment}
   </body>
 </html>`;
 }

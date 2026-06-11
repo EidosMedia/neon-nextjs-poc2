@@ -7,6 +7,7 @@ import { renderContent, findElementsInContentJson, findCustomComponentNodes } fr
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
+import { getTeaserOrMainImageUrl } from '../../components/contentElements/MainImage';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -20,13 +21,7 @@ const Article = async ({ data }: PageProps) => {
   const section = (articleData?.url?.split?.('/')?.[1] ?? '').toUpperCase();
 
   // Resolve hero image URL from teaserPicture or mainPicture
-  const teaserPic = articleData?.links?.system?.teaserPicture?.[0];
-  const mainPic = articleData?.links?.system?.mainPicture?.[0];
-  const heroImageUrl =
-    teaserPic?.dynamicCropsResourceUrls?.['Ultrawide_large'] ??
-    mainPic?.dynamicCropsResourceUrls?.['Ultrawide_large'] ??
-    teaserPic?.dynamicCropsResourceUrls?.['Landscape_large'] ??
-    mainPic?.dynamicCropsResourceUrls?.['Landscape_large'];
+  const heroImageUrl = getTeaserOrMainImageUrl(articleData, 'Wide_large', 'main');
 
   // Resolve title and subtitle from grouphead
   const title =
