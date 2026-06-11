@@ -92,26 +92,22 @@ async function importFromTempDir(
     // runtimes produce incompatible element objects in dev mode, causing React
     // to throw "Attempted to render element without development properties".
     //
-    // Fix: rewrite every `from 'react/jsx-runtime'` bare-specifier in the
-    // bundle and chunk texts to a relative import pointing at a local shim
-    // that re-exports jsx/jsxs/Fragment by delegating to jsxDEV.
-    // Using a relative path avoids all Node.js ESM package-resolution
-    // complexity (package.json exports fields, subpath resolution, etc.).
-    let patchText = (t: string) => t;
+    // Always write a react/jsx-runtime shim so the dynamically-imported ESM
+    // bundle never tries to consume the bare 'react/jsx-runtime' specifier
+    // directly. In production Next.js bundles react/jsx-runtime as a CJS
+    // module; named imports from CJS via ESM static analysis fail with
+    // "Named export 'jsx' not found". The shim does a default import (which
+    // always works for CJS) and re-exports the named symbols.
+    //
+    // In development the shim additionally patches Object.freeze to inject
+    // React 19 RSC debug properties (_debugStack, _debugTask) that the RSC
+    // renderer requires on every element.
+    const shimFilename = '_shim_react_jsx_runtime.mjs';
+    let shimBody: string;
     if (process.env.NODE_ENV !== 'production') {
-      const shimFilename = '_shim_react_jsx_runtime.mjs';
-      // In dev mode, the React Server Components renderer (react-server-dom-webpack)
-      // checks that every element has _debugStack and _debugTask (React 19 RSC
-      // debug instrumentation). These are only set by Next.js's compiled React
-      // build, NOT by the standard node_modules/react jsx-runtime.
-      //
-      // The elements produced by the upstream bundle are frozen by jsx() before
-      // we can mutate them. To inject _debugStack/_debugTask before the freeze
-      // we temporarily replace Object.freeze with an interceptor that adds the
-      // two properties when it detects a React element ($$typeof is a Symbol).
-      // This runs synchronously inside the (synchronous) jsx() call, so it is
-      // safe in Node.js's single-threaded JS runtime.
-      const shimBody = [
+      // Dev: delegate to the standard jsx-runtime via named imports (works in
+      // dev where react/jsx-runtime is proper ESM), and patch freeze.
+      shimBody = [
         "import { jsx as _j, jsxs as _js, Fragment } from 'react/jsx-runtime';",
         'function _patch(fn, type, props, key) {',
         '  const orig = Object.freeze;',
@@ -130,10 +126,20 @@ async function importFromTempDir(
         'export function jsxs(type, props, key) { return _patch(_js, type, props, key); }',
         'export { Fragment };',
       ].join('\n');
-      writeFileSync(join(tmpDir, shimFilename), shimBody, 'utf8');
-      // Replace bare 'react/jsx-runtime' imports with the local shim path.
-      patchText = (t: string) => t.replace(/(['"])react\/jsx-runtime\1/g, `'./${shimFilename}'`);
+    } else {
+      // Production: react/jsx-runtime may be a CJS module. A default import
+      // always succeeds for CJS; then we re-export the named symbols.
+      shimBody = [
+        "import pkg from 'react/jsx-runtime';",
+        'export const jsx = pkg.jsx;',
+        'export const jsxs = pkg.jsxs;',
+        'export const Fragment = pkg.Fragment;',
+      ].join('\n');
     }
+    writeFileSync(join(tmpDir, shimFilename), shimBody, 'utf8');
+    // Replace bare 'react/jsx-runtime' imports with the local shim path in
+    // both the entry bundle and all chunks.
+    const patchText = (t: string) => t.replace(/(['"])react\/jsx-runtime\1/g, `'./${shimFilename}'`);
 
     const STUB_PACKAGES = ['@eidosmedia/react-marvin-components'];
     const stubExports = new Map<string, Set<string>>();
