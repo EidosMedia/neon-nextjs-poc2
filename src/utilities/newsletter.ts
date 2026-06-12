@@ -195,7 +195,7 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background: ${palette.bg};">
       <tr>
         <td align="center" style="padding: 24px 16px;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center" id="neon-newsletter-table" style="width: 600px; max-width: 600px; background: ${palette.bg};">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center" id="neon-newsletter-table" style="width: auto; max-width: 600px; background: ${palette.bg};">
             <tr>
               <td style="padding: 24px; border-bottom: 2px solid ${palette.accent};">
                 <span style="font-family: ${palette.headlineFont}; font-size: 24px; font-weight: 700; color: ${palette.text};">
