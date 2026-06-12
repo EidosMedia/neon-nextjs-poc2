@@ -160,6 +160,94 @@ const renderTeaserRow = (linkedObject: any, palette: NewsletterThemePalette): st
 };
 
 /**
+ * Date/issue header shown under the masthead, e.g. "Thursday, June 12, 2026".
+ */
+const renderDateLine = (palette: NewsletterThemePalette): string => {
+  const dateLabel = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date());
+
+  return `
+        <tr>
+          <td style="padding: 16px 24px 0 24px;">
+            <p style="margin: 0; font-family: ${palette.bodyFont}; font-size: 13px; line-height: 1.5; color: ${palette.muted};">
+              ${escapeHtml(dateLabel)}
+            </p>
+          </td>
+        </tr>`;
+};
+
+/**
+ * Short editorial intro blurb shown below the date line, above "Top Stories".
+ */
+const renderIntroBlock = (palette: NewsletterThemePalette): string => `
+        <tr>
+          <td style="padding: 8px 24px 16px 24px;">
+            <p style="margin: 0; font-family: ${palette.bodyFont}; font-size: 15px; line-height: 1.5; color: ${palette.text};">
+              Your morning briefing &mdash; the stories shaping today, starting with our top picks.
+            </p>
+          </td>
+        </tr>`;
+
+/**
+ * Small uppercase section label (e.g. "Top Stories", "More Headlines")
+ * separating groups of teaser rows.
+ */
+const renderSectionHeader = (label: string, palette: NewsletterThemePalette): string => `
+        <tr>
+          <td style="padding: 16px 24px 8px 24px; border-top: 1px solid ${palette.muted};">
+            <span style="font-family: ${palette.headlineFont}; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: ${palette.accent};">
+              ${escapeHtml(label)}
+            </span>
+          </td>
+        </tr>`;
+
+/**
+ * Compact teaser row for "More Headlines": small thumbnail (if any) beside
+ * a smaller title and short summary, instead of the full image+title+summary
+ * stack used by `renderTeaserRow`.
+ */
+const renderCompactTeaserRow = (linkedObject: any, palette: NewsletterThemePalette): string => {
+  const title = linkedObject?.title ?? '';
+  const summary = linkedObject?.summary ?? '';
+  const imageUrl = getTeaserImageUrl(linkedObject);
+  const linkUrl = getTeaserLinkUrl(linkedObject);
+
+  const imageCell = imageUrl
+    ? `
+              <td width="96" valign="top" style="padding: 0 12px 0 0;">
+                <a href="${escapeHtml(linkUrl)}" style="text-decoration: none;">
+                  <img src="${escapeHtml(imageUrl)}" alt="" width="96" style="display: block; width: 96px; height: auto; border: 0; border-radius: 4px;" />
+                </a>
+              </td>`
+    : '';
+
+  return `
+        <tr>
+          <td style="padding: 12px 24px; border-bottom: 1px solid ${palette.muted};">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                ${imageCell}
+                <td valign="top" style="padding: 0;">
+                  <a href="${escapeHtml(linkUrl)}" style="text-decoration: none; color: ${palette.text};">
+                    <h3 style="margin: 0 0 4px 0; font-family: ${palette.headlineFont}; font-size: 16px; line-height: 1.3; color: ${palette.text};">
+                      ${escapeHtml(title)}
+                    </h3>
+                  </a>
+                  <p style="margin: 0; font-family: ${palette.bodyFont}; font-size: 13px; line-height: 1.4; color: ${palette.muted};">
+                    ${escapeHtml(summary)}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>`;
+};
+
+/**
  * Renders the mail-client-compatible newsletter markup for a webpage as a
  * standalone HTML fragment (no <html>/<head>/<body> wrapper). This is the
  * SINGLE source of truth for newsletter markup: both the in-page preview
@@ -188,7 +276,22 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
 
   const teaserItems = [...mainItems, ...contextItems, ...insightItems];
 
-  const teaserRows = teaserItems.map((linkedObject) => renderTeaserRow(linkedObject, palette)).join('');
+  // First 3 items get the full "Top Stories" treatment, the rest a compact
+  // "More Headlines" treatment.
+  const topItems = teaserItems.slice(0, 3);
+  const restItems = teaserItems.slice(3);
+
+  const topStoriesSection = topItems.length
+    ? renderSectionHeader('Top Stories', palette) +
+      topItems.map((linkedObject) => renderTeaserRow(linkedObject, palette)).join('')
+    : '';
+
+  const moreHeadlinesSection = restItems.length
+    ? renderSectionHeader('More Headlines', palette) +
+      restItems.map((linkedObject) => renderCompactTeaserRow(linkedObject, palette)).join('')
+    : '';
+
+  const teaserRows = topStoriesSection + moreHeadlinesSection;
 
   const year = new Date().getFullYear();
 
@@ -203,6 +306,8 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
                 </span>
               </td>
             </tr>
+            ${renderDateLine(palette)}
+            ${renderIntroBlock(palette)}
             ${teaserRows}
             <tr>
               <td style="padding: 24px; text-align: center;">
