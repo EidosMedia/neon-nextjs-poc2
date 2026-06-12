@@ -125,6 +125,7 @@ const Article = async ({ data }: PageProps) => {
   // Neon node IDs follow the pattern: {hex4}-{hex12}-{hex12}-{digits} appearing as a path segment.
   const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
   const nodeDataMap = new Map<string, unknown>();
+
   const currentHeaders = await headers();
   const apiHostname = currentHeaders.get('x-neon-backend-url') ?? '';
   const auth = await getAuthOptions();
@@ -133,16 +134,31 @@ const Article = async ({ data }: PageProps) => {
     neonNodes.map(async n => {
       const neonId = n.attributes!.href.match(NEON_ID_RE)?.[1] ?? '';
       if (!neonId) return;
+      // Fetch from API to get complete metadata (e.g. mainPicture, links).
+      // Then merge with pageData.model.nodes, which wins on conflicts because it
+      // carries CMS-aggregated fields (posts, count, linkedNodes, etc.) that the
+      // generic /api/nodes endpoint does not return.
+      let apiData: Record<string, unknown> = {};
       try {
         const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
         if (resp.ok) {
-          nodeDataMap.set(neonId, await resp.json());
+          apiData = await resp.json();
         } else {
           console.warn('[Article] embed fetch failed:', resp.status, 'for node', neonId);
         }
       } catch (err) {
         console.error('[Article] embed fetch error for node', neonId, ':', err);
       }
+      // Use the API response as the base (full links, mainPicture, dynamicCropsResourceUrls).
+      // Then overlay only the aggregated fields that /api/nodes does not return:
+      // posts, count, totalPosts, linkedNodes (liveblog), proxyJsonContent (external refs).
+      const modelNodeData = (data.model.nodes?.[neonId] ?? {}) as Record<string, unknown>;
+      const aggregatedKeys = ['posts', 'count', 'totalPosts', 'linkedNodes', 'proxyJsonContent'] as const;
+      const merged: Record<string, unknown> = { ...apiData };
+      for (const key of aggregatedKeys) {
+        if (key in modelNodeData) merged[key] = modelNodeData[key];
+      }
+      nodeDataMap.set(neonId, merged);
     }),
   );
 
