@@ -20,8 +20,11 @@ const getDimensionsFromUrl = (url: string): { width: number; height: number } | 
   return null;
 };
 
-const convertToDateString = (dateString: string) => {
-  return new Date(dateString)
+const convertToDateString = (dateString?: string) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return '';
+  return date
     .toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'long',
@@ -88,7 +91,7 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
                     }
                   }}
                 >
-                  <h4>{convertToDateString(result.nodeData?.pubInfo?.publicationTime) || ''}</h4>
+                  <h4>{convertToDateString(result.nodeData?.pubInfo?.publicationTime || result.nodeData?.sys?.creationTime)}</h4>
                   <h3>
                     <span dangerouslySetInnerHTML={{ __html: title }} />
                   </h3>
@@ -113,6 +116,7 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
                     data-nimg="1"
                     src={
                       result.nodeData.links?.system?.mainPicture[0]?.dynamicCropsResourceUrls.Wide_small ||
+                      result.nodeData?.sys?.previewImageUrl ||
                       '/static/img/nothumb.jpeg'
                     }
                     className="h-[250px] object-cover justify-self-end"
