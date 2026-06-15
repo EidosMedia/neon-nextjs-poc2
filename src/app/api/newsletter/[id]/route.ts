@@ -4,23 +4,21 @@ import { getAuthOptions } from '@/utilities/security';
 import { renderNewsletterHtml } from '@/utilities/newsletter';
 
 /**
- * GET /api/newsletter
+ * GET /api/newsletter/[id]
  *
- * Resolves a page by `path`/`id` query params (mirroring how `page.tsx`
- * resolves a page) and returns its newsletter rendering as raw HTML, suitable
- * for export into a newsletter platform. Produces byte-identical markup to
- * the `NewsletterWebpage` preview component, since both call
- * `renderNewsletterHtml` with the same `pageDataJSON` shape.
+ * Resolves a page by content `id` (mirroring how `page.tsx` resolves a page
+ * via its `id` search param against the root path) and returns its newsletter
+ * rendering as raw HTML, suitable for export into a newsletter platform.
+ * Produces byte-identical markup to the `NewsletterWebpage` preview component,
+ * since both call `renderNewsletterHtml` with the same `pageDataJSON` shape.
  */
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { apiHostname } = await getAPIHostnameConfig(req);
     const auth = await getAuthOptions();
-    const path = req.nextUrl.searchParams.get('path') ?? '/';
-    const id = req.nextUrl.searchParams.get('id');
+    const { id } = await params;
 
-    const baseUrl = `${apiHostname}${path}`;
-    const url = id ? `${baseUrl.replace(/\/$/, '')}/${id}` : baseUrl;
+    const url = `${apiHostname.replace(/\/$/, '')}/${id}`;
     const pageData = await connection.makePageRequest(url, auth, { redirect: 'manual', cache: 'no-cache' });
 
     // handle redirection (matches page.tsx — `redirect: 'manual'` means the
