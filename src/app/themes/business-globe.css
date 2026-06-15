@@ -17,6 +17,18 @@
   --bgl-up:      #1A7A1A;
   --bgl-down:    #CC2200;
 
+  --color-neutral-primary:   #1A1A1A;
+  --color-neutral-secondary: #4A3F33;
+  --color-neutral-light-2:   #807060;
+  --color-neutral-light:     #CCC0B3;
+  --color-neutral-lightest:  #FFFFFF;
+  --color-neutral-bg:        #FFF1E5;
+  --border-card:             1px solid #CCC0B3;
+
+  --font-headline: Georgia, serif;
+  --font-body:     Georgia, serif;
+  --font-nav:      'Inter', system-ui, sans-serif;
+
   --color-primary:          #990F3D;
   --color-primary-dark:     #6B0A2B;
   --color-primary-light:    #C73B5F;

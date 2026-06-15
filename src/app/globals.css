@@ -32,6 +32,9 @@
   --color-neutral-light-2: #999999;
   --color-neutral-light: #B0B0B0;
   --color-neutral-lightest: #FFFFFF;
+  --color-neutral-secondary: #555555;
+  --color-neutral-bg: #F4F4F4;
+  --border-card: 1px solid #E0E0E0;
 
   --color-feedback-red: #D22D2D;
   --color-feedback-red-dark: #8B1E1E;

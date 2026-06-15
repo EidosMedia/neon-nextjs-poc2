@@ -21,6 +21,16 @@
   --color-primary-dark:     #a01028;
   --color-primary-light:    #ff4444;
   --color-primary-lightest: #2a1014;
+
+  /* Dark-theme neutral scale: "lightest" = elevated dark surface,
+     "primary" text = light, inverted relative to light themes. */
+  --color-neutral-primary:   #f0f0f0;
+  --color-neutral-secondary: #cccccc;
+  --color-neutral-light-2:   #888888;
+  --color-neutral-light:     #2a2a2a;
+  --color-neutral-lightest:  #1a1a1a;
+  --color-neutral-bg:        #141414;
+  --border-card:             1px solid #2a2a2a;
 }
 
 /* ─── Global ─────────────────────────────────────────────────────── */

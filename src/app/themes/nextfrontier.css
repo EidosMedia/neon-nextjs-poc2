@@ -9,6 +9,19 @@
   --nf-muted:       #6b6b6b;
   --nf-border:      #e2e2e2;
   --nf-accent:      #0050FF;
+
+  --color-neutral-primary:   #1a1a1a;
+  --color-neutral-secondary: #444444;
+  --color-neutral-light-2:   #6b6b6b;
+  --color-neutral-light:     #e2e2e2;
+  --color-neutral-lightest:  #ffffff;
+  --color-neutral-bg:        #f5f5f5;
+  --border-card:             1px solid #e2e2e2;
+
+  --font-headline: 'Epilogue', system-ui, sans-serif;
+  --font-body:     'Inter', system-ui, sans-serif;
+  --font-nav:      'Inter', system-ui, sans-serif;
+
   --color-primary:          #0050FF;
   --color-primary-dark:     #0035CC;
   --color-primary-light:    #3375FF;
