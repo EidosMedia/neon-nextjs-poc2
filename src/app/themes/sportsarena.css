@@ -16,6 +16,11 @@
   --color-sa-text:           #f0f0f0;
   --color-sa-muted:          #888888;
   --color-sa-border:         #2a2a2a;
+
+  --color-primary:          #e31837;
+  --color-primary-dark:     #a01028;
+  --color-primary-light:    #ff4444;
+  --color-primary-lightest: #2a1014;
 }
 
 /* ─── Global ─────────────────────────────────────────────────────── */

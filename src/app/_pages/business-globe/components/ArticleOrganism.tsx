@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import React from 'react';
+import { getTeaserOrMainImageUrl } from '@/app/components/contentElements/MainImage';
 
 type ArticleOrganismProps = {
   data: any;
@@ -25,10 +26,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
   const overhead = linkedObject.attributes?.overhead as string | undefined;
   const tag = overhead || (url.split('/')[1] ?? '').toUpperCase();
 
-  const teaserImage = linkedObject.attributes?.teaser?.image;
-  const thumbUrl: string | undefined =
-    teaserImage?.elements?.find((el: any) => el.nodeType === 'image')?.attributes?.src ??
-    teaserImage?.elements?.[0]?.attributes?.src;
+  const thumbUrl = getTeaserOrMainImageUrl(linkedObject, 'Square_large');
 
   return (
     <Link href={url} className="bgl-pick-card">

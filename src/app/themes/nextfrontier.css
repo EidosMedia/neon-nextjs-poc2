@@ -9,6 +9,10 @@
   --nf-muted:       #6b6b6b;
   --nf-border:      #e2e2e2;
   --nf-accent:      #0050FF;
+  --color-primary:          #0050FF;
+  --color-primary-dark:     #0035CC;
+  --color-primary-light:    #3375FF;
+  --color-primary-lightest: #EEF2FF;
   --nf-banner-bg:   #0050FF;
   --nf-cat-tech:    #0050FF;
   --nf-cat-ai:      #6200EA;

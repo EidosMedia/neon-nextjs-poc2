@@ -1,14 +1,18 @@
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import SearchResult from '../../components/SearchResult';
-import NavbarSearch from '../../components/NavbarSearch';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const SearchPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: default/SearchPage');
+  console.log('[NEON] render: business-globe/SearchPage');
 
   return (
-    <div className="container mx-auto">
-      <NavbarSearch data={{ siteNode: data.root }} />
-      <SearchResult data={data} />
+    <div className="min-h-screen" style={{ background: 'var(--bgl-cream, #FFF1E5)' }}>
+      <Navbar data={{ siteNode: data.root }} />
+      <div className="bgl-home-wrap">
+        <SearchResult data={data} />
+      </div>
+      <Footer data={{ siteNode: data.root }} />
     </div>
   );
 };

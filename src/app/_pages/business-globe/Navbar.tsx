@@ -52,7 +52,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
       <div className="bgl-masthead w-full">
         <div className="bgl-masthead-side bgl-masthead-icons">
           <MenuToggle items={fullMenuItems} />
-          <span aria-label="Search">🔍</span>
+          <Link href="/search" aria-label="Search">🔍</Link>
         </div>
         <Link href="/" className="bgl-masthead-logo">
           {siteLabel}

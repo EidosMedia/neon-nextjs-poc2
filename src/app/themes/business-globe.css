@@ -17,6 +17,11 @@
   --bgl-up:      #1A7A1A;
   --bgl-down:    #CC2200;
 
+  --color-primary:          #990F3D;
+  --color-primary-dark:     #6B0A2B;
+  --color-primary-light:    #C73B5F;
+  --color-primary-lightest: #F7E0E6;
+
   /* ── Global reset ── */
   background: var(--bgl-cream);
   color: var(--bgl-text);
@@ -254,17 +259,51 @@
 }
 
 @media (max-width: 900px) {
-  .root[data-theme="business-globe"] .bgl-home-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .root[data-theme="business-globe"] .bgl-picks-rail {
-    display: none;
-  }
-}
-
-@media (max-width: 600px) {
+  /* Mobile flow: Main > Insight1 (horizontal carousel) > Context */
   .root[data-theme="business-globe"] .bgl-home-grid {
     grid-template-columns: 1fr;
+  }
+
+  .root[data-theme="business-globe"] .bgl-centre-col {
+    order: 1;
+  }
+
+  .root[data-theme="business-globe"] .bgl-picks-rail {
+    order: 2;
+    display: block;
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--bgl-border);
+    border-bottom: 1px solid var(--bgl-border);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin: 1rem 0;
+  }
+
+  .root[data-theme="business-globe"] .bgl-picks-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .root[data-theme="business-globe"] .bgl-pick-item {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+  }
+
+  .root[data-theme="business-globe"] .bgl-pick-item .bgl-divider {
+    display: none;
+  }
+
+  .root[data-theme="business-globe"] .bgl-left-lead {
+    order: 3;
+    border-right: none;
+    padding-right: 0;
+    border-top: 1px solid var(--bgl-border);
+    padding-top: 1rem;
+    margin-top: 1rem;
   }
 }
 
@@ -392,6 +431,7 @@
 .root[data-theme="business-globe"] .bgl-picks-rail {
   border-left: 1px solid var(--bgl-border);
   padding-left: 1rem;
+  overflow: hidden;
 }
 
 .root[data-theme="business-globe"] .bgl-picks-header {
@@ -617,4 +657,16 @@
 .root[data-theme="business-globe"] .bgl-footer-links a:hover {
   color: var(--bgl-accent);
   text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .root[data-theme="business-globe"] .bgl-footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .root[data-theme="business-globe"] .bgl-footer-links {
+    flex-wrap: wrap;
+  }
 }

@@ -28,8 +28,8 @@ function getImageUrl(item: WebpageNodeModel): string | undefined {
   const tp = (item as any)?.links?.system?.teaserPicture?.[0];
   const mp = (item as any)?.links?.system?.mainPicture?.[0];
   return (
-    tp?.dynamicCropsResourceUrls?.['Landscape_large'] ??
-    mp?.dynamicCropsResourceUrls?.['Landscape_large'] ??
+    tp?.dynamicCropsResourceUrls?.['Wide_large'] ??
+    mp?.dynamicCropsResourceUrls?.['Wide_large'] ??
     tp?.dynamicCropsResourceUrls?.['Square_large'] ??
     mp?.dynamicCropsResourceUrls?.['Square_large']
   );
@@ -96,18 +96,20 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
           </div>
 
           {/* ── Centre: image feature + secondary grid ───────────── */}
-          <div>
+          <div className="bgl-centre-col">
             {feature && (
               <>
-                {featureImageUrl ? (
-                  <img
-                    src={featureImageUrl}
-                    alt={getTitle(feature)}
-                    className="bgl-centre-img"
-                  />
-                ) : (
-                  <div className="bgl-centre-img" style={{ background: 'var(--bgl-border)', minHeight: '200px' }} />
-                )}
+                <Link href={(feature as any).url || '#'}>
+                  {featureImageUrl ? (
+                    <img
+                      src={featureImageUrl}
+                      alt={getTitle(feature)}
+                      className="bgl-centre-img"
+                    />
+                  ) : (
+                    <div className="bgl-centre-img" style={{ background: 'var(--bgl-border)', minHeight: '200px' }} />
+                  )}
+                </Link>
                 <div className="bgl-caption-card">
                   <div className="bgl-caption-tag">{getTag(feature)}</div>
                   <Link href={(feature as any).url || '#'} className="bgl-caption-title">
@@ -123,11 +125,13 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
                   const imgUrl = getImageUrl(item);
                   return (
                     <div key={(item as any).id ?? i}>
-                      {imgUrl ? (
-                        <img src={imgUrl} alt={getTitle(item)} className="bgl-secondary-img" />
-                      ) : (
-                        <div className="bgl-secondary-img" />
-                      )}
+                      <Link href={(item as any).url || '#'}>
+                        {imgUrl ? (
+                          <img src={imgUrl} alt={getTitle(item)} className="bgl-secondary-img" />
+                        ) : (
+                          <div className="bgl-secondary-img" />
+                        )}
+                      </Link>
                       <div className="bgl-tag" style={{ marginTop: '0.25rem' }}>{getTag(item)}</div>
                       <Link href={(item as any).url || '#'} className="bgl-secondary-title">
                         {getTitle(item)}
@@ -142,18 +146,20 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
           {/* ── Right: Editor's picks ────────────────────────────── */}
           <div className="bgl-picks-rail">
             <div className="bgl-picks-header">Editor's picks</div>
-            {picks.map((item, i) => (
-              <div key={(item as any).id ?? i}>
-                <ArticleOrganism
-                  data={data}
-                  linkedObject={item}
-                  linkedObjects={picks}
-                  index={i}
-                  type="article-sm"
-                />
-                {i < picks.length - 1 && <hr className="bgl-divider" />}
-              </div>
-            ))}
+            <div className="bgl-picks-list">
+              {picks.map((item, i) => (
+                <div key={(item as any).id ?? i} className="bgl-pick-item">
+                  <ArticleOrganism
+                    data={data}
+                    linkedObject={item}
+                    linkedObjects={picks}
+                    index={i}
+                    type="article-sm"
+                  />
+                  {i < picks.length - 1 && <hr className="bgl-divider" />}
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>
