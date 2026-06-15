@@ -76,7 +76,7 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
                       el.dataset.showMoreInitialized = 'true';
                       const btn = document.createElement('button');
                       btn.textContent = 'Show more';
-                      btn.className = 'absolute bottom-0 right-0 bg-white px-2 py-1 text-blue-600 underline';
+                      btn.className = 'absolute bottom-0 right-0 bg-neutral-lightest px-2 py-1 text-primary underline';
                       btn.onclick = () => {
                         el.style.maxHeight = 'none';
                         btn.remove();

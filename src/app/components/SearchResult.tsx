@@ -31,7 +31,7 @@ function SimpleMarkdown({ text }: { text: string }) {
                   ? line.trimStart().slice(2)
                   : line.trim();
                 return content ? (
-                  <li key={j} className="text-sm leading-relaxed font-georgia">
+                  <li key={j} className="text-sm leading-relaxed font-[family-name:var(--font-body)]">
                     <InlineText text={content} />
                   </li>
                 ) : null;
@@ -40,7 +40,7 @@ function SimpleMarkdown({ text }: { text: string }) {
           );
         }
         return (
-          <p key={i} className="text-sm leading-relaxed font-georgia">
+          <p key={i} className="text-sm leading-relaxed font-[family-name:var(--font-body)]">
             {lines.map((line, j) => (
               <span key={j}>
                 {j > 0 && <br />}
@@ -406,7 +406,7 @@ const SearchResult = ({ data }: { data: Site }) => {
       )}
 
       {/* Tab bar */}
-      <div className="flex items-center gap-1 border-b border-gray-200 mb-6">
+      <div className="flex items-center gap-1 border-b border-(--color-neutral-light) mb-6">
         {TABS.map(tab => (
           <button
             key={tab.value}
@@ -415,7 +415,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
               activeTab === tab.value
                 ? 'border-(--color-primary) text-(--color-primary)'
-                : 'border-transparent text-gray-600 hover:text-gray-800'
+                : 'border-transparent text-(--color-neutral-light-2) hover:text-(--color-neutral-primary)'
             }`}
           >
             {tab.label}
@@ -427,7 +427,7 @@ const SearchResult = ({ data }: { data: Site }) => {
               type="button"
               variant="ghost"
               onClick={handleResetChat}
-              className="text-sm text-gray-500 flex items-center gap-1 h-8 px-2"
+              className="text-sm text-(--color-neutral-light-2) flex items-center gap-1 h-8 px-2"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               New chat
@@ -453,8 +453,8 @@ const SearchResult = ({ data }: { data: Site }) => {
             <div key={index} className="grid grid-cols-3 gap-8 items-start">
               {/* Left: question + answer */}
               <div className="col-span-2 flex flex-col gap-3">
-                <div className="text-sm bg-gray-100 rounded-tl-xl rounded-tr-xl rounded-bl-xl p-3 self-end max-w-prose">
-                  <p className="font-gabarito">{item.question}</p>
+                <div className="text-sm bg-(--color-neutral-bg) rounded-tl-xl rounded-tr-xl rounded-bl-xl p-3 self-end max-w-prose">
+                  <p className="font-[family-name:var(--font-headline)]">{item.question}</p>
                 </div>
                 <div className="text-sm bg-(--color-primary-lightest) rounded-tl-xl rounded-tr-xl rounded-br-xl p-3 self-start max-w-prose">
                   <SimpleMarkdown text={item.answer} />
@@ -463,7 +463,7 @@ const SearchResult = ({ data }: { data: Site }) => {
               {/* Right: references — sticky so they stay visible while scrolling the answer */}
               {item.references && item.references.length > 0 && (
                 <div className="col-span-1 sticky top-16 self-start">
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                  <h4 className="text-sm font-semibold text-(--color-neutral-light-2) uppercase tracking-wide mb-3">
                     References ({item.references.length})
                   </h4>
                   <div className={`flex flex-col gap-3${expandedRefs.has(index) ? ' overflow-y-auto max-h-[420px] pr-1' : ''}`}>
@@ -473,14 +473,14 @@ const SearchResult = ({ data }: { data: Site }) => {
                         <Link
                           key={ref.nodeData.id}
                           href={ref.nodeData.url}
-                          className="flex gap-2 text-sm text-gray-800 hover:text-[var(--color-primary)] leading-snug no-underline"
+                          className="flex gap-2 text-sm text-(--color-neutral-primary) hover:text-[var(--color-primary)] leading-snug no-underline"
                         >
                           {thumb && <img src={thumb} alt="" className="w-12 h-12 object-cover rounded flex-shrink-0" />}
                           <div className="flex flex-col">
                             <p className="font-medium line-clamp-2">
                               {ref.nodeData.attributes?.teaser?.title || ref.nodeData.title}
                             </p>
-                            <p className="text-xs text-gray-400 mt-0.5">
+                            <p className="text-xs text-(--color-neutral-light-2) mt-0.5">
                               {ref.nodeData.pubInfo?.publicationTime
                                 ? new Date(ref.nodeData.pubInfo.publicationTime).toLocaleDateString('en-GB', {
                                     day: 'numeric', month: 'short', year: 'numeric',
@@ -511,12 +511,12 @@ const SearchResult = ({ data }: { data: Site }) => {
             {/* Left: current question + answer state + follow-up form */}
             <div className="col-span-2 flex flex-col gap-3">
               {currentChatQuery && (
-                <div className="text-sm bg-gray-100 rounded-tl-xl rounded-tr-xl rounded-bl-xl p-3 self-end max-w-prose">
-                  <p className="font-gabarito">{currentChatQuery}</p>
+                <div className="text-sm bg-(--color-neutral-bg) rounded-tl-xl rounded-tr-xl rounded-bl-xl p-3 self-end max-w-prose">
+                  <p className="font-[family-name:var(--font-headline)]">{currentChatQuery}</p>
                 </div>
               )}
               {(isLoading || isAsking) ? (
-                <div className="flex items-center gap-2 text-sm text-gray-500 self-start">
+                <div className="flex items-center gap-2 text-sm text-(--color-neutral-light-2) self-start">
                   <LoaderCircle className="animate-spin h-4 w-4" />
                   <span>Thinking...</span>
                 </div>
@@ -525,7 +525,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                   <SimpleMarkdown text={result.answer} />
                 </div>
               ) : currentChatQuery ? (
-                <div className="flex flex-col items-center py-8 text-gray-500">
+                <div className="flex flex-col items-center py-8 text-(--color-neutral-light-2)">
                   <AiSearchIcon className="h-8 w-8 mb-2" />
                   {!authorized ? (
                     <p>You are not authorised to use AI features</p>
@@ -550,7 +550,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             {/* Right: current references — sticky */}
             {result?.count > 0 && (
               <div className="col-span-1 sticky top-16 self-start">
-                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                <h4 className="text-sm font-semibold text-(--color-neutral-light-2) uppercase tracking-wide mb-3">
                   References ({result.count})
                 </h4>
                 <div className={`flex flex-col gap-3${showAllRefs ? ' overflow-y-auto max-h-[420px] pr-1' : ''}`}>
@@ -560,14 +560,14 @@ const SearchResult = ({ data }: { data: Site }) => {
                       <Link
                         key={item.nodeData.id}
                         href={item.nodeData.url}
-                        className="flex gap-2 text-sm text-gray-800 hover:text-[var(--color-primary)] leading-snug no-underline"
+                        className="flex gap-2 text-sm text-(--color-neutral-primary) hover:text-[var(--color-primary)] leading-snug no-underline"
                       >
                         {thumb && <img src={thumb} alt="" className="w-12 h-12 object-cover rounded flex-shrink-0" />}
                         <div className="flex flex-col">
                           <p className="font-medium line-clamp-2">
                             {item.nodeData.attributes?.teaser?.title || item.nodeData.title}
                           </p>
-                          <p className="text-xs text-gray-400 mt-0.5">
+                          <p className="text-xs text-(--color-neutral-light-2) mt-0.5">
                             {item.nodeData.pubInfo?.publicationTime
                               ? new Date(item.nodeData.pubInfo.publicationTime).toLocaleDateString('en-GB', {
                                   day: 'numeric', month: 'short', year: 'numeric',
@@ -602,14 +602,14 @@ const SearchResult = ({ data }: { data: Site }) => {
         <div className="flex flex-col items-center">
           {result?.answer && (
             <div className="mt-4 flex flex-col items-center bg-(--color-primary-lightest) p-4 rounded-sm w-full mb-4">
-              <h4 className="text-xl font-bold mb-2 mt-2 text-gray-800">AI Overview</h4>
+              <h4 className="text-xl font-bold mb-2 mt-2 text-(--color-neutral-primary)">AI Overview</h4>
               <p className="text-left">{result.answer}</p>
             </div>
           )}
           {result.count > 0 && (
             <div className="flex w-full justify-between items-center mb-4 pl-2 gap-2">
               <div>
-                <div className="text-left text-semibold font-gabarito">{result.count} results</div>
+                <div className="text-left text-semibold font-[family-name:var(--font-headline)]">{result.count} results</div>
                 <h2 className="text-left">{lastSearchText.current}</h2>
               </div>
             </div>
@@ -618,7 +618,7 @@ const SearchResult = ({ data }: { data: Site }) => {
             {result?.count > 0 ? (
               activeTab === 'images' ? (
                 result.result.map((item) => (
-                  <div key={item.nodeData.id} className="aspect-square overflow-hidden rounded-md bg-gray-100">
+                  <div key={item.nodeData.id} className="aspect-square overflow-hidden rounded-md bg-(--color-neutral-bg)">
                     <img
                       src={item.nodeData.resourceUrl}
                       alt={item.nodeData.title ?? ''}
