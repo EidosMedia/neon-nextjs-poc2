@@ -65,7 +65,10 @@ const SearchResultItem = ({ result, data, onChangeSelected, index }: SearchResul
         </div>
         <ArticleOverlay data={data.root} viewStatus={data.viewStatus}>
           <ErrorBoundaryContainer>
-            <Link className="no-underline" href={result.nodeData.url}>
+            <Link
+              className="no-underline"
+              href={result.nodeData.url || result.nodeData.sys?.detailPage || result.nodeData.sys?.importUrl || '#'}
+            >
               <div className="text-left grid grid-cols-12 h-[250px] gap-4">
                 <div
                   id={`item${index}`}

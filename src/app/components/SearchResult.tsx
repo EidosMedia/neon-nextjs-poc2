@@ -472,7 +472,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                       return (
                         <Link
                           key={ref.nodeData.id}
-                          href={ref.nodeData.url}
+                          href={ref.nodeData.url || ref.nodeData.sys?.detailPage || ref.nodeData.sys?.importUrl || '#'}
                           className="flex gap-2 text-sm text-(--color-neutral-primary) hover:text-[var(--color-primary)] leading-snug no-underline"
                         >
                           {thumb && <img src={thumb} alt="" className="w-12 h-12 object-cover rounded flex-shrink-0" />}
@@ -559,7 +559,7 @@ const SearchResult = ({ data }: { data: Site }) => {
                     return (
                       <Link
                         key={item.nodeData.id}
-                        href={item.nodeData.url}
+                        href={item.nodeData.url || item.nodeData.sys?.detailPage || item.nodeData.sys?.importUrl || '#'}
                         className="flex gap-2 text-sm text-(--color-neutral-primary) hover:text-[var(--color-primary)] leading-snug no-underline"
                       >
                         {thumb && <img src={thumb} alt="" className="w-12 h-12 object-cover rounded flex-shrink-0" />}
