@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import { WebVitals } from './components/utilities/WebVitals';
 import './globals.css';
@@ -16,7 +17,6 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  ...props
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -26,7 +26,9 @@ export default async function RootLayout({
         {/* Import map so ESM uicomponent bundles can resolve bare React specifiers
             via self-hosted shim routes. The shims re-export the React instance
             that Next.js already loads, so no duplicate copies of React exist. */}
-        <script
+        <Script
+          id="uicomponents-importmap"
+          strategy="beforeInteractive"
           type="importmap"
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
@@ -58,10 +60,7 @@ export default async function RootLayout({
           rel="stylesheet"
         />
         {/* NYT theme fonts */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap"
-          rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet" />
         {/* ADN theme fonts */}
         <link
           href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap"
