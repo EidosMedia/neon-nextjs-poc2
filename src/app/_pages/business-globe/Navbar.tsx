@@ -31,7 +31,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
   const sections = mainMenuItems.length > 0 ? mainMenuItems : null;
 
   return (
-    <header className="w-full sticky top-0 z-[100]">
+    <header className="w-full sticky z-[100]" style={{ top: 'var(--neon-bar-height, 0rem)' }}>
 
       {/* ── Markets ticker ───────────────────────────────────────── */}
       <div className="bgl-ticker w-full">

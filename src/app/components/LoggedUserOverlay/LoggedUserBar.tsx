@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Switch from '../base/Switch';
 import ViewStatus from './ViewStatus';
 import History from './History';
@@ -41,6 +41,14 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   if (isNeonAppPreview()) {
     return null;
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    document.documentElement.style.setProperty('--neon-bar-height', '4rem');
+    return () => {
+      document.documentElement.style.setProperty('--neon-bar-height', '0rem');
+    };
+  }, []);
 
   const liveWebPageType =
     'model' in data &&

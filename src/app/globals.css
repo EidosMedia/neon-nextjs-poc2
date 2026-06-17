@@ -216,6 +216,10 @@ h6, h6 p {
 
 
 
+:target {
+  scroll-margin-top: calc(var(--neon-bar-height, 0rem) + 4rem);
+}
+
 @keyframes scroll {
   0% {
     transform: translateX(500%);
