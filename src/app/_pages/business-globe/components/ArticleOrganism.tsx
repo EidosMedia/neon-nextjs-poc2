@@ -29,7 +29,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
   const thumbUrl = getTeaserOrMainImageUrl(linkedObject, 'Square_large');
 
   return (
-    <Link href={url} className="bgl-pick-card">
+    <Link id={linkedObject.id.replaceAll('-', '_')} href={url} className="bgl-pick-card">
       {thumbUrl ? (
         <img src={thumbUrl} alt="" aria-hidden="true" className="bgl-pick-thumb" />
       ) : (
