@@ -37,8 +37,9 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const isBarVisible = !!userData.user?.name && !isNeonAppPreview();
 
   useEffect(() => {
-    if (!isBarVisible) return;
-    document.documentElement.style.setProperty('--neon-bar-height', '4rem');
+    if (isBarVisible) {
+      document.documentElement.style.setProperty('--neon-bar-height', '4rem');
+    }
     return () => {
       document.documentElement.style.setProperty('--neon-bar-height', '0rem');
     };
