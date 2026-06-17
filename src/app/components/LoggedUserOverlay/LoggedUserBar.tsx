@@ -34,6 +34,16 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   console.log('userData', userData);
   console.log('loggedUserInfo', loggedUserInfo);
 
+  const isBarVisible = !!userData.user?.name && !isNeonAppPreview();
+
+  useEffect(() => {
+    if (!isBarVisible) return;
+    document.documentElement.style.setProperty('--neon-bar-height', '4rem');
+    return () => {
+      document.documentElement.style.setProperty('--neon-bar-height', '0rem');
+    };
+  }, [isBarVisible]);
+
   if (!userData.user?.name) {
     return null;
   }
@@ -41,14 +51,6 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   if (isNeonAppPreview()) {
     return null;
   }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    document.documentElement.style.setProperty('--neon-bar-height', '4rem');
-    return () => {
-      document.documentElement.style.setProperty('--neon-bar-height', '0rem');
-    };
-  }, []);
 
   const liveWebPageType =
     'model' in data &&
