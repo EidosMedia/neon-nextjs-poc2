@@ -48,7 +48,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
     )?.attributes?.src ?? teaserImage?.elements?.[0]?.attributes?.src;
 
   return (
-    <Link id={linkedObject.id.replaceAll('-', '_')} href={url} className="sa-card block">
+    <Link id={linkedObject.id?.replaceAll('-', '_')} href={url} className="sa-card block">
       {/* Thumbnail */}
       <div className="sa-card-img">
         {thumbUrl ? (

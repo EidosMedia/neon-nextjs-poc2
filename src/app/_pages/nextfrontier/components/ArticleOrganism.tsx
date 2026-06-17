@@ -55,7 +55,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
   // Sidebar mode: horizontal thumb + title
   if (type === 'sidebar') {
     return (
-      <Link id={linkedObject.id.replaceAll('-', '_')} href={url} className="nf-sidebar-item">
+      <Link id={linkedObject.id?.replaceAll('-', '_')} href={url} className="nf-sidebar-item">
         {thumbUrl ? (
           <img src={thumbUrl} alt="" aria-hidden="true" className="nf-sidebar-thumb" />
         ) : (
@@ -68,7 +68,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
 
   // Category row card mode
   return (
-    <Link id={linkedObject.id.replaceAll('-', '_')} href={url} className="nf-card">
+    <Link id={linkedObject.id?.replaceAll('-', '_')} href={url} className="nf-card">
       {thumbUrl ? (
         <img src={thumbUrl} alt={title} className="nf-card-img" />
       ) : (
