@@ -9,123 +9,68 @@ import Footer from './Footer';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
+import { Share2, LockIcon } from 'lucide-react';
+import Link from 'next/link';
 
 type PageProps = {
   data: PageData<ArticleModel>;
 };
 
 const Article = async ({ data }: PageProps) => {
-  console.log('[NEON] render: default/Article');
+  console.log('[NEON] render: financier/Article');
 
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
+  const section = articleData?.url?.split?.('/')?.[1] ?? '';
+  const standfirst = (articleData?.attributes as Record<string, unknown>)?.standfirst as string | undefined;
+  const isPremium = !!(articleData as any)?.pubInfo?.paywallLevel;
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
-  // Insert ad elements every 3 paragraphs, considering existing adblocks.
-  // Plain function — Server Components do not re-render so memoisation is unnecessary.
   const textContentWithAds = (() => {
-    if (!textContent?.elements || adsDensity === 0) {
-      console.log('[AdBlock] No elements or adsDensity is 0');
-      return textContent;
-    }
+    if (!textContent?.elements || adsDensity === 0) return textContent;
 
-    console.log('[AdBlock] Total elements:', textContent.elements.length);
-    console.log('[AdBlock] adsDensity:', adsDensity);
-
-    // Count existing adblocks
-    const existingAdsCount = textContent.elements.filter(element => element.nodeType === 'adblock').length;
-
-    console.log('[AdBlock] Existing adblocks:', existingAdsCount);
-
-    // If we already have enough ads, return as is
-    if (existingAdsCount >= adsDensity) {
-      console.log('[AdBlock] Already have enough ads, returning as is');
-      return textContent;
-    }
+    const existingAdsCount = textContent.elements.filter(el => el.nodeType === 'adblock').length;
+    if (existingAdsCount >= adsDensity) return textContent;
 
     const maxNewAds = adsDensity - existingAdsCount;
-    console.log('[AdBlock] Max new ads to add:', maxNewAds);
-
     const newElements: typeof textContent.elements = [];
     let paragraphsSinceLastAd = 0;
     let adsAdded = 0;
 
     textContent.elements.forEach((element, index) => {
       newElements.push(element);
+      if (element.nodeType === 'p') paragraphsSinceLastAd++;
+      else if (element.nodeType === 'adblock') paragraphsSinceLastAd = 0;
 
-      if (element.nodeType === 'p') {
-        paragraphsSinceLastAd++;
-        console.log(`[AdBlock] Paragraph at index ${index}, count since last ad: ${paragraphsSinceLastAd}`);
-      } else if (element.nodeType === 'adblock') {
-        // Reset counter when we encounter an existing adblock
-        console.log(`[AdBlock] Found existing adblock at index ${index}, resetting counter`);
-        paragraphsSinceLastAd = 0;
-      }
-
-      // Insert ad after every 3 paragraphs
       if (element.nodeType === 'p' && paragraphsSinceLastAd === 3 && adsAdded < maxNewAds) {
-        console.log(`[AdBlock] Reached 3 paragraphs at index ${index}, checking if we can add ad...`);
-
-        // Check if we have at least 3 more paragraphs ahead or an existing adblock
-        const remainingElements = textContent.elements.slice(index + 1);
-        const nextParagraphsCount = remainingElements.filter(el => el.nodeType === 'p').length;
-        const hasAdblockAhead = remainingElements.some(el => el.nodeType === 'adblock');
-
-        console.log(`[AdBlock] Paragraphs ahead: ${nextParagraphsCount}, has adblock ahead: ${hasAdblockAhead}`);
-
-        // Only add if we can maintain 3 paragraphs distance to the end or next adblock
-        if (nextParagraphsCount >= 3 || hasAdblockAhead) {
-          console.log(`[AdBlock] ✓ Adding new adblock after index ${index}`);
-          newElements.push({
-            nodeType: 'adblock',
-            attributes: {},
-            elements: [],
-            value: '',
-          });
+        const remaining = textContent.elements.slice(index + 1);
+        const nextParas = remaining.filter(el => el.nodeType === 'p').length;
+        const hasAdAhead = remaining.some(el => el.nodeType === 'adblock');
+        if (nextParas >= 3 || hasAdAhead) {
+          newElements.push({ nodeType: 'adblock', attributes: {}, elements: [], value: '' });
           paragraphsSinceLastAd = 0;
           adsAdded++;
-        } else {
-          console.log(`[AdBlock] ✗ Cannot add adblock - not enough paragraphs ahead`);
         }
       }
     });
 
-    console.log('[AdBlock] Total ads added:', adsAdded);
-    console.log('[AdBlock] Final elements count:', newElements.length);
-
-    return {
-      ...textContent,
-      elements: newElements,
-    };
+    return { ...textContent, elements: newElements };
   })();
 
-  // Pre-resolve custom components server-side so renderContent can render them
-  // without any client-side JS. Falls back to CustomComponentClient for unknowns.
   const customComponents = new Map<string, React.ComponentType<Record<string, unknown>>>();
   const customNodes = findCustomComponentNodes(
     textContentWithAds ?? { nodeType: '', elements: [], attributes: {}, value: '' },
   );
-  console.log(
-    '[Article] custom component nodes found:',
-    customNodes.map(n => n.attributes?.componentname),
-  );
   await Promise.all(
     [...new Set(customNodes.map(n => n.attributes?.componentname).filter(Boolean))].map(async name => {
-      console.log('[Article] resolving server component:', name);
-      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<
-        Record<string, unknown>
-      > | null;
-      console.log('[Article] resolved:', name, '->', Comp ? 'OK' : 'null');
+      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<Record<string, unknown>> | null;
       if (Comp) customComponents.set(name, Comp);
     }),
   );
 
-  // Pre-fetch embed node data for any custom component nodes that reference a CMS node via href.
-  // Neon node IDs follow the pattern: {hex4}-{hex12}-{hex12}-{digits} appearing as a path segment.
   const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
   const nodeDataMap = new Map<string, unknown>();
-
   const currentHeaders = await headers();
   const apiHostname = currentHeaders.get('x-neon-backend-url') ?? '';
   const auth = await getAuthOptions();
@@ -134,57 +79,83 @@ const Article = async ({ data }: PageProps) => {
     neonNodes.map(async n => {
       const neonId = n.attributes!.href.match(NEON_ID_RE)?.[1] ?? '';
       if (!neonId) return;
-      // Fetch from API to get complete metadata (e.g. mainPicture, links).
-      // Then merge with pageData.model.nodes, which wins on conflicts because it
-      // carries CMS-aggregated fields (posts, count, linkedNodes, etc.) that the
-      // generic /api/nodes endpoint does not return.
-      let apiData: Record<string, unknown> = {};
       try {
         const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
-        if (resp.ok) {
-          apiData = await resp.json();
-        } else {
-          console.warn('[Article] embed fetch failed:', resp.status, 'for node', neonId);
-        }
+        if (resp.ok) nodeDataMap.set(neonId, await resp.json());
+        else console.warn('[Financier/Article] embed fetch failed:', resp.status, 'for node', neonId);
       } catch (err) {
-        console.error('[Article] embed fetch error for node', neonId, ':', err);
+        console.error('[Financier/Article] embed fetch error for node', neonId, ':', err);
       }
-      // Use the API response as the base (full links, mainPicture, dynamicCropsResourceUrls).
-      // Then overlay only the aggregated fields that /api/nodes does not return:
-      // posts, count, totalPosts, linkedNodes (liveblog), proxyJsonContent (external refs).
-      const modelNodeData = (data.model.nodes?.[neonId] ?? {}) as Record<string, unknown>;
-      const aggregatedKeys = ['posts', 'count', 'totalPosts', 'linkedNodes', 'proxyJsonContent'] as const;
-      const merged: Record<string, unknown> = { ...apiData };
-      for (const key of aggregatedKeys) {
-        if (key in modelNodeData) merged[key] = modelNodeData[key];
-      }
-      nodeDataMap.set(neonId, merged);
     }),
   );
 
   return (
-    <article className="container mx-auto">
+    <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <Navbar data={data} />
-      <div className="px-5 xl:px-52 mt-10 mb-12">
-        <Grouphead data={articleData} />
-        <MainImage data={articleData} preferredImage="main" />
-        <div>
-          {renderContent(
-            textContentWithAds,
-            articleData,
-            undefined,
-            'flex flex-col gap-4',
-            customComponents,
-            nodeDataMap,
+
+      <div className="w-full max-w-[740px] mx-auto px-4 py-8">
+
+        {/* Section label + premium badge */}
+        {(section || isPremium) && (
+          <div className="mb-3 flex items-center gap-2">
+            {section && (
+              <Link
+                href={`/${section.toLowerCase()}`}
+                className="financier-eyebrow uppercase"
+                style={{ textDecoration: 'none' }}
+              >
+                {section}
+              </Link>
+            )}
+            {isPremium && (
+              <span className="financier-premium-badge">
+                <LockIcon className="w-2.5 h-2.5" />
+                Premium
+              </span>
+            )}
+          </div>
+        )}
+
+        <article>
+          <Grouphead data={articleData} />
+
+          {/* Standfirst — only render if field present */}
+          {standfirst && (
+            <div className="financier-standfirst">{standfirst}</div>
           )}
-        </div>
+
+          {/* Byline / share row */}
+          <div className="financier-byline-rule">
+            <button
+              aria-label="Share"
+              className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide"
+              style={{ fontFamily: 'var(--font-nav)', color: 'var(--color-primary)', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              <Share2 className="w-4 h-4" />
+              Share
+            </button>
+          </div>
+
+          {/* Hero image — full column width */}
+          <MainImage data={articleData} preferredImage="main" />
+
+          {/* Body text */}
+          <div className="mt-8">
+            {renderContent(
+              textContentWithAds,
+              articleData,
+              undefined,
+              'flex flex-col gap-5',
+              customComponents,
+              nodeDataMap,
+            )}
+          </div>
+        </article>
+
       </div>
-      <div className="flex justify-center mb-24">
-        {/* Placeholder for advertisement */}
-        <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
-      </div>
+
       <Footer data={data} />
-    </article>
+    </div>
   );
 };
 
