@@ -1,20 +1,70 @@
+import React from 'react';
 import { WebpageModel } from '@/types/models/WebpageModel';
 import Navbar from './Navbar';
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import DefaultSectionItemsRenderer from '../../components/DefaultSectionItemsRenderer';
 import Footer from './Footer';
+import ArticleOrganism from './components/ArticleOrganism';
 
 type PageProps = {
   data: PageData<WebpageModel>;
 };
 
 const Section: React.FC<PageProps> = ({ data }) => {
-  console.log('[NEON] render: default/DefaultSection');
+  console.log('[NEON] render: financier/DefaultSection');
+
+  const sectionTitle = (
+    data.model?.data?.title ||
+    data.siteNode?.title ||
+    data.siteNode?.name ||
+    ''
+  ).toUpperCase();
+
+  const linkedObjects = data.model.data.children
+    ? data.model.data.children.map(item => data.model.nodes[item])
+    : [];
+
+  const [lead, ...rest] = linkedObjects;
 
   return (
-    <div className="container mx-auto">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-neutral-bg, #f6f6f6)' }}>
       <Navbar data={data} />
-      <DefaultSectionItemsRenderer data={data} />
+      <div className="w-full max-w-[1300px] mx-auto px-4 py-6">
+        {sectionTitle && (
+          <div className="mb-6">
+            <div className="financier-section-header">{sectionTitle}</div>
+          </div>
+        )}
+
+        {linkedObjects.length === 0 ? (
+          <div className="flex items-center justify-center py-12" style={{ color: 'var(--color-neutral-light-2)' }}>
+            No articles found.
+          </div>
+        ) : (
+          <>
+            <ArticleOrganism
+              data={data}
+              linkedObject={lead}
+              linkedObjects={linkedObjects}
+              index={0}
+              type="article-xl"
+            />
+            {rest.length > 0 && (
+              <div className="financier-default-grid">
+                {rest.map((linkedObject: any, idx: number) => (
+                  <ArticleOrganism
+                    key={linkedObject.id ?? idx}
+                    data={data}
+                    linkedObject={linkedObject}
+                    linkedObjects={rest}
+                    index={idx}
+                    type="article-sm"
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
       <Footer data={data} />
     </div>
   );
