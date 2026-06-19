@@ -14,7 +14,9 @@ type PageProps = {
 const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
   console.log('[NEON] render: foghorn/SectionWebPage');
 
-  const sectionTitle = data?.siteNode?.title ?? data?.model?.data?.title ?? '';
+  const sectionTitle = data?.model?.data?.title ?? data?.siteNode?.title ?? '';
+
+  console.log('[NEON] sectionTitle:', sectionTitle);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f6f6f6' }}>

@@ -19,6 +19,8 @@ const Section: React.FC<PageProps> = ({ data }) => {
     ''
   ).toUpperCase();
 
+  console.log('[NEON] sectionTitle:', sectionTitle);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f6f6f6' }}>
       <Navbar data={data} />
