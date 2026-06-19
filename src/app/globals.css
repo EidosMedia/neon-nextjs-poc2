@@ -12,6 +12,7 @@
 @import "./themes/sportsarena.css";
 @import "./themes/business-globe.css";
 @import "./themes/nextfrontier.css";
+@import "./themes/financier.css";
 
 @custom-variant dark (&:is(.dark *));
 
