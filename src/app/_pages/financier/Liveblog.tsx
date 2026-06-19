@@ -7,7 +7,6 @@ import Grouphead from '../../components/contentElements/Grouphead';
 import MainImage from '../../components/contentElements/MainImage';
 import LiveblogPosts from './LiveblogPosts';
 import Footer from './Footer';
-import { CircleDot } from 'lucide-react';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
@@ -17,32 +16,25 @@ type PageProps = {
 };
 
 const Liveblog = async ({ data }: PageProps) => {
-  console.log('[NEON] render: default/Liveblog');
+  console.log('[NEON] render: financier/Liveblog');
 
   const articleData = data.model.data;
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
-  // Pre-resolve custom components server-side so renderContent can render them
-  // without any client-side JS.
   const customComponents = new Map<string, React.ComponentType<Record<string, unknown>>>();
   const customNodes = findCustomComponentNodes(
     textContent ?? { nodeType: '', elements: [], attributes: {}, value: '' },
   );
   await Promise.all(
     [...new Set(customNodes.map(n => n.attributes?.componentname).filter(Boolean))].map(async name => {
-      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<
-        Record<string, unknown>
-      > | null;
+      const Comp = (await resolveServerComponent('editor', name)) as React.ComponentType<Record<string, unknown>> | null;
       if (Comp) customComponents.set(name, Comp);
     }),
   );
 
-  // Pre-fetch embed node data for any custom component nodes that reference a CMS node via href.
-  // Neon node IDs follow the pattern: {hex4}-{hex12}-{hex12}-{digits} appearing as a path segment.
   const NEON_ID_RE = /(?:^|\/)([0-9a-f]{4}-[0-9a-f]{12}-[0-9a-f]{12}-\d+)(?:\/|$)/i;
   const nodeDataMap = new Map<string, unknown>();
-
   const currentHeaders = await headers();
   const apiHostname = currentHeaders.get('x-neon-backend-url') ?? '';
   const auth = await getAuthOptions();
@@ -52,55 +44,60 @@ const Liveblog = async ({ data }: PageProps) => {
       .map(async n => {
         const neonId = n.attributes!.href.match(NEON_ID_RE)?.[1] ?? '';
         if (!neonId) return;
-        // Fetch from API to get complete metadata (e.g. mainPicture, links).
-        // Then merge with pageData.model.nodes, which wins on conflicts because it
-        // carries CMS-aggregated fields (posts, count, linkedNodes, etc.) that the
-        // generic /api/nodes endpoint does not return.
-        let apiData: Record<string, unknown> = {};
         try {
           const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
-          if (resp.ok) {
-            apiData = await resp.json();
-          } else {
-            console.warn('[Liveblog] embed fetch failed:', resp.status, 'for node', neonId);
-          }
+          if (resp.ok) nodeDataMap.set(neonId, await resp.json());
+          else console.warn('[Financier/Liveblog] embed fetch failed:', resp.status, neonId);
         } catch (err) {
-          console.error('[Liveblog] embed fetch error for node', neonId, ':', err);
+          console.error('[Financier/Liveblog] embed fetch error:', neonId, err);
         }
-        // Use the API response as the base (full links, mainPicture, dynamicCropsResourceUrls).
-        // Then overlay only the aggregated fields that /api/nodes does not return:
-        // posts, count, totalPosts, linkedNodes (liveblog), proxyJsonContent (external refs).
-        const modelNodeData = (data.model.nodes?.[neonId] ?? {}) as Record<string, unknown>;
-        const aggregatedKeys = ['posts', 'count', 'totalPosts', 'linkedNodes', 'proxyJsonContent'] as const;
-        const merged: Record<string, unknown> = { ...apiData };
-        for (const key of aggregatedKeys) {
-          if (key in modelNodeData) merged[key] = modelNodeData[key];
-        }
-        nodeDataMap.set(neonId, merged);
       }),
   );
 
   return (
-    <article className="container mx-auto">
+    <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <Navbar data={data} />
-      <div className="xl:px-52 mt-10 mb-12">
-        <div className="flex items-center gap-1 mb-4 w-fit max-h-[30px] p-2 rounded-xs bg-feedback-red text-neutral-lightest">
-          <CircleDot className="w-4 h-4" />
-          <span className="subhead1 pt-[3px]">Live</span>
+
+      <div className="w-full max-w-[740px] mx-auto px-4 py-8">
+
+        {/* LIVE badge */}
+        <div className="mb-4 flex items-center gap-2">
+          <span style={{
+            fontFamily: 'var(--font-nav)',
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--color-primary)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+          }}>
+            <span style={{
+              display: 'inline-block',
+              width: 7,
+              height: 7,
+              borderRadius: '50%',
+              background: 'var(--color-primary)',
+            }} />
+            Live Updates
+          </span>
         </div>
-        <Grouphead data={articleData} />
-        <MainImage data={articleData} preferredImage="main" />
-        <div className="mb-8">
-          {renderContent(textContent, articleData, undefined, 'flex flex-col gap-4', customComponents, nodeDataMap)}
-        </div>
-        <LiveblogPosts data={data} />
+
+        <article>
+          <Grouphead data={articleData} />
+          <MainImage data={articleData} preferredImage="main" />
+          <div className="mt-6 mb-8">
+            {renderContent(textContent, articleData, undefined, 'flex flex-col gap-5', customComponents, nodeDataMap)}
+          </div>
+          <div style={{ borderTop: '3px solid var(--color-neutral-primary)', marginBottom: 24 }} />
+          <LiveblogPosts data={data} />
+        </article>
+
       </div>
-      <div className="flex justify-center mb-24">
-        {/* Placeholder for advertisement */}
-        <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
-      </div>
+
       <Footer data={data} />
-    </article>
+    </div>
   );
 };
 

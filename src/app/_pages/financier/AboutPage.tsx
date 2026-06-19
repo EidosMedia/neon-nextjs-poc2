@@ -2,55 +2,51 @@ import React from 'react';
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import Link from 'next/link';
 
 const AboutPage = ({ data }: { data: Site }) => {
-  console.log('[NEON] render: default/AboutPage');
+  console.log('[NEON] render: financier/AboutPage');
 
   return (
-    <div className="container mx-auto text-center flex flex-col items-center justify-center">
+    <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <Navbar data={{ siteNode: data.root }} />
-      <div className="max-w-2xl">
-        <h1 className="text-3xl font-bold my-2">
-          Neon NextJS POC v2 {data.root.title} site's About Page
-          <br />
-          Eidosmedia® 2025©
+
+      <div className="w-full max-w-[740px] mx-auto px-4 py-10">
+        <div className="financier-section-header">About</div>
+        <h1 style={{
+          fontFamily: 'var(--font-headline)',
+          fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+          fontWeight: 700,
+          lineHeight: 1.15,
+          color: 'var(--color-neutral-primary)',
+          margin: '8px 0 20px',
+        }}>
+          {data.root.title}
         </h1>
-        <div className="text-left text-base">
-          <p className="text-base mt-3 mb-1">
-            This is the about page of this example of a "front-end" NextJs© application able to render NEON's multiple
-            headless SaaS sites. Now is rendering the <strong>{data.root.name}</strong> site that has title:{' '}
-            <em>{data.root.title}</em>.
+
+        <div style={{ fontFamily: 'var(--font-body)', fontSize: 18, lineHeight: 1.75, color: 'var(--color-neutral-secondary)' }} className="flex flex-col gap-5">
+          <p>
+            This is the About page of this example Next.js front-office application capable of rendering
+            multiple NEON headless SaaS sites. Currently rendering the{' '}
+            <strong>{data.root.name}</strong> site with title: <em>{data.root.title}</em>.
           </p>
-          <ul className="text-base mt-3 mb-1 list-disc list-inside">
-            The scope of this proof of concept is to show how to implement:
-            <li>Secure Server-side rendered UI, able to be a front-end application over the NEON multi-sites CMS.</li>
-            <li>
-              Implement a secure preview front end and secure live admin client-side addons, capable of allowing NeonApp
-              users to inspect, modify, and access extra information of the rendered content.
-            </li>
-          </ul>
-          <p className="text-base mt-3 mb-1">
-            The implementation is provided under the BSD-3-Clause license, allowing usages as specified by the license.
+          <p>
+            The project demonstrates how to implement a secure server-side rendered UI on top of the NEON
+            multi-site CMS, including preview front-end support and client-side add-ons for NeonApp users.
           </p>
-          <ul className="text-base mt-3 mb-1 list-disk list-inside">
-            The source code is hosted on GitHub.
-            <li>
-              <a className="text-base" href="https://github.com/EidosMedia/neon-nextjs-poc2">
-                NEON NextJS Poc2
-              </a>
-            </li>
-            <li>
-              <a className="text-base" href="https://github.com/EidosMedia/neon-frontoffice-ts-sdk">
-                NEON Front Office TypeScript library
-              </a>
-            </li>
-          </ul>
-          <p className="text-base mt-3 mb-1">
-            It is provided as-is, with no warranties, for any legal use and can be forked and modified, in conjunction
-            with the Neon public TypeScript front-office SDK library, to implement your front-end application.
+          <p>
+            Source code is hosted on{' '}
+            <Link href="https://github.com/EidosMedia/neon-nextjs-poc2" style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}>
+              GitHub — NEON NextJS Poc2
+            </Link>
+            {' '}and provided under the BSD-3-Clause license.
+          </p>
+          <p style={{ fontSize: 14, color: 'var(--color-neutral-light-2)' }}>
+            Eidosmedia® 2025©
           </p>
         </div>
       </div>
+
       <Footer data={{ siteNode: data.root }} />
     </div>
   );
