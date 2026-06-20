@@ -51,7 +51,7 @@
 /* ─── Navbar ──────────────────────────────────────────────────────────────── */
 .root[data-theme="financier"] .financier-header {
   position: sticky;
-  top: 0;
+  top: var(--neon-bar-height, 0rem);
   z-index: 100;
   background: var(--color-nav-bg);
   border-bottom: 1px solid var(--color-neutral-light);

@@ -36,7 +36,7 @@
 /* ─── Navbar ──────────────────────────────────────────────────────────────── */
 .root[data-theme="oldtown"] .oldtown-header {
   position: sticky;
-  top: 0;
+  top: var(--neon-bar-height, 0rem);
   z-index: 100;
   background: #FFFFFF;
   border-bottom: 1px solid #DFDFDF;
