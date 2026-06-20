@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ArticleOrganism from './components/ArticleOrganism';
+import ArticleOverlay from '../../components/base/ArticleOverlay';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -36,7 +37,9 @@ const CategoryColumn: React.FC<{ data: PageData<WebpageModel>; zone: Zone; wide?
         <ul className={wide ? 'financier-category-list financier-category-list--wide' : 'financier-category-list'}>
           {rest.map((item: any, idx: number) => (
             <li key={item.id ?? idx}>
-              <Link href={item.url}>{item.attributes?.teaser?.title ?? item.title}</Link>
+              <ArticleOverlay data={item} viewStatus={data.siteData.viewStatus ?? ''} width="normal">
+                <Link href={item.url}>{item.attributes?.teaser?.title ?? item.title}</Link>
+              </ArticleOverlay>
             </li>
           ))}
         </ul>
