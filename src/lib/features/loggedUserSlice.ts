@@ -44,16 +44,16 @@ export const { setInspectItemsVisible, setInspectItems, setAnalytics, setViewSta
 
 // Selectors
 export const getInspectItemsVisible = (state: any) => {
-  return state && state.loggedUser.inspectItemsVisible;
+  return state?.loggedUser?.inspectItemsVisible;
 };
 export const getInspectItems = (state: any) => {
-  return state && state.loggedUser.inspectItems;
+  return state?.loggedUser?.inspectItems;
 };
 export const getAnalytics = (state: any) => {
-  return state && state.loggedUser.analytics;
+  return state?.loggedUser?.analytics;
 };
 export const getViewStatus = (state: any) => {
-  return state && state.loggedUser.viewStatus;
+  return state?.loggedUser?.viewStatus;
 };
 
 export default loggedUserSlice.reducer;
