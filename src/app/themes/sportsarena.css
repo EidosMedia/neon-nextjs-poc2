@@ -43,7 +43,7 @@
 /* ─── Navbar ─────────────────────────────────────────────────────── */
 .root[data-theme="sportsarena"] .sa-header {
   position: sticky;
-  top: 0;
+  top: var(--neon-bar-height, 0rem);
   z-index: 100;
 }
 

@@ -31,6 +31,8 @@ type UserLayerProps = {
 const History: React.FC<UserLayerProps> = ({ data }) => {
   const [latestPreviewSysData, setLatestPreviewSysData] = useState<SysData | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(true);
+  const [rollbackError, setRollbackError] = useState<string | null>(null);
+  const [rollbackingId, setRollbackingId] = useState<string | null>(null);
 
   const {
     data: historyData,
@@ -53,9 +55,16 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   }
 
   async function rollbackTo(nodeId: string, baseType: string, versionName: string) {
-    if (confirm(`Are you sure you want to Rollback to version ${versionName}`)) {
-      // go to roll back!
+    if (!confirm(`Are you sure you want to Rollback to version ${versionName}`)) {
+      console.log('roll back not confirmed');
+      return;
+    }
 
+    // go to roll back!
+    setRollbackError(null);
+    setRollbackingId(nodeId);
+
+    try {
       const response = await fetch(`/api/versions`, {
         method: 'POST',
         headers: {
@@ -66,21 +75,32 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
           baseType: baseType,
         }),
       });
-      if (response.ok) {
-        response.json().then(rollbacked => {
-          console.log('Rollbacked to version ', versionName, ' with new node:', rollbacked.nodeRef);
 
-          window.location.href = removeDashNumber(window.location.href).replace(
-            removeDashNumber(data.model.data.id),
-            rollbacked.nodeRef,
-          );
-        });
-      } else {
+      if (!response.ok) {
         console.error('Failed to rollback version with response:', response);
+        setRollbackError(`Rollback to version ${versionName} failed (HTTP ${response.status}). Please try again.`);
+        return;
       }
-    } else {
-      // Do nothing!
-      console.log('roll back not confirmed');
+
+      const rollbacked = await response.json();
+
+      if (!rollbacked?.nodeRef) {
+        console.error('Rollback response missing nodeRef:', rollbacked);
+        setRollbackError(`Rollback to version ${versionName} did not return a valid result. Please refresh and check.`);
+        return;
+      }
+
+      console.log('Rollbacked to version ', versionName, ' with new node:', rollbacked.nodeRef);
+
+      window.location.href = removeDashNumber(window.location.href).replace(
+        removeDashNumber(data.model.data.id),
+        rollbacked.nodeRef,
+      );
+    } catch (err) {
+      console.error('Error during rollback:', err);
+      setRollbackError(`Rollback to version ${versionName} failed due to a network error. Please try again.`);
+    } finally {
+      setRollbackingId(null);
     }
   }
 
@@ -197,6 +217,9 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                 <Close />
               </a>
             </div>
+            {rollbackError && (
+              <div className="px-4 py-2 text-sm text-red-700 bg-red-100 border-b border-red-200">{rollbackError}</div>
+            )}
             <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0 overflow-y-auto">
               {loadingHistory ? (
                 <div className="text-gray-500 italic">
@@ -289,15 +312,16 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
                             </Link>
                             {index > 0 && !item.live && !isLatestPreviewVersion && !latestPreviewSysData?.lockedBy && (
                               <button
-                                className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out"
+                                className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
                                 title="Rollback to this version"
+                                disabled={rollbackingId === item.nodeId}
                                 onClick={e => {
                                   e.stopPropagation();
                                   e.nativeEvent.stopImmediatePropagation();
                                   rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
                                 }}
                               >
-                                Rollback
+                                {rollbackingId === item.nodeId ? 'Rolling back…' : 'Rollback'}
                               </button>
                             )}
                           </div>

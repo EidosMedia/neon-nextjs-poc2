@@ -6,6 +6,7 @@ import * as Foghorn from './_pages/foghorn';
 import * as Sportsarena from './_pages/sportsarena';
 import * as BusinessGlobe from './_pages/business-globe';
 import * as Nextfrontier from './_pages/nextfrontier';
+import * as Financier from './_pages/financier';
 
 type PageComponents = typeof Default;
 
@@ -18,6 +19,7 @@ const THEME_MAP: Record<string, PageComponents> = {
   sportsarena:  Sportsarena,
   'business-globe': BusinessGlobe,
   'nextfrontier': Nextfrontier,
+  'financier': Financier,
 };
 
 // componentKey must match a named export from the theme's index.ts barrel

@@ -70,6 +70,11 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700;900&display=swap"
           rel="stylesheet"
         />
+        {/* Financier theme fonts */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
       </head>
 
       <body className={inter.className}>
