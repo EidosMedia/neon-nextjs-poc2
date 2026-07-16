@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
 import UIStyleGuide from '../components/baseComponents/UIStyleGuide';
 import * as DefaultPages from '../_pages';
+import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
 
 export default async function Page({
   params,
@@ -80,40 +81,36 @@ export default async function Page({
   const auth = await getAuthOptions();
   const url = resolveUrl(hostname, path, id as string);
 
-  let pageData;
+  let result: CachedPageResult | undefined;
 
   try {
-    pageData = await connection.makePageRequest(url, auth, {
-      redirect: 'manual',
-      cache: 'no-cache',
-    });
+    result =
+      viewStatus === 'live'
+        ? await fetchPageDataCached(url, siteName ?? '', auth)
+        : await fetchPageDataDirect(url, auth);
   } catch (error: any) {
     if (error.status === 404) {
       notFound();
     }
 
-    // handle 401 and 403 unauthorized
+    // handle 401, 403, and 410 unauthorized / gone
     if (error.status === 401 || error.status === 403 || error.status === 410) {
       notFound();
     }
   }
 
-  if (!pageData) {
+  if (!result) {
     notFound();
   }
 
   // handle redirection
-  if (pageData.status > 300 && pageData.status < 400) {
-    const newLocation = pageData.headers.get('Location') as string;
-    redirect(newLocation);
+  if (result.redirectLocation) {
+    redirect(result.redirectLocation);
   }
 
-  const pageDataJSON = await pageData.json();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const pageDataJSON = result.data!;
   console.log('Current page model', pageDataJSON);
-
-  if (process.env.NODE_ENV === 'development' && pageData.status >= 500) {
-    throw new Error(pageDataJSON.model.data.trace);
-  }
 
   const siteLive = await connection.findSite(siteName ?? '', 'live');
   const sitePreview = await connection.findSite(siteName ?? '', 'preview');
@@ -128,9 +125,11 @@ export default async function Page({
 
   // For article longform, use a sub-type key so themes can differentiate
   const componentKey =
-    baseType === 'article' && type === 'longform' ? 'ArticleLongform'
-    : baseType === 'webpage' && type === 'newsletter' ? 'NewsletterWebpage'
-    : resolveBaseTypeKey(baseType);
+    baseType === 'article' && type === 'longform'
+      ? 'ArticleLongform'
+      : baseType === 'webpage' && type === 'newsletter'
+        ? 'NewsletterWebpage'
+        : resolveBaseTypeKey(baseType);
   const PageComponent = resolvePageComponent(componentKey, theme);
 
   return (
@@ -141,11 +140,7 @@ export default async function Page({
           editUrl: `${process.env.NEON_APP_URL}/neon/app/neon.html#open/${pageDataJSON.model.data.id}`,
         }}
       />
-      {PageComponent ? (
-        <PageComponent data={pageDataJSON} />
-      ) : (
-        <DefaultPages.Article data={pageDataJSON} />
-      )}
+      {PageComponent ? <PageComponent data={pageDataJSON} /> : <DefaultPages.Article data={pageDataJSON} />}
     </div>
   );
 }
@@ -178,6 +173,8 @@ export async function generateMetadata({
   const currentHeaders = await headers();
 
   const hostname = currentHeaders.get('x-neon-backend-url');
+  const siteName = currentHeaders.get('x-neon-site-name') ?? '';
+  const viewStatus = currentHeaders.get('x-neon-view-status') as string;
   const path = currentHeaders.get('x-neon-pathname') as string;
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
@@ -185,8 +182,6 @@ export async function generateMetadata({
 
   const url = resolveUrl(hostname, path, id as string);
   try {
-    let title;
-
     if (slug && slug.length === 1) {
       switch (slug[0]) {
         case 'search':
@@ -197,28 +192,18 @@ export async function generateMetadata({
           return { title: 'Login' };
       }
     }
-    const pageData = await connection.makePageRequest(url, auth, {
-      redirect: 'manual',
-      cache: 'no-cache',
-    });
 
-    if (pageData.status == 200) {
-      const pageDataJSON = await pageData.json();
+    const result =
+      viewStatus === 'live' ? await fetchPageDataCached(url, siteName, auth) : await fetchPageDataDirect(url, auth);
 
-      if (!title) {
-        title = pageDataJSON.model.data.title;
-      }
-
+    if (result.status === 200 && result.data) {
       return {
-        title: `${pageDataJSON.siteData.siteName} - ${title}`,
-        description: pageDataJSON.model.data.summary,
-      };
-    } else {
-      return {
-        title: 'Error',
-        description: 'Failed to generate metadata.',
+        title: `${result.data.siteData?.siteName} - ${result.data.model?.data?.title}`,
+        description: result.data.model?.data?.summary,
       };
     }
+
+    return { title: 'Error', description: 'Failed to generate metadata.' };
   } catch (error) {
     console.warn('Error generating metadata:', error);
     return {

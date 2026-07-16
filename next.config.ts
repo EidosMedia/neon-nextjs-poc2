@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   trailingSlash: true,
   allowedDevOrigins: ['*.neon.test'],
+  cacheComponents: true,
 };
 
 export default nextConfig;

@@ -118,3 +118,49 @@ The local SDK is aliased as a package. Import types and the connection facade li
 import { NeonConnection, PageData, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 // connection is a global — no import needed in API routes and server components
 ```
+
+## Cache Invalidation
+
+Pages are cached server-side using Next.js 16 `'use cache'` with demand invalidation via
+`revalidateTag`. The entry point for the Neon CMS backend is:
+
+**`POST /api/cache`** → `src/app/api/cache/route.ts`
+
+Security: the request must include a header whose name and value match env vars
+`INVALIDATE_NEXTJS_HEADER_NAME` and `INVALIDATE_NEXTJS_HEADER_VALUE`. Missing or wrong
+header returns **404**.
+
+Request body shape:
+```json
+{
+  "siteName": "<site root.name>",
+  "evict":      { "ids": ["<nodeId>"], "paths": ["/news/slug/"] },
+  "revalidate": { "ids": ["<nodeId>"], "paths": ["/"] }
+}
+```
+
+- **`ids`** — raw CMS node IDs (no prefix). The route applies the `neon:node:` prefix
+  internally before calling `revalidateTag`.
+- **`paths`** — URL paths forwarded directly to `revalidatePath`.
+- **`siteName`** is validated against `connection.getSitesList()` — unknown names return 400.
+
+Cache tagging is applied in `src/utilities/pageCache.ts` (`fetchPageDataCached`):
+
+| Tag                    | Covers                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| `neon:site:<siteName>` | All pages on the site                                                          |
+| `neon:node:<nodeId>`   | The page's own CMS node (`data.model.data.id`) — applies to every content type |
+| `neon:node:<targetId>` | Every article linked in a webpage zone (`data.model.data.links.pagelink.*`)    |
+| `neon:node:<childId>`  | Every child node in a section/list page (`data.model.data.children`)           |
+
+This means evicting one article's `nodeId` purges both the article page **and** every
+listing page that references it in a zone — the full invalidation loop is closed.
+
+**viewStatus gating**: `fetchPageDataCached` is only called when `viewStatus === 'live'`.
+Preview and editorial requests use `fetchPageDataDirect` (always fresh, never cached).
+
+**Logging**: Every cache build (`neon-fo:page-cache`) and every invalidation call
+(`neon-fo:cache-api`) emit structured pino JSON logs with node IDs, zone contents, and paths.
+
+For full details, debugging steps, and how to extend tag coverage to new content types,
+see the **`frontend-cache-management`** skill.

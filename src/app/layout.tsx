@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Inter } from 'next/font/google';
+import { Suspense } from 'react';
 import { WebVitals } from './components/utilities/WebVitals';
 import './globals.css';
 import { ReloadListener } from './components/utilities/ReloadListener';
@@ -81,9 +82,11 @@ export default async function RootLayout({
         <WebVitals />
         <ReactShimExposer />
         <ReloadListener />
-        <StoreProvider>
-          <QueryProvider>{children}</QueryProvider>
-        </StoreProvider>
+        <Suspense fallback={null}>
+          <StoreProvider>
+            <QueryProvider>{children}</QueryProvider>
+          </StoreProvider>
+        </Suspense>
       </body>
     </html>
   );
