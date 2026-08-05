@@ -38,7 +38,7 @@ Next.js purges all 'use cache' entries that were tagged with neon:node:<id>
 |---|---|
 | `src/app/api/cache/route.ts` | POST endpoint — validates the secret, validates site name, calls `revalidateTag` / `revalidatePath`; logs every invalidation request |
 | `src/utilities/pageCache.ts` | `fetchPageDataCached()` (LIVE) and `fetchPageDataDirect()` (preview) — cache server function applies tags after parsing |
-| `src/app/[[...slug]]/page.tsx` | Calls `fetchPageDataCached` for `viewStatus === 'live'`; `fetchPageDataDirect` for all other view statuses |
+| `src/app/[[...slug]]/page.tsx` | Calls `fetchPageDataCached` for `viewStatus === ViewStatus.LIVE`; `fetchPageDataDirect` for all other view statuses |
 | `src/lib/logger.ts` | Shared pino logger instance (`name: 'neon-fo'`); each module creates its own child logger |
 
 ---
@@ -173,11 +173,11 @@ The request must include a header matching exactly:
 
 ## Cache Lifetime
 
-Live content is cached with the `'hours'` profile (1-hour revalidation window).
-Editorial / preview requests (`auth.editorialAuth` present) use a 5-second TTL so editors
-always see fresh content.
+Live content is cached with the `'hours'` profile (1-hour revalidation window) and demand
+invalidation. Preview and editorial requests never call `fetchPageDataCached()`; they use
+`fetchPageDataDirect()` with `cache: 'no-store'` and therefore never receive a cached TTL.
 
-These profiles are set inside `fetchPageDataCached()` via `cacheLife()`.
+The live profile is set inside `fetchPageDataCached()` via `cacheLife()`.
 
 ---
 
@@ -226,3 +226,12 @@ Using `revalidatePath('/', 'layout')` in route code would purge all pages under 
    `model.data.links.pagelink.*` in the webpage's response payload. If the relationship is
    managed differently (e.g., a separate aggregator call), add the appropriate `cacheTag()`
    in `fetchPageDataCached()`.
+
+---
+
+## Documentation Synchronization
+
+When cache behavior changes, verify it against `src/utilities/pageCache.ts` and
+`src/app/api/cache/route.ts`. In the same change, update this skill, its mirrored copy at
+`.claude/skills/frontend-cache-management/SKILL.md`, and the Cache Invalidation section of
+`AGENTS.md`. Keep the two skill copies synchronized.

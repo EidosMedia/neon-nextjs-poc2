@@ -1,8 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 import { ArticleModel } from '@/types/models';
-import useAuth from '@/hooks/useAuth';
 import useVersions from '@/hooks/useVersions';
+import useAuthContext from '@/hooks/useAuthContext';
+import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 type PromotionButtonProps = {
   data: ArticleModel;
@@ -11,10 +12,16 @@ type PromotionButtonProps = {
 
 const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) => {
   const [showButton, setShowButton] = useState(true);
-  const isLive = viewStatus === 'LIVE';
-  const { data: authData } = useAuth();
+  const normalizedViewStatus = normalizeViewStatus(viewStatus);
+  const isLive = normalizedViewStatus === ViewStatus.LIVE;
+  const { data: authContext } = useAuthContext();
+  const canUseVersions = normalizedViewStatus === ViewStatus.PREVIEW || authContext.hasEditorialAuth;
 
-  const { changeEdited } = useVersions({ currentNode: data as any, viewStatus }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
+  const { changeEdited } = useVersions({
+    currentNode: data as any,
+    viewStatus: normalizedViewStatus,
+    enabled: canUseVersions,
+  }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
 
   const handlePromotion = async () => {
     try {
@@ -35,10 +42,7 @@ const PromotionButton: React.FC<PromotionButtonProps> = ({ data, viewStatus }) =
     }
   };
 
-  const isUserLogged = authData.user?.name !== undefined;
-
   return (
-    isUserLogged &&
     showButton && (
       <div className="flex items-center justify-center text-white cursor-pointer">
         <button

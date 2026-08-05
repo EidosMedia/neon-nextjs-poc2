@@ -2,6 +2,7 @@ import { getFamilyRef } from '@/utilities/content';
 import { createSlice } from '@reduxjs/toolkit';
 import { NodeHistory } from '@/neon-frontoffice-ts-sdk/src';
 import { identity } from 'lodash';
+import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 const initialState: Record<string, any> = {
   edited: false,
@@ -60,7 +61,7 @@ export const { setHistory, setVersionPanelOpen, setEdited, setLoadingHistory } =
 
 // Selectors
 export const getHistory =
-  (id: string, viewStatus: string) =>
+  (id: string, viewStatus: ViewStatus | string) =>
   (state: any): NodeHistory => {
     if (!id) {
       return {
@@ -68,7 +69,7 @@ export const getHistory =
         version: '',
         acquireTimestamp: 0,
         versions: [],
-        viewStatus: 'LIVE',
+        viewStatus: ViewStatus.LIVE,
         latestLiveVersion: '',
         latestEditableVersion: '',
       } as NodeHistory;
@@ -83,7 +84,7 @@ export const getEdited = (state: any) => {
 };
 
 export const getLoadingHistory =
-  (id: string, viewStatus: string) =>
+  (id: string, viewStatus: ViewStatus | string) =>
   (state: any): number => {
     if (id && state.nodes) {
       const familyRef = getFamilyRef(id);

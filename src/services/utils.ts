@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { NeonConnection, SiteNode, ErrorObject } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { normalizeViewStatus, toSiteViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 declare global {
   var connection: NeonConnection;
   var cacheMap: Map<string, string>;
@@ -7,7 +8,7 @@ declare global {
 
 const resolveForcedLocalhostSiteConfig = async (
   forwardedHostname: string,
-): Promise<{ apiHostname: string; viewStatus: string; root: SiteNode } | null> => {
+): Promise<{ apiHostname: string; viewStatus: ViewStatus; root: SiteNode } | null> => {
   const hostWithoutProtocol = forwardedHostname.replace(/^https?:\/\//, '').toLowerCase();
   const isLocalhostRequest =
     hostWithoutProtocol === 'localhost' ||
@@ -25,7 +26,7 @@ const resolveForcedLocalhostSiteConfig = async (
   }
 
   const forcedSiteConfig =
-    (await connection.findSite(forcedSite, 'live')) ||
+    (await connection.findSite(forcedSite, toSiteViewStatus(ViewStatus.LIVE))) ||
     (await connection.findSite(forcedSite)) ||
     (await connection.getSitesList()).find(site => site.root.name.toLowerCase() === forcedSite.toLowerCase());
 
@@ -37,14 +38,14 @@ const resolveForcedLocalhostSiteConfig = async (
     apiHostname: forcedSiteConfig.apiHostnames.liveHostname.startsWith('https://')
       ? forcedSiteConfig.apiHostnames.liveHostname
       : `https://${forcedSiteConfig.apiHostnames.liveHostname}`,
-    viewStatus: 'LIVE',
+    viewStatus: ViewStatus.LIVE,
     root: forcedSiteConfig.root,
   };
 };
 
 export const getAPIHostnameConfig = async (
   request: NextRequest,
-): Promise<{ apiHostname: string; viewStatus: string; root: SiteNode }> => {
+): Promise<{ apiHostname: string; viewStatus: ViewStatus; root: SiteNode }> => {
   const protocol = request.headers.get('X-Forwarded-Proto') || 'http';
 
   const forwardedHostname = request.headers.get('x-forwarded-host');
@@ -64,7 +65,11 @@ export const getAPIHostnameConfig = async (
   apiHostnameConfig.apiHostname = apiHostnameConfig.apiHostname.startsWith('https://')
     ? apiHostnameConfig.apiHostname
     : `https://${apiHostnameConfig.apiHostname}`;
-  return apiHostnameConfig;
+
+  return {
+    ...apiHostnameConfig,
+    viewStatus: normalizeViewStatus(apiHostnameConfig.viewStatus),
+  };
 };
 
 export const handleServicesError = (error: unknown) => {

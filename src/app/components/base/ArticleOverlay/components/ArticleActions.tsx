@@ -4,6 +4,7 @@ import { Info } from 'lucide-react';
 import ArticleInfo from './ArticleInfo';
 import { OverlayDataObj } from '../ArticleOverlay';
 import { useState, useRef, useEffect } from 'react';
+import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 type ArticleActionsProps = {
   data: any;
@@ -13,7 +14,7 @@ type ArticleActionsProps = {
 };
 
 const ArticleActions: React.FC<ArticleActionsProps> = ({ data, viewStatus, overlayData, width }) => {
-  const isLive = viewStatus === 'LIVE';
+  const isLive = normalizeViewStatus(viewStatus) === ViewStatus.LIVE;
   const [showInfo, setShowInfo] = useState(false);
   const infoRef = useRef<HTMLDivElement>(null);
 

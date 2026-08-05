@@ -2,16 +2,17 @@
 import { useState, useRef } from 'react';
 import { X, Check, LockKeyhole } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
-import ReactDOMServer from 'react-dom/server';
 import { isString } from 'lodash';
 import useVersions from '@/hooks/useVersions';
 import { ArticleModel } from '@/types/models/ArticleModel';
+import useAuthContext from '@/hooks/useAuthContext';
+import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 type ContentEditableProps = {
   data?: ArticleModel;
   children?: React.ReactNode;
   showLockedByTooltip?: boolean;
-  viewStatus?: 'LIVE' | 'PREVIEW';
+  viewStatus?: ViewStatus;
   minimal?: boolean;
 };
 
@@ -31,23 +32,29 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   const divButtonsRef = useRef<HTMLDivElement>(null);
   //console.log('data in contentEditable', data);
 
+  const { data: authContext } = useAuthContext();
+  const normalizedViewStatus = normalizeViewStatus(viewStatus);
+  const canUseVersions = normalizedViewStatus === ViewStatus.PREVIEW || authContext.hasEditorialAuth;
+
   const { changeEdited, refetch: refetchVersions } = useVersions({
     currentNode: data as any,
-    viewStatus: viewStatus || 'PREVIEW',
+    viewStatus: normalizedViewStatus,
     notLoadOnInit: minimal,
+    enabled: canUseVersions,
   }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
-  const [contentString, setContentString] = useState<string>(ReactDOMServer.renderToStaticMarkup(children));
-  const [previousContentString, setPreviousContentString] = useState<string>(
-    ReactDOMServer.renderToStaticMarkup(children),
-  );
-  const key = new Date().toISOString() + Math.random().toString(36).substring(2, 15);
+  const [previousContentString, setPreviousContentString] = useState<string>('');
 
   const showDivButtons = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+
+    if (divRef.current) {
+      setPreviousContentString(divRef.current.innerHTML);
+    }
+
     divButtonsRef.current?.classList.remove('hidden');
   };
 
@@ -84,7 +91,6 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
       const content = firstChild?.innerHTML;
 
       handleUpdateContentItem(dataId, content);
-      setContentString(divRef?.current?.innerHTML);
       setPreviousContentString(divRef?.current?.innerHTML);
       changeEdited(true); // Mark as edited
       hideDivButtons(); // Hide buttons after save
@@ -101,7 +107,6 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
     if (divRef.current) {
       divRef.current.innerHTML = previousContentString; // Reset to previous content
     }
-    setContentString(previousContentString);
     hideDivButtons(); // Hide buttons after cancel
     divRef.current?.blur(); // Remove focus from the div
   };
@@ -113,8 +118,11 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
     }
   };
 
+  const canEdit =
+    !!loggedUserInfo?.inspectItems && normalizedViewStatus !== ViewStatus.LIVE && !loggedUserInfo?.preview;
+
   return lockedBy ? (
-    <div key={key} className="relative group">
+    <div className="relative group">
       <div className="flex items-center">
         {children}
         {showLockedByTooltip && loggedUserInfo?.inspectItems && !loggedUserInfo?.preview && (
@@ -142,20 +150,18 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   ) : (
     <div>
       <div
-        key={key}
         ref={divRef}
-        contentEditable={!!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE' && !loggedUserInfo?.preview}
+        contentEditable={canEdit}
         suppressContentEditableWarning={!!loggedUserInfo?.inspectItems}
-        onClick={!!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE' ? showDivButtons : undefined}
-        onBlur={!!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE' ? handleBlur : undefined}
+        onClick={canEdit ? showDivButtons : undefined}
+        onBlur={canEdit ? handleBlur : undefined}
         className={`relative rounded z-10 ${
-          !!loggedUserInfo?.inspectItems && viewStatus !== 'LIVE'
-            ? 'border-1 border-neutral-light/30 hover:border-primary p-1 cursor-text'
-            : ''
+          canEdit ? 'border-1 border-neutral-light/30 hover:border-primary p-1 cursor-text' : ''
         }`}
-        dangerouslySetInnerHTML={{ __html: contentString }}
         tabIndex={0}
-      />
+      >
+        {children}
+      </div>
       {loggedUserInfo?.inspectItems && (
         <div className="relative">
           <div

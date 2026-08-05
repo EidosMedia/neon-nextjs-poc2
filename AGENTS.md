@@ -64,6 +64,20 @@ auth: await getAuthOptions(contextId) // editorial context with trace ID
 - `useAuth` — fetches current user from `/api/users` via React Query (5-min stale time, httpOnly cookie sent automatically)
 - `useWebauth` — stores display name in Redux + `localStorage`
 
+### Editorial Cookie Scope
+
+`src/proxy.ts` owns `editorialauth` issuance for PreviewToken authorization and the
+Preview/Live `switch-token` exchange. New cookies are **host-only**: do not set a
+`Domain` attribute. The browser keeps one editorial cookie per concrete host, while the
+switch-token redirect transfers authentication between sibling Preview and Live hosts.
+
+Each issuance response also expires the prior domain-scoped `editorialauth` cookie with
+`Domain=<normalized current hostname>`. That migration-only domain value must contain a
+hostname, never a port or protocol. Do not scope the cookie to a broad parent domain.
+
+The focused regression suite is `src/test/proxy.test.ts`; run it with:
+`npm test -- --runInBand src/test/proxy.test.ts`.
+
 ## API Endpoint Contract
 
 Every API route follows this pattern:
@@ -119,6 +133,26 @@ import { NeonConnection, PageData, Site } from '@eidosmedia/neon-frontoffice-ts-
 // connection is a global — no import needed in API routes and server components
 ```
 
+## SDK Dependency Boundary
+
+`src/neon-frontoffice-ts-sdk/` is framework-independent and must never import source from
+the Next.js application (`src/app`, `src/hooks`, `src/services`, `src/types`, or other parent
+paths). Shared Neon CMS value types and helpers originate in the SDK and are exported through
+`@eidosmedia/neon-frontoffice-ts-sdk`; the application consumes them only through that package alias.
+
+The SDK owns the view-status contract:
+
+- `ViewStatus` is the uppercase editorial value: `LIVE` or `PREVIEW`.
+- `SiteViewStatus` is the lowercase site API value: `live` or `preview`.
+- Convert canonical values with `toSiteViewStatus()`. Normalize raw headers, query parameters,
+  and backend values with `normalizeViewStatus()` or `parseViewStatus()` before treating them as
+  typed values.
+
+When changing the SDK public contract, update its README, this section, and both mirrored
+`.agents/skills/neon-sdk-boundary/SKILL.md` and `.claude/skills/neon-sdk-boundary/SKILL.md`
+files. Run `npm run build --prefix src/neon-frontoffice-ts-sdk` and
+`npm test --prefix src/neon-frontoffice-ts-sdk -- --runInBand` to verify the SDK independently.
+
 ## Cache Invalidation
 
 Pages are cached server-side using Next.js 16 `'use cache'` with demand invalidation via
@@ -156,7 +190,7 @@ Cache tagging is applied in `src/utilities/pageCache.ts` (`fetchPageDataCached`)
 This means evicting one article's `nodeId` purges both the article page **and** every
 listing page that references it in a zone — the full invalidation loop is closed.
 
-**viewStatus gating**: `fetchPageDataCached` is only called when `viewStatus === 'live'`.
+**viewStatus gating**: `fetchPageDataCached` is only called when `viewStatus === ViewStatus.LIVE`.
 Preview and editorial requests use `fetchPageDataDirect` (always fresh, never cached).
 
 **Logging**: Every cache build (`neon-fo:page-cache`) and every invalidation call
@@ -164,3 +198,10 @@ Preview and editorial requests use `fetchPageDataDirect` (always fresh, never ca
 
 For full details, debugging steps, and how to extend tag coverage to new content types,
 see the **`frontend-cache-management`** skill.
+
+### Cache Documentation Maintenance
+
+When cache behavior changes, verify the implementation in `src/utilities/pageCache.ts` and
+`src/app/api/cache/route.ts`, then update this Cache Invalidation section and both mirrored
+skill files: `.agents/skills/frontend-cache-management/SKILL.md` and
+`.claude/skills/frontend-cache-management/SKILL.md`. Keep the two skill files synchronized.

@@ -9,21 +9,27 @@ import {
 import { BaseModel, NodeHistory, NodeVersion } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { getFamilyRef } from '@/utilities/content';
+import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 const useVersions = ({
   currentNode,
   viewStatus,
   notLoadOnInit,
+  enabled = true,
 }: {
   currentNode?: BaseModel;
-  viewStatus?: string;
+  viewStatus?: ViewStatus | string;
   notLoadOnInit?: boolean;
+  enabled?: boolean;
 }) => {
   const dispatch = useDispatch();
+  const normalizedViewStatus = normalizeViewStatus(viewStatus);
 
   const fetchQueries = async () => {
     const versionFetchUrl: string =
-      viewStatus === 'LIVE' ? `/api/nodes/${currentNode?.id}/versions/live` : `/api/nodes/${currentNode?.id}/versions`;
+      normalizedViewStatus === ViewStatus.LIVE
+        ? `/api/nodes/${currentNode?.id}/versions/live`
+        : `/api/nodes/${currentNode?.id}/versions`;
 
     const response = await fetch(versionFetchUrl);
     if (!response.ok) {
@@ -35,9 +41,10 @@ const useVersions = ({
 
   // Queries
   const { data, refetch } = useQuery({
-    queryKey: ['versions', getFamilyRef(currentNode?.id || ''), viewStatus],
+    queryKey: ['versions', getFamilyRef(currentNode?.id || ''), normalizedViewStatus],
     queryFn: fetchQueries,
     enabled:
+      enabled &&
       !!currentNode?.id &&
       currentNode.sys.baseType !== 'site' &&
       currentNode.sys.baseType !== 'section' &&
@@ -72,15 +79,17 @@ const useVersions = ({
     }
 
     // Only run refetch if modelChanged or edited
-    if (edited) {
+    if (enabled && edited) {
       console.log('calling refetch');
       refetch();
     }
-  }, [currentNode?.id, edited, viewStatus]);
+  }, [currentNode?.id, edited, normalizedViewStatus, enabled]);
 
-  const getVersionLabelFromVersion = (nodeVersion: string, viewStatus: string) => {
+  const getVersionLabelFromVersion = (nodeVersion: string, currentViewStatus: ViewStatus | string) => {
+    const normalizedCurrentViewStatus = normalizeViewStatus(currentViewStatus);
+
     if (!history?.versions || history.versions.length === 0) {
-      return viewStatus; // while not loaded
+      return normalizedCurrentViewStatus; // while not loaded
     }
 
     const dashCount = (nodeVersion.match(/-/g) || []).length;
@@ -90,9 +99,15 @@ const useVersions = ({
     const firstEditVersion = history.versions.findIndex(
       (version: NodeVersion) => !version.live && version.versionTimestamp !== -1,
     );
+    const myCheckoutEditVersion = nodeVersion.endsWith('-n1'); // only user that has exclusive lock can obtain in read the checkout private node (-1)
 
     if (isVersion) {
-      const versionIndex = history.versions.findIndex((version: NodeVersion) => version.nodeId === nodeVersion);
+      const versionIndex = history.versions.findIndex(
+        (version: NodeVersion) =>
+          version.nodeId === nodeVersion &&
+          ((myCheckoutEditVersion && version.versionTimestamp == -1) ||
+            (!myCheckoutEditVersion && version.versionTimestamp != -1)),
+      );
       if (versionIndex === -1) {
         console.warn('not able to identify the nodeVersion', nodeVersion, 'in versions', history.versions);
         return 'not found version';
@@ -100,10 +115,10 @@ const useVersions = ({
       const versionObj = history.versions[versionIndex];
 
       if (isEditVersion) {
-        if (versionIndex === firstEditVersion) return 'PREVIEW';
+        if (versionIndex === firstEditVersion || myCheckoutEditVersion) return 'PREVIEW';
         else return `PREVIEW ${versionObj.major}.${versionObj.minor}`;
       } else {
-        if (viewStatus === 'LIVE' && versionIndex === firstLiveVersion) return 'LIVE';
+        if (normalizedCurrentViewStatus === ViewStatus.LIVE && versionIndex === firstLiveVersion) return 'LIVE';
         else return `LIVE ${versionObj.major}.${versionObj.minor}`;
       }
     }
@@ -112,24 +127,25 @@ const useVersions = ({
       return 'LIVE';
     }
 
-    return viewStatus;
+    return normalizedCurrentViewStatus;
   };
 
-  const getLatestViewVersion = (viewStatus: string): NodeVersion => {
+  const getLatestViewVersion = (currentViewStatus: ViewStatus | string): NodeVersion => {
+    const normalizedCurrentViewStatus = normalizeViewStatus(currentViewStatus);
     let version: NodeVersion | undefined;
-    switch (viewStatus) {
-      case 'PREVIEW':
+    switch (normalizedCurrentViewStatus) {
+      case ViewStatus.PREVIEW:
         version =
           history.versions?.find((version: NodeVersion) => !version.live && version.versionTimestamp !== -1) ||
           history.versions?.[0];
         break;
-      case 'LIVE':
+      case ViewStatus.LIVE:
         version =
           history.versions?.find((version: NodeVersion) => version.live && version.versionTimestamp !== -1) ||
           history.versions?.[0];
         break;
       default:
-        console.warn('Unknown viewStatus', viewStatus, 'using first version', history.versions?.[0]);
+        console.warn('Unknown viewStatus', normalizedCurrentViewStatus, 'using first version', history.versions?.[0]);
         version = history.versions?.[0];
         break;
     }

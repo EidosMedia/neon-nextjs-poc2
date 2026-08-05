@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Close from '../icons/close';
 import { useEffect, useState } from 'react';
 import { isEqual } from 'lodash';
+import useAuthContext from '@/hooks/useAuthContext';
+import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 type SysData = {
   baseType: string;
@@ -33,6 +35,9 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [rollbackError, setRollbackError] = useState<string | null>(null);
   const [rollbackingId, setRollbackingId] = useState<string | null>(null);
+  const { data: authContext } = useAuthContext();
+  const normalizedViewStatus = normalizeViewStatus(data.siteData.viewStatus);
+  const canUseVersions = normalizedViewStatus === ViewStatus.PREVIEW || authContext.hasEditorialAuth;
 
   const {
     data: historyData,
@@ -40,7 +45,8 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     panelOpened,
   } = useVersions({
     currentNode: data.model.data,
-    viewStatus: data.siteData.viewStatus,
+    viewStatus: normalizedViewStatus,
+    enabled: canUseVersions,
   });
 
   console.log('data in history', data);
@@ -122,7 +128,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     ? historyData.versions.findIndex((v: NodeVersion) => v.live)
     : -1;
 
-  const viewStatus = data.siteData.viewStatus || 'LIVE';
+  const viewStatus = normalizedViewStatus;
 
   const latestEditNodeVersion: NodeVersion =
     historyData?.versions?.find((v: NodeVersion) => !v.live && v.versionTimestamp !== -1) ||
@@ -137,7 +143,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     } as NodeVersion);
 
   const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
-    if (data.siteData.viewStatus !== 'PREVIEW') {
+    if (normalizedViewStatus !== ViewStatus.PREVIEW) {
       return null;
     }
 
@@ -155,7 +161,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
 
   const liveWebPageType =
     ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
-    data.siteData.viewStatus === 'LIVE';
+    normalizedViewStatus === ViewStatus.LIVE;
 
   useEffect(() => {
     if (liveWebPageType) {
@@ -180,7 +186,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
     const regex = /-n[0-9a-zA-Z]+/;
     const match = url.match(regex);
     const isVersion = match !== null;
-    if(isVersion){
+    if (isVersion) {
       fetchLatestPreviewSysData().then(sys => {
         if (!isEqual(sys, latestPreviewSysData)) {
           setLatestPreviewSysData(sys);
@@ -188,7 +194,7 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       });
     }
     setLoadingHistory(false);
-    
+
   }, [historyData, latestEditNodeVersion, data.model.data.version]);
 
   return (

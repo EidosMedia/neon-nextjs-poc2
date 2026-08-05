@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 interface LoggedUserState {
   inspectItemsVisible: boolean;
   inspectItems: boolean;
   analytics: boolean;
-  viewStatus?: string;
+  viewStatus?: ViewStatus;
 }
 
 const initialState: LoggedUserState = {
