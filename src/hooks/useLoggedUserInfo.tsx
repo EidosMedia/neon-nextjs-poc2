@@ -10,6 +10,7 @@ import {
   getInspectItemsVisible,
 } from '@/lib/features/loggedUserSlice';
 import { useState } from 'react';
+import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 const useLoggedUserInfo = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const useLoggedUserInfo = () => {
     dispatch(setInspectItemsAction(value));
   };
 
-  const setViewStatus = (value: string) => {
+  const setViewStatus = (value: ViewStatus) => {
     dispatch(setViewStatusAction(value));
   };
 

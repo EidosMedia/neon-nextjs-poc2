@@ -14,6 +14,8 @@ import InfoTooltip from './InfoTooltip';
 import { Braces, SquareArrowOutUpRight } from 'lucide-react';
 import EditedChip from './EditedChip';
 import { isNeonAppPreview } from '@/neon-frontoffice-ts-sdk/src';
+import useAuthContext from '@/hooks/useAuthContext';
+import { normalizeViewStatus, ViewStatus as ViewStatusEnum } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
@@ -29,7 +31,10 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     dispatch(loggedUserSlice.actions.setAnalytics(!analyticsEnabled));
   };*/
 
-  const { data: userData } = useAuth();
+  const { data: authContext } = useAuthContext();
+  const normalizedViewStatus = normalizeViewStatus(data.siteData.viewStatus);
+  const canLoadUser = normalizedViewStatus === ViewStatusEnum.PREVIEW || authContext.hasEditorialAuth;
+  const { data: userData } = useAuth({ enabled: canLoadUser });
 
   console.log('userData', userData);
   console.log('loggedUserInfo', loggedUserInfo);
@@ -55,9 +60,11 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const liveWebPageType =
     'model' in data &&
     ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
-    data.siteData.viewStatus === 'LIVE';
+    normalizedViewStatus === ViewStatusEnum.LIVE;
 
-  const shouldShowInspectSwitch = inspectItemsVisible && (liveWebPageType || data.siteData.viewStatus === 'PREVIEW');
+  const shouldShowInspectSwitch =
+    inspectItemsVisible && (liveWebPageType || normalizedViewStatus === ViewStatusEnum.PREVIEW);
+  const canUseVersions = normalizedViewStatus === ViewStatusEnum.PREVIEW || authContext.hasEditorialAuth;
 
   return (
     <div
@@ -68,7 +75,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
         <ViewStatus data={data} />
         {shouldShowInspectSwitch && (
           <Switch
-            label={data.siteData.viewStatus === 'LIVE' ? 'View Additional Information' : 'Edit Content Items'}
+            label={normalizedViewStatus === ViewStatusEnum.LIVE ? 'View Additional Information' : 'Edit Content Items'}
             checked={inspectItemsEnabled}
             onChange={toggleInspectItems}
           />
@@ -100,9 +107,9 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
             >
               <SquareArrowOutUpRight />
             </Link>
-            <History data={data} />
+            {canUseVersions && <History data={data} />}
             <VisibilityChip data={data} />
-            <EditedChip data={data} />
+            {canUseVersions && <EditedChip data={data} />}
           </>
         )}
         <div className="flex items-center justify-center text-white gap-3">

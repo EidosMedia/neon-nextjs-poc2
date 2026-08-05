@@ -7,6 +7,7 @@ import { getAuthOptions } from '@/utilities/security';
 import UIStyleGuide from '../components/baseComponents/UIStyleGuide';
 import * as DefaultPages from '../_pages';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
+import { normalizeViewStatus, toSiteViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 export default async function Page({
   params,
@@ -19,6 +20,9 @@ export default async function Page({
   const hostname = currentHeaders.get('x-neon-backend-url');
   const siteName = currentHeaders.get('x-neon-site-name');
   const viewStatus = currentHeaders.get('x-neon-view-status') as string;
+  const normalizedViewStatus = normalizeViewStatus(viewStatus);
+  const siteViewStatus = toSiteViewStatus(normalizedViewStatus);
+  const isLiveView = normalizedViewStatus === ViewStatus.LIVE;
   const path = currentHeaders.get('x-neon-pathname') as string;
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
@@ -44,7 +48,7 @@ export default async function Page({
             DefaultPages.SearchPage;
           return (
             <div className="root" data-theme={theme}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
+              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <SearchPage data={site} />
             </div>
           );
@@ -57,7 +61,7 @@ export default async function Page({
             DefaultPages.AboutPage;
           return (
             <div className="root" data-theme={theme}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
+              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <AboutPage data={site} />
             </div>
           );
@@ -70,7 +74,7 @@ export default async function Page({
             DefaultPages.LoginPage;
           return (
             <div className="root" data-theme={theme}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus } }} />
+              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <LoginPage data={site} />
             </div>
           );
@@ -84,10 +88,7 @@ export default async function Page({
   let result: CachedPageResult | undefined;
 
   try {
-    result =
-      viewStatus === 'live'
-        ? await fetchPageDataCached(url, siteName ?? '', auth)
-        : await fetchPageDataDirect(url, auth);
+    result = isLiveView ? await fetchPageDataCached(url, siteName ?? '', auth) : await fetchPageDataDirect(url, auth);
   } catch (error: any) {
     if (error.status === 404) {
       notFound();
@@ -112,8 +113,8 @@ export default async function Page({
   const pageDataJSON = result.data!;
   console.log('Current page model', pageDataJSON);
 
-  const siteLive = await connection.findSite(siteName ?? '', 'live');
-  const sitePreview = await connection.findSite(siteName ?? '', 'preview');
+  const siteLive = await connection.findSite(siteName ?? '', toSiteViewStatus(ViewStatus.LIVE));
+  const sitePreview = await connection.findSite(siteName ?? '', toSiteViewStatus(ViewStatus.PREVIEW));
 
   pageDataJSON.liveHost = siteLive?.root.hostname;
   pageDataJSON.previewHost = sitePreview?.root.hostname;
@@ -175,6 +176,8 @@ export async function generateMetadata({
   const hostname = currentHeaders.get('x-neon-backend-url');
   const siteName = currentHeaders.get('x-neon-site-name') ?? '';
   const viewStatus = currentHeaders.get('x-neon-view-status') as string;
+  const normalizedViewStatus = normalizeViewStatus(viewStatus);
+  const isLiveView = normalizedViewStatus === ViewStatus.LIVE;
   const path = currentHeaders.get('x-neon-pathname') as string;
   const slug = (await params).slug || [];
   const id = (await searchParams)?.id;
@@ -193,8 +196,7 @@ export async function generateMetadata({
       }
     }
 
-    const result =
-      viewStatus === 'live' ? await fetchPageDataCached(url, siteName, auth) : await fetchPageDataDirect(url, auth);
+    const result = isLiveView ? await fetchPageDataCached(url, siteName, auth) : await fetchPageDataDirect(url, auth);
 
     if (result.status === 200 && result.data) {
       return {

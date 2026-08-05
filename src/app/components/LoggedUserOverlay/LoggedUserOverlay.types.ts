@@ -6,5 +6,10 @@ export interface LoggedUserBarProps {
 }
 
 export interface LoggedUserBarComponentProps {
-  data: PageData<BaseModel> & { editUrl: string };
+  data: PageData<BaseModel> & {
+    editUrl: string;
+    siteData: { viewStatus?: string };
+    previewHost?: string;
+    liveHost?: string;
+  };
 }

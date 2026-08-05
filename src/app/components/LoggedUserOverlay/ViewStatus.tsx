@@ -3,25 +3,43 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { LoggedUserBarProps } from './LoggedUserOverlay.types';
 import React from 'react';
+import useAuthContext from '@/hooks/useAuthContext';
+import {
+  getSwitchTargetViewStatus,
+  normalizeViewStatus,
+  ViewStatus as ViewStatusEnum,
+} from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
+  const { data: authContext } = useAuthContext();
+  const normalizedViewStatus = normalizeViewStatus(data.siteData.viewStatus);
+  const canUseVersions = normalizedViewStatus === ViewStatusEnum.PREVIEW || authContext.hasEditorialAuth;
+
   const { getVersionLabelFromVersion, getLatestViewVersion } = useVersions({
     currentNode: 'model' in data ? data.model.data : undefined,
-    viewStatus: data.siteData.viewStatus,
+    viewStatus: normalizedViewStatus,
+    enabled: canUseVersions,
+  });
+  const { getLatestViewVersion: getLatestPreviewVersion } = useVersions({
+    currentNode: 'model' in data ? data.model.data : undefined,
+    viewStatus: ViewStatusEnum.PREVIEW,
+    enabled: canUseVersions && normalizedViewStatus === ViewStatusEnum.LIVE,
   });
 
-  const version = getVersionLabelFromVersion(
-    'model' in data && data.model?.data?.version
-      ? data.model.data.version
-      : data.siteData.viewStatus === 'LIVE' && 'model' in data && data.model?.data?.id
-        ? data.model.data.id
-        : '',
-    data.siteData.viewStatus ?? '',
-  );
+  const version = canUseVersions
+    ? getVersionLabelFromVersion(
+        'model' in data && data.model?.data?.version
+          ? data.model.data.version
+          : normalizedViewStatus === ViewStatusEnum.LIVE && 'model' in data && data.model?.data?.id
+            ? data.model.data.id
+            : '',
+        normalizedViewStatus,
+      )
+    : normalizedViewStatus;
 
-  const isLastPreview = version === 'PREVIEW';
-  const isLastLive = version === 'LIVE';
-  const isLive = version.startsWith('LIVE');
+  const isLastPreview = version === ViewStatusEnum.PREVIEW;
+  const isLastLive = version === ViewStatusEnum.LIVE;
+  const isLive = version.startsWith(ViewStatusEnum.LIVE);
 
   const colorClass = () => {
     if (isLastLive || isLive) {
@@ -45,14 +63,25 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
       return '';
     }
 
-    return `${data.model.data.url}?switch-view=${isLastLive ? 'preview' : 'live'}`;
+    const targetViewStatus = getSwitchTargetViewStatus(normalizedViewStatus);
+    let pathname = data.model.data.url;
+
+    if (normalizedViewStatus === ViewStatusEnum.LIVE && targetViewStatus === ViewStatusEnum.PREVIEW) {
+      try {
+        pathname = new URL(getLatestPreviewVersion(ViewStatusEnum.PREVIEW).pubInfo.canonical, window.location.origin).pathname;
+      } catch (error) {
+        console.warn('Unable to resolve latest preview version URL for view switch', error);
+      }
+    }
+
+    const targetUrl = new URL(pathname, window.location.origin);
+    targetUrl.searchParams.set('switch-view', targetViewStatus);
+    return `${targetUrl.pathname}${targetUrl.search}`;
   };
 
   if (!('model' in data && data.model.data.url)) {
     return '';
   }
-
-  let host = isLastLive ? data.previewHost : data.liveHost;
 
   return (
     <>
@@ -62,7 +91,7 @@ const ViewStatus: React.FC<LoggedUserBarProps> = ({ data }) => {
         ) : (
           <div className="flex flex-col justify-center items-center">
             <span className={clsx('font-normal', textClass())}>{version}</span>
-            <Link href={getLatestViewVersion(data.siteData.viewStatus ?? '').pubInfo.canonical}>
+            <Link href={canUseVersions ? getLatestViewVersion(normalizedViewStatus).pubInfo.canonical : '#'}>
               <span className={clsx('underline font-normal', textClass())}>Back to latest version</span>
             </Link>
           </div>
