@@ -19,7 +19,9 @@ type PageProps = {
 };
 
 const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
-  React.useEffect(() => { console.log('[NEON] mount: adn/LiveblogPosts'); }, []);
+  React.useEffect(() => {
+    console.log('[NEON] mount: adn/LiveblogPosts');
+  }, []);
 
   const lastLoadedPostId = useRef<string>(null);
 
@@ -29,7 +31,7 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
         return {
           id: postId,
           content: data.model.nodes[postId].files.content.data,
-          publicationTime: data.model.nodes[postId].sys.updateTime,
+          publicationTime: data.model.nodes[postId].sys.postEventTime,
         };
       })
     : [];
@@ -45,8 +47,8 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
         _.uniqBy([...liveblogPostsResp, ...oldResults], 'id').map(post => ({
           id: post.id,
           content: post.content || post.files?.content?.data,
-          publicationTime: post.sys?.updateTime,
-        }))
+          publicationTime: post.sys?.postEventTime,
+        })),
       );
     };
 
@@ -65,27 +67,35 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
       </div>
       <div className="flex flex-col gap-6">
         {liveblogPosts.length > 0 ? (
-          liveblogPosts.map(post => (
-            <div key={post.id} className="bg-white border border-gray-200 rounded p-5">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-semibold text-red-600">
-                  {new Date(post.publicationTime).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}{' '}
-                  —{' '}
-                  {new Date(post.publicationTime).toLocaleDateString('it-IT', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </span>
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="sm"><Share className="w-3.5 h-3.5" /></Button>
-                  <Button variant="ghost" size="sm"><Bookmark className="w-3.5 h-3.5" /></Button>
-                  <Button variant="ghost" size="sm"><Link2 className="w-3.5 h-3.5" /></Button>
+          [...liveblogPosts]
+            .sort((a, b) => new Date(b.publicationTime).getTime() - new Date(a.publicationTime).getTime())
+            .map(post => (
+              <div key={post.id} className="bg-white border border-gray-200 rounded p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold text-red-600">
+                    {new Date(post.publicationTime).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}{' '}
+                    —{' '}
+                    {new Date(post.publicationTime).toLocaleDateString('it-IT', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="sm">
+                      <Share className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Bookmark className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Link2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
                 </div>
+                {renderContent(post.content)}
               </div>
-              {renderContent(post.content)}
-            </div>
-          ))
+            ))
         ) : (
           <p className="text-sm text-gray-500 italic">Nessun aggiornamento disponibile al momento.</p>
         )}

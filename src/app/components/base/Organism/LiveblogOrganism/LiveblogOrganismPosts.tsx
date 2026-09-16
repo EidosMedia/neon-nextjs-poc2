@@ -16,9 +16,7 @@ type LiveblogOrganismPostsProps = {
 const TITLE_MAX_LENGTH = 70;
 
 const getPostTitle = (content: any): string => {
-  const element =
-    findElementsInContentJson(['h1'], content)[0] ??
-    findElementsInContentJson(['p'], content)[0];
+  const element = findElementsInContentJson(['h1'], content)[0] ?? findElementsInContentJson(['p'], content)[0];
   if (!element) return '';
   const text = String(findText(element) ?? '').trim();
   if (!text) return '';
@@ -33,8 +31,7 @@ const formatGroupDate = (publicationTime: string): string =>
     .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
     .replace(/(\d+)(?=,)/, match => `${match}th`);
 
-const isSameCalendarDate = (a: string, b: string): boolean =>
-  new Date(a).toDateString() === new Date(b).toDateString();
+const isSameCalendarDate = (a: string, b: string): boolean => new Date(a).toDateString() === new Date(b).toDateString();
 
 const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogId }) => {
   const [liveblogPosts, setLiveblogPosts] = useState<LiveblogPost[]>([]);
@@ -47,8 +44,8 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
         _.uniqBy([...posts, ...oldResults], 'id').map(post => ({
           id: post.id,
           content: post.content || post.files?.content?.data,
-          publicationTime: post.publicationTime || post.sys?.updateTime,
-        }))
+          publicationTime: post.publicationTime || post.sys?.postEventTime,
+        })),
       );
     };
 
@@ -61,7 +58,9 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
     };
   }, [liveblogId]);
 
-  const visiblePosts = liveblogPosts.slice(0, 3);
+  const visiblePosts = [...liveblogPosts]
+    .sort((a, b) => new Date(b.publicationTime).getTime() - new Date(a.publicationTime).getTime())
+    .slice(0, 3);
   console.log('LiveblogOrganismPosts - visiblePosts:', visiblePosts);
 
   return (
@@ -71,7 +70,8 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
           <span className="absolute left-[3px] top-1 bottom-1 w-px bg-neutral-light-2" aria-hidden="true" />
           {visiblePosts.map((post, index) => {
             const previousPost = visiblePosts[index - 1];
-            const showDateDivider = !previousPost || !isSameCalendarDate(previousPost.publicationTime, post.publicationTime);
+            const showDateDivider =
+              !previousPost || !isSameCalendarDate(previousPost.publicationTime, post.publicationTime);
             const title = getPostTitle(post.content);
 
             return (
@@ -82,7 +82,10 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
                   </span>
                 )}
                 <div className="relative">
-                  <span className="absolute -left-[14px] top-[6px] w-2 h-2 rounded-full bg-feedback-red-dark" aria-hidden="true" />
+                  <span
+                    className="absolute -left-[14px] top-[6px] w-2 h-2 rounded-full bg-feedback-red-dark"
+                    aria-hidden="true"
+                  />
                   <span className="caption text-feedback-red-dark">{formatPostTime(post.publicationTime)} - </span>
                   <span className="text-sm">{title || 'No title available'}</span>
                 </div>
@@ -91,9 +94,7 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
           })}
         </div>
       ) : (
-        <p className="text-sm text-neutral-light-2">
-          Live
-        </p>
+        <p className="text-sm text-neutral-light-2">Live</p>
       )}
     </div>
   );
