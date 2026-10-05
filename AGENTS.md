@@ -3,6 +3,35 @@
 This is a front-office web application powered by **Neon CMS**, using its TypeScript SDK to
 fetch content, resolve sites, authenticate users, and render content types.
 
+## Project Ownership
+
+Keep this project's agent guidance self-contained. Its instructions and skills must not depend
+on agent instructions or skills from an adjacent Neon workspace; the POC may be cloned and used
+independently. Neon integration details in this file describe the product contracts consumed by
+the frontend, while the Neon workspace owns guidance about Neon backend implementation.
+
+## Neon Integration Capability Inventory
+
+This inventory describes the integration areas represented by the POC and is not a claim that
+every capability is complete or supported in every deployment. Keep it aligned with the
+capability overview in the Neon technical documentation's `front-end-poc` section.
+
+1. Neon security, Front Office APIs, and site-host APIs.
+2. NeonWebApp editor authentication for preview and live administration.
+3. Editor preview workflows, including version history and in-context editing of article content
+  items used in article pages or teaser renderings. Persistence of page-specific teaser overrides
+  has not been verified.
+4. Contextual preview launched from the Neon webpage editor.
+5. Live editor administration, including history, rollback, unpublish, and promotion.
+6. Multi-site delivery and SaaS site discovery.
+7. Multiple frontend themes.
+8. Frontend navigation using Neon menus.
+9. Site and editorial organization, including sites, sections, and content placements.
+10. Neon-owned content URL patterns, canonical URLs, aliases, and redirects.
+11. Neon push invalidation integration.
+12. Site-level web-user authentication and access configured in Neon; web users remain separate
+  from editorial users.
+
 ## Project Layout
 
 | Path | Purpose |
@@ -190,8 +219,11 @@ Cache tagging is applied in `src/utilities/pageCache.ts` (`fetchPageDataCached`)
 This means evicting one article's `nodeId` purges both the article page **and** every
 listing page that references it in a zone — the full invalidation loop is closed.
 
-**viewStatus gating**: `fetchPageDataCached` is only called when `viewStatus === ViewStatus.LIVE`.
-Preview and editorial requests use `fetchPageDataDirect` (always fresh, never cached).
+**viewStatus gating**: the page route selects `fetchPageDataCached` when the resolved
+`viewStatus === ViewStatus.LIVE`; PREVIEW requests use `fetchPageDataDirect`. The cache
+selection does not check whether `editorialauth` is present. Do not assume that every
+editorial request bypasses the cache or that authenticated LIVE responses are isolated
+without verifying the deployed cache-key behavior.
 
 **Logging**: Every cache build (`neon-fo:page-cache`) and every invalidation call
 (`neon-fo:cache-api`) emit structured pino JSON logs with node IDs, zone contents, and paths.
