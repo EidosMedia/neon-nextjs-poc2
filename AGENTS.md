@@ -180,8 +180,8 @@ The SDK owns the view-status contract:
   and backend values with `normalizeViewStatus()` or `parseViewStatus()` before treating them as
   typed values.
 
-The SDK also owns the accessory value types. Webpage zone overrides are delivered through
-`WebpageModel.attributes.zoneAccessories`, keyed by zone name. `getDwxLinkedObjects()` preserves
+The SDK also owns the accessory value types. Webpage zone overrides are delivered through top-level
+`WebpageModel.zoneAccessories`, keyed by zone name. `getDwxLinkedObjects()` preserves
 each page link's metadata separately as `WebpageNodeModel.linkMetadata`; do not merge link metadata
 into the linked node's `attributes`.
 

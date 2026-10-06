@@ -28,7 +28,7 @@ headers, query parameters, and backend payloads with `normalizeViewStatus()` or 
 before using typed values.
 
 Accessory values are shared SDK contracts: `AccessorySet`, `AccessoryValues`, and `LinkMetadata`.
-Zone accessory sets are delivered in `WebpageModel.attributes.zoneAccessories`. The
+Zone accessory sets are delivered in top-level `WebpageModel.zoneAccessories`. The
 `getDwxLinkedObjects()` adapter exposes a page link's metadata as `WebpageNodeModel.linkMetadata`,
 separate from the linked node's attributes.
 
