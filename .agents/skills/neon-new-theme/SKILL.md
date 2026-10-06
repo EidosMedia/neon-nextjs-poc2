@@ -14,6 +14,13 @@ This project supports per-site structural themes: when `siteNode.attributes.them
 Both functions read from the same `THEME_MAP` in `_themeRouter.tsx`.
 
 ## Directory structure
+## Accessory Rendering
+
+Accessory definitions are served from the canonical `src/lib/accessories/accessory.json` document. The current default document has no active settings. Add a definition only with its default-theme renderer and focused tests; stored values alone do not establish support.
+
+Resolve accessories only when the active theme is exactly `default` and the saved context matches the concrete page type, zone, and linked type. Missing, stale, unsupported, or version-incompatible values use renderer defaults. Do not rewrite stale data while rendering. Unknown themes that fall back to default page components must not consume default accessory values, and accessory CSS must remain scoped to the default theme.
+
+## Directory structure
 
 ```
 src/app/

@@ -31,6 +31,9 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 11. Neon push invalidation integration.
 12. Site-level web-user authentication and access configured in Neon; web users remain separate
   from editorial users.
+13. Accessory definitions and page/zone/link metadata integration are in progress. The canonical
+  default-theme document currently contains no active settings; do not claim renderer support or
+  apply default-theme values in non-default themes.
 
 ## Project Layout
 
@@ -176,6 +179,11 @@ The SDK owns the view-status contract:
 - Convert canonical values with `toSiteViewStatus()`. Normalize raw headers, query parameters,
   and backend values with `normalizeViewStatus()` or `parseViewStatus()` before treating them as
   typed values.
+
+The SDK also owns the accessory value types. Webpage zone overrides are delivered through
+`WebpageModel.attributes.zoneAccessories`, keyed by zone name. `getDwxLinkedObjects()` preserves
+each page link's metadata separately as `WebpageNodeModel.linkMetadata`; do not merge link metadata
+into the linked node's `attributes`.
 
 When changing the SDK public contract, update its README, this section, and both mirrored
 `.agents/skills/neon-sdk-boundary/SKILL.md` and `.claude/skills/neon-sdk-boundary/SKILL.md`
