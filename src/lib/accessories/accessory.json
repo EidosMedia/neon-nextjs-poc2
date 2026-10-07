@@ -1,7 +1,53 @@
 {
   "version": "1.0",
   "theme": "default",
-  "pageAccessories": {},
-  "zoneAccessories": {},
-  "linkAccessories": {}
+  "pageAccessories": {
+    "header": {
+      "name": "header",
+      "label": "Header",
+      "version": "1.0",
+      "types": ["article", "liveblog", "webpage", "homewebpage", "sectionwebpage"],
+      "toggles": [
+        { "name": "enabled", "label": "Enable header", "default": true },
+        { "name": "sectionsMenu", "label": "Show sections menu", "default": true }
+      ]
+    },
+    "footer": {
+      "name": "footer",
+      "label": "Footer",
+      "version": "1.0",
+      "types": ["article", "liveblog", "webpage", "sectionwebpage"],
+      "toggles": [
+        { "name": "enabled", "label": "Enable footer", "default": true },
+        { "name": "menu", "label": "Show footer menu", "default": true }
+      ]
+    }
+  },
+  "zoneAccessories": {
+    "shape": {
+      "name": "shape",
+      "label": "Zone appearance",
+      "version": "1.0",
+      "types": ["webpage", "homewebpage", "sectionwebpage"],
+      "zones": ["main", "context", "insight1", "insight2"],
+      "toggles": [
+        { "name": "bold", "label": "Bold teaser titles", "default": false },
+        { "name": "border", "label": "Show zone border", "default": false }
+      ]
+    }
+  },
+  "linkAccessories": {
+    "shape": {
+      "name": "shape",
+      "label": "Linked item appearance",
+      "version": "1.0",
+      "types": ["webpage", "homewebpage", "sectionwebpage"],
+      "zones": ["main", "context", "insight1", "insight2"],
+      "linkedTypes": ["article", "liveblog"],
+      "toggles": [
+        { "name": "bold", "label": "Bold teaser title", "default": false },
+        { "name": "border", "label": "Show card border", "default": false }
+      ]
+    }
+  }
 }
