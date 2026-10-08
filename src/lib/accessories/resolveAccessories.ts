@@ -20,7 +20,9 @@ type ToggleDefinition = {
 type PropertyDefinition = {
   name: string;
   default: string;
-  options: { name: string }[];
+  type?: 'string' | 'text';
+  size?: number;
+  options?: { name: string }[];
 };
 
 type AccessoryDefinition = {
@@ -157,8 +159,9 @@ function defaultValues(definition: AccessoryDefinition): Record<string, boolean 
     }
   }
   for (const property of definition.properties ?? []) {
-    if (typeof property.default === 'string'
-      && property.options.some((option) => option.name === property.default)) {
+    if (property.type === undefined
+      && typeof property.default === 'string'
+      && property.options?.some((option) => option.name === property.default)) {
       values[property.name] = property.default;
     }
   }
@@ -184,7 +187,10 @@ function applyStoredValues(
       continue;
     }
     const property = propertiesByName.get(name);
-    if (property && typeof value === 'string' && property.options.some((option) => option.name === value)) {
+    if (property
+      && property.type === undefined
+      && typeof value === 'string'
+      && property.options?.some((option) => option.name === value)) {
       resolved[name] = value;
     }
   }

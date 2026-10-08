@@ -79,6 +79,32 @@
       "toggles": [
         { "name": "bold", "label": "Bold teaser titles", "default": false },
         { "name": "border", "label": "Show zone border", "default": false }
+      ],
+      "properties": [
+        {
+          "name": "layout",
+          "label": "Zone preferred layout",
+          "default": "verticalsidebar",
+          "options": [
+            { "name": "verticalsidebar", "label": "Vertical sidebar if possible" },
+            { "name": "bottomlist", "label": "bottom list if possible" },
+            { "name": "toprolling", "label": "top rolling if possible" }
+          ]
+        },
+        {
+          "name": "zonetitle",
+          "label": "Zone title",
+          "type": "string",
+          "default": "",
+          "size": 256
+        },
+        {
+          "name": "zonesummary",
+          "label": "Zone summary",
+          "type": "text",
+          "default": "",
+          "size": 2000
+        }
       ]
     }
   },

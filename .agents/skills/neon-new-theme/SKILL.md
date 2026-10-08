@@ -16,9 +16,11 @@ Both functions read from the same `THEME_MAP` in `_themeRouter.tsx`.
 ## Directory structure
 ## Accessory Rendering
 
-Accessory definitions are served from the canonical `src/lib/accessories/accessory.json` document. The current default document has no active settings. Add a definition only with its default-theme renderer and focused tests; stored values alone do not establish support.
+Accessory definitions are served from the canonical `src/lib/accessories/accessory.json` document. The default document includes editor-test definitions, including zone `layout`, `zonetitle`, and `zonesummary`. In Step 1, these values can be selected and stored for Neon editor testing but have no visible POC effect. Do not claim renderer support from definitions or storage alone.
 
 Resolve accessories only when the active theme is exactly `default` and the saved context matches the concrete page type, zone, and linked type. Missing, stale, unsupported, or version-incompatible values use renderer defaults. Do not rewrite stale data while rendering. Unknown themes that fall back to default page components must not consume default accessory values, and accessory CSS must remain scoped to the default theme.
+
+When Step 2 rendering is implemented, treat `zonetitle` as plain text and `zonesummary` as untrusted HTML. Sanitize rich text to the agreed allowlist (`strong`, `em`, `u`, `s`, `br`, and safe `a[href]`) and accept only root-relative same-site paths or HTTPS links. Color and other attributes are not supported.
 
 ## Directory structure
 

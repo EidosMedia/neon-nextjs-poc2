@@ -118,6 +118,19 @@ describe('zone shapes', () => {
     expect(getZoneShape(data, 'insight1')).toEqual({ bold: false, border: false });
   });
 
+  test('tolerates editor-only zone properties without changing rendered zone shape', () => {
+    const data = webpage({
+      main: zoneSet('main', {
+        bold: true,
+        layout: 'bottomlist',
+        zonetitle: 'Latest updates',
+        zonesummary: '<strong>Summary</strong>',
+      }),
+    });
+
+    expect(getZoneShape(data, 'main')).toEqual({ bold: true, border: false });
+  });
+
   test('ignores a set stored for another zone, an unsupported zone or another theme', () => {
     expect(getZoneShape(webpage({ main: zoneSet('context', { bold: true }) }), 'main')).toEqual({
       bold: false,
