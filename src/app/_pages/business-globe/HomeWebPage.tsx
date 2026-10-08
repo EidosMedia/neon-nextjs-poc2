@@ -1,9 +1,16 @@
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
+import { cacheLife } from 'next/cache';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ArticleOrganism from './components/ArticleOrganism';
+
+async function getCachedTimestamp(): Promise<number> {
+  'use cache';
+  cacheLife('hours');
+  return Date.now();
+}
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -35,19 +42,20 @@ function getImageUrl(item: WebpageNodeModel): string | undefined {
   );
 }
 
-function isRecent(item: WebpageNodeModel): boolean {
+function isRecent(item: WebpageNodeModel, timestamp: number): boolean {
   const pubDate = (item as any)?.pubInfo?.pubDate;
   if (!pubDate) return false;
-  return Date.now() - new Date(pubDate).getTime() < 3 * 60 * 60 * 1000;
+  return timestamp - new Date(pubDate).getTime() < 3 * 60 * 60 * 1000;
 }
 
 const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
   console.log('[NEON] render: business-globe/HomeWebPage');
 
-  const [mainItems, contextItems, insight1Items] = await Promise.all([
+  const [mainItems, contextItems, insight1Items, timestamp] = await Promise.all([
     connection.getDwxLinkedObjects(data, 'main'),
     connection.getDwxLinkedObjects(data, 'context'),
     connection.getDwxLinkedObjects(data, 'insight1'),
+    getCachedTimestamp(),
   ]);
 
   const contextLead = contextItems[0] as WebpageNodeModel | undefined;
@@ -76,7 +84,7 @@ const HomeWebPage: React.FC<PageProps> = async ({ data }) => {
                 {getDeck(contextLead) && (
                   <p className="bgl-lead-deck">{getDeck(contextLead)}</p>
                 )}
-                {isRecent(contextLead) && <div className="bgl-updated">Updated</div>}
+                {isRecent(contextLead, timestamp) && <div className="bgl-updated">Updated</div>}
               </>
             )}
 

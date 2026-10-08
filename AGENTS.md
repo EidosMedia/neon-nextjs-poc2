@@ -32,8 +32,11 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 12. Site-level web-user authentication and access configured in Neon; web users remain separate
   from editorial users.
 13. Accessory definitions and page/zone/link metadata integration are in progress. The canonical
-  default-theme document contains a test-only definition set for NeonWebApp editor smoke tests;
-  these definitions do not claim POC renderer support. Do not apply default-theme values in
+  default-theme document holds the definitions. Rendered by default-theme components only:
+  header/footer `enabled`, header `sectionsMenu`, footer `menu`, and zone/link `bold` and
+  `border` (zones `main`, `context`, `insight1`, `insight2`). `header.variant`, `footer.variant`
+  and link `layout` are editor-visible test definitions with no rendered effect. Readers live in
+  `src/lib/accessories/defaultThemeAccessories.ts`. Do not apply default-theme values in
   non-default themes. Neon resolves the nearest nonblank section/site-root theme and requests the
   `default` definition document when neither level declares a theme. The POC falls back to default
   page components for a missing theme, but an explicit unknown theme must not consume default

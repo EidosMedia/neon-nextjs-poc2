@@ -1,0 +1,21 @@
+.root[data-theme="default"] .acc-title-bold,
+.root[data-theme="default"] .acc-title-bold p {
+  font-weight: 800;
+}
+
+.root[data-theme="default"] .acc-title-regular,
+.root[data-theme="default"] .acc-title-regular p {
+  font-weight: 550;
+}
+
+.root[data-theme="default"] .acc-zone-border {
+  border: 2px solid var(--color-primary);
+  border-radius: 0.25rem;
+  background-color: #f0f0f0;
+}
+
+.root[data-theme="default"] .acc-card-border {
+  border: 2px solid var(--color-primary);
+  border-radius: 0.25rem;
+  background-color: #f0f0f0;
+}
