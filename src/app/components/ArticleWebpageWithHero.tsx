@@ -5,6 +5,7 @@ import { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-front
 import ArticleOrganism from './base/Organism/ArticleOrganism';
 import ArticleHero from './base/Organism/ArticleHero';
 import { itemShape, zoneAccessoryClass, type ZoneAccessoryShapes } from '@/lib/accessories/shapeClasses';
+import ZoneHead from './webpage/ZoneHead';
 
 type ArticleWebpageWithHeroProps = {
   data: PageData<WebpageModel>;
@@ -31,6 +32,7 @@ const ArticleWebpageWithHero: React.FC<ArticleWebpageWithHeroProps> = ({
 
   const content = (
     <>
+      {accessories?.head && <ZoneHead head={accessories.head} cardTitle="hero" shape={accessories.zone} />}
       {/* Hero Article */}
       <ArticleHero
         data={data}

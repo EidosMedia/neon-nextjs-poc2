@@ -34,10 +34,11 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 13. Accessory definitions and page/zone/link metadata integration are in progress. The canonical
   default-theme document holds the definitions. Rendered by default-theme components only:
   header/footer `enabled`, header `sectionsMenu`, footer `menu`, and zone/link `bold` and
-  `border` (zones `main`, `context`, `insight1`, `insight2`). `header.variant`, `footer.variant`,
-  link `layout`, and zone `layout`, `zonetitle`, and `zonesummary` are editor-visible definitions
-  with no rendered effect in Step 1. Rich-text accessory values remain untrusted; Step 2 must
-  sanitize them before any POC rendering. Readers live in
+  `border` (zones `main`, `context`, `insight1`, `insight2`), plus the zone title/summary area
+  (`zonetitle`, `zonesummary`) rendered by `ZoneHead`. `header.variant`, `footer.variant`, link
+  `layout`, and zone `layout` are editor-visible definitions with no rendered effect. The zone
+  summary is untrusted HTML: it is re-sanitized by `sanitizeZoneSummary` and rendered as React
+  elements, never injected as raw HTML. Readers live in
   `src/lib/accessories/defaultThemeAccessories.ts`. Do not apply default-theme values in
   non-default themes. Neon resolves the nearest nonblank section/site-root theme and requests the
   `default` definition document when neither level declares a theme. The POC falls back to default

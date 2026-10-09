@@ -5,6 +5,7 @@ import { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-front
 import ArticleOrganism from './base/Organism/ArticleOrganism';
 import LiveblogOrganism from './base/Organism/LiveblogOrganism';
 import { itemShape, zoneAccessoryClass, type ZoneAccessoryShapes } from '@/lib/accessories/shapeClasses';
+import ZoneHead from './webpage/ZoneHead';
 
 type ArticleWepageProps = {
   data: PageData<WebpageModel>;
@@ -53,8 +54,21 @@ const ArticleWebpage: React.FC<ArticleWepageProps> = ({
     </>
   );
 
+  const head = linkedObjects.length > 0 ? accessories?.head : undefined;
+  const content = head ? (
+    <>
+      <ZoneHead
+        head={head}
+        cardTitle={linkedObjects[0].sys?.baseType === 'liveblog' ? 'h2' : 'h1'}
+        shape={accessories?.zone}
+      />
+      {items}
+    </>
+  ) : (
+    items
+  );
   const zoneClass = zoneAccessoryClass(accessories?.zone);
-  return zoneClass ? <div className={zoneClass}>{items}</div> : items;
+  return zoneClass ? <div className={zoneClass}>{content}</div> : content;
 };
 
 export default ArticleWebpage;

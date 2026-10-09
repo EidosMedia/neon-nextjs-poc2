@@ -3,6 +3,7 @@ import {
   getLinkShapes,
   getPageChrome,
   getZoneAccessoryShapes,
+  getZoneHead,
   getZoneShape,
   normalizeTheme,
 } from '@/lib/accessories/defaultThemeAccessories';
@@ -164,6 +165,56 @@ describe('zone shapes', () => {
   test('getZoneAccessoryShapes combines zone and link shapes', () => {
     const data = webpage({ main: zoneSet('main', { bold: true }) });
     expect(getZoneAccessoryShapes(data, 'main', [])).toEqual({ zone: { bold: true, border: false }, links: [] });
+  });
+});
+
+describe('zone head', () => {
+  const headSet = (values: Record<string, unknown>, zone = 'main', theme = 'default') => ({
+    theme,
+    type: 'sectionwebpage',
+    zone,
+    items: { shape: { version: '1.0', values } },
+  });
+  const webpage = (zoneAccessories: unknown, theme?: string) =>
+    page({ theme, type: 'sectionwebpage', baseType: 'sectionwebpage', zoneAccessories });
+
+  test('is absent without title and summary, or when both are empty', () => {
+    expect(getZoneHead(webpage(undefined), 'main')).toBeUndefined();
+    expect(getZoneHead(webpage({ main: headSet({ bold: true }) }), 'main')).toBeUndefined();
+    expect(getZoneHead(webpage({ main: headSet({ zonetitle: '   ', zonesummary: '<p><br></p>' }) }), 'main')).toBeUndefined();
+  });
+
+  test('carries the trimmed title alone', () => {
+    expect(getZoneHead(webpage({ main: headSet({ zonetitle: '  Top  stories ' }) }), 'main')).toEqual({
+      title: 'Top stories',
+    });
+  });
+
+  test('carries a re-sanitized summary alone', () => {
+    const stored = '<p style="text-align: center; color: red">x</p><p style="text-align: right"><strong>Hi</strong></p>';
+    expect(getZoneHead(webpage({ main: headSet({ zonesummary: stored }) }), 'main')).toEqual({
+      summary: [
+        { children: [{ kind: 'text', text: 'x' }] },
+        { align: 'right', children: [{ kind: 'mark', mark: 'strong', children: [{ kind: 'text', text: 'Hi' }] }] },
+      ],
+    });
+  });
+
+  test('carries title and summary together through the zone shapes', () => {
+    const data = webpage({ main: headSet({ bold: true, zonetitle: 'T', zonesummary: '<p>S</p>' }) });
+    expect(getZoneAccessoryShapes(data, 'main', [])).toEqual({
+      zone: { bold: true, border: false },
+      head: { title: 'T', summary: [{ children: [{ kind: 'text', text: 'S' }] }] },
+      links: [],
+    });
+  });
+
+  test('ignores stale context, other themes, unsupported zones and oversize values', () => {
+    expect(getZoneHead(webpage({ main: headSet({ zonetitle: 'T' }, 'context') }), 'main')).toBeUndefined();
+    expect(getZoneHead(webpage({ main: headSet({ zonetitle: 'T' }, 'main', 'adn') }, 'adn'), 'main')).toBeUndefined();
+    expect(getZoneHead(webpage({ banner: headSet({ zonetitle: 'T' }, 'banner') }), 'banner')).toBeUndefined();
+    expect(getZoneHead(webpage({ main: headSet({ zonetitle: 'x'.repeat(257) }) }), 'main')).toBeUndefined();
+    expect(getZoneHead(webpage({ main: headSet({ zonesummary: `<p>${'x'.repeat(2001)}</p>` }) }), 'main')).toBeUndefined();
   });
 });
 

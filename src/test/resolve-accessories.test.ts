@@ -105,3 +105,80 @@ describe('resolveAccessoryValues', () => {
     expect(resolveAccessoryValues(definitions, undefined, { ...pageContext, theme: 'other' })).toBeUndefined();
   });
 });
+
+describe('resolveAccessoryValues string and text properties', () => {
+  const typedDefinitions: AccessoryDefinitions = {
+    version: '1.0',
+    theme: 'default',
+    zoneAccessories: {
+      shape: {
+        name: 'shape',
+        version: '1.0',
+        types: ['sectionwebpage'],
+        zones: ['main'],
+        properties: [
+          { name: 'layout', default: 'a', options: [{ name: 'a' }, { name: 'b' }] },
+          { name: 'zonetitle', type: 'string', default: '', size: 10 },
+          { name: 'zonesummary', type: 'text', default: '', size: 10 },
+        ],
+      },
+    },
+  };
+  const zoneContext: AccessoryContext = {
+    theme: 'default',
+    type: 'sectionwebpage',
+    level: 'zone',
+    zone: 'main',
+  };
+  const stored = (values: Record<string, unknown>): AccessorySet => ({
+    theme: 'default',
+    type: 'sectionwebpage',
+    zone: 'main',
+    items: { shape: { version: '1.0', values } },
+  });
+
+  test('resolves empty defaults and keeps enum values working next to typed ones', () => {
+    expect(resolveAccessoryValues(typedDefinitions, undefined, zoneContext)).toEqual({
+      shape: { layout: 'a', zonetitle: '', zonesummary: '' },
+    });
+  });
+
+  test('accepts stored plain text and rich text within their limits', () => {
+    expect(
+      resolveAccessoryValues(typedDefinitions, stored({ zonetitle: 'Title', zonesummary: '<p>Sum</p>', layout: 'b' }), zoneContext),
+    ).toEqual({ shape: { layout: 'b', zonetitle: 'Title', zonesummary: '<p>Sum</p>' } });
+  });
+
+  test('rejects plain strings with markup or beyond size, and text beyond twice its size', () => {
+    expect(
+      resolveAccessoryValues(typedDefinitions, stored({ zonetitle: '<b>x</b>', zonesummary: 'x'.repeat(21) }), zoneContext),
+    ).toEqual({ shape: { layout: 'a', zonetitle: '', zonesummary: '' } });
+    expect(resolveAccessoryValues(typedDefinitions, stored({ zonetitle: 'x'.repeat(11) }), zoneContext)?.shape.zonetitle).toBe('');
+    expect(resolveAccessoryValues(typedDefinitions, stored({ zonesummary: 'x'.repeat(20) }), zoneContext)?.shape.zonesummary).toBe(
+      'x'.repeat(20),
+    );
+  });
+
+  test('rejects non-string values and values for undeclared properties', () => {
+    expect(resolveAccessoryValues(typedDefinitions, stored({ zonetitle: 5, zonesummary: true, other: 'x' }), zoneContext)).toEqual({
+      shape: { layout: 'a', zonetitle: '', zonesummary: '' },
+    });
+  });
+
+  test('ignores a typed property without a valid size', () => {
+    const noSize: AccessoryDefinitions = {
+      version: '1.0',
+      theme: 'default',
+      zoneAccessories: {
+        shape: {
+          name: 'shape',
+          version: '1.0',
+          types: ['sectionwebpage'],
+          zones: ['main'],
+          properties: [{ name: 'zonetitle', type: 'string', default: '' }],
+        },
+      },
+    };
+    expect(resolveAccessoryValues(noSize, stored({ zonetitle: 'x' }), zoneContext)).toEqual({ shape: {} });
+  });
+});

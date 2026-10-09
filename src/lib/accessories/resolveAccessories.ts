@@ -17,7 +17,7 @@ type ToggleDefinition = {
   default: boolean;
 };
 
-type PropertyDefinition = {
+export type PropertyDefinition = {
   name: string;
   default: string;
   type?: 'string' | 'text';
@@ -25,7 +25,7 @@ type PropertyDefinition = {
   options?: { name: string }[];
 };
 
-type AccessoryDefinition = {
+export type AccessoryDefinition = {
   name: string;
   version: string;
   types: string[];
@@ -163,9 +163,23 @@ function defaultValues(definition: AccessoryDefinition): Record<string, boolean 
       && typeof property.default === 'string'
       && property.options?.some((option) => option.name === property.default)) {
       values[property.name] = property.default;
+    } else if (isValidTypedValue(property, property.default)) {
+      values[property.name] = property.default;
     }
   }
   return values;
+}
+
+/** Plain strings carry no markup; text keeps its markup for the renderer's sanitizer, within twice its visible size. */
+function isValidTypedValue(property: PropertyDefinition, value: unknown): value is string {
+  if (typeof value !== 'string' || !Number.isInteger(property.size) || (property.size as number) < 1) {
+    return false;
+  }
+  const size = property.size as number;
+  if (property.type === 'string') {
+    return value.length <= size && !/[<>]/.test(value);
+  }
+  return property.type === 'text' && value.length <= size * 2;
 }
 
 function applyStoredValues(
@@ -191,6 +205,8 @@ function applyStoredValues(
       && property.type === undefined
       && typeof value === 'string'
       && property.options?.some((option) => option.name === value)) {
+      resolved[name] = value;
+    } else if (property && isValidTypedValue(property, value)) {
       resolved[name] = value;
     }
   }

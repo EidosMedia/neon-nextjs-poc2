@@ -16,11 +16,13 @@ Both functions read from the same `THEME_MAP` in `_themeRouter.tsx`.
 ## Directory structure
 ## Accessory Rendering
 
-Accessory definitions are served from the canonical `src/lib/accessories/accessory.json` document. The default document includes editor-test definitions, including zone `layout`, `zonetitle`, and `zonesummary`. In Step 1, these values can be selected and stored for Neon editor testing but have no visible POC effect. Do not claim renderer support from definitions or storage alone.
+Accessory definitions are served from the canonical `src/lib/accessories/accessory.json` document. The default document includes editor-test definitions. The default theme renders zone `zonetitle` and `zonesummary` (the zone title/summary area, `ZoneHead`); zone `layout` values can be selected and stored for Neon editor testing but have no visible POC effect. Do not claim renderer support from definitions or storage alone.
 
 Resolve accessories only when the active theme is exactly `default` and the saved context matches the concrete page type, zone, and linked type. Missing, stale, unsupported, or version-incompatible values use renderer defaults. Do not rewrite stale data while rendering. Unknown themes that fall back to default page components must not consume default accessory values, and accessory CSS must remain scoped to the default theme.
 
-When Step 2 rendering is implemented, treat `zonetitle` as plain text and `zonesummary` as untrusted HTML. Sanitize rich text to the agreed allowlist (`strong`, `em`, `u`, `s`, `br`, and safe `a[href]`) and accept only root-relative same-site paths or HTTPS links. Color and other attributes are not supported.
+Treat `zonetitle` as plain text and `zonesummary` as untrusted HTML. Re-sanitize the summary at the reading boundary with `sanitizeZoneSummary` into the typed tree and render it as React elements; never inject raw HTML. The allowlist is `p` (with one validated `text-align`), `br`, `strong`, `em`, `u`, `s` and safe `a[href]`; accept only root-relative same-site paths or HTTPS links. Color and other attributes are not supported.
+
+The zone title/summary area is rendered only when a title or a summary with visible text exists and the zone has at least one linked item. It is sized from the first card actually rendered in the zone (`h1` article card 2.5rem, live blog `h2` 1.875rem, hero 3rem): title 120%, summary 80%. It sits 20px from the zone top, left, right and above the first card, with 20px between title and summary. New themes keep their own output unless they opt in explicitly.
 
 ## Directory structure
 
