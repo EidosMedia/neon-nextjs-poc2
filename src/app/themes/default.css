@@ -1,0 +1,66 @@
+.root[data-theme="default"] .acc-title-bold,
+.root[data-theme="default"] .acc-title-bold p {
+  font-weight: 800;
+}
+
+.root[data-theme="default"] .acc-title-regular,
+.root[data-theme="default"] .acc-title-regular p {
+  font-weight: 550;
+}
+
+.root[data-theme="default"] .acc-zone-border {
+  border: 2px solid var(--color-primary);
+  border-radius: 0.25rem;
+  background-color: #f0f0f0;
+}
+
+.root[data-theme="default"] .acc-card-border {
+  border: 2px solid var(--color-primary);
+  border-radius: 0.25rem;
+  background-color: #f0f0f0;
+}
+
+/* Zone title/summary area: 20px inset from the zone top, left and right and 20px above the first card. */
+.root[data-theme="default"] .acc-zone-head {
+  --acc-card-title-size: 1.875rem;
+  padding: 20px;
+}
+
+.root[data-theme="default"] .acc-zone-head[data-card-title="h1"] {
+  --acc-card-title-size: 2.5rem;
+}
+
+.root[data-theme="default"] .acc-zone-head[data-card-title="hero"] {
+  --acc-card-title-size: 3rem;
+}
+
+.root[data-theme="default"] .acc-zone-title {
+  font-size: calc(var(--acc-card-title-size) * 1.2);
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.root[data-theme="default"] .acc-zone-title + .acc-zone-summary {
+  margin-top: 20px;
+}
+
+.root[data-theme="default"] .acc-zone-summary {
+  font-size: calc(var(--acc-card-title-size) * 0.8);
+  overflow-wrap: break-word;
+}
+
+/* The global base layer sets a font size on every element, and `p a` sets text-base. */
+.root[data-theme="default"] .acc-zone-summary * {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.root[data-theme="default"] .acc-zone-summary p {
+  margin: 0;
+  font-weight: 400;
+  text-align: left;
+}
+
+.root[data-theme="default"] .acc-zone-summary p + p {
+  margin-top: 0.75em;
+}

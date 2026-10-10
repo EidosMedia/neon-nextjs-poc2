@@ -6,6 +6,8 @@ import LiveblogOrganismPosts from './LiveblogOrganismPosts';
 import { CircleDot } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import React from 'react';
+import clsx from 'clsx';
+import { cardAccessoryClass, titleAccessoryClass, type AccessoryShape } from '@/lib/accessories/shapeClasses';
 
 type LiveblogOrganismProps = {
   data: any;
@@ -14,11 +16,20 @@ type LiveblogOrganismProps = {
   index: number;
   type: string;
   imageFormat?: string;
+  accessoryShape?: AccessoryShape;
 };
 
 const extractSectionFromUrl = (url: string): string => url.split('/')[1];
 
-const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({ data, linkedObject, linkedObjects, index, type, imageFormat = 'Wide_small' }) => {
+const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({
+  data,
+  linkedObject,
+  linkedObjects,
+  index,
+  type,
+  imageFormat = 'Wide_small',
+  accessoryShape,
+}) => {
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`].url;
   const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
@@ -26,26 +37,54 @@ const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({ data, linkedObject,
   const summaryId = linkedObject.attributes?.contentIds?.teaserSummary;
 
   var title, summary;
-  if (linkedObject.attributes?.teaser?.title) { title = linkedObject.attributes?.teaser?.title; } else { title = linkedObject.title; }
-  if (linkedObject.attributes?.teaser?.summary) { summary = linkedObject.attributes?.teaser?.summary; } else { summary = linkedObject.summary; }
+  if (linkedObject.attributes?.teaser?.title) {
+    title = linkedObject.attributes?.teaser?.title;
+  } else {
+    title = linkedObject.title;
+  }
+  if (linkedObject.attributes?.teaser?.summary) {
+    summary = linkedObject.attributes?.teaser?.summary;
+  } else {
+    summary = linkedObject.summary;
+  }
 
   const lockedBy = data?.sys?.lockedBy?.userId === 'CollaborationEditor' ? null : data?.sys?.lockedBy;
 
   return (
     <ArticleOverlay data={linkedObject} viewStatus={data.siteData.viewStatus} width="max" data-type={type}>
-      <Link id={linkedObject.id.replaceAll('-', '_')} className="no-underline" href={loggedUserInfo.inspectItems ? '' : url}>
-        <div className={`p-4 grid grid-cols-12 gap-4`}>
+      <Link
+        id={linkedObject.id.replaceAll('-', '_')}
+        className="no-underline"
+        href={loggedUserInfo.inspectItems ? '' : url}
+      >
+        <div className={clsx('p-4 grid grid-cols-12 gap-4', cardAccessoryClass(accessoryShape))}>
           <div className="flex flex-col col-span-5 max-[1024px]:col-span-12">
-            <span className="subhead1 uppercase mt-2" data-type="section">{overhead}</span>
+            <span className="subhead1 uppercase mt-2" data-type="section">
+              {overhead}
+            </span>
             <div className="flex items-center gap-1 mt-2 w-fit max-h-[30px] p-2 rounded-xs bg-feedback-red text-neutral-lightest">
               <CircleDot className="w-4 h-4" />
               <span className="subhead1 pt-[3px]">Live</span>
             </div>
-            <ContentEditable showLockedByTooltip={lockedBy} viewStatus={data.siteData.viewStatus} data={linkedObject} minimal>
-              <h2 className="mt-2" id={titleId} data-type="title"><p>{title}</p></h2>
+            <ContentEditable
+              showLockedByTooltip={lockedBy}
+              viewStatus={data.siteData.viewStatus}
+              data={linkedObject}
+              minimal
+            >
+              <h2 className={clsx('mt-2', titleAccessoryClass(accessoryShape))} id={titleId} data-type="title">
+                <p>{title}</p>
+              </h2>
             </ContentEditable>
-            <ContentEditable showLockedByTooltip={lockedBy} viewStatus={data.siteData.viewStatus} data={linkedObject} minimal>
-              <span className="mt-2" id={summaryId} data-type="summary"><p>{summary}</p></span>
+            <ContentEditable
+              showLockedByTooltip={lockedBy}
+              viewStatus={data.siteData.viewStatus}
+              data={linkedObject}
+              minimal
+            >
+              <span className="mt-2" id={summaryId} data-type="summary">
+                <p>{summary}</p>
+              </span>
             </ContentEditable>
             <span className="mt-2">{linkedObject.author}</span>
             <span className="subhead1 uppercase mt-2 hidden">Latest updates</span>

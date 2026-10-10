@@ -27,6 +27,11 @@ Use `toSiteViewStatus()` to convert canonical values. At external boundaries, no
 headers, query parameters, and backend payloads with `normalizeViewStatus()` or `parseViewStatus()`
 before using typed values.
 
+Accessory values are shared SDK contracts: `AccessorySet`, `AccessoryValues`, and `LinkMetadata`.
+Zone accessory sets are delivered in top-level `WebpageModel.zoneAccessories`. The
+`getDwxLinkedObjects()` adapter exposes a page link's metadata as `WebpageNodeModel.linkMetadata`,
+separate from the linked node's attributes.
+
 ## Change Checklist
 
 1. Add or update the contract under `src/neon-frontoffice-ts-sdk/src/`.

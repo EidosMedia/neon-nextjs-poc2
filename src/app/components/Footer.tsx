@@ -4,7 +4,13 @@ import Logo from './Logo';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import FooterMenu from './FooterMenu';
 
-export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
+export default async function Footer({
+  data,
+  showMenu = true,
+}: {
+  data: Partial<PageData<BaseModel>>;
+  showMenu?: boolean;
+}) {
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) {
@@ -44,9 +50,10 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
         <div className="w-[70%] p-4">
           {/* Left 70% content */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {footerMenu?.items?.map((item: any, idx: number) => (
-              <FooterMenu key={item.ref || idx} url={item.url} title={item.label} links={flattenLinks(item.items)} />
-            ))}
+            {showMenu &&
+              footerMenu?.items?.map((item: any, idx: number) => (
+                <FooterMenu key={item.ref || idx} url={item.url} title={item.label} links={flattenLinks(item.items)} />
+              ))}
           </div>
         </div>
         {/* Vertical blue line */}
