@@ -11,6 +11,7 @@ import { CircleDot } from 'lucide-react';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
+import { getPageChrome } from '@/lib/accessories/defaultThemeAccessories';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -18,6 +19,7 @@ type PageProps = {
 
 const Liveblog = async ({ data }: PageProps) => {
   console.log('[NEON] render: default/Liveblog');
+  const chrome = getPageChrome(data);
 
   const articleData = data.model.data;
 
@@ -82,7 +84,7 @@ const Liveblog = async ({ data }: PageProps) => {
 
   return (
     <article className="container mx-auto">
-      <Navbar data={data} />
+      {chrome.showHeader && <Navbar data={data} showSectionsMenu={chrome.showSectionsMenu} />}
       <div className="xl:px-52 mt-10 mb-12">
         <div className="flex items-center gap-1 mb-4 w-fit max-h-[30px] p-2 rounded-xs bg-feedback-red text-neutral-lightest">
           <CircleDot className="w-4 h-4" />
@@ -99,7 +101,7 @@ const Liveblog = async ({ data }: PageProps) => {
         {/* Placeholder for advertisement */}
         <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
       </div>
-      <Footer data={data} />
+      {chrome.showFooter && <Footer data={data} showMenu={chrome.showFooterMenu} />}
     </article>
   );
 };

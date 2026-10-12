@@ -4,6 +4,8 @@ import MainImage from '@/app/components/contentElements/MainImage';
 import ContentEditable from '@/app/components/utilities/ContentEditable';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import React from 'react';
+import clsx from 'clsx';
+import { cardAccessoryClass, titleAccessoryClass, type AccessoryShape } from '@/lib/accessories/shapeClasses';
 
 type ArticleOrganismProps = {
   data: any; // Adjust type as needed
@@ -12,6 +14,7 @@ type ArticleOrganismProps = {
   index: number;
   type: string;
   imageFormat?: string;
+  accessoryShape?: AccessoryShape;
 };
 
 const extractSectionFromUrl = (url: string): string => url.split('/')[1];
@@ -67,11 +70,19 @@ const getArticleClasses = (type: string) => {
   return classMap[type] || classMap['article-md']; // fallback to article-md if type not found
 };
 
-const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, linkedObjects, index, type, imageFormat = 'Wide_small' }) => {
+const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
+  data,
+  linkedObject,
+  linkedObjects,
+  index,
+  type,
+  imageFormat = 'Wide_small',
+  accessoryShape,
+}) => {
   console.log('[NEON] render: ArticleOrganism');
   //console.log('ArticleOrganism Props:', { linkedObject, linkedObjects, index, type });
   console.log('linkedObject ID:', linkedObject?.id);
-  
+
   const TitleComponent = type === 'article-xl' ? 'h1' : 'h2';
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`].url;
@@ -103,7 +114,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
         className="no-underline"
         href={loggedUserInfo.inspectItems ? '' : url}
       >
-        <div className={`p-4 grid grid-cols-12 ${classes.container}`}>
+        <div className={clsx('p-4 grid grid-cols-12', classes.container, cardAccessoryClass(accessoryShape))}>
           <div className={`flex flex-col ${classes.textColumn}`}>
             <span className={`subhead1 uppercase ${classes.section}`} data-type="section">
               {overhead}
@@ -114,7 +125,11 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
               data={linkedObject}
               minimal
             >
-              <TitleComponent className="py-2" id={titleId} data-type="title">
+              <TitleComponent
+                className={clsx('py-2', titleAccessoryClass(accessoryShape))}
+                id={titleId}
+                data-type="title"
+              >
                 <p>{title}</p>
               </TitleComponent>
             </ContentEditable>

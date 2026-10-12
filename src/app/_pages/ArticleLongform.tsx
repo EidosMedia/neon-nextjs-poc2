@@ -9,6 +9,7 @@ import Footer from '../components/Footer';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
+import { getPageChrome } from '@/lib/accessories/defaultThemeAccessories';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -16,6 +17,7 @@ type PageProps = {
 
 const Article = async ({ data }: PageProps) => {
   console.log('[NEON] render: default/ArticleLongform');
+  const chrome = getPageChrome(data);
 
   const articleData = data.model.data;
   const adsDensity = articleData?.attributes?.ads?.adsDensity || 0;
@@ -142,7 +144,7 @@ const Article = async ({ data }: PageProps) => {
 
   return (
     <article>
-      <Navbar data={data} />
+      {chrome.showHeader && <Navbar data={data} showSectionsMenu={chrome.showSectionsMenu} />}
       <HeroCoverImage data={articleData} format="Ultrawide_large" preferredImage="main" />
       <div className="container mx-auto px-5 xl:px-52 mt-10 mb-12">
         <Summary data={articleData} />
@@ -161,7 +163,7 @@ const Article = async ({ data }: PageProps) => {
         {/* Placeholder for advertisement */}
         <img src="https://placehold.co/1200x259?text=Adv" alt="Advertisement" />
       </div>
-      <Footer data={data} />
+      {chrome.showFooter && <Footer data={data} showMenu={chrome.showFooterMenu} />}
     </article>
   );
 };

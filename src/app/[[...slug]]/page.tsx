@@ -4,10 +4,14 @@ import { resolvePageComponent } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
+import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import UIStyleGuide from '../components/baseComponents/UIStyleGuide';
 import * as DefaultPages from '../_pages';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
 import { normalizeViewStatus, toSiteViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+
+// Site, backend URL and view status come from request headers, so there is no static shell; LIVE content is cached in fetchPageDataCached.
+export const instant = false;
 
 export default async function Page({
   params,
@@ -119,7 +123,7 @@ export default async function Page({
   pageDataJSON.liveHost = siteLive?.root.hostname;
   pageDataJSON.previewHost = sitePreview?.root.hostname;
 
-  const theme: string = pageDataJSON?.siteNode?.attributes?.theme ?? 'default';
+  const theme: string = normalizeTheme(pageDataJSON?.siteNode?.attributes?.theme);
   const baseType = pageDataJSON?.model?.data?.sys?.baseType as string;
   const type = pageDataJSON?.model?.data?.sys?.type as string;
   console.log('Resolving page for baseType:', baseType, 'type:', type, 'theme:', theme);

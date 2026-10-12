@@ -7,7 +7,13 @@ import AiSearchIcon from './icons/AiSearch';
 import LoginButton from './LoginButton';
 import MenuToggle from './MenuToggle';
 
-export default async function Navbar({ data }: { data: Partial<PageData<BaseModel>> }) {
+export default async function Navbar({
+  data,
+  showSectionsMenu = true,
+}: {
+  data: Partial<PageData<BaseModel>>;
+  showSectionsMenu?: boolean;
+}) {
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) {
@@ -57,28 +63,30 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
           <Logo data={data} />
           <h1 className="text-2xl font-bold text-gray-800">{siteLabel}</h1>
         </div>
-        <div className="flex justify-center items-center">
-          <ul className="hidden md:flex gap-x-6">
-            {mainMenuItems.length > 0
-              ? mainMenuItems.map((item, idx) => {
-                  const href = item.url || item.ref || '#';
-                  return (
-                    <li key={item.ref || item.url || idx}>
-                      <Link href={href} className={clsx(isActiveMenuLink(item) && 'text-(--color-primary)')}>
-                        <h3 className="text-lg uppercase">{item.label}</h3>
+        {showSectionsMenu && (
+          <div className="flex justify-center items-center">
+            <ul className="hidden md:flex gap-x-6">
+              {mainMenuItems.length > 0
+                ? mainMenuItems.map((item, idx) => {
+                    const href = item.url || item.ref || '#';
+                    return (
+                      <li key={item.ref || item.url || idx}>
+                        <Link href={href} className={clsx(isActiveMenuLink(item) && 'text-(--color-primary)')}>
+                          <h3 className="text-lg uppercase">{item.label}</h3>
+                        </Link>
+                      </li>
+                    );
+                  })
+                : site.root.items.map(item => (
+                    <li key={item.id}>
+                      <Link href={item.path} className={clsx(isActiveLink(item) && 'text-(--color-primary)')}>
+                        <h3 className="text-lg uppercase">{item.title}</h3>
                       </Link>
                     </li>
-                  );
-                })
-              : site.root.items.map(item => (
-                  <li key={item.id}>
-                    <Link href={item.path} className={clsx(isActiveLink(item) && 'text-(--color-primary)')}>
-                      <h3 className="text-lg uppercase">{item.title}</h3>
-                    </Link>
-                  </li>
-                ))}
-          </ul>
-        </div>
+                  ))}
+            </ul>
+          </div>
+        )}
         {hotTopicsItems.length > 0 && (
           <div className="flex justify-center items-center">
             <ul className="hidden md:flex gap-x-4 overflow-x-auto py-1 border-t border-gray-100">

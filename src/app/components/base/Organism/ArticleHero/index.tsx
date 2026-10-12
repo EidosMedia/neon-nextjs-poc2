@@ -4,15 +4,18 @@ import { getTeaserOrMainImageUrl } from '@/app/components/contentElements/MainIm
 import ContentEditable from '@/app/components/utilities/ContentEditable';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import React from 'react';
+import clsx from 'clsx';
+import { cardAccessoryClass, titleAccessoryClass, type AccessoryShape } from '@/lib/accessories/shapeClasses';
 
 type ArticleHeroProps = {
   data: any;
   linkedObject: any;
+  accessoryShape?: AccessoryShape;
 };
 
 const extractSectionFromUrl = (url: string): string => url.split('/')[1];
 
-const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
+const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject, accessoryShape }) => {
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url;
   const imageUrl = getTeaserOrMainImageUrl(linkedObject, 'Ultrawide_large');
@@ -34,7 +37,12 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
         className="no-underline"
         href={loggedUserInfo.inspectItems ? '' : url}
       >
-        <div className="relative w-full h-[60vh] min-h-[400px] max-h-[500px] overflow-hidden group">
+        <div
+          className={clsx(
+            'relative w-full h-[60vh] min-h-[400px] max-h-[500px] overflow-hidden group',
+            cardAccessoryClass(accessoryShape),
+          )}
+        >
           {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -61,7 +69,10 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject }) => {
                   minimal
                 >
                   <h1
-                    className="text-5xl font-bold leading-tight mb-4 text-white group-hover:text-gray-100 transition-colors"
+                    className={clsx(
+                      'text-5xl font-bold leading-tight mb-4 text-white group-hover:text-gray-100 transition-colors',
+                      titleAccessoryClass(accessoryShape),
+                    )}
                     id={titleId}
                     data-type="title"
                   >

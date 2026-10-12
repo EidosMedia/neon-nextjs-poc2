@@ -1,10 +1,12 @@
 import { MetadataRoute } from 'next';
-import { NextRequest } from 'next/server';
+import { connection as nextConnection, NextRequest } from 'next/server';
 import { getAPIHostnameConfig } from '@/services/utils';
 import { getAuthOptions } from '@/utilities/security';
 import { headers } from 'next/headers';
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
+  await nextConnection();
+
   try {
     // Get headers to construct request
     const headersList = await headers();
