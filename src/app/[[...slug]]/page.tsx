@@ -138,7 +138,7 @@ export default async function Page({
       <LoggedUserBar
         data={{
           ...pageDataJSON,
-          editUrl: `${process.env.NEON_APP_URL}/neon/app/neon.html#open/${pageDataJSON.model.data.id}`,
+          editUrl: `${process.env.NEON_APP_URL}/neon/app/open/${pageDataJSON.model.data.id}`,
         }}
       />
       {PageComponent ? <PageComponent data={pageDataJSON} /> : <DefaultPages.Article data={pageDataJSON} />}
