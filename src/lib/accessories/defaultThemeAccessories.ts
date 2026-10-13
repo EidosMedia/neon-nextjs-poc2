@@ -1,5 +1,5 @@
 import type { BaseModel, PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import accessoryDefinitions from './accessory.json';
+import { getAccessoryDefinitions } from './definitions';
 import {
   resolveAccessoryValues,
   type AccessoryContext,
@@ -11,8 +11,6 @@ import {
 import { sanitizeZoneSummary } from './sanitizeZoneSummary';
 import type { AccessoryShape, ZoneAccessoryShapes } from './shapeClasses';
 import type { ZoneHeadContent } from './zoneHeadTypes';
-
-const DEFINITIONS = accessoryDefinitions as unknown as AccessoryDefinitions;
 
 type PageDataLike = Partial<PageData<BaseModel>>;
 
@@ -45,9 +43,17 @@ function nodeContext(data: PageDataLike): Pick<AccessoryContext, 'theme' | 'type
   return { theme: getActiveTheme(data), type: sys?.type ?? '', baseType: sys?.baseType };
 }
 
+function resolveForTheme(
+  stored: Parameters<typeof resolveAccessoryValues>[1],
+  context: AccessoryContext,
+): ResolvedAccessoryValues | undefined {
+  const definitions = getAccessoryDefinitions(context.theme);
+  return definitions ? resolveAccessoryValues(definitions, stored, context) : undefined;
+}
+
 export function getPageChrome(data: PageDataLike): PageChrome {
   const stored = data.model?.data?.pubInfo?.attributes?.pageAccessories;
-  const resolved = resolveAccessoryValues(DEFINITIONS, stored, { ...nodeContext(data), level: 'page' });
+  const resolved = resolveForTheme(stored, { ...nodeContext(data), level: 'page' });
   const header = resolved?.header;
   const footer = resolved?.footer;
   return {
@@ -70,23 +76,22 @@ function toShape(resolved: ResolvedAccessoryValues | undefined): AccessoryShape 
 
 function zoneValues(data: PageDataLike, zone: string): ResolvedAccessoryValues | undefined {
   const stored = (data.model?.data as WebpageModel | undefined)?.zoneAccessories?.[zone];
-  return resolveAccessoryValues(DEFINITIONS, stored, { ...nodeContext(data), level: 'zone', zone });
+  return resolveForTheme(stored, { ...nodeContext(data), level: 'zone', zone });
 }
 
-function zoneShapeProperty(name: string): PropertyDefinition | undefined {
-  const definitions = DEFINITIONS.zoneAccessories;
-  const list: AccessoryDefinition[] = Array.isArray(definitions) ? definitions : Object.values(definitions ?? {});
+function zoneShapeProperty(definitions: AccessoryDefinitions | undefined, name: string): PropertyDefinition | undefined {
+  const zoneDefinitions = definitions?.zoneAccessories;
+  const list: AccessoryDefinition[] = Array.isArray(zoneDefinitions) ? zoneDefinitions : Object.values(zoneDefinitions ?? {});
   return list.find(definition => definition.name === 'shape')?.properties?.find(property => property.name === name);
 }
 
 /** Title and summary of a zone; undefined when both are absent or empty, so no top area is rendered. */
-function toHead(resolved: ResolvedAccessoryValues | undefined): ZoneHeadContent | undefined {
+function toHead(theme: string, resolved: ResolvedAccessoryValues | undefined): ZoneHeadContent | undefined {
   const shape = resolved?.shape;
+  const summarySize = zoneShapeProperty(getAccessoryDefinitions(theme), 'zonesummary')?.size ?? 0;
   const title = typeof shape?.zonetitle === 'string' ? shape.zonetitle.replace(/\s+/g, ' ').trim() : '';
   const summary =
-    typeof shape?.zonesummary === 'string'
-      ? sanitizeZoneSummary(shape.zonesummary, { maxVisible: zoneShapeProperty('zonesummary')?.size ?? 0 })
-      : undefined;
+    typeof shape?.zonesummary === 'string' ? sanitizeZoneSummary(shape.zonesummary, { maxVisible: summarySize }) : undefined;
   if (!title && !summary) {
     return undefined;
   }
@@ -98,7 +103,7 @@ export function getZoneShape(data: PageDataLike, zone: string): AccessoryShape |
 }
 
 export function getZoneHead(data: PageDataLike, zone: string): ZoneHeadContent | undefined {
-  return toHead(zoneValues(data, zone));
+  return toHead(getActiveTheme(data), zoneValues(data, zone));
 }
 
 export function getZoneAccessoryShapes(
@@ -107,7 +112,11 @@ export function getZoneAccessoryShapes(
   linkedObjects: WebpageNodeModel[],
 ): ZoneAccessoryShapes {
   const values = zoneValues(data, zone);
-  return { zone: toShape(values), head: toHead(values), links: getLinkShapes(data, zone, linkedObjects) };
+  return {
+    zone: toShape(values),
+    head: toHead(getActiveTheme(data), values),
+    links: getLinkShapes(data, zone, linkedObjects),
+  };
 }
 
 export function getLinkShapes(
@@ -118,7 +127,7 @@ export function getLinkShapes(
   const context = nodeContext(data);
   return linkedObjects.map(linkedObject =>
     toShape(
-      resolveAccessoryValues(DEFINITIONS, linkedObject.linkMetadata?.linkAccessories, {
+      resolveForTheme(linkedObject.linkMetadata?.linkAccessories, {
         ...context,
         level: 'link',
         zone,

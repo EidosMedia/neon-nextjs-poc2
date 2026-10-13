@@ -50,7 +50,7 @@ export function resolveAccessoryValues(
   stored: AccessorySet | null | undefined,
   context: AccessoryContext,
 ): ResolvedAccessoryValues | undefined {
-  if (context.theme !== 'default' || definitions.theme !== context.theme) {
+  if (definitions.theme !== context.theme) {
     return undefined;
   }
 

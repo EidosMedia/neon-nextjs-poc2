@@ -31,8 +31,12 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 11. Neon push invalidation integration.
 12. Site-level web-user authentication and access configured in Neon; web users remain separate
   from editorial users.
-13. Accessory definitions and page/zone/link metadata integration are in progress. The canonical
-  default-theme document holds the definitions. Rendered by default-theme components only:
+13. Accessory definitions and page/zone/link metadata integration are in progress. Each theme's
+  definitions live in its own `accessories.json` next to its pages (`src/app/_pages/accessories.json`
+  for `default`, `src/app/_pages/<theme>/accessories.json` for the others), registered in
+  `src/lib/accessories/definitions.ts`, compiled into the image and served by `/api/accessories`
+  (404 for a theme without a file; `INVALIDATE_NEXTJS_HEADER_VALUE` must be set or every call is
+  404). Rendered by default-theme components only:
   header/footer `enabled`, header `sectionsMenu`, footer `menu`, and zone/link `bold` and
   `border` (zones `main`, `context`, `insight1`, `insight2`), plus the zone title/summary area
   (`zonetitle`, `zonesummary`) rendered by `ZoneHead`. `header.variant`, `footer.variant`, link

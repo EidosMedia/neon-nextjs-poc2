@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { ZoneHeadContent } from './zoneHeadTypes';
 
-// Client-safe: no definitions import, so client components can use it without bundling accessory.json.
+// Client-safe: no definitions import, so client components can use it without bundling accessories.json.
 export type AccessoryShape = { bold: boolean; border: boolean };
 
 export type ZoneAccessoryShapes = {
