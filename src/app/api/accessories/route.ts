@@ -40,5 +40,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  // Return the complete theme document; the Neon Sites service filters by editor context.
+  // A known theme with no matching page/zone/link definition remains a successful empty result there.
   return NextResponse.json(definitions);
 }
