@@ -26,7 +26,9 @@ const LoginButton: React.FC<{ webauth?: string }> = ({ webauth }) => {
   return (
     <div className="flex flex-col gap-2 relative">
       <div className="flex gap-2">
-        <Button variant="default" className="theme-login-subscribe">Subscribe</Button>
+        <Button variant="default" className="theme-login-subscribe">
+          Subscribe
+        </Button>
         {currentWebauth ? (
           <>
             <div className="flex flex-col relative">

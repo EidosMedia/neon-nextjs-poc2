@@ -1,5 +1,5 @@
 import { handleServicesError } from '@/services/utils';
-import { getAuthOptions } from '@/utilities/security';
+import { getEditorAuthOptions } from '@/utilities/security';
 import { ErrorObject } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     return await connection.getUserAvatar({
       id: userId,
-      auth: await getAuthOptions(),
+      auth: await getEditorAuthOptions(),
     });
   } catch (error) {
     // Backend returns 406 when the user has no avatar set, not as an actual error.

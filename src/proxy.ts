@@ -143,7 +143,9 @@ export async function proxy(request: NextRequest) {
       );
     }
 
-    const targetBase = targetHostname.startsWith('http') ? targetHostname : `${request.nextUrl.protocol}//${targetHostname}`;
+    const targetBase = targetHostname.startsWith('http')
+      ? targetHostname
+      : `${request.nextUrl.protocol}//${targetHostname}`;
     const targetPathname =
       foundsite.viewStatus === ViewStatus.PREVIEW && viewParam === ViewStatus.LIVE
         ? normalizeLiveSwitchPathname(request.nextUrl.pathname)
