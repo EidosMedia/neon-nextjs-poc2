@@ -44,7 +44,7 @@ describe('editorialauth cookie handling', () => {
     process.env.DEV_MODE = originalDevMode;
   });
 
-  test('sets a host-only cookie and expires a legacy domain cookie when exchanging a switch token', async () => {
+  test('sets a host-only cookie without expiring it when exchanging a switch token', async () => {
     const response = await proxy(
       createRequest('/story?switch-view=PREVIEW&switch-token=switch-token', 'PREVIEW-NEWS.EXAMPLE.TEST:8443'),
     );
@@ -56,8 +56,8 @@ describe('editorialauth cookie handling', () => {
       path: '/',
     });
     expect(editorialCookie?.domain).toBeUndefined();
-    expect(response.headers.get('set-cookie')).toContain('Domain=preview-news.example.test; Max-Age=0');
-    expect(response.headers.get('set-cookie')).not.toContain('Domain=PREVIEW-NEWS.EXAMPLE.TEST:8443');
+    expect(response.headers.get('set-cookie')).not.toContain('Max-Age=0');
+    expect(response.headers.get('set-cookie')).not.toContain('Domain=');
   });
 
   test('uses the same host-only policy for PreviewToken authorization', async () => {
@@ -79,6 +79,7 @@ describe('editorialauth cookie handling', () => {
       path: '/',
     });
     expect(editorialCookie?.domain).toBeUndefined();
-    expect(response.headers.get('set-cookie')).toContain('Domain=preview-news.example.test; Max-Age=0');
+    expect(response.headers.get('set-cookie')).not.toContain('Max-Age=0');
+    expect(response.headers.get('set-cookie')).not.toContain('Domain=');
   });
 });

@@ -21,23 +21,6 @@ const getEditorialAuthCookieOptions = (value: string): ResponseCookie => ({
   secure: process.env.DEV_MODE === 'false',
 });
 
-const expireLegacyDomainScopedEditorialAuthCookie = (response: NextResponse, request: NextRequest): void => {
-  const requestHost = request.headers.get('x-forwarded-host') || request.nextUrl.host;
-  const legacyDomain = toComparableHostname(requestHost);
-  const attributes = [
-    'editorialauth=',
-    'Path=/',
-    `Domain=${legacyDomain}`,
-    'Max-Age=0',
-    'Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-    'HttpOnly',
-    process.env.DEV_MODE === 'false' ? 'SameSite=None' : undefined,
-    process.env.DEV_MODE === 'false' ? 'Secure' : undefined,
-  ].filter(Boolean);
-
-  response.headers.append('Set-Cookie', attributes.join('; '));
-};
-
 const deriveSwitchHostFromCurrent = (currentHost: string, targetView: ViewStatus): string | undefined => {
   const parsedCurrent = new URL(`https://${currentHost}`);
   const currentHostname = parsedCurrent.hostname;
@@ -93,7 +76,6 @@ export async function proxy(request: NextRequest) {
       // Rewrite to the clean URL (no redirect, URL stays the same in browser)
       const response = NextResponse.redirect(cleanUrl, { headers });
       response.cookies.set(cookieOptions);
-      expireLegacyDomainScopedEditorialAuthCookie(response, request);
 
       return response;
     }
@@ -190,7 +172,6 @@ export async function proxy(request: NextRequest) {
 
       const response = NextResponse.next({ headers });
       response.cookies.set(cookieOptions);
-      expireLegacyDomainScopedEditorialAuthCookie(response, request);
 
       return response;
     }

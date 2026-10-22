@@ -117,9 +117,11 @@ Preview/Live `switch-token` exchange. New cookies are **host-only**: do not set 
 `Domain` attribute. The browser keeps one editorial cookie per concrete host, while the
 switch-token redirect transfers authentication between sibling Preview and Live hosts.
 
-Each issuance response also expires the prior domain-scoped `editorialauth` cookie with
-`Domain=<normalized current hostname>`. That migration-only domain value must contain a
-hostname, never a port or protocol. Do not scope the cookie to a broad parent domain.
+Issuance responses must not add any other `editorialauth` `Set-Cookie` header. Do not expire
+the cookie with `Domain=<current hostname>`: that is the same cookie identity as the new
+host-only cookie, and browsers apply the later header, deleting the cookie just set. Legacy
+domain-scoped cookies (4-hour max-age) are left to expire on their own. Do not scope the cookie
+to a broad parent domain.
 
 The focused regression suite is `src/test/proxy.test.ts`; run it with:
 `npm test -- --runInBand src/test/proxy.test.ts`.
