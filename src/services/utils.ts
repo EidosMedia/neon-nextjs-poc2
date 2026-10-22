@@ -79,7 +79,7 @@ export const handleServicesError = (error: unknown) => {
       ...responseError.cause,
     },
     {
-      status: responseError.status,
+      status: responseError.status ?? 500,
     },
   );
 };

@@ -1,4 +1,4 @@
-import { handleServicesError } from '@/services/utils';
+import { getAPIHostnameConfig, handleServicesError } from '@/services/utils';
 import { getEditorAuthOptions } from '@/utilities/security';
 import { ErrorObject } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { NextRequest, NextResponse } from 'next/server';
@@ -6,9 +6,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     const userId = request.nextUrl.searchParams.get('id') || '';
+    const { apiHostname } = await getAPIHostnameConfig(request);
 
     return await connection.getUserAvatar({
       id: userId,
+      apiHostname,
       auth: await getEditorAuthOptions(),
     });
   } catch (error) {
