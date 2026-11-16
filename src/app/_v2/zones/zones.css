@@ -49,16 +49,18 @@
   .root[data-engine="v2"] .v2-comp__lead { min-width: 0; }
   .root[data-engine="v2"] .v2-comp__stack { display: grid; gap: var(--v2-space-3); align-content: start; }
 
-  .root[data-engine="v2"] .v2-comp--leadList { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .root[data-engine="v2"] .v2-comp--leadList { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
   .root[data-engine="v2"] .v2-comp--split { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
   .root[data-engine="v2"] .v2-comp--grid2x2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .root[data-engine="v2"] .v2-comp--overlayPair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .root[data-engine="v2"] .v2-comp--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .root[data-engine="v2"] .v2-comp--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
+  .root[data-engine="v2"] .v2-zone__overflow { display: grid; gap: var(--v2-space-3); margin-top: var(--v2-space-4); }
+
   /* Sponsored */
   .root[data-engine="v2"] .v2-comp--sponsored {
-    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-columns: 260px minmax(0, 1fr) minmax(0, 1fr);
     background: var(--v2-surface);
     padding: var(--v2-space-4);
     border-radius: var(--v2-radius-card);
@@ -72,9 +74,9 @@
     color: var(--v2-text-muted);
   }
   .root[data-engine="v2"] .v2-sponsored__name { font-family: var(--v2-font-heading); font-size: var(--v2-fs-h3); }
-  .root[data-engine="v2"] .v2-sponsored__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--v2-space-4); }
   .root[data-engine="v2"] .v2-sponsored__foot {
     grid-column: 1 / -1;
+    text-align: right;
     margin: 0;
     font-family: var(--v2-font-meta);
     font-size: var(--v2-fs-meta);
@@ -114,7 +116,6 @@
     .root[data-engine="v2"] .v2-comp--cols-3,
     .root[data-engine="v2"] .v2-comp--cols-4,
     .root[data-engine="v2"] .v2-comp--sponsored,
-    .root[data-engine="v2"] .v2-sponsored__cards,
     .root[data-engine="v2"] .v2-dated__group,
     .root[data-engine="v2"] .v2-dated__grid { grid-template-columns: minmax(0, 1fr); }
   }

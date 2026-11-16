@@ -6,7 +6,7 @@ import type { SummaryInline, ZoneHeadContent } from '@/lib/accessories/zoneHeadT
 /** Title element of the first card in the zone; the head sizes are derived from it. */
 export type ZoneHeadCardTitle = 'h1' | 'h2' | 'hero';
 
-export function renderInline(nodes: SummaryInline[]): React.ReactNode {
+function renderInline(nodes: SummaryInline[]): React.ReactNode {
   return nodes.map((node, index) => {
     switch (node.kind) {
       case 'text':

@@ -1,5 +1,6 @@
+import { planSlots } from '@/app/_v2/lib/layout';
 import type { WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { itemKind, limitToCapacity, nodePublicationDate } from '@/app/_v2/lib/zoneItems';
+import { itemKind, nodePublicationDate } from '@/app/_v2/lib/zoneItems';
 
 const node = (o: Record<string, unknown>) => o as unknown as WebpageNodeModel;
 
@@ -21,9 +22,9 @@ describe('nodePublicationDate', () => {
   });
 });
 
-describe('limitToCapacity', () => {
-  it('truncates fixed compositions only', () => {
-    expect(limitToCapacity([1, 2, 3], 'overlayPair')).toEqual([1, 2]);
-    expect(limitToCapacity([1, 2, 3], 'threeUp')).toEqual([1, 2, 3]);
+describe('overflow', () => {
+  it('planSlots never drops items past capacity', () => {
+    expect(planSlots('overlayPair', 4)).toEqual(['overlay', 'overlay', 'compact', 'compact']);
+    expect(planSlots('leadList', 7)).toHaveLength(7);
   });
 });

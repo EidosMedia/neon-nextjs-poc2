@@ -1,7 +1,28 @@
+import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import type { ZoneHeadContent } from '@/lib/accessories/zoneHeadTypes';
-import { renderInline } from '@/app/components/webpage/ZoneHead';
+import type { SummaryInline, ZoneHeadContent } from '@/lib/accessories/zoneHeadTypes';
+
+function renderInline(nodes: SummaryInline[]): ReactNode {
+  return nodes.map((node, index) => {
+    switch (node.kind) {
+      case 'text':
+        return node.text;
+      case 'br':
+        return <br key={index} />;
+      case 'link':
+        return (
+          <a key={index} href={node.href}>
+            {renderInline(node.children)}
+          </a>
+        );
+      case 'mark': {
+        const Mark = node.mark;
+        return <Mark key={index}>{renderInline(node.children)}</Mark>;
+      }
+    }
+  });
+}
 
 type Props = {
   head?: ZoneHeadContent;

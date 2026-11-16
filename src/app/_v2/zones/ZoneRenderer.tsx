@@ -2,9 +2,9 @@ import type { BaseModel, PageData, WebpageModel, WebpageNodeModel } from '@eidos
 import { normalizeViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
-import { groupByDate, planSlots, resolveComposition, type ConcreteComposition } from '../lib/layout';
+import { COMPOSITION_CAPACITY, groupByDate, planSlots, resolveComposition, type ConcreteComposition } from '../lib/layout';
 import { getItemSettings, getZoneSettings, V2_DEFAULTS, type ItemSettings } from '../lib/settings';
-import { itemKind, limitToCapacity, nodePublicationDate } from '../lib/zoneItems';
+import { itemKind, nodePublicationDate } from '../lib/zoneItems';
 import ItemSwitch from './ItemSwitch';
 import ZoneTitle from './ZoneTitle';
 import Cards from './compositions/Cards';
@@ -52,10 +52,10 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
     settingsFor = (node) => getItemSettings(zoneData, props.zone, node);
   }
 
-  nodes = limitToCapacity(nodes, composition);
   if (nodes.length === 0) return null;
 
   const slots = planSlots(composition, nodes.length);
+  const titled = Boolean(titleProps?.head?.title);
   const cells: Cell[] = nodes.map((node, i) => {
     const settings = settingsFor(node);
     return {
@@ -63,21 +63,25 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
       highlight: settings.kind === 'article' && settings.variant === 'highlight',
       el: (
         <div className="relative group">
-          <ItemSwitch node={node} settings={settings} slot={slots[i]} viewStatus={viewStatus} />
+          <ItemSwitch node={node} settings={settings} slot={slots[i]} viewStatus={viewStatus} titled={titled} />
         </div>
       ),
     };
   });
 
+  const capacity = COMPOSITION_CAPACITY[composition];
+  const drawn = Number.isFinite(capacity) ? cells.slice(0, capacity) : cells;
+  const overflow = Number.isFinite(capacity) ? cells.slice(capacity) : [];
+
   let body: React.ReactNode;
   switch (composition) {
-    case 'leadList': body = <LeadList cells={cells} />; break;
-    case 'split': body = <Split cells={cells} />; break;
-    case 'grid2x2': body = <Grid2x2 cells={cells} />; break;
-    case 'overlayPair': body = <OverlayPair cells={cells} />; break;
+    case 'leadList': body = <LeadList cells={drawn} />; break;
+    case 'split': body = <Split cells={drawn} />; break;
+    case 'grid2x2': body = <Grid2x2 cells={drawn} />; break;
+    case 'overlayPair': body = <OverlayPair cells={drawn} />; break;
     case 'threeUp': body = <Cards cells={cells} columns={3} />; break;
     case 'fourUp': body = <Cards cells={cells} columns={4} />; break;
-    case 'sponsored': body = <Sponsored cells={cells} sponsorName={sponsorName} />; break;
+    case 'sponsored': body = <Sponsored cells={drawn} sponsorName={sponsorName} />; break;
     case 'datedListing': {
       const byKey = new Map(cells.map((c, i) => [nodes[i], c] as const));
       const groups = groupByDate(nodes, nodePublicationDate).map((g) => ({
@@ -93,7 +97,16 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
   return (
     <section className={`v2-zone v2-zone--${titleProps?.style ?? 'bar'}`} data-composition={composition}>
       {titleProps && <ZoneTitle {...titleProps} />}
-      <div className="v2-zone__body">{body}</div>
+      <div className="v2-zone__body">
+        {body}
+        {overflow.length > 0 && (
+          <div className="v2-zone__overflow">
+            {overflow.map((c) => (
+              <div key={c.key} className="v2-comp__cell">{c.el}</div>
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

@@ -11,10 +11,10 @@ import ArticleItem from '../items/ArticleItem';
 import GalleryItem from '../items/GalleryItem';
 import LiveblogItem from '../items/LiveblogItem';
 
-type Props = { node: WebpageNodeModel; settings: ItemSettings; slot: SlotShape; viewStatus: ViewStatus };
+type Props = { node: WebpageNodeModel; settings: ItemSettings; slot: SlotShape; viewStatus: ViewStatus; titled?: boolean };
 
-export default function ItemSwitch({ node, settings, slot, viewStatus }: Props) {
-  const headingLevel = slot === 'lead' ? 2 : 3;
+export default function ItemSwitch({ node, settings, slot, viewStatus, titled = false }: Props) {
+  const headingLevel = slot === 'lead' && !titled ? 2 : 3;
   if (settings.kind === 'gallery') {
     return <GalleryItem node={node} view={resolveGalleryItemView(settings, slot)} viewStatus={viewStatus} headingLevel={headingLevel} />;
   }

@@ -7,9 +7,7 @@ export default function Sponsored({ cells, sponsorName }: { cells: Cell[]; spons
         <span className="v2-sponsored__label">Paid content</span>
         {sponsorName && <span className="v2-sponsored__name">{sponsorName}</span>}
       </div>
-      <div className="v2-sponsored__cards">
-        {cells.map((c) => <div key={c.key} className="v2-comp__cell">{c.el}</div>)}
-      </div>
+      {cells.map((c) => <div key={c.key} className="v2-comp__cell">{c.el}</div>)}
       {sponsorName && <p className="v2-sponsored__foot">Paid for by {sponsorName}</p>}
     </div>
   );
