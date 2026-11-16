@@ -58,8 +58,10 @@ and brand modules only; page structure is shared.
 - `src/app/globals.css` declares the layer order `@layer theme, base, components, v2, utilities;`.
   All v2 CSS lives in `@layer v2`, so it beats legacy `components` rules and loses to utilities.
 - Unlayered legacy globals in `globals.css` would otherwise beat any layered v2 rule. They are
-  excluded from v2 pages with `:where(:not(.root[data-engine="v2"] *))` appended to the selector
-  (zero specificity). Any new unlayered global element rule must use the same exclusion.
+  excluded from v2 pages with `:where(:not(.root[data-engine="v2"] *), .v2-legacy *)` appended to the
+  subject compound of the selector (zero specificity; it still matches legacy elements and anything inside a
+  `.v2-legacy` island). Any new unlayered global element or typography-class rule must use the same
+  exclusion. Legacy components rendered inside a v2 root are wrapped in `<div className="v2-legacy">`.
 - Scope brand rules with `.root[data-theme="<key>"]`; never leak across themes.
 
 ## Editor DOM contract (checklist, `src/app/_v2/items/ItemFrame.tsx`)

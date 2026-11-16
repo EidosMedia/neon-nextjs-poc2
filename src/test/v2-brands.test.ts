@@ -120,13 +120,20 @@ describe('globals.css layering for v2', () => {
     (type) => {
       const bareRule = new RegExp(`^\\s*\\[data-type="${type}"\\]\\s*\\{`, 'm');
       expect(globalsCss).not.toMatch(bareRule);
-      expect(globalsCss).toContain(`[data-type="${type}"]:where(:not(.root[data-engine="v2"] *)) {`);
+      expect(globalsCss).toContain(`[data-type="${type}"]:where(:not(.root[data-engine="v2"] *), .v2-legacy *) {`);
     },
   );
 
   it('excludes v2 roots from the unlayered p > a rule', () => {
-    expect(globalsCss).toContain('a:where(:not(.root[data-engine="v2"] *)) {\n    @apply text-base underline');
+    expect(globalsCss).toContain('a:where(:not(.root[data-engine="v2"] *), .v2-legacy *) {\n    @apply text-base underline');
   });
+
+  it.each(['body-large', 'body-medium', 'body-small', 'subhead1', 'subhead2', 'author-medium', 'author-small'])(
+    'guards the unlayered .%s typography rule',
+    (cls) => {
+      expect(globalsCss).toContain(`.${cls}:where(:not(.root[data-engine="v2"] *), .v2-legacy *)`);
+    },
+  );
 
   it('does not import the legacy sportsarena/nextfrontier theme files', () => {
     expect(globalsCss).not.toContain('themes/sportsarena.css');

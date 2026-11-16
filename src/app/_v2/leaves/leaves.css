@@ -84,6 +84,42 @@
   .root[data-engine="v2"] .v2-leaf__text p { margin: 0 0 var(--v2-space-2); }
   .root[data-engine="v2"] .v2-leaf__text img { max-width: 100%; height: auto; }
   .root[data-engine="v2"] .v2-leaf__text a { color: var(--v2-link); }
+  /* renderContent gives paragraphs/captions/credits legacy body-* classes; the v2 leaf owns their typography. */
+  .root[data-engine="v2"] .v2-leaf__text p,
+  .root[data-engine="v2"] .v2-leaf__text .body-large {
+    font-family: var(--v2-font-body); font-size: var(--v2-fs-body); line-height: 1.7; letter-spacing: normal;
+  }
+  .root[data-engine="v2"] .v2-leaf__text figcaption,
+  .root[data-engine="v2"] .v2-leaf__text [data-type="caption"],
+  .root[data-engine="v2"] .v2-leaf__text [data-type="credit"] {
+    font-family: var(--v2-font-body); font-size: var(--v2-fs-meta); line-height: 1.7;
+    color: var(--v2-text-muted) !important; /* beats the unlayered/utility text-gray-500 */
+  }
+  .root[data-engine="v2"] .v2-leaf__text figcaption p,
+  .root[data-engine="v2"] .v2-leaf__text [data-type="caption"] p {
+    font-size: inherit; color: inherit; margin: 0;
+  }
+
+  /* Body lists, subheads and quotes (the legacy global list/heading rules do not reach the v2 root). */
+  .root[data-engine="v2"] .v2-leaf__text :is(h2, h3, h4) {
+    margin: var(--v2-space-4) 0 var(--v2-space-1); font-family: var(--v2-font-heading); line-height: 1.2; font-weight: 700;
+  }
+  .root[data-engine="v2"] .v2-leaf__text h2 { font-size: var(--v2-fs-h2); }
+  .root[data-engine="v2"] .v2-leaf__text h3 { font-size: var(--v2-fs-h3); }
+  .root[data-engine="v2"] .v2-leaf__text h4 { font-size: var(--v2-fs-h4); }
+  .root[data-engine="v2"] .v2-leaf__text :is(ul, ol) { margin: 0 0 var(--v2-space-2); padding-inline-start: 1.5em; }
+  .root[data-engine="v2"] .v2-leaf__text ul { list-style: disc; }
+  .root[data-engine="v2"] .v2-leaf__text ol { list-style: decimal; }
+  .root[data-engine="v2"] .v2-leaf__text :is(ul, ol) :is(ul, ol) { margin: var(--v2-space-1) 0 0; }
+  .root[data-engine="v2"] .v2-leaf__text ul ul { list-style: circle; }
+  .root[data-engine="v2"] .v2-leaf__text li { margin-bottom: var(--v2-space-1); padding-inline-start: 0.25em; }
+  .root[data-engine="v2"] .v2-leaf__text li > p { margin: 0; }
+  .root[data-engine="v2"] .v2-leaf__text blockquote {
+    margin: var(--v2-space-3) 0; padding: var(--v2-space-1) 0 var(--v2-space-1) var(--v2-space-3);
+    border-inline-start: 4px solid var(--v2-brand); color: var(--v2-text-muted);
+    font-family: var(--v2-font-heading); font-size: var(--v2-fs-standfirst); font-style: italic;
+  }
+  .root[data-engine="v2"] .v2-leaf__text blockquote p { font-family: inherit; font-size: inherit; margin: 0; }
 
   /* ---------- Ads ---------- */
   .root[data-engine="v2"] .v2-ad {

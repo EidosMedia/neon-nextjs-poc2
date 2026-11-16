@@ -112,6 +112,15 @@ Engine selection: `data-theme` is the site's theme; `data-engine="v2"` is set on
 the theme is in `V2_THEMES`. `_themeRouter.tsx` maps `default`, `theglobe`, `sportsarena` and
 `nextfrontier` to the v2 barrel (`src/app/_v2/index.ts`); legacy keys keep their own page folders. Use the
 `neon-v2-brand` skill for v2 brands and `neon-new-theme` for legacy structural themes.
+`data-theme`/`data-engine` use `resolveRenderTheme()` (`src/app/themeKeys.ts`): an unknown explicit theme
+renders with the `default` page components and look, while accessory lookups keep the raw site theme so it
+consumes no accessory values.
+
+Unlayered legacy globals in `globals.css` are guarded with `:where(:not(.root[data-engine="v2"] *), .v2-legacy *)`
+(zero specificity). Legacy islands rendered inside a v2 root (`LoggedUserBar`, the legacy
+`NewsletterWebpage`) are wrapped in `<div className="v2-legacy">` so they keep the legacy globals.
+
+The v2 paywall is visual only: the full model still reaches the client, so it is not access control.
 
 ## Authentication Model
 

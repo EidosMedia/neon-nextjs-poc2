@@ -12,5 +12,5 @@ export { default as AboutPage } from './pages/AboutPage';
 export { default as LoginPage } from './pages/LoginPage';
 export { default as NotFound } from './pages/NotFound';
 // Legacy re-exports (not yet v2).
-export { default as NewsletterWebpage } from '../_pages/NewsletterWebpage';
+export { default as NewsletterWebpage } from './pages/NewsletterLegacy';
 export { default as ArticleOrganism } from '../components/base/Organism/ArticleOrganism';

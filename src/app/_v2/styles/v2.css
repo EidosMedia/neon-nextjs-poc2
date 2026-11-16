@@ -16,6 +16,11 @@
     font-family: var(--v2-font-body);
   }
 
+  /* Legacy island: layout-transparent wrapper so sticky/fixed legacy chrome keeps its containing block. */
+  .root[data-engine="v2"] .v2-legacy {
+    display: contents;
+  }
+
   .v2-container {
     max-width: 1440px;
     margin-inline: auto;

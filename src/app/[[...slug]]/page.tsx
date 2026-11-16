@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
 import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
+import LegacyIsland from '../_v2/ui/LegacyIsland';
 import { canShowStyleGuide } from '../_v2/ui/gate';
 import * as DefaultPages from '../_v2';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
@@ -63,7 +64,9 @@ export default async function Page({
             DefaultPages.SearchPage;
           return (
             <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+                <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              </LegacyIsland>
               <SearchPage data={site} />
             </div>
           );
@@ -76,7 +79,9 @@ export default async function Page({
             DefaultPages.AboutPage;
           return (
             <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+                <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              </LegacyIsland>
               <AboutPage data={site} />
             </div>
           );
@@ -89,7 +94,9 @@ export default async function Page({
             DefaultPages.LoginPage;
           return (
             <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+                <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              </LegacyIsland>
               <LoginPage data={site} />
             </div>
           );
@@ -154,12 +161,14 @@ export default async function Page({
 
   return (
     <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
-      <LoggedUserBar
-        data={{
-          ...pageDataJSON,
-          editUrl: `${process.env.NEON_APP_URL}/neon/app/open/${pageDataJSON.model.data.id}`,
-        }}
-      />
+      <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+        <LoggedUserBar
+          data={{
+            ...pageDataJSON,
+            editUrl: `${process.env.NEON_APP_URL}/neon/app/open/${pageDataJSON.model.data.id}`,
+          }}
+        />
+      </LegacyIsland>
       {PageComponent ? <PageComponent data={pageDataJSON} /> : <DefaultPages.Article data={pageDataJSON} />}
     </div>
   );
