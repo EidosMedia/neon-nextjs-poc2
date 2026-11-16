@@ -16,7 +16,19 @@ export type TeaserFields = {
 
 const str = (v: unknown): string | undefined => (typeof v === 'string' && v !== '' ? v : undefined);
 
-export function resolveTeaserFields(node: WebpageNodeModel): TeaserFields {
+type CropPicture = { dynamicCropsResourceUrls?: Record<string, string> };
+
+/** Mirrors legacy getTeaserOrMainImageUrl: editor-chosen teaser crop, then main crop, then raw mainPicture. */
+export function resolveTeaserImageUrl(node: WebpageNodeModel, format: string): string | undefined {
+  const sys = (node as unknown as { links?: { system?: Record<string, CropPicture[] | undefined> } }).links?.system;
+  return (
+    str(sys?.teaserPicture?.[0]?.dynamicCropsResourceUrls?.[format]) ??
+    str(sys?.mainPicture?.[0]?.dynamicCropsResourceUrls?.[format]) ??
+    str(node.mainPicture)
+  );
+}
+
+export function resolveTeaserFields(node: WebpageNodeModel, format = 'Wide_small'): TeaserFields {
   const n = node as WebpageNodeModel & { author?: string; overhead?: string };
   const attrs = n.attributes;
   const url = n.url ?? '';
@@ -26,7 +38,7 @@ export function resolveTeaserFields(node: WebpageNodeModel): TeaserFields {
     titleId: str(attrs?.contentIds?.teaserTitle),
     summaryId: str(attrs?.contentIds?.teaserSummary),
     kicker: str(attrs?.overhead) ?? str(n.overhead) ?? str(url.split('/')[1]),
-    imageUrl: str(n.mainPicture),
+    imageUrl: resolveTeaserImageUrl(node, format),
     href: url,
     byline: str(n.author),
     date: str(n.pubInfo?.publicationTime) ?? str(n.pubInfo?.pubDate),

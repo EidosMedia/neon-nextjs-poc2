@@ -20,6 +20,8 @@ export default function LiveblogItem({ node, view, viewStatus, headingLevel }: P
     <ItemFrame
       node={node}
       viewStatus={viewStatus}
+      showShare={view.showShare}
+      format={view.variant === 'panel' ? 'Wide_large' : 'Wide_small'}
       className={clsx('v2-item v2-item--liveblog', `v2-item--${view.variant}`, !view.showImage && 'v2-item--no-image')}
     >
       {(f, { Title, Summary }) => (

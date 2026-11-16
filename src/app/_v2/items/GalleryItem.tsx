@@ -22,6 +22,7 @@ export default function GalleryItem({ node, view, viewStatus, headingLevel }: Pr
     <ItemFrame
       node={node}
       viewStatus={viewStatus}
+      format={view.variant === 'fullBleed' ? 'Wide_large' : 'Wide_small'}
       className={clsx('v2-item v2-item--gallery', `v2-item--${view.variant}`, 'v2-item--no-thumbs')}
     >
       {(f, { Title, Summary }) => (

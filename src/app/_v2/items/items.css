@@ -166,4 +166,25 @@
     border-radius: var(--v2-radius-card);
   }
   .root[data-engine="v2"] .v2-item--grid .v2-item__title { font-size: var(--v2-fs-h4); }
+
+  /* ---------- Share ---------- */
+  .root[data-engine="v2"] .v2-item-wrap { position: relative; }
+  .root[data-engine="v2"] .v2-item__share {
+    display: flex;
+    align-items: center;
+    gap: var(--v2-space-1);
+    margin-top: var(--v2-space-1);
+    font-family: var(--v2-font-meta);
+    font-size: var(--v2-fs-meta);
+  }
+  .root[data-engine="v2"] .v2-item__share-btn {
+    font: inherit;
+    color: var(--v2-link);
+    background: none;
+    border: 1px solid var(--v2-rule);
+    border-radius: var(--v2-radius-pill);
+    padding: 4px var(--v2-space-2);
+    cursor: pointer;
+  }
+  .root[data-engine="v2"] .v2-item__share-note { color: var(--v2-text-muted); }
 }

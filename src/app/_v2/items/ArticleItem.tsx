@@ -25,6 +25,7 @@ export default function ArticleItem({ node, view, viewStatus, headingLevel }: Pr
     <ItemFrame
       node={node}
       viewStatus={viewStatus}
+      format={view.variant === 'lead' ? 'Wide_large' : 'Wide_small'}
       className={clsx(
         'v2-item',
         `v2-item--${view.variant}`,

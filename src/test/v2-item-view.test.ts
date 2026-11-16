@@ -46,6 +46,17 @@ describe('resolveTeaserFields', () => {
   });
 });
 
+describe('teaser image crops', () => {
+  const crops = (u: string) => [{ dynamicCropsResourceUrls: { Wide_small: u } }];
+  it('prefers teaser crop, then main crop, then mainPicture', () => {
+    const links = { system: { teaserPicture: crops('t'), mainPicture: crops('m') } };
+    expect(resolveTeaserFields(node({ title: 'T', url: '/', mainPicture: 'raw', links })).imageUrl).toBe('t');
+    expect(resolveTeaserFields(node({ title: 'T', url: '/', mainPicture: 'raw', links: { system: { mainPicture: crops('m') } } })).imageUrl).toBe('m');
+    expect(resolveTeaserFields(node({ title: 'T', url: '/', mainPicture: 'raw', links })).imageUrl).not.toBe('raw');
+    expect(resolveTeaserFields(node({ title: 'T', url: '/', mainPicture: 'raw' }), 'Wide_large').imageUrl).toBe('raw');
+  });
+});
+
 describe('resolveArticleItemView', () => {
   const base = V2_DEFAULTS.articleItem;
   it('auto takes the slot', () => {
