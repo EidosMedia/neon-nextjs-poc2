@@ -76,6 +76,7 @@ function selectDefinitions(
 ): AccessoryDefinition[] {
   const candidates = definitionsForLevel(definitions, context.level);
   const selected = new Map<string, { definition: AccessoryDefinition; score: number[] }>();
+  const scored: { definition: AccessoryDefinition; score: number[] }[] = [];
 
   for (const definition of candidates) {
     const typeScore = selectorScore(definition.types, context.type, context.baseType);
@@ -97,7 +98,22 @@ function selectDefinitions(
       continue;
     }
 
-    const score = [typeScore, zoneScore, linkedTypeScore];
+    scored.push({ definition, score: [typeScore, zoneScore, linkedTypeScore] });
+  }
+
+  // Spec 5.1: a baseType-only definition gives way to an exact-type definition (e.g. article/gallery).
+  const isLink = context.level === 'link';
+  const exactIndex = isLink ? 2 : 0;
+  const selectors = (definition: AccessoryDefinition) => (isLink ? definition.linkedTypes : definition.types) ?? [];
+  const baseOf = isLink ? context.linkedBaseType : context.baseType;
+  const hasExact = scored.some(({ score }) => score[exactIndex] === 2);
+
+  for (const { definition, score } of scored) {
+    if (hasExact
+      && score[exactIndex] === 1
+      && selectors(definition).every((selector) => selector === baseOf)) {
+      continue;
+    }
     const previous = selected.get(definition.name);
     if (!previous || isMoreSpecific(score, previous.score)) {
       selected.set(definition.name, { definition, score });

@@ -182,3 +182,49 @@ describe('resolveAccessoryValues string and text properties', () => {
     expect(resolveAccessoryValues(noSize, stored({ zonetitle: 'x' }), zoneContext)).toEqual({ shape: {} });
   });
 });
+describe('exact type exclusion', () => {
+  const def = (name: string, extra: Record<string, unknown>) => ({
+    name,
+    version: '1.0',
+    types: ['article'],
+    ...extra,
+  });
+  const doc = {
+    version: '1.0',
+    theme: 'default',
+    pageAccessories: {
+      articleLeaf: def('articleLeaf', {}),
+      galleryLeaf: def('galleryLeaf', { types: ['gallery'] }),
+      header: def('header', {
+        types: ['article', 'liveblog', 'webpage', 'homewebpage', 'sectionwebpage', 'section', 'site'],
+      }),
+    },
+    linkAccessories: {
+      articleItem: def('articleItem', { types: ['homewebpage'], zones: ['main'], linkedTypes: ['article'] }),
+      galleryItem: def('galleryItem', { types: ['homewebpage'], zones: ['main'], linkedTypes: ['gallery'] }),
+    },
+  } as unknown as AccessoryDefinitions;
+
+  test('exact page type excludes baseType-only definitions of other names', () => {
+    const r = resolveAccessoryValues(doc, null, { theme: 'default', level: 'page', type: 'gallery', baseType: 'article' })!;
+    expect(Object.keys(r).sort()).toEqual(['galleryLeaf', 'header']);
+  });
+
+  test('unknown article subtype falls back to the article definition', () => {
+    const r = resolveAccessoryValues(doc, null, { theme: 'default', level: 'page', type: 'interview', baseType: 'article' })!;
+    expect(Object.keys(r).sort()).toEqual(['articleLeaf', 'header']);
+  });
+
+  test('exact linked type excludes baseType-only link definitions', () => {
+    const r = resolveAccessoryValues(doc, null, {
+      theme: 'default', level: 'link', type: 'homewebpage', baseType: 'webpage',
+      zone: 'main', linkedType: 'gallery', linkedBaseType: 'article',
+    })!;
+    expect(Object.keys(r)).toEqual(['galleryItem']);
+  });
+
+  test('a definition targeting many page types survives on a gallery page', () => {
+    const r = resolveAccessoryValues(doc, null, { theme: 'default', level: 'page', type: 'gallery', baseType: 'article' })!;
+    expect(Object.keys(r)).toContain('header');
+  });
+});
