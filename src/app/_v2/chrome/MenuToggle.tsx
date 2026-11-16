@@ -1,5 +1,5 @@
 'use client';
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 
 export type ChromeLink = { label: string; href: string; items?: ChromeLink[] };
@@ -19,9 +19,23 @@ export default function MenuToggle({
 }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
   return (
     <div className={`v2-menutoggle${className ? ` ${className}` : ''}`}>
       <button
+        ref={buttonRef}
         type="button"
         className="v2-menutoggle__button"
         aria-expanded={open}

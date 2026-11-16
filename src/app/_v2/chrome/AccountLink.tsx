@@ -1,14 +1,21 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useWebauth from '@/hooks/useWebauth';
+import { logoutWebUser } from '@/lib/auth/logout';
 
-/** Login link, or the signed-in user's name with a logout button. Uses the same `webauth` flow as the legacy LoginButton. */
+/** Login link, or the signed-in user's name with a logout button. Same webauth flow as the legacy LoginButton. */
 export default function AccountLink({ webauth }: { webauth?: string }) {
   const { data } = useWebauth();
+  const [currentWebauth, setCurrentWebauth] = useState(webauth);
   const [busy, setBusy] = useState(false);
 
-  if (!webauth) {
+  // Follow the server-provided cookie value when it changes.
+  useEffect(() => {
+    setCurrentWebauth(webauth);
+  }, [webauth]);
+
+  if (!currentWebauth) {
     return (
       <Link href="/login" className="v2-header__login">
         Login
@@ -18,8 +25,7 @@ export default function AccountLink({ webauth }: { webauth?: string }) {
 
   const logout = async () => {
     setBusy(true);
-    await fetch('/api/users/logout', { method: 'POST', credentials: 'include' });
-    window.location.reload();
+    await logoutWebUser();
   };
 
   return (

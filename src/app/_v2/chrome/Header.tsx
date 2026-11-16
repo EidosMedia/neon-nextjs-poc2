@@ -60,7 +60,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
         {brand.header === 'globe' && (
           <>
             <div className="v2-header__tools">
-              {!minimal && <MenuToggle items={fullLinks} />}
+              {!minimal && <MenuToggle items={fullLinks} className="v2-menutoggle--desktop" />}
               {!minimal && (
                 <Link href="/search" className="v2-header__search">
                   Search
@@ -104,7 +104,6 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
           <MenuToggle items={mainLinks} className="v2-menutoggle--mobile" label="Sections" />
         </div>
       )}
-      {/* blocks:headers (Task 15 renders header blocks here) */}
     </header>
   );
 }

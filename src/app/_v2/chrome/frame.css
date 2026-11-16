@@ -136,6 +136,13 @@
     font-family: var(--v2-font-body);
     font-size: var(--v2-fs-body);
   }
+  .root[data-engine="v2"] .v2-header a:focus-visible,
+  .root[data-engine="v2"] .v2-header button:focus-visible,
+  .root[data-engine="v2"] .v2-footer a:focus-visible,
+  .root[data-engine="v2"] .v2-menutoggle a:focus-visible {
+    outline: 2px solid var(--v2-link);
+    outline-offset: 2px;
+  }
   /* The mobile-only toggle is hidden on desktop. */
   .root[data-engine="v2"] .v2-menutoggle--mobile {
     display: none;
@@ -340,6 +347,9 @@
     }
     .root[data-engine="v2"] .v2-header__navrow .v2-nav,
     .root[data-engine="v2"] .v2-header__pill .v2-nav {
+      display: none;
+    }
+    .root[data-engine="v2"] .v2-menutoggle--desktop {
       display: none;
     }
     .root[data-engine="v2"] .v2-menutoggle--mobile {

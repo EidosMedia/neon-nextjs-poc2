@@ -6,13 +6,13 @@ import { getActiveTheme, normalizeTheme } from '@/lib/accessories/defaultThemeAc
 import Header from './Header';
 import Footer from './Footer';
 
-type Common = { children: ReactNode; rail?: ReactNode; wide?: boolean };
+type Common = { children: ReactNode; rail?: ReactNode; wide?: boolean; hero?: 'overlay' };
 type ModelProps = Common & { data: PageData<BaseModel>; site?: undefined };
 type SiteProps = Common & { site: Site; data?: undefined };
 
 /** Page frame for every v2 page: header, header blocks, main, footer blocks, footer. */
 export default async function PageShell(props: ModelProps | SiteProps) {
-  const { children, rail, wide } = props;
+  const { children, rail, wide, hero } = props;
   let site: Site | undefined;
   let theme: string;
   let siteLabel: string | undefined;
@@ -41,7 +41,11 @@ export default async function PageShell(props: ModelProps | SiteProps) {
     <>
       <link rel="stylesheet" href={brand.fontsHref} precedence="default" />
       {settings.header.enabled && <Header {...frame} header={settings.header} />}
-      <main className={`v2-main${wide ? ' v2-main--wide' : ''}${rail ? ' v2-main--rail' : ''}`}>
+      {/* blocks:headers (Task 15 renders header blocks here) */}
+      <main
+        data-hero={hero}
+        className={`v2-main${wide ? ' v2-main--wide' : ''}${rail ? ' v2-main--rail' : ''}`}
+      >
         {rail ? (
           <div className="v2-container v2-main__grid">
             <div className="v2-main__content">{children}</div>
