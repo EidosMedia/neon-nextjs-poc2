@@ -1,0 +1,19 @@
+@layer v2 {
+  .root[data-engine="v2"] {
+    background: var(--v2-bg);
+    color: var(--v2-text);
+    font-family: var(--v2-font-body);
+  }
+
+  .v2-container {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 80px;
+  }
+
+  @media (max-width: 767px) {
+    .v2-container {
+      padding-inline: 16px;
+    }
+  }
+}

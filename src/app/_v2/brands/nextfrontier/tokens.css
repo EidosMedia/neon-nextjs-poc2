@@ -1,0 +1,39 @@
+.root[data-theme="nextfrontier"] {
+  --v2-bg: #1D1930;
+  --v2-surface: #323742;
+  --v2-surface-raised: #461FD2;
+  --v2-text: #F2F6FF;
+  --v2-text-muted: #D3D8E6;
+  --v2-rule: #737B8E;
+  --v2-brand: #461FD2;
+  --v2-brand-strong: #1D1930;
+  --v2-on-brand: #FFFFFF;
+  --v2-accent: #FEF445;
+  --v2-on-accent: #1D1930;
+  --v2-live: #FBB3DA;
+  --v2-link: #FEF445;
+
+  --v2-font-display: "Abril Fatface", Georgia, serif;
+  --v2-font-heading: "PT Sans", system-ui, sans-serif;
+  --v2-font-body: "Noto Sans", system-ui, sans-serif;
+  --v2-font-meta: "IBM Plex Mono", ui-monospace, monospace;
+
+  --v2-radius-card: 0px;
+  --v2-radius-media: 0px;
+  --v2-radius-pill: 100px;
+
+  --v2-space-1: 8px;
+  --v2-space-2: 16px;
+  --v2-space-3: 24px;
+  --v2-space-4: 32px;
+  --v2-space-5: 48px;
+  --v2-space-6: 80px;
+
+  --v2-fs-h1: 64px;
+  --v2-fs-h2: 36px;
+  --v2-fs-h3: 26px;
+  --v2-fs-h4: 20px;
+  --v2-fs-body: 17px;
+  --v2-fs-standfirst: 24px;
+  --v2-fs-meta: 12px;
+}

@@ -1,0 +1,40 @@
+.root[data-theme="default"],
+.root[data-theme="theglobe"] {
+  --v2-bg: #FFFFFF;
+  --v2-surface: #F3F3F4;
+  --v2-surface-raised: #D6E1F1;
+  --v2-text: #2F2F2F;
+  --v2-text-muted: #595959;
+  --v2-rule: #AFAFAF;
+  --v2-brand: #3969AC;
+  --v2-brand-strong: #1D3557;
+  --v2-on-brand: #FFFFFF;
+  --v2-accent: #81A4D5;
+  --v2-on-accent: #1D3557;
+  --v2-live: #D22D2D;
+  --v2-link: #3969AC;
+
+  --v2-font-display: "Gabarito", system-ui, sans-serif;
+  --v2-font-heading: "Gabarito", system-ui, sans-serif;
+  --v2-font-body: Georgia, serif;
+  --v2-font-meta: "Epilogue", system-ui, sans-serif;
+
+  --v2-radius-card: 8px;
+  --v2-radius-media: 2px;
+  --v2-radius-pill: 100px;
+
+  --v2-space-1: 8px;
+  --v2-space-2: 16px;
+  --v2-space-3: 24px;
+  --v2-space-4: 32px;
+  --v2-space-5: 48px;
+  --v2-space-6: 80px;
+
+  --v2-fs-h1: 40px;
+  --v2-fs-h2: 30px;
+  --v2-fs-h3: 20px;
+  --v2-fs-h4: 16px;
+  --v2-fs-body: 16px;
+  --v2-fs-standfirst: 20px;
+  --v2-fs-meta: 12px;
+}

@@ -14,6 +14,10 @@
 @import "./themes/business-globe.css";
 @import "./themes/nextfrontier.css";
 @import "./themes/financier.css";
+@import "./_v2/brands/theglobe/tokens.css";
+@import "./_v2/brands/sportsarena/tokens.css";
+@import "./_v2/brands/nextfrontier/tokens.css";
+@import "./_v2/styles/v2.css";
 
 @custom-variant dark (&:is(.dark *));
 
