@@ -1,6 +1,6 @@
 import type { PageData, WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import PageShell from '../chrome/PageShell';
-import { StackedZones } from './HomePage';
+import StackedZones from '../zones/StackedZones';
 
 type PageProps = { data: PageData<WebpageModel> };
 

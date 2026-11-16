@@ -18,9 +18,9 @@ export function resolveComposition(
   brandDefaults: Partial<Record<string, ConcreteComposition>>,
 ): ConcreteComposition {
   if (c !== 'auto') return c;
+  if (zone === 'main' && pageBaseType === 'sectionwebpage') return 'datedListing';
   const brand = brandDefaults[zone];
   if (brand) return brand;
-  if (zone === 'main' && pageBaseType === 'sectionwebpage') return 'datedListing';
   return ZONE_DEFAULTS[zone] ?? 'threeUp';
 }
 

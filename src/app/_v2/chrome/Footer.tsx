@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CurrentYear from './CurrentYear';
 import type { SiteFrameProps } from './Header';
 
 type FooterItem = { label: string; url?: string; ref?: string; items?: FooterItem[] };
@@ -9,7 +10,6 @@ export default function Footer({ site, footer, brand, siteLabel }: Omit<SiteFram
   const columns = ((site.menus?.Footer?.items ?? []) as FooterItem[]).filter(item => item.label);
   const lite = footer.variant === 'lite';
   const showColumns = footer.menu && !lite && columns.length > 0;
-  const year = new Date().getFullYear();
 
   return (
     <footer className={`v2-footer v2-footer--${brand.footer} v2-footer--${footer.variant}`}>
@@ -36,7 +36,7 @@ export default function Footer({ site, footer, brand, siteLabel }: Omit<SiteFram
           </nav>
         )}
         <p className="v2-footer__copy">
-          &copy; {year} {label}
+          &copy; <CurrentYear /> {label}
         </p>
       </div>
     </footer>

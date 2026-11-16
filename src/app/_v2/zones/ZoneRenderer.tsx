@@ -16,8 +16,8 @@ import Split from './compositions/Split';
 import Sponsored from './compositions/Sponsored';
 import type { Cell } from './compositions/types';
 
-type ZoneForm = { data: PageData<WebpageModel>; zone: string };
-type ItemsForm = { data: PageData<BaseModel>; items: WebpageNodeModel[]; composition: ConcreteComposition; title?: string };
+type ZoneForm = { data: PageData<WebpageModel>; zone: string; container?: boolean };
+type ItemsForm = { data: PageData<BaseModel>; items: WebpageNodeModel[]; composition: ConcreteComposition; title?: string; container?: boolean };
 export type ZoneRendererProps = ZoneForm | ItemsForm;
 
 const DEFAULT_ITEM_SETTINGS: Record<ItemSettings['kind'], ItemSettings> = {
@@ -94,7 +94,7 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
     }
   }
 
-  return (
+  const section = (
     <section className={`v2-zone v2-zone--${titleProps?.style ?? 'bar'}`} data-composition={composition}>
       {titleProps && <ZoneTitle {...titleProps} />}
       <div className="v2-zone__body">
@@ -109,4 +109,5 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
       </div>
     </section>
   );
+  return props.container ? <div className="v2-container">{section}</div> : section;
 }

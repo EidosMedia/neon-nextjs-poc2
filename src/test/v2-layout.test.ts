@@ -29,6 +29,12 @@ describe('resolveComposition', () => {
     expect(resolveComposition('auto', 'main', 'homewebpage', { main: 'fourUp' })).toBe('fourUp');
   });
 
+  it('section page main wins over brand defaults', () => {
+    expect(resolveComposition('auto', 'main', 'sectionwebpage', { main: 'leadList' })).toBe('datedListing');
+    expect(resolveComposition('auto', 'main', 'homewebpage', { main: 'leadList' })).toBe('leadList');
+    expect(resolveComposition('grid2x2', 'main', 'sectionwebpage', { main: 'leadList' })).toBe('grid2x2');
+  });
+
   it('falls back to threeUp for unknown zones', () => {
     expect(resolveComposition('auto', 'other', 'homewebpage', {})).toBe('threeUp');
   });
