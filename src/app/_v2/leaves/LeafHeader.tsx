@@ -8,6 +8,8 @@ type Props = {
   imageUrl?: string;
   /** Whether to render the hero image (articles: yes; gallery leaves supply their own media). */
   showImage?: boolean;
+  /** Omit the standfirst (the live blog renders it once, in its pinned summary block). */
+  hideSummary?: boolean;
 };
 
 const formatDate = (iso?: string) =>
@@ -17,7 +19,7 @@ const formatDate = (iso?: string) =>
  * Overhead, headline, summary and byline. Every element goes through renderContent with the
  * article model, so the legacy ContentEditable wrappers (inline edit, lock, versions) stay intact.
  */
-export default function LeafHeader({ article, hero, titleSize, imageUrl, showImage = true }: Props) {
+export default function LeafHeader({ article, hero, titleSize, imageUrl, showImage = true, hideSummary = false }: Props) {
   const content = article.files.content.data;
   const [overhead] = findElementsInContentJson(['overhead'], content);
   const [headline] = findElementsInContentJson(['headline'], content);
@@ -31,7 +33,7 @@ export default function LeafHeader({ article, hero, titleSize, imageUrl, showIma
     <div className="v2-leaf-head__text">
       {overhead && <div className="v2-leaf-head__kicker">{renderContent(overhead, article)}</div>}
       {headline && <div className="v2-leaf-head__title">{renderContent(headline, article)}</div>}
-      {summary && <div className="v2-leaf-head__standfirst">{renderContent(summary, article)}</div>}
+      {summary && !hideSummary && <div className="v2-leaf-head__standfirst">{renderContent(summary, article)}</div>}
       <div className="v2-leaf-head__meta">
         {hero === 'portrait' && image && <img className="v2-leaf-head__portrait" src={image} alt="" />}
         <span className="v2-leaf-head__by">

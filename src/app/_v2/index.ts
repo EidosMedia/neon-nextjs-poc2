@@ -7,3 +7,4 @@ export { default as DefaultSection, default as DefaultLanding } from './pages/Ch
 export { default as UIStyleGuide } from './ui/StyleGuide';
 export { default as Article, default as ArticleLongform } from './pages/ArticleLeaf';
 export { default as ArticleGallery } from './pages/GalleryLeaf';
+export { default as Liveblog } from './pages/LiveblogLeaf';
