@@ -9,7 +9,10 @@ import { resolveArticleItemView, resolveGalleryItemView, resolveLiveblogItemView
 import type { ConcreteComposition } from '../lib/layout';
 import type { ArticleItemVariant } from '../lib/settings';
 import ZoneRenderer from '../zones/ZoneRenderer';
-import { makeFixtureNode, makeFixtureNodes } from './fixtures';
+import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { getBrand } from '../brands/registry';
+import { getBrandModules } from '../brands/moduleRegistry';
+import { MODULE_FIXTURES, makeFixtureNode, makeFixtureNodes } from './fixtures';
 
 const ARTICLE_VARIANTS: ArticleItemVariant[] = [
   'standard', 'lead', 'compact', 'textOnly', 'overlay', 'opinion', 'highlight', 'sponsored',
@@ -114,7 +117,27 @@ async function compositions() {
   );
 }
 
+/** Each module of the current brand with a fixture block (never rendered on reader pages). */
+function moduleCells(theme: string) {
+  const brand = getBrand(theme);
+  const modules = getBrandModules(brand.key);
+  return brand.moduleKeys.map((key) => {
+    const Module = modules[key];
+    const block = MODULE_FIXTURES[brand.key]?.[key];
+    if (!Module || !block) return null;
+    return (
+      <div key={key} className="v2-ui__composition">
+        <p className="v2-ui__label">
+          <strong>{key}</strong> <span>{brand.name} module</span>
+        </p>
+        <Module block={block} />
+      </div>
+    );
+  });
+}
+
 export default async function StyleGuide({ site }: { site?: Site }) {
+  const theme = normalizeTheme(site?.root?.attributes?.theme);
   const body = (
     <div className="v2-container v2-ui">
       <h1 className="v2-ui__title">Style guide</h1>
@@ -125,6 +148,10 @@ export default async function StyleGuide({ site }: { site?: Site }) {
       <section className="v2-ui__section">
         <h2 className="v2-ui__heading">Compositions</h2>
         {await compositions()}
+      </section>
+      <section className="v2-ui__section">
+        <h2 className="v2-ui__heading">Brand modules</h2>
+        {moduleCells(theme)}
       </section>
     </div>
   );

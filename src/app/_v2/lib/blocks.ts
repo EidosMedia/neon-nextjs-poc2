@@ -1,4 +1,5 @@
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { getBrand } from '../brands/registry';
 
 /**
  * The ONLY module that knows the Neon Content Block model. The body contract is still undefined
@@ -76,8 +77,7 @@ export function decideBlockRender(
   return viewStatus === ViewStatus.PREVIEW ? { kind: 'placeholder' } : { kind: 'none' };
 }
 
-/** Stub: Task 16 replaces this with the brand modules registry lookup (`brand.modules`). */
+/** Block `sys.type` keys rendered as modules by the brand resolved from the theme. */
 export function getModuleKeys(theme: string): string[] {
-  void theme;
-  return [];
+  return [...getBrand(theme).moduleKeys];
 }

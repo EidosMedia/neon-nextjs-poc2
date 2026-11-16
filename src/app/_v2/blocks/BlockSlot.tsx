@@ -5,6 +5,8 @@ import { decideBlockRender, getModuleKeys, type BlockArea } from '../lib/blocks'
 import BlockBoundary from './BlockBoundary';
 import ZoneRenderer from '../zones/ZoneRenderer';
 import { fetchBlocks } from './fetchBlocks';
+import { getBrand } from '../brands/registry';
+import { getBrandModules } from '../brands/moduleRegistry';
 
 type Props = { data: PageData<BaseModel>; area: BlockArea };
 
@@ -13,7 +15,9 @@ export default async function BlockSlot({ data, area }: Props) {
   const blocks = await fetchBlocks(data, area);
   if (blocks.length === 0) return null;
   const viewStatus = normalizeViewStatus(data.siteData?.viewStatus);
-  const moduleKeys = getModuleKeys(getActiveTheme(data));
+  const theme = getActiveTheme(data);
+  const moduleKeys = getModuleKeys(theme);
+  const modules = getBrandModules(getBrand(theme).key);
 
   const rendered = blocks.map(({ link, data: block }, index) => {
     const key = `${area}-${link.id}-${index}`;
@@ -31,8 +35,16 @@ export default async function BlockSlot({ data, area }: Props) {
         );
       case 'placeholder':
         return <div key={key} className="v2-block v2-block--placeholder">{placeholder.props.children}</div>;
+      case 'module': {
+        const Module = modules[decision.key];
+        if (!Module || !block) return null;
+        return (
+          <BlockBoundary key={key} fallback={viewStatus === ViewStatus.PREVIEW ? placeholder : null}>
+            <Module block={block} />
+          </BlockBoundary>
+        );
+      }
       default:
-        // 'module' rendering arrives with Task 16 (brand.modules); until then nothing is drawn.
         return null;
     }
   });

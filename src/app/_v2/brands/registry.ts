@@ -1,4 +1,7 @@
 import type { ConcreteComposition } from '../lib/layout';
+import { MODULE_KEYS as GLOBE_MODULE_KEYS } from './theglobe/modules/keys';
+import { MODULE_KEYS as ARENA_MODULE_KEYS } from './sportsarena/modules/keys';
+import { MODULE_KEYS as FRONTIER_MODULE_KEYS } from './nextfrontier/modules/keys';
 
 export type BrandKey = 'theglobe' | 'sportsarena' | 'nextfrontier';
 
@@ -12,6 +15,8 @@ export type Brand = {
   leafRail: boolean;
   leafWidths: { main: number; body: number; rail: number };
   compositionDefaults: Partial<Record<string, ConcreteComposition>>;
+  /** Block `sys.type` values rendered as brand modules; components live in moduleRegistry.ts (keeps this file React-free). */
+  moduleKeys: readonly string[];
 };
 
 const BRANDS: Record<BrandKey, Brand> = {
@@ -26,6 +31,7 @@ const BRANDS: Record<BrandKey, Brand> = {
     leafRail: false,
     leafWidths: { main: 760, body: 560, rail: 0 },
     compositionDefaults: { main: 'leadList', context: 'threeUp', insight1: 'split', insight2: 'grid2x2', insight3: 'overlayPair' },
+    moduleKeys: GLOBE_MODULE_KEYS,
   },
   sportsarena: {
     key: 'sportsarena',
@@ -38,6 +44,7 @@ const BRANDS: Record<BrandKey, Brand> = {
     leafRail: true,
     leafWidths: { main: 920, body: 600, rail: 300 },
     compositionDefaults: { main: 'leadList', context: 'threeUp', insight1: 'threeUp', insight2: 'grid2x2', insight3: 'threeUp' },
+    moduleKeys: ARENA_MODULE_KEYS,
   },
   nextfrontier: {
     key: 'nextfrontier',
@@ -50,6 +57,7 @@ const BRANDS: Record<BrandKey, Brand> = {
     leafRail: true,
     leafWidths: { main: 1040, body: 664, rail: 320 },
     compositionDefaults: { main: 'leadList', context: 'fourUp', insight1: 'threeUp', insight2: 'grid2x2', insight3: 'fourUp' },
+    moduleKeys: FRONTIER_MODULE_KEYS,
   },
 };
 

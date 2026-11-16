@@ -1,5 +1,6 @@
 @layer v2 {
   .root[data-engine="v2"] .v2-ui { padding-block: var(--v2-space-5); }
+  .root[data-engine="v2"] .v2-ui .v2-container { padding-inline: 0; }
   .root[data-engine="v2"] .v2-ui__title { font-family: var(--v2-font-display); font-size: var(--v2-fs-h1); margin: 0; }
   .root[data-engine="v2"] .v2-ui__note { color: var(--v2-text-muted); font-family: var(--v2-font-meta); }
   .root[data-engine="v2"] .v2-ui__heading {

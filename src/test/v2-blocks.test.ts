@@ -1,5 +1,5 @@
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { BLOCK_LIMITS, blockCacheTags, blockContentTags, isFetchable, decideBlockRender, extractBlockLinks } from '@/app/_v2/lib/blocks';
+import { BLOCK_LIMITS, blockCacheTags, blockContentTags, isFetchable, decideBlockRender, extractBlockLinks, getModuleKeys } from '@/app/_v2/lib/blocks';
 
 const link = (id: string) => ({ targetId: id });
 const model = (pagelink: unknown, nodes: unknown = {}) => ({ data: { links: { pagelink } }, nodes });
@@ -56,5 +56,15 @@ describe('isFetchable / blockContentTags', () => {
     const m = { data: { links: { pagelink: { main: [link('a'), link('b')], side: [link('a'), {}] } } } };
     expect(blockContentTags(m)).toEqual(['neon:node:a', 'neon:node:b']);
     expect(blockContentTags(undefined)).toEqual([]);
+  });
+});
+
+describe('getModuleKeys', () => {
+  it('returns the module keys of each brand', () => {
+    expect(getModuleKeys('sportsarena')).toEqual(['breakingnews', 'results', 'scorecard']);
+    expect(getModuleKeys('nextfrontier')).toEqual(['breakingnews', 'liveticker', 'topstories', 'hottopics', 'verdict', 'specs']);
+  });
+  it('maps default, theglobe and unknown themes to the Globe keys', () => {
+    for (const t of ['default', 'theglobe', '', 'x']) expect(getModuleKeys(t)).toEqual(['newsletter']);
   });
 });
