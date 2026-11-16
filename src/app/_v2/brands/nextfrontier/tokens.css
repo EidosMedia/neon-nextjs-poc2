@@ -1,4 +1,5 @@
 .root[data-theme="nextfrontier"] {
+  color-scheme: dark;
   --v2-bg: #1D1930;
   --v2-surface: #323742;
   --v2-surface-raised: #461FD2;

@@ -105,3 +105,22 @@ describe('v2 brand tokens', () => {
     expect(getBrand('sportsarena').scheme).toBe('light');
   });
 });
+
+describe('globals.css layering for v2', () => {
+  const globalsCss = readFileSync(join(process.cwd(), 'src/app/globals.css'), 'utf8');
+  const withoutComments = globalsCss.replace(/\/\*[\s\S]*?\*\//g, '');
+
+  it('declares v2 between components and utilities as the first statement', () => {
+    const firstStatement = `${withoutComments.trim().split(';')[0].trim()};`;
+    expect(firstStatement).toBe('@layer theme, base, components, v2, utilities;');
+  });
+
+  it.each(['article-xl', 'article-md'])(
+    'excludes v2 roots from the unlayered [data-type="%s"] rule',
+    (type) => {
+      const bareRule = new RegExp(`^\\s*\\[data-type="${type}"\\]\\s*\\{`, 'm');
+      expect(globalsCss).not.toMatch(bareRule);
+      expect(globalsCss).toContain(`[data-type="${type}"]:where(:not(.root[data-engine="v2"] *)) {`);
+    },
+  );
+});

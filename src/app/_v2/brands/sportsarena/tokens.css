@@ -1,4 +1,5 @@
 .root[data-theme="sportsarena"] {
+  color-scheme: light;
   --v2-bg: #FFFFFF;
   --v2-surface: #F3F7FB;
   --v2-surface-raised: #DCE9F5;

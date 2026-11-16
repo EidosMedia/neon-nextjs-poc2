@@ -1,3 +1,4 @@
+@layer theme, base, components, v2, utilities;
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
@@ -125,22 +126,22 @@
 }
 
 /* TYPOGRAPHY */
-h1, h1 p {
+h1:where(:not(.root[data-engine="v2"] *)), h1 p:where(:not(.root[data-engine="v2"] *)) {
   @apply font-[family-name:var(--font-headline)] font-semibold text-[2.5rem] leading-[124%] tracking-normal;
 }
-h2, h2 p, h2 span {
+h2:where(:not(.root[data-engine="v2"] *)), h2 p:where(:not(.root[data-engine="v2"] *)), h2 span:where(:not(.root[data-engine="v2"] *)) {
   @apply font-[family-name:var(--font-headline)] font-semibold text-3xl leading-[124%] tracking-normal;
 }
-h3, h3 p, h3 span {
+h3:where(:not(.root[data-engine="v2"] *)), h3 p:where(:not(.root[data-engine="v2"] *)), h3 span:where(:not(.root[data-engine="v2"] *)) {
   @apply font-[family-name:var(--font-headline)] font-semibold text-xl leading-[120%] tracking-normal;
 }
-h4, h4 p {
+h4:where(:not(.root[data-engine="v2"] *)), h4 p:where(:not(.root[data-engine="v2"] *)) {
   @apply font-[family-name:var(--font-headline)] font-semibold text-base leading-[120%] tracking-normal;
 }
-h5, h5 p {
+h5:where(:not(.root[data-engine="v2"] *)), h5 p:where(:not(.root[data-engine="v2"] *)) {
   @apply font-[family-name:var(--font-headline)] font-semibold text-sm leading-[120%] tracking-normal;
 }
-h6, h6 p {
+h6:where(:not(.root[data-engine="v2"] *)), h6 p:where(:not(.root[data-engine="v2"] *)) {
   @apply font-[family-name:var(--font-headline)] font-semibold text-xs leading-[120%] tracking-normal;
 }
 
@@ -245,15 +246,15 @@ h6, h6 p {
 
 }
 
-button {
+button:where(:not(.root[data-engine="v2"] *)) {
   @apply font-epilogue
 }
 
-[data-type="article-xl"] {
+[data-type="article-xl"]:where(:not(.root[data-engine="v2"] *)) {
   max-height: 470px;
 }
 
-[data-type="article-md"] {
+[data-type="article-md"]:where(:not(.root[data-engine="v2"] *)) {
   max-height: 330px;
 }
 
@@ -264,68 +265,68 @@ p {
 }
 
 nav {
-  ul {
+  ul:where(:not(.root[data-engine="v2"] *)) {
     @apply list-none;
   }
 }
 
 /* Base list styles */
-ol,
-ul,
-ul ul,
-ul ol,
-ol ul,
-ol ol {
+ol:where(:not(.root[data-engine="v2"] *)),
+ul:where(:not(.root[data-engine="v2"] *)),
+ul ul:where(:not(.root[data-engine="v2"] *)),
+ul ol:where(:not(.root[data-engine="v2"] *)),
+ol ul:where(:not(.root[data-engine="v2"] *)),
+ol ol:where(:not(.root[data-engine="v2"] *)) {
   @apply list-inside;
 }
 
-ul,
-ul ul,
-ol ul {
+ul:where(:not(.root[data-engine="v2"] *)),
+ul ul:where(:not(.root[data-engine="v2"] *)),
+ol ul:where(:not(.root[data-engine="v2"] *)) {
   @apply list-disc;
 }
 
-ol,
-ol ol,
-ul ol {
+ol:where(:not(.root[data-engine="v2"] *)),
+ol ol:where(:not(.root[data-engine="v2"] *)),
+ul ol:where(:not(.root[data-engine="v2"] *)) {
   @apply list-decimal;
 }
 
-li,
-li li {
+li:where(:not(.root[data-engine="v2"] *)),
+li li:where(:not(.root[data-engine="v2"] *)) {
   @apply text-base;
 }
 
 /* Multilevel nested unordered lists */
-ul ul {
+ul ul:where(:not(.root[data-engine="v2"] *)) {
   @apply list-disc ml-6;
 }
-ul ul ul {
+ul ul ul:where(:not(.root[data-engine="v2"] *)) {
   @apply list-disc ml-6;
 }
-ul ul ul ul {
+ul ul ul ul:where(:not(.root[data-engine="v2"] *)) {
   @apply list-disc ml-6;
 }
 
 /* Multilevel nested ordered lists */
-ol ol {
+ol ol:where(:not(.root[data-engine="v2"] *)) {
   @apply list-[lower-alpha] ml-6;
 }
-ol ol ol {
+ol ol ol:where(:not(.root[data-engine="v2"] *)) {
   @apply list-[lower-roman] ml-6;
 }
-ol ol ol ol {
+ol ol ol ol:where(:not(.root[data-engine="v2"] *)) {
   @apply list-[lower-roman] ml-6;
 }
 
 /* Mixed nested lists */
-ul ol,
-ol ul {
+ul ol:where(:not(.root[data-engine="v2"] *)),
+ol ul:where(:not(.root[data-engine="v2"] *)) {
   @apply ml-6;
 }
 
 [data-panel="history"] {
-  ul, ol {
+  ul:where(:not(.root[data-engine="v2"] *)), ol:where(:not(.root[data-engine="v2"] *)) {
     @apply list-none;
   }
 }

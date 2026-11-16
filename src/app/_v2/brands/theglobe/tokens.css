@@ -1,5 +1,6 @@
 .root[data-theme="default"],
 .root[data-theme="theglobe"] {
+  color-scheme: light;
   --v2-bg: #FFFFFF;
   --v2-surface: #F3F3F4;
   --v2-surface-raised: #D6E1F1;
