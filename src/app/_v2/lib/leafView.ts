@@ -74,7 +74,8 @@ export function extractGalleryImages(content: unknown): { src: string; caption?:
       const src = image && srcOf(image);
       if (src) {
         const cap = children.find(c => type(c) === 'image-caption' || type(c) === 'graphic-caption');
-        const cred = children.find(c => type(c) === 'credit');
+        // Credit source is not used by the legacy slider renderer.
+        const cred = children.find(c => type(c) === 'credit' || type(c) === 'image-credit');
         out.push({
           src,
           caption: nonEmpty(cap && textOf(cap)),
@@ -90,7 +91,15 @@ export function extractGalleryImages(content: unknown): { src: string; caption?:
     }
     kids(n).forEach(c => visit(c, depth + 1));
   };
-  visit(content, 0);
+  const galleries: Node[] = [];
+  const find = (n: unknown, depth: number) => {
+    if (!isNode(n) || depth > 50) return;
+    if (type(n) === 'mediagallery') { galleries.push(n); return; }
+    kids(n).forEach(c => find(c, depth + 1));
+  };
+  find(content, 0);
+  if (galleries.length > 0) galleries.forEach(g => kids(g).forEach(c => visit(c, 1)));
+  else visit(content, 0);
   return out;
 }
 
