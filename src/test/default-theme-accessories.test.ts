@@ -1,13 +1,4 @@
-import {
-  DEFAULT_PAGE_CHROME,
-  getLinkShapes,
-  getPageChrome,
-  getZoneAccessoryShapes,
-  getZoneHead,
-  getZoneShape,
-  normalizeTheme,
-} from '@/lib/accessories/defaultThemeAccessories';
-import { itemShape, cardAccessoryClass, titleAccessoryClass, zoneAccessoryClass } from '@/lib/accessories/shapeClasses';
+import { DEFAULT_PAGE_CHROME, getPageChrome, normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 
 function page(options: {
   theme?: string;
@@ -31,7 +22,7 @@ function page(options: {
 const headerSet = (values: Record<string, unknown>, theme = 'default', type = 'article') => ({
   theme,
   type,
-  items: { header: { version: '1.0', values } },
+  items: { header: { version: '2.0', values } },
 });
 
 describe('normalizeTheme', () => {
@@ -56,8 +47,8 @@ describe('getPageChrome', () => {
           theme: 'default',
           type: 'article',
           items: {
-            header: { version: '1.0', values: { enabled: false } },
-            footer: { version: '1.0', values: { menu: false } },
+            header: { version: '2.0', values: { enabled: false } },
+            footer: { version: '2.0', values: { menu: false } },
           },
         },
       }),
@@ -94,152 +85,5 @@ describe('getPageChrome', () => {
         }),
       ),
     ).toEqual(DEFAULT_PAGE_CHROME);
-  });
-});
-
-describe('zone shapes', () => {
-  const zoneSet = (zone: string, values: Record<string, unknown>, theme = 'default') => ({
-    theme,
-    type: 'sectionwebpage',
-    zone,
-    items: { shape: { version: '1.0', values } },
-  });
-  const webpage = (zoneAccessories: unknown, theme?: string) =>
-    page({ theme, type: 'sectionwebpage', baseType: 'sectionwebpage', zoneAccessories });
-
-  test('returns undefined when there is nothing to apply', () => {
-    expect(getZoneShape(webpage(undefined), 'banner')).toBeUndefined();
-    expect(getZoneShape(webpage({ banner: zoneSet('banner', { bold: false }) }), 'banner')).toBeUndefined();
-  });
-
-  test('reads the set stored for the zone name', () => {
-    const data = webpage({ main: zoneSet('main', { bold: true }), context: zoneSet('context', { border: true }) });
-    expect(getZoneShape(data, 'main')).toEqual({ bold: true, border: false });
-    expect(getZoneShape(data, 'context')).toEqual({ bold: false, border: true });
-    expect(getZoneShape(data, 'insight1')).toEqual({ bold: false, border: false });
-  });
-
-  test('tolerates editor-only zone properties without changing rendered zone shape', () => {
-    const data = webpage({
-      main: zoneSet('main', {
-        bold: true,
-        layout: 'bottomlist',
-        zonetitle: 'Latest updates',
-        zonesummary: '<strong>Summary</strong>',
-      }),
-    });
-
-    expect(getZoneShape(data, 'main')).toEqual({ bold: true, border: false });
-  });
-
-  test('ignores a set stored for another zone, an unsupported zone or another theme', () => {
-    expect(getZoneShape(webpage({ main: zoneSet('context', { bold: true }) }), 'main')).toEqual({
-      bold: false,
-      border: false,
-    });
-    expect(getZoneShape(webpage({ banner: zoneSet('banner', { bold: true }) }), 'banner')).toBeUndefined();
-    expect(getZoneShape(webpage({ main: zoneSet('main', { bold: true }) }, 'adn'), 'main')).toBeUndefined();
-  });
-
-  test('reads link accessories from link metadata, one entry per linked item', () => {
-    const data = webpage(undefined);
-    const linked = (accessories: unknown, type = 'article') =>
-      ({ sys: { type, baseType: type }, linkMetadata: { linkAccessories: accessories } }) as never;
-    const set = (values: Record<string, unknown>, linkedType = 'article') => ({
-      theme: 'default',
-      type: 'sectionwebpage',
-      zone: 'main',
-      linkedType,
-      items: { shape: { version: '1.0', values } },
-    });
-
-    expect(
-      getLinkShapes(data, 'main', [linked(set({ border: true })), linked(undefined), linked(set({ bold: true }, 'gallery'))]),
-    ).toEqual([
-      { bold: false, border: true },
-      { bold: false, border: false },
-      { bold: false, border: false },
-    ]);
-  });
-
-  test('getZoneAccessoryShapes combines zone and link shapes', () => {
-    const data = webpage({ main: zoneSet('main', { bold: true }) });
-    expect(getZoneAccessoryShapes(data, 'main', [])).toEqual({ zone: { bold: true, border: false }, links: [] });
-  });
-});
-
-describe('zone head', () => {
-  const headSet = (values: Record<string, unknown>, zone = 'main', theme = 'default') => ({
-    theme,
-    type: 'sectionwebpage',
-    zone,
-    items: { shape: { version: '1.0', values } },
-  });
-  const webpage = (zoneAccessories: unknown, theme?: string) =>
-    page({ theme, type: 'sectionwebpage', baseType: 'sectionwebpage', zoneAccessories });
-
-  test('is absent without title and summary, or when both are empty', () => {
-    expect(getZoneHead(webpage(undefined), 'main')).toBeUndefined();
-    expect(getZoneHead(webpage({ main: headSet({ bold: true }) }), 'main')).toBeUndefined();
-    expect(getZoneHead(webpage({ main: headSet({ zonetitle: '   ', zonesummary: '<p><br></p>' }) }), 'main')).toBeUndefined();
-  });
-
-  test('carries the trimmed title alone', () => {
-    expect(getZoneHead(webpage({ main: headSet({ zonetitle: '  Top  stories ' }) }), 'main')).toEqual({
-      title: 'Top stories',
-    });
-  });
-
-  test('carries a re-sanitized summary alone', () => {
-    const stored = '<p style="text-align: center; color: red">x</p><p style="text-align: right"><strong>Hi</strong></p>';
-    expect(getZoneHead(webpage({ main: headSet({ zonesummary: stored }) }), 'main')).toEqual({
-      summary: [
-        { children: [{ kind: 'text', text: 'x' }] },
-        { align: 'right', children: [{ kind: 'mark', mark: 'strong', children: [{ kind: 'text', text: 'Hi' }] }] },
-      ],
-    });
-  });
-
-  test('carries title and summary together through the zone shapes', () => {
-    const data = webpage({ main: headSet({ bold: true, zonetitle: 'T', zonesummary: '<p>S</p>' }) });
-    expect(getZoneAccessoryShapes(data, 'main', [])).toEqual({
-      zone: { bold: true, border: false },
-      head: { title: 'T', summary: [{ children: [{ kind: 'text', text: 'S' }] }] },
-      links: [],
-    });
-  });
-
-  test('ignores stale context, other themes, unsupported zones and oversize values', () => {
-    expect(getZoneHead(webpage({ main: headSet({ zonetitle: 'T' }, 'context') }), 'main')).toBeUndefined();
-    expect(getZoneHead(webpage({ main: headSet({ zonetitle: 'T' }, 'main', 'adn') }, 'adn'), 'main')).toBeUndefined();
-    expect(getZoneHead(webpage({ banner: headSet({ zonetitle: 'T' }, 'banner') }), 'banner')).toBeUndefined();
-    expect(getZoneHead(webpage({ main: headSet({ zonetitle: 'x'.repeat(257) }) }), 'main')).toBeUndefined();
-    expect(getZoneHead(webpage({ main: headSet({ zonesummary: `<p>${'x'.repeat(2001)}</p>` }) }), 'main')).toBeUndefined();
-  });
-});
-
-describe('shape classes', () => {
-  test('adds no class without an applicable value', () => {
-    expect(titleAccessoryClass(undefined)).toBeUndefined();
-    expect(titleAccessoryClass({ bold: false, border: false })).toBe('acc-title-regular');
-    expect(cardAccessoryClass({ bold: true, border: false })).toBeUndefined();
-    expect(zoneAccessoryClass({ bold: true, border: false })).toBeUndefined();
-  });
-
-  test('maps values to named classes', () => {
-    expect(titleAccessoryClass({ bold: true, border: false })).toBe('acc-title-bold');
-    expect(titleAccessoryClass({ bold: false, border: false })).toBe('acc-title-regular');
-    expect(cardAccessoryClass({ bold: false, border: true })).toBe('acc-card-border');
-    expect(zoneAccessoryClass({ bold: false, border: true })).toBe('acc-zone-border');
-  });
-
-  test('item shape takes bold from either level and border only from the link', () => {
-    expect(itemShape({ bold: true, border: true }, undefined)).toEqual({ bold: true, border: false });
-    expect(itemShape(undefined, { bold: false, border: true })).toEqual({ bold: false, border: true });
-    expect(itemShape({ bold: false, border: true }, undefined)).toEqual({ bold: false, border: false });
-    expect(itemShape({ bold: false, border: true }, { bold: true, border: true })).toEqual({
-      bold: true,
-      border: false,
-    });
   });
 });

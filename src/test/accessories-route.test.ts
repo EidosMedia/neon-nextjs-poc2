@@ -49,6 +49,19 @@ describe('GET /api/accessories', () => {
     expect(await response.json()).toEqual(defaultAccessoryDefinitions);
   });
 
+  test('stamps the requested v2 theme on the shared document', async () => {
+    const response = await GET(createRequest('sportsarena'));
+
+    expect(response.status).toBe(200);
+    expect((await response.json()).theme).toBe('sportsarena');
+  });
+
+  test('returns 404 for a legacy theme', async () => {
+    const response = await GET(createRequest('business-globe'));
+
+    expect(response.status).toBe(404);
+  });
+
   test('rejects a missing or incorrect shared secret', async () => {
     const response = await GET(createRequest('default', 'wrong-secret'));
 

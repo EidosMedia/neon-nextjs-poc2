@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { getAccessoryDefinitions, listAccessoryThemes } from '@/lib/accessories/definitions';
+import { getAccessoryDefinitions, listAccessoryThemes, isV2Theme, V2_THEMES } from '@/lib/accessories/definitions';
+import sharedFile from '@/app/_pages/accessories.json';
 
 const pagesDir = join(process.cwd(), 'src/app/_pages');
 const NAME = /^[a-z][A-Za-z0-9]*$/;
@@ -74,32 +75,48 @@ function problems(document: Json): string[] {
   return found;
 }
 
-describe('theme accessories.json files', () => {
-  test('the default theme has a file', () => {
-    expect(themeFiles.map(file => file.theme)).toContain('default');
+describe('shared v2 accessories.json', () => {
+  const path = join(pagesDir, 'accessories.json');
+
+  test('the only accessories file on disk is the shared one', () => {
+    expect(themeFiles.map(file => file.path)).toEqual([path]);
   });
 
-  test.each(themeFiles)('$theme is registered, names its own theme and follows the definition rules', ({ theme, path }) => {
+  test('the file itself declares theme "default" and version "2.0"', () => {
+    expect(sharedFile.theme).toBe('default');
+    expect(sharedFile.version).toBe('2.0');
+  });
+
+  test('follows the definition rules', () => {
+    expect(problems(JSON.parse(readFileSync(path, 'utf8')))).toEqual([]);
+  });
+
+  test('every definition is version 2.0', () => {
     const document: Json = JSON.parse(readFileSync(path, 'utf8'));
-
-    expect(getAccessoryDefinitions(theme)).toBeDefined();
-    expect(document.theme).toBe(theme);
-    expect(problems(document)).toEqual([]);
-  });
-
-  test('every registered theme has a file next to its pages', () => {
-    expect([...listAccessoryThemes()].sort()).toEqual(themeFiles.map(file => file.theme).sort());
-  });
-
-  test('registered documents are the files on disk', () => {
-    for (const { theme, path } of themeFiles) {
-      expect(getAccessoryDefinitions(theme)).toEqual(JSON.parse(readFileSync(path, 'utf8')));
+    for (const level of ['pageAccessories', 'zoneAccessories', 'linkAccessories']) {
+      for (const definition of Object.values<Json>(document[level])) {
+        expect(definition.version).toBe('2.0');
+      }
     }
   });
 
-  test('a theme without a file has no definitions, including inherited object keys', () => {
-    for (const theme of ['adn', 'constructor', '__proto__', 'hasOwnProperty']) {
+  test('the registered themes are the v2 themes', () => {
+    expect(listAccessoryThemes()).toEqual(['default', 'theglobe', 'sportsarena', 'nextfrontier']);
+    expect(V2_THEMES.every(theme => isV2Theme(theme))).toBe(true);
+    expect(isV2Theme('adn')).toBe(false);
+  });
+
+  test.each(['default', 'theglobe', 'sportsarena', 'nextfrontier'])('%s gets the shared document stamped with its theme', theme => {
+    const doc = getAccessoryDefinitions(theme)!;
+    expect(doc.theme).toBe(theme);
+    expect({ ...doc, theme: 'default' }).toEqual(sharedFile);
+    expect(Object.isFrozen(doc)).toBe(true);
+  });
+
+  test.each(['adn', 'business-globe', 'business-globe2', 'constructor', '__proto__', 'hasOwnProperty'])(
+    '%s has no definitions',
+    theme => {
       expect(getAccessoryDefinitions(theme)).toBeUndefined();
-    }
-  });
+    },
+  );
 });
