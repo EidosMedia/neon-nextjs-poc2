@@ -42,6 +42,7 @@ const ArticleLeaf = async ({ data }: PageProps) => {
         {behind && header}
         <LeafLayout
           brand={brand}
+          data={data}
           railAds={railAds}
           header={behind ? undefined : header}
           rail={slots.includes('rail') ? <AdSlot placement="rail" /> : undefined}

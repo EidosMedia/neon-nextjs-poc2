@@ -1,13 +1,16 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Brand } from '../brands/registry';
+import type { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import BlockSlot from '../blocks/BlockSlot';
+import { extractBlockLinks } from '../lib/blocks';
 import { planRail } from '../lib/leafView';
 
 type Props = {
   brand: Brand;
   /** Number of rail ad slots planned for this leaf. */
   railAds: number;
-  /** Sidebar blocks (Task 15 supplies these). */
-  sidebarBlocks?: number;
+  /** Page data: its sidebar content blocks are rendered in the rail and counted for rail planning. */
+  data?: PageData<BaseModel>;
   header?: ReactNode;
   rail?: ReactNode;
   children: ReactNode;
@@ -19,7 +22,8 @@ type Props = {
  * `brand.leafWidths` (header spans main; body column is `body`; rail is `rail`), while PageShell's
  * grid is a fixed 2fr/1fr container split for web pages.
  */
-export default function LeafLayout({ brand, railAds, sidebarBlocks = 0, header, rail, children, className }: Props) {
+export default function LeafLayout({ brand, railAds, data, header, rail, children, className }: Props) {
+  const sidebarBlocks = data ? extractBlockLinks(data.model, 'sidebars').length : 0;
   const showRail = planRail(brand.leafRail, sidebarBlocks, railAds) === 'show';
   const { main, body, rail: railWidth } = brand.leafWidths;
   const style = {
@@ -32,7 +36,10 @@ export default function LeafLayout({ brand, railAds, sidebarBlocks = 0, header, 
       {header}
       <div className={`v2-leaf__grid${showRail ? ' v2-leaf__grid--rail' : ''}`}>
         <div className="v2-leaf__main">{children}</div>
-        {showRail && <aside className="v2-leaf__rail">{rail}</aside>}
+        {showRail && <aside className="v2-leaf__rail">
+            {rail}
+            {data && <BlockSlot data={data} area="sidebars" />}
+          </aside>}
       </div>
     </div>
   );

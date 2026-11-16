@@ -62,7 +62,7 @@ const LiveblogLeaf = async ({ data }: PageProps) => {
   return (
     <PageShell data={data}>
       <article className={`v2-leaf-liveblog v2-leaf-liveblog--${view.variant}`} data-leaf="liveblog">
-        <LeafLayout brand={brand} railAds={rail ? 1 : 0} header={header} rail={rail}>
+        <LeafLayout brand={brand} data={data} railAds={rail ? 1 : 0} header={header} rail={rail}>
           {showPinned && (
             <section className="v2-liveblog__pinned">
               <span className="v2-liveblog__pinned-kicker">Pinned summary</span>

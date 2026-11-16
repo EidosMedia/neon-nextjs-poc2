@@ -103,7 +103,7 @@ const GalleryLeaf = async ({ data }: PageProps) => {
             <div className="v2-leaf-gallery__bleed">
               <Slider images={images} captions={captions} thumbnails={thumbnails} />
             </div>
-            <LeafLayout brand={brand} railAds={railAds} rail={rail}>
+            <LeafLayout brand={brand} data={data} railAds={railAds} rail={rail}>
               {afterHero}
               {body}
               {tail}
@@ -111,7 +111,7 @@ const GalleryLeaf = async ({ data }: PageProps) => {
           </>
         )}
         {variant === 'storyGallery' && (
-          <LeafLayout brand={brand} railAds={railAds} header={header} rail={rail}>
+          <LeafLayout brand={brand} data={data} railAds={railAds} header={header} rail={rail}>
             {afterHero}
             <Slider images={images} captions={captions} thumbnails={thumbnails} />
             {body}

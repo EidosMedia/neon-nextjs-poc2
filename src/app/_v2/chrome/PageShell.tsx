@@ -5,6 +5,7 @@ import { getPageSettings, V2_DEFAULTS } from '../lib/settings';
 import { getActiveTheme, normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import Header from './Header';
 import Footer from './Footer';
+import BlockSlot from '../blocks/BlockSlot';
 
 type Common = { children: ReactNode; rail?: ReactNode; wide?: boolean; hero?: 'overlay' };
 type ModelProps = Common & { data: PageData<BaseModel>; site?: undefined };
@@ -41,7 +42,7 @@ export default async function PageShell(props: ModelProps | SiteProps) {
     <>
       <link rel="stylesheet" href={brand.fontsHref} precedence="default" />
       {settings.header.enabled && <Header {...frame} header={settings.header} />}
-      {/* blocks:headers (Task 15 renders header blocks here) */}
+      {props.data && <BlockSlot data={props.data} area="headers" />}
       <main
         data-hero={hero}
         className={`v2-main${wide ? ' v2-main--wide' : ''}${rail ? ' v2-main--rail' : ''}`}
@@ -54,8 +55,9 @@ export default async function PageShell(props: ModelProps | SiteProps) {
         ) : (
           children
         )}
+        {props.data && <BlockSlot data={props.data} area="includes" />}
       </main>
-      {/* blocks:footers (Task 15 renders footer blocks here) */}
+      {props.data && <BlockSlot data={props.data} area="footers" />}
       {settings.footer.enabled && <Footer {...frame} footer={settings.footer} />}
     </>
   );

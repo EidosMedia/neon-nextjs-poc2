@@ -3,6 +3,7 @@
 @import "../zones/zones.css";
 @import "../pages/pages.css";
 @import "../leaves/leaves.css";
+@import "../blocks/blocks.css";
 @import "../ui/ui.css";
 
 @layer v2 {
