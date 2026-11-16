@@ -234,16 +234,10 @@
   .root[data-engine="v2"] .v2-liveblog__pinned-text { font-size: var(--v2-fs-standfirst); line-height: 1.5; }
   .root[data-engine="v2"] .v2-liveblog__pinned-text p { margin: 0; }
 
-  /* Legacy LiveblogPosts (client component, unedited): restyle its existing markup. */
   .root[data-engine="v2"] .v2-liveblog__posts { margin-top: var(--v2-space-4); }
-  .root[data-engine="v2"] .v2-liveblog__posts > div {
-    background: var(--v2-surface); color: var(--v2-text); padding: var(--v2-space-3); border-radius: var(--v2-radius-card);
-  }
-  .root[data-engine="v2"] .v2-liveblog__posts .liveblog-posts {
-    background: var(--v2-bg); color: var(--v2-text); padding: var(--v2-space-3); border-radius: var(--v2-radius-card);
-    border: 1px solid var(--v2-rule);
-  }
-  .root[data-engine="v2"] .v2-liveblog__posts .liveblog-posts > div:first-child span { color: var(--v2-live); }
-  .root[data-engine="v2"] .v2-liveblog__posts p.text-neutral-lightest { color: var(--v2-text-muted); }
-  .root[data-engine="v2"] .v2-liveblog__posts img { max-width: 100%; height: auto; }
+
+  /* Dark results panel: every head element reads on the brand surface. */
+  .root[data-engine="v2"] .v2-liveblog__panel .v2-leaf-head,
+  .root[data-engine="v2"] .v2-liveblog__panel .v2-leaf-head * { color: var(--v2-on-brand); }
+  .root[data-engine="v2"] .v2-liveblog__panel .v2-leaf-head a { color: inherit; }
 }

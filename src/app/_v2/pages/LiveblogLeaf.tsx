@@ -10,7 +10,8 @@ import AdSlot from '../leaves/AdSlot';
 import LeafBody from '../leaves/LeafBody';
 import LeafHeader from '../leaves/LeafHeader';
 import LeafLayout from '../leaves/LeafLayout';
-import LiveblogPosts from '../../_pages/LiveblogPosts';
+import PostsFeed from '../liveblog/PostsFeed';
+import { initialPostsFromModel } from '../liveblog/posts';
 import { heroImage } from '../leaves/heroImage';
 
 type PageProps = { data: PageData<ArticleModel> };
@@ -77,7 +78,7 @@ const LiveblogLeaf = async ({ data }: PageProps) => {
             insertAfter={slots.includes('midBody') ? <AdSlot placement="midBody" /> : undefined}
           />
           <div className="v2-liveblog__posts">
-            <LiveblogPosts data={data} />
+            <PostsFeed liveblogId={article.id} initialPosts={initialPostsFromModel(data.model)} />
           </div>
           {slots.includes('end') && <AdSlot placement="end" />}
         </LeafLayout>

@@ -1,0 +1,34 @@
+@layer v2 {
+  /* Shared v2 form controls and buttons. */
+  .root[data-engine="v2"] .v2-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--v2-space-1);
+    padding: var(--v2-space-1) var(--v2-space-3); border: 1px solid transparent; cursor: pointer;
+    border-radius: var(--v2-radius-pill); background: var(--v2-brand); color: var(--v2-on-brand);
+    font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta); font-weight: 700; line-height: 1.4;
+  }
+  .root[data-engine="v2"] .v2-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .root[data-engine="v2"] .v2-btn--ghost {
+    background: transparent; color: var(--v2-text-muted); border-color: var(--v2-rule);
+  }
+  .root[data-engine="v2"] .v2-btn--link {
+    padding: 0; border: 0; background: none; color: var(--v2-brand); border-radius: 0; text-decoration: underline; font-weight: 600;
+  }
+  .root[data-engine="v2"] .v2-btn:focus-visible,
+  .root[data-engine="v2"] .v2-field__control:focus-visible,
+  .root[data-engine="v2"] .v2-tabs__tab:focus-visible {
+    outline: 2px solid var(--v2-brand); outline-offset: 2px;
+  }
+
+  .root[data-engine="v2"] .v2-field { display: flex; flex-direction: column; gap: var(--v2-space-1); margin-bottom: var(--v2-space-3); }
+  .root[data-engine="v2"] .v2-field__label { font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta); font-weight: 600; color: var(--v2-text); }
+  .root[data-engine="v2"] .v2-field__control {
+    width: 100%; padding: var(--v2-space-1) var(--v2-space-2); background: var(--v2-surface); color: var(--v2-text);
+    border: 1px solid var(--v2-rule); border-radius: var(--v2-radius-card);
+    font-family: var(--v2-font-body); font-size: var(--v2-fs-body); line-height: 1.5;
+  }
+  .root[data-engine="v2"] .v2-field__error {
+    margin: 0 0 var(--v2-space-3); padding: var(--v2-space-1) var(--v2-space-2);
+    border-left: 4px solid var(--v2-live); background: var(--v2-surface); color: var(--v2-text);
+    font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta);
+  }
+}

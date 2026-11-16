@@ -1,7 +1,7 @@
 'use client';
 import clsx from 'clsx';
 import type { ViewStatus, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import LiveblogOrganismPosts from '@/app/components/base/Organism/LiveblogOrganism/LiveblogOrganismPosts';
+import PostsTimeline from '../liveblog/PostsTimeline';
 import ItemFrame, { type HeadingLevel } from './ItemFrame';
 import Kicker from './Kicker';
 import Media from './Media';
@@ -41,7 +41,7 @@ export default function LiveblogItem({ node, view, viewStatus, headingLevel, pos
             {view.variant === 'pinnedSummary' && Summary({ className: 'v2-item__summary v2-item__pinned' })}
             {view.variant !== 'pinnedSummary' && posts !== false && (
               <div className="v2-item__posts">
-                <LiveblogOrganismPosts liveblogId={node.id} />
+                <PostsTimeline liveblogId={node.id} />
               </div>
             )}
           </div>
