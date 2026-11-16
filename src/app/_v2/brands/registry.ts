@@ -25,7 +25,7 @@ const BRANDS: Record<BrandKey, Brand> = {
     footer: 'globe',
     leafRail: false,
     leafWidths: { main: 760, body: 560, rail: 0 },
-    compositionDefaults: {},
+    compositionDefaults: { main: 'leadList', context: 'threeUp', insight1: 'split', insight2: 'grid2x2', insight3: 'overlayPair' },
   },
   sportsarena: {
     key: 'sportsarena',
@@ -37,7 +37,7 @@ const BRANDS: Record<BrandKey, Brand> = {
     footer: 'arena',
     leafRail: true,
     leafWidths: { main: 920, body: 600, rail: 300 },
-    compositionDefaults: {},
+    compositionDefaults: { main: 'leadList', context: 'threeUp', insight1: 'threeUp', insight2: 'grid2x2', insight3: 'threeUp' },
   },
   nextfrontier: {
     key: 'nextfrontier',
@@ -49,7 +49,7 @@ const BRANDS: Record<BrandKey, Brand> = {
     footer: 'frontier',
     leafRail: true,
     leafWidths: { main: 1040, body: 664, rail: 320 },
-    compositionDefaults: {},
+    compositionDefaults: { main: 'leadList', context: 'fourUp', insight1: 'threeUp', insight2: 'grid2x2', insight3: 'fourUp' },
   },
 };
 
