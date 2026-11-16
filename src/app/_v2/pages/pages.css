@@ -49,4 +49,23 @@
     .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__body,
     .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__stack { padding-inline: 16px; }
   }
+
+  /* Special pages: about, login, search, 404. */
+  .root[data-engine="v2"] .v2-special { padding-block: var(--v2-space-6, 48px); max-width: 72ch; }
+  .root[data-engine="v2"] .v2-special--search { max-width: none; }
+  .root[data-engine="v2"] .v2-special--login { max-width: 480px; }
+  .root[data-engine="v2"] .v2-special__title {
+    margin: 0 0 var(--v2-space-3);
+    font-family: var(--v2-font-display);
+    font-size: var(--v2-fs-h1);
+  }
+  .root[data-engine="v2"] .v2-special__code {
+    margin: 0;
+    font-family: var(--v2-font-display);
+    font-size: var(--v2-fs-h1);
+    color: var(--v2-brand);
+  }
+  .root[data-engine="v2"] .v2-special__legal { color: var(--v2-text-muted); font-size: var(--v2-fs-meta); }
+  .root[data-engine="v2"] .v2-special :is(ul) { padding-inline-start: 1.25em; list-style: disc; }
+  .root[data-engine="v2"] .v2-special :is(a) { color: var(--v2-brand); text-decoration: underline; }
 }

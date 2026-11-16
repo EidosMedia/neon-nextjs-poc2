@@ -7,7 +7,7 @@ import { getAuthOptions } from '@/utilities/security';
 import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
 import { canShowStyleGuide } from '../_v2/ui/gate';
-import * as DefaultPages from '../_pages';
+import * as DefaultPages from '../_v2';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
 import type { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { createElement } from 'react';

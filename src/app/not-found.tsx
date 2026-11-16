@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { headers } from 'next/headers';
-import * as DefaultPages from './_pages';
+import * as DefaultPages from './_v2';
 import { resolvePageComponent } from './_themeRouter';
 import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
