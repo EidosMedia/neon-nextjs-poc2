@@ -1,5 +1,6 @@
 @import "../chrome/frame.css";
 @import "../items/items.css";
+@import "../zones/zones.css";
 
 @layer v2 {
   .root[data-engine="v2"] {
