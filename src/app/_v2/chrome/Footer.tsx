@@ -6,7 +6,7 @@ type FooterItem = { label: string; url?: string; ref?: string; items?: FooterIte
 const href = (item: { url?: string; ref?: string }) => item.url || item.ref || '#';
 
 export default function Footer({ site, footer, brand, siteLabel }: Omit<SiteFrameProps, 'header'>) {
-  const label = siteLabel || site.siteName;
+  const label = siteLabel || site.siteName || site.root?.name || '';
   const columns = ((site.menus?.Footer?.items ?? []) as FooterItem[]).filter(item => item.label);
   const lite = footer.variant === 'lite';
   const showColumns = footer.menu && !lite && columns.length > 0;

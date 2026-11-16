@@ -25,12 +25,12 @@ export default async function PageShell(props: ModelProps | SiteProps) {
     if (!siteName) throw new Error('Site node data is missing');
     site = await connection.findSite(siteName);
     theme = getActiveTheme(data);
-    siteLabel = data.siteNode?.attributes?.sitename || siteName;
+    siteLabel = data.siteNode?.attributes?.sitename || siteName || data.siteNode?.name;
     settings = getPageSettings(data);
   } else {
     site = props.site;
     theme = normalizeTheme(site.root?.attributes?.theme);
-    siteLabel = site.root?.attributes?.sitename || site.siteName;
+    siteLabel = site.root?.attributes?.sitename || site.siteName || site.root?.name;
     settings = { header: V2_DEFAULTS.header, footer: V2_DEFAULTS.footer };
   }
   if (!site) throw new Error('Site not found');

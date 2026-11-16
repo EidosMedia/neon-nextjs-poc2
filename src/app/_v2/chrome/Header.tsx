@@ -16,16 +16,10 @@ export type SiteFrameProps = {
   siteLabel?: string;
 };
 
-const initials = (text: string) =>
-  text
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map(word => word[0]!.toUpperCase())
-    .join('');
+import { initials } from './initials';
 
 export default async function Header({ site, header, brand, siteLabel }: Omit<SiteFrameProps, 'footer'>) {
-  const label = siteLabel || site.siteName;
+  const label = siteLabel || site.siteName || site.root?.name || '';
   const pathname = (await headers()).get('x-neon-pathname');
   const webauth = (await cookies()).get('webauth')?.value;
   const mainLinks = getMainLinks(site);

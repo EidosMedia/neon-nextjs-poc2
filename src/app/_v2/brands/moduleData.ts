@@ -1,3 +1,4 @@
+import { isSafeHref } from '@/lib/accessories/sanitizeZoneSummary';
 import type { BaseModel, PageData, WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 /**
@@ -25,6 +26,12 @@ export const blockSummary = (block: PageData<BaseModel>) => str(data(block).summ
 export const blockAttrs = (block: PageData<BaseModel>): Attrs => asAttrs(data(block).attributes);
 export const attr = (attrs: Attrs, key: string) => str(attrs[key]);
 
+/** The only way module hrefs are built: root-relative paths and absolute https URLs; anything else is undefined. */
+export function safeHref(raw: unknown): string | undefined {
+  const v = str(raw);
+  return v && isSafeHref(v) ? v : undefined;
+}
+
 export type ModuleItem = { id: string; title: string; href?: string; summary?: string; time?: string; attrs: Attrs };
 
 /** Linked items of the block's `main` link zone; items without a title are dropped. */
@@ -35,7 +42,7 @@ export async function blockItems(block: PageData<BaseModel>, limit = 8): Promise
     const title = str(n?.title);
     if (!title) continue;
     const pub = (n as { pubInfo?: { publicationTime?: string } }).pubInfo?.publicationTime;
-    out.push({ id: String(n.id ?? title), title, href: str(n.url), summary: str(n.summary), time: str(pub), attrs: asAttrs(n.attributes) });
+    out.push({ id: String(n.id ?? title), title, href: safeHref(n.url), summary: str(n.summary), time: str(pub), attrs: asAttrs(n.attributes) });
   }
   return out.slice(0, limit);
 }

@@ -1,4 +1,4 @@
-import { parseList, parsePairs, readMatch } from '@/app/_v2/brands/moduleData';
+import { parseList, parsePairs, readMatch, safeHref } from '@/app/_v2/brands/moduleData';
 
 describe('module data parsing', () => {
   it('parseList splits pipes and drops blanks', () => {
@@ -12,5 +12,15 @@ describe('module data parsing', () => {
   it('readMatch needs two teams and never invents a score', () => {
     expect(readMatch({ teams: 'A' })).toBeUndefined();
     expect(readMatch({ teams: 'A|B' })).toEqual({ home: 'A', away: 'B', score: undefined, status: undefined, competition: undefined });
+  });
+});
+
+describe('safeHref', () => {
+  it('rejects unsafe values and keeps same-site and https links', () => {
+    expect(safeHref('javascript:alert(1)')).toBeUndefined();
+    expect(safeHref('//evil.example')).toBeUndefined();
+    expect(safeHref(undefined)).toBeUndefined();
+    expect(safeHref('/sport/')).toBe('/sport/');
+    expect(safeHref('https://example.com/x')).toBe('https://example.com/x');
   });
 });

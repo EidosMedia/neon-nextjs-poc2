@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { blockItems, blockTitle, type BrandModuleProps } from '../../moduleData';
 
 const fmt = (iso?: string) => {
@@ -20,7 +21,7 @@ export default async function LiveTicker({ block }: BrandModuleProps) {
             return (
               <li key={i.id} className="v2-mod-ticker__item">
                 {t && <time className="v2-mod-ticker__time" dateTime={t.iso}>{t.text}</time>}
-                {i.href ? <a href={i.href}>{i.title}</a> : <span>{i.title}</span>}
+                {i.href ? <Link href={i.href}>{i.title}</Link> : <span>{i.title}</span>}
               </li>
             );
           })}

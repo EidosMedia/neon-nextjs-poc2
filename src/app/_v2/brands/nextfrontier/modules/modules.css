@@ -1,7 +1,7 @@
 @layer v2 {
   .root[data-engine="v2"][data-theme="nextfrontier"] .v2-mod-breaking--frontier {
     background: var(--v2-live);
-    color: #1D1930;
+    color: var(--v2-on-accent);
     font-family: var(--v2-font-meta);
   }
   .root[data-engine="v2"][data-theme="nextfrontier"] .v2-mod-breaking__inner {

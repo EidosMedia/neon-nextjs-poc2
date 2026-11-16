@@ -1,4 +1,4 @@
-import { attr, blockAttrs, blockSummary, blockTitle, type BrandModuleProps } from '../../moduleData';
+import { blockAttrs, safeHref, blockSummary, blockTitle, type BrandModuleProps } from '../../moduleData';
 
 /**
  * Newsletter band. Reads `title`, `summary`, and `attributes.signupUrl` (the "Sign up free" link
@@ -8,7 +8,7 @@ export default function NewsletterBand({ block }: BrandModuleProps) {
   const title = blockTitle(block);
   const summary = blockSummary(block);
   if (!title && !summary) return null;
-  const signup = attr(blockAttrs(block), 'signupUrl');
+  const signup = safeHref(blockAttrs(block).signupUrl);
   return (
     <section className="v2-mod-newsletter" aria-label={title ?? 'Newsletter'}>
       <div className="v2-container v2-mod-newsletter__inner">
