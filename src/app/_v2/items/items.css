@@ -187,4 +187,32 @@
     cursor: pointer;
   }
   .root[data-engine="v2"] .v2-item__share-note { color: var(--v2-text-muted); }
+
+  /* ---------- Item panel timeline ---------- */
+  .root[data-engine="v2"] .v2-timeline {
+    position: relative; display: flex; flex-direction: column; gap: var(--v2-space-2);
+    margin: 0; padding: 0 0 0 var(--v2-space-2); list-style: none;
+    font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta);
+  }
+  .root[data-engine="v2"] .v2-timeline::before {
+    content: ""; position: absolute; left: 3px; top: 4px; bottom: 4px; width: 1px; background: currentColor; opacity: 0.35;
+  }
+  .root[data-engine="v2"] .v2-timeline__date {
+    display: block; margin: 0 0 var(--v2-space-1) calc(var(--v2-space-2) * -1); padding-left: var(--v2-space-2);
+    text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.8;
+  }
+  .root[data-engine="v2"] .v2-timeline__line { position: relative; display: block; }
+  .root[data-engine="v2"] .v2-timeline__line::before {
+    content: ""; position: absolute; left: calc(var(--v2-space-2) * -1 - 1px); top: 0.45em; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--v2-live);
+  }
+  .root[data-engine="v2"] .v2-timeline__time { font-weight: 700; color: var(--v2-live); }
+  .root[data-engine="v2"] .v2-timeline__empty { margin: 0; opacity: 0.8; }
+
+  /* On the dark item panel the timeline reads on the brand surface. */
+  .root[data-engine="v2"] .v2-item--panel .v2-timeline,
+  .root[data-engine="v2"] .v2-item--panel .v2-timeline__title,
+  .root[data-engine="v2"] .v2-item--panel .v2-timeline__date,
+  .root[data-engine="v2"] .v2-item--panel .v2-timeline__empty { color: var(--v2-on-brand); }
+  .root[data-engine="v2"] .v2-item--panel .v2-timeline__time { color: var(--v2-accent); }
 }

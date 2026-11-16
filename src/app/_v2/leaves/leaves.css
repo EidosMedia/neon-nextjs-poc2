@@ -240,4 +240,29 @@
   .root[data-engine="v2"] .v2-liveblog__panel .v2-leaf-head,
   .root[data-engine="v2"] .v2-liveblog__panel .v2-leaf-head * { color: var(--v2-on-brand); }
   .root[data-engine="v2"] .v2-liveblog__panel .v2-leaf-head a { color: inherit; }
+
+  /* ---------- Leaf feed ---------- */
+  .root[data-engine="v2"] .v2-feed { scroll-margin-top: 72px; }
+  .root[data-engine="v2"] .v2-feed__tag {
+    display: inline-flex; align-items: center; gap: var(--v2-space-1); margin-bottom: var(--v2-space-3);
+    padding: 4px 10px; background: var(--v2-live); color: #fff; border-radius: var(--v2-radius-pill);
+    font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .root[data-engine="v2"] .v2-feed__dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .root[data-engine="v2"] .v2-feed__list { display: flex; flex-direction: column; gap: var(--v2-space-3); margin: 0; padding: 0; list-style: none; }
+  .root[data-engine="v2"] .v2-feed__post {
+    padding: var(--v2-space-3); background: var(--v2-surface); color: var(--v2-text);
+    border: 1px solid var(--v2-rule); border-radius: var(--v2-radius-card);
+  }
+  .root[data-engine="v2"] .v2-feed__stamp {
+    display: block; margin-bottom: var(--v2-space-2); font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta);
+    font-weight: 700; letter-spacing: 0.04em; color: var(--v2-live);
+  }
+  .root[data-engine="v2"] .v2-feed__content { font-family: var(--v2-font-body); font-size: var(--v2-fs-body); line-height: 1.7; }
+  .root[data-engine="v2"] .v2-feed__content p { margin: 0 0 var(--v2-space-2); font-family: inherit; font-size: inherit; line-height: inherit; }
+  .root[data-engine="v2"] .v2-feed__content :is(h1, h2, h3, h4) { margin: 0 0 var(--v2-space-1); font-family: var(--v2-font-heading); line-height: 1.2; }
+  .root[data-engine="v2"] .v2-feed__content a { color: var(--v2-link); }
+  .root[data-engine="v2"] .v2-feed__content img { max-width: 100%; height: auto; }
+  .root[data-engine="v2"] .v2-feed__empty { color: var(--v2-text-muted); }
+  .root[data-engine="v2"] .v2-feed__foot { display: flex; justify-content: center; margin-top: var(--v2-space-4); }
 }
