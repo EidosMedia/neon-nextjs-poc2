@@ -39,6 +39,24 @@ export function blockCacheTags(siteName: string, links: BlockLink[]): string[] {
   return [`neon:site:${siteName}`, ...links.map((l) => `neon:node:${l.id}`)];
 }
 
+export const isFetchable = (link: BlockLink): boolean => link.url.trim().length > 0;
+
+/** `neon:node:<id>` for every pagelink target (all zones) in a block's own model. */
+export function blockContentTags(blockModel: unknown): string[] {
+  const pagelink = asRecord(asRecord(asRecord(blockModel)?.data)?.links)?.pagelink;
+  const zones = asRecord(pagelink);
+  if (!zones) return [];
+  const ids = new Set<string>();
+  for (const zone of Object.values(zones)) {
+    if (!Array.isArray(zone)) continue;
+    for (const l of zone) {
+      const id = asRecord(l)?.targetId;
+      if (typeof id === 'string' && id) ids.add(id);
+    }
+  }
+  return [...ids].map((id) => `neon:node:${id}`);
+}
+
 export type BlockRenderDecision =
   | { kind: 'module'; key: string }
   | { kind: 'webpage' }

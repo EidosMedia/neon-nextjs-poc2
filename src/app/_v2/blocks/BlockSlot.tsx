@@ -1,7 +1,8 @@
-import type { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { normalizeViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import type { BaseModel, PageData, WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { decideBlockRender, getModuleKeys, type BlockArea } from '../lib/blocks';
+import BlockBoundary from './BlockBoundary';
 import ZoneRenderer from '../zones/ZoneRenderer';
 import { fetchBlocks } from './fetchBlocks';
 
@@ -14,19 +15,22 @@ export default async function BlockSlot({ data, area }: Props) {
   const viewStatus = normalizeViewStatus(data.siteData?.viewStatus);
   const moduleKeys = getModuleKeys(getActiveTheme(data));
 
-  const rendered = blocks.map(({ link, data: block }) => {
+  const rendered = blocks.map(({ link, data: block }, index) => {
+    const key = `${area}-${link.id}-${index}`;
+    const placeholder = (
+      <div className="v2-block v2-block--placeholder">{`Block: ${link.blockType ?? 'unknown'} (${link.id})`}</div>
+    );
     // A failed fetch has no baseType, so it falls to placeholder (PREVIEW) or none (LIVE).
     const decision = decideBlockRender(link.blockType, block?.model?.data?.sys?.baseType, moduleKeys, viewStatus);
     switch (decision.kind) {
       case 'webpage':
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return <ZoneRenderer key={link.id} data={block as PageData<any>} zone="main" />;
-      case 'placeholder':
         return (
-          <div key={link.id} className="v2-block v2-block--placeholder">
-            {`Block: ${link.blockType ?? 'unknown'} (${link.id})`}
-          </div>
+          <BlockBoundary key={key} fallback={viewStatus === ViewStatus.PREVIEW ? placeholder : null}>
+            <ZoneRenderer data={block as PageData<WebpageModel>} zone="main" />
+          </BlockBoundary>
         );
+      case 'placeholder':
+        return <div key={key} className="v2-block v2-block--placeholder">{placeholder.props.children}</div>;
       default:
         // 'module' rendering arrives with Task 16 (brand.modules); until then nothing is drawn.
         return null;

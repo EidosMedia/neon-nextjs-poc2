@@ -1,5 +1,5 @@
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { BLOCK_LIMITS, blockCacheTags, decideBlockRender, extractBlockLinks } from '@/app/_v2/lib/blocks';
+import { BLOCK_LIMITS, blockCacheTags, blockContentTags, isFetchable, decideBlockRender, extractBlockLinks } from '@/app/_v2/lib/blocks';
 
 const link = (id: string) => ({ targetId: id });
 const model = (pagelink: unknown, nodes: unknown = {}) => ({ data: { links: { pagelink } }, nodes });
@@ -43,5 +43,18 @@ describe('decideBlockRender', () => {
   it('placeholder in preview, none in live for unknown', () => {
     expect(decideBlockRender('x', 'article', [], ViewStatus.PREVIEW)).toEqual({ kind: 'placeholder' });
     expect(decideBlockRender('x', undefined, [], ViewStatus.LIVE)).toEqual({ kind: 'none' });
+  });
+});
+
+describe('isFetchable / blockContentTags', () => {
+  it('flags links without a url', () => {
+    expect(isFetchable({ area: 'headers', id: 'a', url: '' })).toBe(false);
+    expect(isFetchable({ area: 'headers', id: 'a', url: '/b/' })).toBe(true);
+    expect(extractBlockLinks(model({ headers: [link('x')] }), 'headers').map(isFetchable)).toEqual([false]);
+  });
+  it('tags every pagelink target across zones, deduped', () => {
+    const m = { data: { links: { pagelink: { main: [link('a'), link('b')], side: [link('a'), {}] } } } };
+    expect(blockContentTags(m)).toEqual(['neon:node:a', 'neon:node:b']);
+    expect(blockContentTags(undefined)).toEqual([]);
   });
 });

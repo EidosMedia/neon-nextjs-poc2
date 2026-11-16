@@ -3,7 +3,7 @@ import pino from 'pino';
 import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { AuthContext, BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getAuthOptions } from '@/utilities/security';
-import { blockCacheTags, extractBlockLinks, type BlockArea, type BlockLink } from '../lib/blocks';
+import { blockCacheTags, blockContentTags, isFetchable, extractBlockLinks, type BlockArea, type BlockLink } from '../lib/blocks';
 
 const logger = pino({ name: 'neon-fo:page-cache' });
 
@@ -27,6 +27,7 @@ async function fetchBlockCached(link: BlockLink, siteName: string, auth: AuthCon
   cacheLife('hours');
   for (const tag of blockCacheTags(siteName, [link])) cacheTag(tag);
   const data = await loadBlock(link, auth);
+  for (const tag of blockContentTags(data?.model)) cacheTag(tag);
   logger.info({ event: 'block-cache-built', url: link.url, siteName, nodeId: link.id, area: link.area }, '[page-cache] built block');
   return data;
 }
@@ -39,6 +40,10 @@ export async function fetchBlocks(data: PageData<BaseModel>, area: BlockArea): P
   const auth = await getAuthOptions();
   return Promise.all(
     links.map(async (link): Promise<FetchedBlock> => {
+      if (!isFetchable(link)) {
+        logger.warn({ event: 'block-fetch-skipped', nodeId: link.id, area }, '[page-cache] block has no url');
+        return { link };
+      }
       try {
         return { link, data: live ? await fetchBlockCached(link, siteName, auth) : await loadBlock(link, auth) };
       } catch (error) {
