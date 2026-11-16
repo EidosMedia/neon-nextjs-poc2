@@ -5,6 +5,9 @@ import * as Wire from './_pages/wire';
 import * as Foghorn from './_pages/foghorn';
 import * as BusinessGlobe from './_pages/business-globe';
 import * as Financier from './_pages/financier';
+import { THEME_KEYS, resolveRenderTheme } from './themeKeys';
+
+export { resolveRenderTheme };
 
 // Each member is a page component whose props differ per content type, so the props stay untyped here.
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -28,7 +31,7 @@ export interface PageComponents {
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
-const THEME_MAP: Record<string, PageComponents> = {
+const THEME_MAP: Record<(typeof THEME_KEYS)[number], PageComponents> = {
   default: V2,
   adn: Adn,
   oldtown: Oldtown,
@@ -43,13 +46,13 @@ const THEME_MAP: Record<string, PageComponents> = {
 
 // componentKey must match a named export from the theme's index.ts barrel
 export function resolvePageComponent(componentKey: string, theme: string): React.ComponentType<any> | undefined {
-  const pages = THEME_MAP[theme] ?? THEME_MAP.default;
+  const pages = THEME_MAP[resolveRenderTheme(theme) as keyof typeof THEME_MAP];
   return (pages as unknown as Record<string, React.ComponentType<any>>)[componentKey];
 }
 
 // resolveComponent uses the same THEME_MAP for sub-page component overrides.
 // Theme barrels export component overrides from their components/ subfolder.
 export function resolveComponent(componentKey: string, theme: string): React.ComponentType<any> | undefined {
-  const pages = THEME_MAP[theme] ?? THEME_MAP.default;
+  const pages = THEME_MAP[resolveRenderTheme(theme) as keyof typeof THEME_MAP];
   return (pages as unknown as Record<string, React.ComponentType<any>>)[componentKey];
 }

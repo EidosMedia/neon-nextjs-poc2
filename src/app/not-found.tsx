@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import * as DefaultPages from './_v2';
-import { resolvePageComponent } from './_themeRouter';
+import { resolvePageComponent, resolveRenderTheme } from './_themeRouter';
 import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
 
@@ -38,7 +38,7 @@ export default async function NotFound() {
     (resolvePageComponent('NotFound', theme) as React.ComponentType<any>) ?? DefaultPages.NotFound;
 
   return (
-    <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
+    <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
       <NotFoundComponent data={site} />
     </div>
   );

@@ -1,6 +1,6 @@
 import { cookies, headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import { resolvePageComponent } from '../_themeRouter';
+import { resolvePageComponent, resolveRenderTheme } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
@@ -49,7 +49,7 @@ export default async function Page({
         if (!canShowStyleGuide(hasEditorialCookie, process.env.NODE_ENV)) notFound();
         const theme = normalizeTheme(site?.root.attributes?.theme);
         return (
-          <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
+          <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
             {styleGuideElement(theme, site)}
           </div>
         );
@@ -62,7 +62,7 @@ export default async function Page({
             (resolvePageComponent('SearchPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.SearchPage;
           return (
-            <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
+            <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <SearchPage data={site} />
             </div>
@@ -75,7 +75,7 @@ export default async function Page({
             (resolvePageComponent('AboutPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.AboutPage;
           return (
-            <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
+            <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <AboutPage data={site} />
             </div>
@@ -88,7 +88,7 @@ export default async function Page({
             (resolvePageComponent('LoginPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.LoginPage;
           return (
-            <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
+            <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <LoginPage data={site} />
             </div>
@@ -153,7 +153,7 @@ export default async function Page({
     (componentKey === 'ArticleGallery' ? resolvePageComponent('Article', theme) : undefined);
 
   return (
-    <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
+    <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
       <LoggedUserBar
         data={{
           ...pageDataJSON,
