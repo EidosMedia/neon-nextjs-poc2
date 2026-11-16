@@ -4,7 +4,7 @@ import { findElementsInContentJson } from '@/utilities/content';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import PageShell from '../chrome/PageShell';
-import { extractGalleryImages, planAdSlots, withoutGalleries } from '../lib/leafView';
+import { extractGalleryImages, planAdSlots, withoutAdblocks, withoutGalleries } from '../lib/leafView';
 import { getPageSettings, V2_DEFAULTS } from '../lib/settings';
 import AdSlot from '../leaves/AdSlot';
 import LeafBody from '../leaves/LeafBody';
@@ -77,7 +77,7 @@ const GalleryLeaf = async ({ data }: PageProps) => {
   const images = extractGalleryImages(article.files.content.data);
   const [rawText] = findElementsInContentJson(['text'], article.files.content.data);
   // The slider is rendered here; keep it out of the body text.
-  const text = rawText ? withoutGalleries(rawText) : undefined;
+  const text = rawText ? withoutAdblocks(withoutGalleries(rawText)) : undefined;
   const { variant, captions, thumbnails } = settings;
 
   const header = <LeafHeader article={article} hero="none" titleSize="standard" showImage={false} />;
@@ -89,11 +89,7 @@ const GalleryLeaf = async ({ data }: PageProps) => {
       insertAfter={slots.includes('midBody') ? <AdSlot placement="midBody" /> : undefined}
     />
   );
-  const tail = (
-    <>
-      {slots.includes('end') && <AdSlot placement="end" />}
-    </>
-  );
+  const tail = slots.includes('end') && <AdSlot placement="end" />;
   const afterHero = slots.includes('afterHero') && <AdSlot placement="afterHero" />;
   const rail = slots.includes('rail') ? <AdSlot placement="rail" /> : undefined;
   const railAds = rail ? 1 : 0;

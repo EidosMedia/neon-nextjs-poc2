@@ -117,6 +117,12 @@
     font-family: var(--v2-font-meta); font-weight: 700;
   }
 
+  .root[data-engine="v2"] .v2-paywall--marker { margin-top: var(--v2-space-3); }
+  .root[data-engine="v2"] .v2-paywall__marker {
+    margin: 0 0 var(--v2-space-1); font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta);
+    text-transform: uppercase; color: var(--v2-text-muted);
+  }
+
   /* ---------- Correlates ---------- */
   .root[data-engine="v2"] .v2-correlates { margin-top: var(--v2-space-5); padding-top: var(--v2-space-3); border-top: 1px solid var(--v2-rule); }
   .root[data-engine="v2"] .v2-correlates__title { margin: 0 0 var(--v2-space-3); font-family: var(--v2-font-heading); font-size: var(--v2-fs-h3); }

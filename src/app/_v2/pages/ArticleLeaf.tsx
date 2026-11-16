@@ -4,7 +4,8 @@ import { findElementsInContentJson } from '@/utilities/content';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import PageShell from '../chrome/PageShell';
-import { planAdSlots, resolveArticleLeafView } from '../lib/leafView';
+import { normalizeViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { paywallMode, planAdSlots, resolveArticleLeafView, withoutAdblocks } from '../lib/leafView';
 import { getPageSettings, V2_DEFAULTS } from '../lib/settings';
 import AdSlot from '../leaves/AdSlot';
 import Correlates from '../leaves/Correlates';
@@ -32,10 +33,12 @@ const ArticleLeaf = async ({ data }: PageProps) => {
   const imageUrl = heroImage(article, settings.variant === 'fullBleedHero' ? 'Ultrawide_large' : 'Wide_large');
   const view = resolveArticleLeafView(settings, Boolean(imageUrl));
   const slots = planAdSlots(settings.adDensity, brand.leafRail);
-  const [text] = findElementsInContentJson(['text'], article.files.content.data);
+  const [rawText] = findElementsInContentJson(['text'], article.files.content.data);
+  const text = rawText ? withoutAdblocks(rawText) : undefined;
+  const mode = paywallMode(view.paywall, normalizeViewStatus(data.siteData?.viewStatus));
 
   const midBody = slots.includes('midBody') && !view.paywall;
-  const insertAfter = view.paywall ? <Paywall /> : midBody ? <AdSlot placement="midBody" /> : undefined;
+  const insertAfter = mode !== 'off' ? <Paywall marker={mode === 'marker'} /> : midBody ? <AdSlot placement="midBody" /> : undefined;
   const railAds = slots.includes('rail') ? 1 : 0;
   const afterHero = slots.includes('afterHero') && <AdSlot placement="afterHero" />;
   const behind = view.hero === 'behind';
@@ -57,11 +60,11 @@ const ArticleLeaf = async ({ data }: PageProps) => {
             pageNodes={data.model.nodes}
             text={text}
             insertAfter={insertAfter}
-            insertWhenShort={view.paywall}
-            hideTail={view.paywall}
+            insertWhenShort={mode !== 'off'}
+            hideTail={mode === 'truncate'}
           />
           {slots.includes('end') && <AdSlot placement="end" />}
-          <Correlates data={data} count={view.correlates as 0 | 1 | 2 | 3} />
+          <Correlates data={data} count={view.correlates} />
         </LeafLayout>
       </article>
     </PageShell>

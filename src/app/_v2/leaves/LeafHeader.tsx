@@ -56,7 +56,7 @@ export default function LeafHeader({ article, hero, titleSize, imageUrl, showIma
       {hero === 'above' && image && (
         <figure className="v2-leaf-head__hero">
           <img src={image} alt="" />
-          {caption && <figcaption>{renderContent(caption)}</figcaption>}
+          {caption && <figcaption>{renderContent(caption, article)}</figcaption>}
         </figure>
       )}
     </header>

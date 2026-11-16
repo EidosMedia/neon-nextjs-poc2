@@ -1,3 +1,4 @@
+import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { AdDensity, ArticleLeafVariant, LeafSettings, LiveblogLeafVariant } from './settings';
 
 export type AdPlacement = 'afterHero' | 'midBody' | 'end' | 'rail';
@@ -28,7 +29,7 @@ export function resolveArticleLeafView(
   hero: 'above' | 'behind' | 'none' | 'portrait';
   titleSize: 'standard' | 'large';
   paywall: boolean;
-  correlates: number;
+  correlates: 0 | 1 | 2 | 3;
 } {
   let hero: 'above' | 'behind' | 'none' | 'portrait';
   switch (s.variant) {
@@ -154,4 +155,19 @@ export function relatedTargetIds(links: unknown): string[] {
     }
   }
   return ids;
+}
+
+/** LIVE truncates the body (shared cache, no per-viewer variance); PREVIEW keeps it all with a marker. */
+export function paywallMode(paywall: boolean, viewStatus: ViewStatus): 'off' | 'marker' | 'truncate' {
+  if (!paywall) return 'off';
+  return viewStatus === ViewStatus.LIVE ? 'truncate' : 'marker';
+}
+
+/** Removes existing `adblock` nodes (any depth): planned AdSlots replace them in v2 leaves. */
+export function withoutAdblocks<T extends El>(node: T): T {
+  if (!Array.isArray(node.elements)) return node;
+  return {
+    ...node,
+    elements: node.elements.filter(e => e?.nodeType !== 'adblock').map(e => withoutAdblocks(e)),
+  };
 }

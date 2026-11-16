@@ -1,7 +1,9 @@
 import {
-  extractGalleryImages, planAdSlots, planRail, resolveArticleLeafView, resolveLiveblogLeafView,
+  extractGalleryImages, paywallMode, planAdSlots, planRail, relatedTargetIds, resolveArticleLeafView,
+  resolveLiveblogLeafView, splitAfterParagraphs, withoutAdblocks, withoutGalleries,
 } from '@/app/_v2/lib/leafView';
 
+import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { LeafSettings, ArticleLeafVariant } from '@/app/_v2/lib/settings';
 
 type ArticleLeaf = Extract<LeafSettings, { kind: 'article' }>;
@@ -97,8 +99,6 @@ describe('planRail', () => {
   ] as const)('%s %i %i', (b, n, a, out) => expect(planRail(b, n, a)).toBe(out));
 });
 
-import { relatedTargetIds, splitAfterParagraphs, withoutGalleries } from '@/app/_v2/lib/leafView';
-
 describe('splitAfterParagraphs', () => {
   const el = (nodeType: string) => ({ nodeType });
   it('splits after the nth top-level paragraph', () => {
@@ -129,5 +129,23 @@ describe('relatedTargetIds', () => {
   it('returns [] for missing links', () => {
     expect(relatedTargetIds(undefined)).toEqual([]);
     expect(relatedTargetIds({ hyperlink: { image: [{ targetId: 'x' }] } })).toEqual([]);
+  });
+});
+
+describe('paywallMode', () => {
+  it('is off without paywall', () => {
+    expect(paywallMode(false, ViewStatus.LIVE)).toBe('off');
+    expect(paywallMode(false, ViewStatus.PREVIEW)).toBe('off');
+  });
+  it('marks in PREVIEW and truncates in LIVE', () => {
+    expect(paywallMode(true, ViewStatus.PREVIEW)).toBe('marker');
+    expect(paywallMode(true, ViewStatus.LIVE)).toBe('truncate');
+  });
+});
+
+describe('withoutAdblocks', () => {
+  it('drops adblock nodes at any depth', () => {
+    const out = withoutAdblocks({ nodeType: 'text', elements: [{ nodeType: 'p' }, { nodeType: 'adblock' }, { nodeType: 'x', elements: [{ nodeType: 'adblock' }] }] });
+    expect(out.elements).toEqual([{ nodeType: 'p' }, { nodeType: 'x', elements: [] }]);
   });
 });
