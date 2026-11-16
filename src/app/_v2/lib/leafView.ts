@@ -106,3 +106,52 @@ export function extractGalleryImages(content: unknown): { src: string; caption?:
 export function planRail(hasRailBrand: boolean, sidebarBlocks: number, railAds: number): 'show' | 'collapse' {
   return hasRailBrand && sidebarBlocks + railAds > 0 ? 'show' : 'collapse';
 }
+
+type El = { nodeType?: string; elements?: El[]; attributes?: Record<string, unknown> };
+
+/**
+ * Splits top-level body elements after the nth top-level `p`. `head` includes everything up to and
+ * including that paragraph; `split` is false when the body has fewer than n paragraphs.
+ */
+export function splitAfterParagraphs<T extends { nodeType?: string }>(
+  elements: readonly T[],
+  n: number,
+): { head: T[]; tail: T[]; split: boolean } {
+  let seen = 0;
+  for (let i = 0; i < elements.length; i++) {
+    if (elements[i].nodeType === 'p' && ++seen === n) {
+      return { head: elements.slice(0, i + 1), tail: elements.slice(i + 1), split: true };
+    }
+  }
+  return { head: [...elements], tail: [], split: false };
+}
+
+/** Removes `mediagallery` nodes (at any depth) so a gallery leaf does not render its slider twice. */
+export function withoutGalleries<T extends El>(node: T): T {
+  if (!Array.isArray(node.elements)) return node;
+  return {
+    ...node,
+    elements: node.elements.filter(e => e?.nodeType !== 'mediagallery').map(e => withoutGalleries(e)),
+  };
+}
+
+const RELATED_PATHS: readonly (readonly string[])[] = [['related'], ['system', 'related'], ['hyperlink', 'related']];
+
+/**
+ * Target ids of an article's related links. The sandbox sample article has no related links, so the
+ * exact field is unverified: the candidates are links.related, links.system.related and
+ * links.hyperlink.related (arrays of `{ targetId }`).
+ */
+export function relatedTargetIds(links: unknown): string[] {
+  const ids: string[] = [];
+  for (const path of RELATED_PATHS) {
+    let cur: unknown = links;
+    for (const key of path) cur = isNode(cur) ? (cur as Record<string, unknown>)[key] : undefined;
+    if (!Array.isArray(cur)) continue;
+    for (const entry of cur) {
+      const id = isNode(entry) ? (entry as { targetId?: unknown }).targetId : undefined;
+      if (typeof id === 'string' && id && !ids.includes(id)) ids.push(id);
+    }
+  }
+  return ids;
+}

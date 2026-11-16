@@ -5,3 +5,5 @@ export { default as SectionWebPage } from './pages/SectionPage';
 export { default as WebpageColumnsLayout } from './pages/WebPage';
 export { default as DefaultSection, default as DefaultLanding } from './pages/ChildrenPage';
 export { default as UIStyleGuide } from './ui/StyleGuide';
+export { default as Article, default as ArticleLongform } from './pages/ArticleLeaf';
+export { default as ArticleGallery } from './pages/GalleryLeaf';

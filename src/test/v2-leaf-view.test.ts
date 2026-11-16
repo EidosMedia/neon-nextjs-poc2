@@ -96,3 +96,38 @@ describe('planRail', () => {
     [true, 1, 0, 'show'], [true, 0, 1, 'show'], [true, 0, 0, 'collapse'], [false, 3, 3, 'collapse'],
   ] as const)('%s %i %i', (b, n, a, out) => expect(planRail(b, n, a)).toBe(out));
 });
+
+import { relatedTargetIds, splitAfterParagraphs, withoutGalleries } from '@/app/_v2/lib/leafView';
+
+describe('splitAfterParagraphs', () => {
+  const el = (nodeType: string) => ({ nodeType });
+  it('splits after the nth top-level paragraph', () => {
+    const r = splitAfterParagraphs([el('p'), el('image'), el('p'), el('p'), el('p')], 3);
+    expect(r.split).toBe(true);
+    expect(r.head.map(e => e.nodeType)).toEqual(['p', 'image', 'p', 'p']);
+    expect(r.tail).toHaveLength(1);
+  });
+  it('does not split a short body', () => {
+    const r = splitAfterParagraphs([el('p'), el('p')], 3);
+    expect(r).toEqual({ head: [el('p'), el('p')], tail: [], split: false });
+  });
+});
+
+describe('withoutGalleries', () => {
+  it('drops nested mediagallery nodes', () => {
+    const out = withoutGalleries({ nodeType: 'text', elements: [{ nodeType: 'p' }, { nodeType: 'mediagallery', elements: [] }] });
+    expect(out.elements).toEqual([{ nodeType: 'p' }]);
+  });
+});
+
+describe('relatedTargetIds', () => {
+  it('collects and dedupes ids from the candidate fields', () => {
+    expect(
+      relatedTargetIds({ related: [{ targetId: 'a' }], system: { related: [{ targetId: 'a' }, { targetId: 'b' }] } }),
+    ).toEqual(['a', 'b']);
+  });
+  it('returns [] for missing links', () => {
+    expect(relatedTargetIds(undefined)).toEqual([]);
+    expect(relatedTargetIds({ hyperlink: { image: [{ targetId: 'x' }] } })).toEqual([]);
+  });
+});

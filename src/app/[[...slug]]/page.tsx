@@ -143,10 +143,14 @@ export default async function Page({
   const componentKey =
     baseType === 'article' && type === 'longform'
       ? 'ArticleLongform'
-      : baseType === 'webpage' && type === 'newsletter'
+      : baseType === 'article' && type === 'gallery'
+        ? 'ArticleGallery'
+        : baseType === 'webpage' && type === 'newsletter'
         ? 'NewsletterWebpage'
         : resolveBaseTypeKey(baseType);
-  const PageComponent = resolvePageComponent(componentKey, theme);
+  const PageComponent =
+    resolvePageComponent(componentKey, theme) ??
+    (componentKey === 'ArticleGallery' ? resolvePageComponent('Article', theme) : undefined);
 
   return (
     <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
