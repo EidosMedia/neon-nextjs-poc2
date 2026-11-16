@@ -12,7 +12,7 @@ import { sanitizeZoneSummary } from './sanitizeZoneSummary';
 import type { AccessoryShape, ZoneAccessoryShapes } from './shapeClasses';
 import type { ZoneHeadContent } from './zoneHeadTypes';
 
-type PageDataLike = Partial<PageData<BaseModel>>;
+export type PageDataLike = Partial<PageData<BaseModel>>;
 
 export type PageChrome = {
   showHeader: boolean;
@@ -85,17 +85,21 @@ function zoneShapeProperty(definitions: AccessoryDefinitions | undefined, name: 
   return list.find(definition => definition.name === 'shape')?.properties?.find(property => property.name === name);
 }
 
-/** Title and summary of a zone; undefined when both are absent or empty, so no top area is rendered. */
-function toHead(theme: string, resolved: ResolvedAccessoryValues | undefined): ZoneHeadContent | undefined {
-  const shape = resolved?.shape;
-  const summarySize = zoneShapeProperty(getAccessoryDefinitions(theme), 'zonesummary')?.size ?? 0;
-  const title = typeof shape?.zonetitle === 'string' ? shape.zonetitle.replace(/\s+/g, ' ').trim() : '';
-  const summary =
-    typeof shape?.zonesummary === 'string' ? sanitizeZoneSummary(shape.zonesummary, { maxVisible: summarySize }) : undefined;
+/** Builds the zone head from stored title/summary: collapsed-whitespace title plus a re-sanitised summary. */
+export function buildZoneHead(rawTitle: unknown, rawSummary: unknown, summarySize: number): ZoneHeadContent | undefined {
+  const title = typeof rawTitle === 'string' ? rawTitle.replace(/\s+/g, ' ').trim() : '';
+  const summary = typeof rawSummary === 'string' ? sanitizeZoneSummary(rawSummary, { maxVisible: summarySize }) : undefined;
   if (!title && !summary) {
     return undefined;
   }
   return { ...(title ? { title } : {}), ...(summary ? { summary } : {}) };
+}
+
+/** Title and summary of a zone; undefined when both are absent or empty, so no top area is rendered. */
+function toHead(theme: string, resolved: ResolvedAccessoryValues | undefined): ZoneHeadContent | undefined {
+  const shape = resolved?.shape;
+  const summarySize = zoneShapeProperty(getAccessoryDefinitions(theme), 'zonesummary')?.size ?? 0;
+  return buildZoneHead(shape?.zonetitle, shape?.zonesummary, summarySize);
 }
 
 export function getZoneShape(data: PageDataLike, zone: string): AccessoryShape | undefined {
