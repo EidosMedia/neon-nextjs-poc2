@@ -11,9 +11,7 @@
 @import "./themes/oldtown.css";
 @import "./themes/wire.css";
 @import "./themes/foghorn.css";
-@import "./themes/sportsarena.css";
 @import "./themes/business-globe.css";
-@import "./themes/nextfrontier.css";
 @import "./themes/financier.css";
 @import "./_v2/brands/theglobe/tokens.css";
 @import "./_v2/brands/sportsarena/tokens.css";
@@ -259,7 +257,7 @@ button:where(:not(.root[data-engine="v2"] *)) {
 }
 
 p {
-  a {
+  a:where(:not(.root[data-engine="v2"] *)) {
     @apply text-base underline hover:text-primary;
   }
 }

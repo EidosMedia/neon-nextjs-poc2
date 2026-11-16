@@ -123,4 +123,13 @@ describe('globals.css layering for v2', () => {
       expect(globalsCss).toContain(`[data-type="${type}"]:where(:not(.root[data-engine="v2"] *)) {`);
     },
   );
+
+  it('excludes v2 roots from the unlayered p > a rule', () => {
+    expect(globalsCss).toContain('a:where(:not(.root[data-engine="v2"] *)) {\n    @apply text-base underline');
+  });
+
+  it('does not import the legacy sportsarena/nextfrontier theme files', () => {
+    expect(globalsCss).not.toContain('themes/sportsarena.css');
+    expect(globalsCss).not.toContain('themes/nextfrontier.css');
+  });
 });
