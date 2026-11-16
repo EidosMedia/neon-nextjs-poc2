@@ -1,10 +1,9 @@
-import type { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { normalizeViewStatus, type PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { ArticleModel } from '@/types/models';
 import { findElementsInContentJson } from '@/utilities/content';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import PageShell from '../chrome/PageShell';
-import { normalizeViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { paywallMode, planAdSlots, resolveArticleLeafView, withoutAdblocks } from '../lib/leafView';
 import { getPageSettings, V2_DEFAULTS } from '../lib/settings';
 import AdSlot from '../leaves/AdSlot';

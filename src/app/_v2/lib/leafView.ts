@@ -158,9 +158,10 @@ export function relatedTargetIds(links: unknown): string[] {
 }
 
 /** LIVE truncates the body (shared cache, no per-viewer variance); PREVIEW keeps it all with a marker. */
-export function paywallMode(paywall: boolean, viewStatus: ViewStatus): 'off' | 'marker' | 'truncate' {
+export function paywallMode(paywall: boolean, viewStatus: ViewStatus | undefined): 'off' | 'marker' | 'truncate' {
   if (!paywall) return 'off';
-  return viewStatus === ViewStatus.LIVE ? 'truncate' : 'marker';
+  // Fail closed: only an explicit PREVIEW shows the full body.
+  return viewStatus === ViewStatus.PREVIEW ? 'marker' : 'truncate';
 }
 
 /** Removes existing `adblock` nodes (any depth): planned AdSlots replace them in v2 leaves. */

@@ -140,6 +140,7 @@ describe('paywallMode', () => {
   it('marks in PREVIEW and truncates in LIVE', () => {
     expect(paywallMode(true, ViewStatus.PREVIEW)).toBe('marker');
     expect(paywallMode(true, ViewStatus.LIVE)).toBe('truncate');
+    expect(paywallMode(true, undefined)).toBe('truncate');
   });
 });
 
