@@ -6,6 +6,10 @@ argument-hint: "Theme name in lowercase-kebab (e.g. 'adn', 'my-brand')"
 
 # Add a New Rendering Theme
 
+> For the three-brand v2 engine use `neon-v2-brand`; this skill covers legacy structural themes.
+> `default`, `theglobe`, `sportsarena` and `nextfrontier` are v2 keys (`src/app/_v2/`). Legacy themes
+> are `adn`, `oldtown`, `wire`, `foghorn`, `financier` and `business-globe`.
+
 This project supports per-site structural themes: when `siteNode.attributes.theme` matches a registered key, the entire page rendering (Navbar, Footer, page layouts, and optionally individual components) switches to a theme-specific set. Theming works at two levels:
 
 - **Page level** — full page templates (HomeWebPage, Article, etc.) resolved via `resolvePageComponent`
@@ -14,28 +18,15 @@ This project supports per-site structural themes: when `siteNode.attributes.them
 Both functions read from the same `THEME_MAP` in `_themeRouter.tsx`.
 
 ## Directory structure
-## Accessory Rendering
-
-Each theme's accessory definitions live in its own `accessories.json` next to its pages: `src/app/_pages/accessories.json` for the `default` theme, `src/app/_pages/<theme>/accessories.json` for any other. The default document includes editor-test definitions. The default theme renders zone `zonetitle` and `zonesummary` (the zone title/summary area, `ZoneHead`); zone `layout` values can be selected and stored for Neon editor testing but have no visible POC effect. Do not claim renderer support from definitions or storage alone.
-
-A theme opts in to accessories by (1) adding its `accessories.json` with `"theme": "<theme>"` equal to its folder name, and (2) registering it in `src/lib/accessories/definitions.ts`. The file is compiled into the image (no runtime file, no Dockerfile `COPY`), is served by `GET /api/accessories/?theme=<theme>`, and a theme without a file answers 404. `src/test/accessories-registry.test.ts` fails when a file is missing from the registry, names another theme, or breaks the definition rules. `npm run scaffold:theme` does not create this file.
-
-Resolve accessories only when the active theme has its own registered definitions and the saved context matches the concrete page type, zone, and linked type. Missing, stale, unsupported, or version-incompatible values use renderer defaults. Do not rewrite stale data while rendering. Unknown themes that fall back to default page components must not consume default accessory values (the lookup is by the exact theme key), and accessory CSS must remain scoped to its theme.
-
-Treat `zonetitle` as plain text and `zonesummary` as untrusted HTML. Re-sanitize the summary at the reading boundary with `sanitizeZoneSummary` into the typed tree and render it as React elements; never inject raw HTML. The allowlist is `p` (with one validated `text-align`), `br`, `strong`, `em`, `u`, `s` and safe `a[href]`; accept only root-relative same-site paths or HTTPS links. Color and other attributes are not supported.
-
-The zone title/summary area is rendered only when a title or a summary with visible text exists and the zone has at least one linked item. It is sized from the first card actually rendered in the zone (`h1` article card 2.5rem, live blog `h2` 1.875rem, hero 3rem): title 120%, summary 80%. It sits 20px from the zone top, left, right and above the first card, with 20px between title and summary. New themes keep their own output unless they opt in explicitly.
-
-## Directory structure
 
 ```
 src/app/
-├── _pages/                        ← default theme templates (root = default)
-│   ├── Article.tsx
-│   ├── HomeWebPage.tsx
-│   ├── … (all page types)
-│   ├── index.ts                   ← barrel export — required
-│   └── <theme-name>/              ← one subdirectory per additional theme
+├── _v2/                           ← v2 engine: default, theglobe, sportsarena, nextfrontier
+├── _pages/
+│   ├── NewsletterWebpage.tsx      ← shared by legacy barrels (and re-exported by the v2 barrel)
+│   ├── LiveblogPosts.tsx
+│   ├── accessories.json           ← shared v2 accessories document
+│   └── <theme-name>/              ← one folder per legacy theme (adn, oldtown, wire, ...)
 │       ├── Navbar.tsx
 │       ├── Footer.tsx
 │       ├── Article.tsx
@@ -43,7 +34,7 @@ src/app/
 │       ├── components/            ← theme-specific component overrides
 │       │   └── ArticleOrganism.tsx
 │       └── index.ts               ← barrel: exports pages + component overrides
-└── _themeRouter.tsx               ← maps (componentKey, theme) → component
+└── _themeRouter.tsx               ← THEME_MAP: theme key → PageComponents
 ```
 
 Theme selection happens in `src/app/[[...slug]]/page.tsx`:
@@ -52,56 +43,50 @@ theme = pageDataJSON.siteNode.attributes.theme ?? 'default'
 PageComponent = resolvePageComponent(componentKey, theme)
 ```
 
-`resolvePageComponent` and `resolveComponent` fall back to the default theme for unknown theme names or missing keys. However, **scaffold-copied pages hardcode their own `Navbar`/`Footer` imports** — the fallback only applies to the `THEME_MAP` lookup, not to what the scaffold copies reference. Fix those imports explicitly (see Step 1).
+`resolvePageComponent` and `resolveComponent` fall back to the `default` entry (the v2 engine) for unknown theme names or missing keys. Scaffold copies reuse their source theme's imports, so check that pages import the new theme's own `./Navbar` and `./Footer` (see Step 1).
 
 ## Steps
 
 ### 1. Scaffold the new theme directory
 
 ```bash
-npm run scaffold:theme -- <theme-name>
+npm run scaffold:theme -- <theme-name> [--from <legacyTheme>]
 ```
 
-This copies all `_pages/*.tsx` files into `_pages/<theme-name>/`, rewrites their import paths from `../components/` to `../../components/`, and generates `index.ts`.
+The scaffold copies an existing **legacy** theme, `wire` by default (`--from adn|oldtown|wire|foghorn|financier|business-globe`): all top-level `*.tsx`, the `components/` folder and `index.ts` (same keys, same relative imports; the copy sits at the same depth). It refuses when `<theme-name>` already exists, when `<theme-name>` or `--from` is a v2 key, and when the source theme is unknown. Pick the source closest to the target look.
 
-**After scaffolding, immediately fix Navbar/Footer imports.** The scaffold copies reference `../../components/Navbar` and `../../components/Footer` (the default shared components), NOT the theme's own `./Navbar` and `./Footer`. Every page that renders a nav/footer will silently use the default ones until you fix this:
+**After scaffolding, check Navbar/Footer imports.** Any page in the source that still imports `../../components/Navbar` or `../../components/Footer` (e.g. `oldtown`, parts of `wire`) will keep using the shared ones:
+
+```bash
+grep -rn "from '../../components/Navbar'\|from '../../components/Footer'" src/app/_pages/<theme-name>/
+```
+
+Switch hits to `./Navbar` / `./Footer`:
 
 ```bash
 sed -i '' "s|from '../../components/Navbar'|from './Navbar'|g" src/app/_pages/<theme-name>/*.tsx
 sed -i '' "s|from '../../components/Footer'|from './Footer'|g" src/app/_pages/<theme-name>/*.tsx
 ```
 
-Verify with `grep -rn "from '../../components/Navbar'" src/app/_pages/<theme-name>/` — should return nothing.
-
 ### 2. Register in `_themeRouter.tsx`
 
 ```ts
 // src/app/_themeRouter.tsx
-import * as Default  from './_pages';
-import * as Adn      from './_pages/adn';
+import * as Wire     from './_pages/wire';
 import * as MyTheme  from './_pages/<theme-name>';   // ← add this
 
-const THEME_MAP: Record<string, typeof Default> = {
-  default:        Default,
-  adn:            Adn,
+const THEME_MAP: Record<string, PageComponents> = {
+  default:        V2,
+  wire:           Wire,
   '<theme-name>': MyTheme,                           // ← add this
 };
 ```
 
 `resolvePageComponent` and `resolveComponent` require no changes — they both read `THEME_MAP`.
 
-### 3. Add required barrel entries
+### 3. Barrel shape
 
-The scaffold generates `index.ts` with page exports. You must also add entries for any shared components that every barrel must declare to satisfy the TypeScript type shape. Currently required:
-
-```ts
-// src/app/_pages/<theme-name>/index.ts  (add these lines)
-export { default as UIStyleGuide } from '../../components/baseComponents/UIStyleGuide';
-export { default as ArticleOrganism } from '../../components/base/Organism/ArticleOrganism';
-// ^ replace with './components/ArticleOrganism' if this theme overrides it
-```
-
-Check `src/app/_pages/index.ts` (the default barrel) for the full authoritative list of required keys — all theme barrels must export the same set.
+The scaffolded `index.ts` already matches its source. The authoritative shape is the `PageComponents` interface in `src/app/_themeRouter.tsx` (`ArticleGallery` is optional; legacy themes fall back to `Article`). Keep `UIStyleGuide` and `ArticleOrganism` exports; point `ArticleOrganism` at `./components/ArticleOrganism` if the theme overrides it.
 
 ### 4. Customise page templates
 
@@ -186,10 +171,10 @@ Add a Google Fonts `<link>` in `src/app/layout.tsx` and reference the font via `
 
 ## Checklist
 
-- [ ] `npm run scaffold:theme -- <theme-name>` ran successfully
-- [ ] **Navbar/Footer import paths fixed** in all scaffold-copied pages (`../../components/Navbar` → `./Navbar`, same for Footer) — verify with `grep -rn "from '../../components/Navbar'" src/app/_pages/<theme-name>/`
+- [ ] `npm run scaffold:theme -- <theme-name> [--from <legacyTheme>]` ran successfully
+- [ ] **Navbar/Footer import paths checked** in all scaffold-copied pages (`../../components/Navbar` → `./Navbar`, same for Footer) — verify with `grep -rn "from '../../components/Navbar'" src/app/_pages/<theme-name>/`
 - [ ] Theme registered in `src/app/_themeRouter.tsx` (`import` + `THEME_MAP` entry)
-- [ ] `UIStyleGuide` and `ArticleOrganism` re-exports added to `index.ts` (match default barrel shape)
+- [ ] `index.ts` satisfies `PageComponents` (`UIStyleGuide`, `ArticleOrganism` exported)
 - [ ] `Navbar.tsx` customised for the new brand
 - [ ] `Footer.tsx` customised for the new brand
 - [ ] Key page layouts customised (`HomeWebPage.tsx`, `Article.tsx`, `SectionWebPage.tsx`)
@@ -205,7 +190,5 @@ Add a Google Fonts `<link>` in `src/app/layout.tsx` and reference the font via `
 | `adn` | Three-layer Navbar, 70/30 article body/sidebar, dark footer, ad slots |
 | `oldtown` | Blackletter masthead, 720px serif column, Oldtown-rule `<hr>`, no sidebar |
 | `wire` | Monospace IBM Plex, feed-row ArticleOrganism with priority badges, panel-header chrome |
-| `sportsarena` | Dark mode ESPN-style: red ticker Navbar, gradient hero, image-left feed cards, immersive article hero with gradient scrim |
 
 `wire` is the reference for component-level overrides (`_pages/wire/components/ArticleOrganism.tsx`).
-`sportsarena` is the reference for dark-mode full-page themes with immersive article heroes.

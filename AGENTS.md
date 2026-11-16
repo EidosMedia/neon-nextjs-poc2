@@ -31,23 +31,35 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 11. Neon push invalidation integration.
 12. Site-level web-user authentication and access configured in Neon; web users remain separate
   from editorial users.
-13. Accessory definitions and page/zone/link metadata integration are in progress. Each theme's
-  definitions live in its own `accessories.json` next to its pages (`src/app/_pages/accessories.json`
-  for `default`, `src/app/_pages/<theme>/accessories.json` for the others), registered in
-  `src/lib/accessories/definitions.ts`, compiled into the image and served by `/api/accessories`
-  (404 for a theme without a file; `INVALIDATE_NEXTJS_HEADER_VALUE` must be set or every call is
-  404). Rendered by default-theme components only:
-  header/footer `enabled`, header `sectionsMenu`, footer `menu`, and zone/link `bold` and
-  `border` (zones `main`, `context`, `insight1`, `insight2`), plus the zone title/summary area
-  (`zonetitle`, `zonesummary`) rendered by `ZoneHead`. `header.variant`, `footer.variant`, link
-  `layout`, and zone `layout` are editor-visible definitions with no rendered effect. The zone
-  summary is untrusted HTML: it is re-sanitized by `sanitizeZoneSummary` and rendered as React
-  elements, never injected as raw HTML. Readers live in
-  `src/lib/accessories/defaultThemeAccessories.ts`. Do not apply default-theme values in
-  non-default themes. Neon resolves the nearest nonblank section/site-root theme and requests the
-  `default` definition document when neither level declares a theme. The POC falls back to default
-  page components for a missing theme, but an explicit unknown theme must not consume default
-  accessory values.
+13. Accessory definitions and page/zone/link metadata integration (contract version 2.0). One shared
+  `src/app/_pages/accessories.json` (`"version": "2.0"`, file `theme` `default`) is served for every
+  key in `V2_THEMES` (`default`, `theglobe`, `sportsarena`, `nextfrontier`) by `/api/accessories`;
+  `getAccessoryDefinitions(theme)` in `src/lib/accessories/definitions.ts` returns a frozen copy with
+  `theme` stamped to the requested key, so Neon stores values per theme and the resolver's exact-theme
+  rule still holds. Legacy themes (`adn`, `oldtown`, `wire`, `foghorn`, `financier`, `business-globe`),
+  unknown themes and prototype names get 404 and no values (`INVALIDATE_NEXTJS_HEADER_VALUE` must be set
+  or every call is 404). The document is compiled into the image.
+  - Page accessories: `header` (`enabled`, `sectionsMenu`, `variant`), `footer` (`enabled`, `menu`,
+    `variant`), `articleLeaf`, `liveblogLeaf`, `galleryLeaf`. Zone accessory `zone` (zones `main`,
+    `context`, `insight1`, `insight2`, `insight3`): `showTitle`, `composition`, `titleStyle`, `zonetitle`,
+    `zonesummary`, `moreLink`, `sponsorName`. Link accessories `articleItem`, `liveblogItem`,
+    `galleryItem`. All of these are rendered by the v2 engine; the special routes (`search`, `about`,
+    `login`, NotFound) have no page model and always render header and footer with defaults.
+  - Exact-type exclusion (`resolveAccessories.ts`): when any definition at a level matches the exact
+    `type` (page `types`, or `linkedTypes` at link level), definitions matching only through the
+    `baseType` are dropped whatever their names. So `article/gallery` gets only `galleryLeaf`
+    (not `articleLeaf`), gallery links get only `galleryItem`, and other article subtypes fall back to
+    `articleLeaf`/`articleItem`. Stored values with a different definition `version` are ignored.
+  - The zone summary is untrusted HTML: it is re-sanitized by `sanitizeZoneSummary` and rendered as React
+    elements, never injected as raw HTML; `zonetitle` is plain text.
+  - Do not apply v2 values in legacy themes. Neon resolves the nearest nonblank section/site-root theme
+    and requests the `default` definition document when neither level declares a theme. The POC falls
+    back to the default (v2) page components for a missing theme, but an explicit unknown theme must not
+    consume accessory values.
+  - Content blocks (`headers`, `includes`, `sidebars`, `footers`): `src/app/_v2/lib/blocks.ts` is the
+    only module that knows the block model (assumed `model.data.links.pagelink.<area>`; the body
+    contract is still undefined in Neon). `BlockSlot` renders a brand module (by block `sys.type`), or a
+    webpage-like block through `ZoneRenderer`, or a dashed placeholder in PREVIEW; nothing in LIVE.
 
 ## Project Layout
 
@@ -55,7 +67,12 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 |---|---|
 | `src/neon-frontoffice-ts-sdk/` | Local Neon CMS TypeScript SDK (source of truth for types/services) |
 | `src/app/[[...slug]]/page.tsx` | Catch-all route — resolves CMS `baseType` to a page component |
-| `src/app/_pages/` | Page components, one per CMS content type |
+| `src/app/_v2/` | v2 rendering engine for `default`/`theglobe`/`sportsarena`/`nextfrontier` (barrel `index.ts` implements `PageComponents`) |
+| `src/app/_v2/lib/` | Pure modules: `layout`, `zoneItems`, `itemView`, `leafView`, `settings`, `share`, `blocks` |
+| `src/app/_v2/brands/` | `registry.ts` (`getBrand`, `REQUIRED_TOKENS`), `moduleRegistry.ts`, per-brand `tokens.css` and block `modules/` |
+| `src/app/_v2/{chrome,zones,items,leaves,blocks,pages,ui}/` | Header/footer, zone compositions, teaser items (`ItemFrame` editor contract), leaves, block slots, pages, `/ui` style guide and gate |
+| `src/app/_themeRouter.tsx` | `THEME_MAP` (theme key to `PageComponents`) |
+| `src/app/_pages/` | Legacy theme folders (`adn`, `oldtown`, `wire`, `foghorn`, `financier`, `business-globe`), `NewsletterWebpage`, `LiveblogPosts`, shared `accessories.json` |
 | `src/app/api/` | API endpoints — thin wrappers over the SDK with auth context |
 | `src/app/components/` | UI components (Navbar, Footer, shared layout) |
 | `src/types/models/` | Extended CMS model types (`ArticleModel`, `WebpageModel`, `LiveblogModel`) |
@@ -85,9 +102,16 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 | `site` | `DefaultLanding` |
 | `liveblog` | `Liveblog` |
 | `article` (default) | `Article` |
+| `article` + `type: gallery` | `ArticleGallery` (v2 only; other themes fall back to `Article`) |
 | `article` + `type: longform` | `ArticleLongform` |
 
-Single-slug specials (bypass CMS lookup): `search`, `about`, `login`.
+Single-slug specials (bypass CMS lookup): `search`, `about`, `login`, `ui`. `ui` is the v2 style guide:
+it renders only with an `editorialauth` cookie or when `NODE_ENV !== 'production'`, otherwise 404.
+
+Engine selection: `data-theme` is the site's theme; `data-engine="v2"` is set on the `.root` wrapper when
+the theme is in `V2_THEMES`. `_themeRouter.tsx` maps `default`, `theglobe`, `sportsarena` and
+`nextfrontier` to the v2 barrel (`src/app/_v2/index.ts`); legacy keys keep their own page folders. Use the
+`neon-v2-brand` skill for v2 brands and `neon-new-theme` for legacy structural themes.
 
 ## Authentication Model
 
@@ -239,6 +263,11 @@ Cache tagging is applied in `src/utilities/pageCache.ts` (`fetchPageDataCached`)
 | `neon:node:<nodeId>`   | The page's own CMS node (`data.model.data.id`) — applies to every content type |
 | `neon:node:<targetId>` | Every article linked in a webpage zone (`data.model.data.links.pagelink.*`)    |
 | `neon:node:<childId>`  | Every child node in a section/list page (`data.model.data.children`)           |
+| `neon:site:<siteName>` + `neon:node:<blockId>` | Each content block (`headers`/`includes`/`sidebars`/`footers`) fetched by `src/app/_v2/blocks/fetchBlocks.tsx`, as its own LIVE `'use cache'` entry; plus `neon:node:<id>` for every pagelink target inside the block's own model (`lib/blocks.ts`) |
+
+Zone tagging is generic over zone names, so `insight3` is covered like `main`, `context`, `insight1` and
+`insight2`. Blocks are cached separately from the page (own cache entry, LIVE only; PREVIEW fetches
+uncached), so evicting a block node id purges the block, not the host page entry.
 
 This means evicting one article's `nodeId` purges both the article page **and** every
 listing page that references it in a zone — the full invalidation loop is closed.
