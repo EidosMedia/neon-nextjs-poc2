@@ -11,7 +11,7 @@ import LeafBody from '../leaves/LeafBody';
 import LeafHeader from '../leaves/LeafHeader';
 import LeafLayout from '../leaves/LeafLayout';
 import LiveblogPosts from '../../_pages/LiveblogPosts';
-import { heroImage } from './ArticleLeaf';
+import { heroImage } from '../leaves/heroImage';
 
 type PageProps = { data: PageData<ArticleModel> };
 
@@ -33,7 +33,6 @@ const LiveblogLeaf = async ({ data }: PageProps) => {
   const content = article.files.content.data;
   const [rawText] = findElementsInContentJson(['text'], content);
   const text = rawText ? withoutAdblocks(rawText) : undefined;
-  const [headline] = findElementsInContentJson(['headline'], content);
   const [summary] = findElementsInContentJson(['summary'], content);
   const showPinned = view.showPinned && Boolean(summary);
 
@@ -42,7 +41,7 @@ const LiveblogLeaf = async ({ data }: PageProps) => {
     view.variant === 'resultsPanel' ? (
       <header className="v2-liveblog__panel">
         {view.showLiveTag && <LiveTag label="Live" />}
-        {headline && <div className="v2-liveblog__panel-title">{renderContent(headline, article)}</div>}
+        <LeafHeader article={article} hero="none" titleSize="standard" showImage={false} hideSummary={showPinned} />
       </header>
     ) : (
       <div className="v2-liveblog__head">

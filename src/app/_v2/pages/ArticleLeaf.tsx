@@ -12,14 +12,7 @@ import LeafBody from '../leaves/LeafBody';
 import LeafHeader from '../leaves/LeafHeader';
 import LeafLayout from '../leaves/LeafLayout';
 import Paywall from '../leaves/Paywall';
-
-type Crops = { dynamicCropsResourceUrls?: Record<string, string> };
-
-/** Editor-chosen crop first (teaser then main), same as the legacy MainImage/HeroCoverImage. */
-export function heroImage(article: ArticleModel, format: string): string | undefined {
-  const sys = article.links?.system as { teaserPicture?: Crops[]; mainPicture?: Crops[] } | undefined;
-  return sys?.mainPicture?.[0]?.dynamicCropsResourceUrls?.[format] ?? sys?.teaserPicture?.[0]?.dynamicCropsResourceUrls?.[format];
-}
+import { heroImage } from '../leaves/heroImage';
 
 type PageProps = { data: PageData<ArticleModel> };
 
