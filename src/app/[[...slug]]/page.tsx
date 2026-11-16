@@ -5,6 +5,7 @@ import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
 import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { isV2Theme } from '@/lib/accessories/definitions';
 import UIStyleGuide from '../components/baseComponents/UIStyleGuide';
 import * as DefaultPages from '../_pages';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
@@ -36,9 +37,9 @@ export default async function Page({
 
     switch (slug[0]) {
       case 'ui': {
-        const theme = site?.root.attributes?.theme ?? 'default';
+        const theme = normalizeTheme(site?.root.attributes?.theme);
         return (
-          <div className="root" data-theme={theme}>
+          <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
             <UIStyleGuide />
           </div>
         );
@@ -46,12 +47,12 @@ export default async function Page({
 
       case 'search':
         if (site) {
-          const theme = site.root.attributes?.theme ?? 'default';
+          const theme = normalizeTheme(site.root.attributes?.theme);
           const SearchPage =
             (resolvePageComponent('SearchPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.SearchPage;
           return (
-            <div className="root" data-theme={theme}>
+            <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <SearchPage data={site} />
             </div>
@@ -59,12 +60,12 @@ export default async function Page({
         }
       case 'about':
         if (site) {
-          const theme = site.root.attributes?.theme ?? 'default';
+          const theme = normalizeTheme(site.root.attributes?.theme);
           const AboutPage =
             (resolvePageComponent('AboutPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.AboutPage;
           return (
-            <div className="root" data-theme={theme}>
+            <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <AboutPage data={site} />
             </div>
@@ -72,12 +73,12 @@ export default async function Page({
         }
       case 'login':
         if (site) {
-          const theme = site.root.attributes?.theme ?? 'default';
+          const theme = normalizeTheme(site.root.attributes?.theme);
           const LoginPage =
             (resolvePageComponent('LoginPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.LoginPage;
           return (
-            <div className="root" data-theme={theme}>
+            <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
               <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               <LoginPage data={site} />
             </div>
@@ -138,7 +139,7 @@ export default async function Page({
   const PageComponent = resolvePageComponent(componentKey, theme);
 
   return (
-    <div className="root" data-theme={theme}>
+    <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
       <LoggedUserBar
         data={{
           ...pageDataJSON,
