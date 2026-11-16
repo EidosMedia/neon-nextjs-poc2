@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { resolvePageComponent } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
@@ -6,13 +6,21 @@ import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
 import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
-import UIStyleGuide from '../components/baseComponents/UIStyleGuide';
+import { canShowStyleGuide } from '../_v2/ui/gate';
 import * as DefaultPages from '../_pages';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
+import type { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { createElement } from 'react';
 import { normalizeViewStatus, toSiteViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 // Site, backend URL and view status come from request headers, so there is no static shell; LIVE content is cached in fetchPageDataCached.
 export const instant = false;
+
+/** Legacy themes keep their own style guide; v2 themes resolve the v2 one. */
+function styleGuideElement(theme: string, site: Site | undefined) {
+  const StyleGuide = resolvePageComponent('UIStyleGuide', theme) ?? DefaultPages.UIStyleGuide;
+  return createElement(StyleGuide, { site });
+}
 
 export default async function Page({
   params,
@@ -37,10 +45,12 @@ export default async function Page({
 
     switch (slug[0]) {
       case 'ui': {
+        const hasEditorialCookie = Boolean((await cookies()).get('editorialauth')?.value);
+        if (!canShowStyleGuide(hasEditorialCookie, process.env.NODE_ENV)) notFound();
         const theme = normalizeTheme(site?.root.attributes?.theme);
         return (
           <div className="root" data-theme={theme} data-engine={isV2Theme(theme) ? 'v2' : undefined}>
-            <UIStyleGuide />
+            {styleGuideElement(theme, site)}
           </div>
         );
       }
@@ -198,6 +208,8 @@ export async function generateMetadata({
           return { title: 'About' };
         case 'login':
           return { title: 'Login' };
+        case 'ui':
+          return { title: 'Style guide', robots: { index: false } };
       }
     }
 

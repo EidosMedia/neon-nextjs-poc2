@@ -13,9 +13,16 @@ export type LiveblogItemView = {
   showShare: boolean;
 };
 
-type Props = { node: WebpageNodeModel; view: LiveblogItemView; viewStatus: ViewStatus; headingLevel: HeadingLevel };
+type Props = {
+  node: WebpageNodeModel;
+  view: LiveblogItemView;
+  viewStatus: ViewStatus;
+  headingLevel: HeadingLevel;
+  /** `false` skips the posts list (style guide fixtures have no posts endpoint). */
+  posts?: false;
+};
 
-export default function LiveblogItem({ node, view, viewStatus, headingLevel }: Props) {
+export default function LiveblogItem({ node, view, viewStatus, headingLevel, posts }: Props) {
   return (
     <ItemFrame
       node={node}
@@ -32,7 +39,7 @@ export default function LiveblogItem({ node, view, viewStatus, headingLevel }: P
             <Kicker text={f.kicker} />
             {Title({ level: headingLevel, className: 'v2-item__title' })}
             {view.variant === 'pinnedSummary' && Summary({ className: 'v2-item__summary v2-item__pinned' })}
-            {view.variant !== 'pinnedSummary' && (
+            {view.variant !== 'pinnedSummary' && posts !== false && (
               <div className="v2-item__posts">
                 <LiveblogOrganismPosts liveblogId={node.id} />
               </div>
