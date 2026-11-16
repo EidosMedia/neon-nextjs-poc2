@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { cacheLife, cacheTag } from 'next/cache';
 import pino from 'pino';
 import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
@@ -36,7 +37,8 @@ export async function fetchBlocks(data: PageData<BaseModel>, area: BlockArea): P
   const links = extractBlockLinks(data.model, area);
   if (links.length === 0) return [];
   const live = normalizeViewStatus(data.siteData?.viewStatus) === ViewStatus.LIVE;
-  const siteName = data.siteData?.siteName || data.siteNode?.name || '';
+  // Same site name the page cache tags with (x-neon-site-name), read outside the cached function.
+  const siteName = (await headers()).get('x-neon-site-name') || data.siteData?.siteName || data.siteNode?.name || '';
   const auth = await getAuthOptions();
   return Promise.all(
     links.map(async (link): Promise<FetchedBlock> => {

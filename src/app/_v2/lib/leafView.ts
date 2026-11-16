@@ -108,6 +108,11 @@ export function planRail(hasRailBrand: boolean, sidebarBlocks: number, railAds: 
   return hasRailBrand && sidebarBlocks + railAds > 0 ? 'show' : 'collapse';
 }
 
+/** A webpage/home rail is rendered only when a rail zone has linked items or the page links sidebar blocks. */
+export function planPageRail(zoneCounts: readonly number[], sidebarLinks: number): boolean {
+  return sidebarLinks > 0 || zoneCounts.some((count) => count > 0);
+}
+
 type El = { nodeType?: string; elements?: El[]; attributes?: Record<string, unknown> };
 
 /**

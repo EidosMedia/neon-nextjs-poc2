@@ -8,6 +8,10 @@ import { fetchBlocks } from './fetchBlocks';
 import { getBrand } from '../brands/registry';
 import { getBrandModules } from '../brands/moduleRegistry';
 
+function BlockPlaceholder({ link }: { link: { id: string; blockType?: string } }) {
+  return <div className="v2-block v2-block--placeholder">{`Block: ${link.blockType ?? 'unknown'} (${link.id})`}</div>;
+}
+
 type Props = { data: PageData<BaseModel>; area: BlockArea };
 
 /** Renders the content blocks linked to a page area; nothing (no wrapper) when there are none. */
@@ -21,9 +25,7 @@ export default async function BlockSlot({ data, area }: Props) {
 
   const rendered = blocks.map(({ link, data: block }, index) => {
     const key = `${area}-${link.id}-${index}`;
-    const placeholder = (
-      <div className="v2-block v2-block--placeholder">{`Block: ${link.blockType ?? 'unknown'} (${link.id})`}</div>
-    );
+    const placeholder = <BlockPlaceholder link={link} />;
     // A failed fetch has no baseType, so it falls to placeholder (PREVIEW) or none (LIVE).
     const decision = decideBlockRender(link.blockType, block?.model?.data?.sys?.baseType, moduleKeys, viewStatus);
     switch (decision.kind) {
@@ -34,7 +36,7 @@ export default async function BlockSlot({ data, area }: Props) {
           </BlockBoundary>
         );
       case 'placeholder':
-        return <div key={key} className="v2-block v2-block--placeholder">{placeholder.props.children}</div>;
+        return <BlockPlaceholder key={key} link={link} />;
       case 'module': {
         const Module = modules[decision.key];
         if (!Module || !block) return null;

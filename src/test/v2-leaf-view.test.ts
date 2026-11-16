@@ -1,5 +1,5 @@
 import {
-  extractGalleryImages, paywallMode, planAdSlots, planRail, relatedTargetIds, resolveArticleLeafView,
+  extractGalleryImages, paywallMode, planAdSlots, planPageRail, planRail, relatedTargetIds, resolveArticleLeafView,
   resolveLiveblogLeafView, splitAfterParagraphs, withoutAdblocks, withoutGalleries,
 } from '@/app/_v2/lib/leafView';
 
@@ -148,5 +148,18 @@ describe('withoutAdblocks', () => {
   it('drops adblock nodes at any depth', () => {
     const out = withoutAdblocks({ nodeType: 'text', elements: [{ nodeType: 'p' }, { nodeType: 'adblock' }, { nodeType: 'x', elements: [{ nodeType: 'adblock' }] }] });
     expect(out.elements).toEqual([{ nodeType: 'p' }, { nodeType: 'x', elements: [] }]);
+  });
+});
+
+describe('planPageRail', () => {
+  it('collapses when no rail zone has items and there are no sidebar blocks', () => {
+    expect(planPageRail([0, 0, 0, 0], 0)).toBe(false);
+    expect(planPageRail([], 0)).toBe(false);
+  });
+  it('shows for a populated rail zone', () => {
+    expect(planPageRail([0, 2, 0, 0], 0)).toBe(true);
+  });
+  it('shows for sidebar blocks alone', () => {
+    expect(planPageRail([0, 0, 0, 0], 1)).toBe(true);
   });
 });
