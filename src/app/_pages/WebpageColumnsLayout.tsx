@@ -9,6 +9,7 @@ import MainWithHero from '../components/webpage/MainWithHero';
 import Context from '../components/webpage/Context';
 import Insight1 from '../components/webpage/Insight1';
 import ContentBlocks from '../components/webpage/ContentBlocks';
+import { getContentBlockLinks } from '@/lib/contentBlocks';
 import Footer from '../components/Footer';
 import { getPageChrome } from '@/lib/accessories/defaultThemeAccessories';
 type PageProps = {
@@ -35,7 +36,7 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
           <Insight1 data={data} displayMainPicture={false} accessories />
         </div>
         <div className="p-4 rounded-lg col-span-12">
-          <ContentBlocks data={data} />
+          <ContentBlocks links={getContentBlockLinks(data)} />
         </div>
       </div>
 
