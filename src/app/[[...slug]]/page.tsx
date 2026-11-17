@@ -7,6 +7,7 @@ import { getAuthOptions } from '@/utilities/security';
 import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
 import UIStyleGuide from '../components/baseComponents/UIStyleGuide';
 import * as DefaultPages from '../_pages';
+import ContentBlockPage from '../_pages/ContentBlockPage';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
 import { normalizeViewStatus, toSiteViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
@@ -127,6 +128,15 @@ export default async function Page({
   const baseType = pageDataJSON?.model?.data?.sys?.baseType as string;
   const type = pageDataJSON?.model?.data?.sys?.type as string;
   console.log('Resolving page for baseType:', baseType, 'type:', type, 'theme:', theme);
+
+  // Content block html is rendered on its own, without the editor toolbar
+  if (baseType === 'contentblock' && (path ?? '').endsWith('.html')) {
+    return (
+      <div className="root" data-theme={theme}>
+        <ContentBlockPage data={pageDataJSON} />
+      </div>
+    );
+  }
 
   // For article longform, use a sub-type key so themes can differentiate
   const componentKey =

@@ -11,7 +11,7 @@ import Insight1 from '../components/webpage/Insight1';
 import ContentBlocks from '../components/webpage/ContentBlocks';
 import { getContentBlockLinks } from '@/lib/contentBlocks';
 import Footer from '../components/Footer';
-import { getPageChrome } from '@/lib/accessories/defaultThemeAccessories';
+import { getActiveTheme, getPageChrome } from '@/lib/accessories/defaultThemeAccessories';
 type PageProps = {
   data: PageData<WebpageModel>;
 };
@@ -36,7 +36,11 @@ const WebpageColumnsLayout: React.FC<PageProps> = async ({ data }) => {
           <Insight1 data={data} displayMainPicture={false} accessories />
         </div>
         <div className="p-4 rounded-lg col-span-12">
-          <ContentBlocks links={getContentBlockLinks(data)} />
+          <ContentBlocks
+            links={getContentBlockLinks(data)}
+            theme={getActiveTheme(data)}
+            viewStatus={data.siteData?.viewStatus}
+          />
         </div>
       </div>
 

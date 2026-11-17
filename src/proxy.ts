@@ -40,6 +40,14 @@ const deriveSwitchHostFromCurrent = (currentHost: string, targetView: ViewStatus
 
 // This function can be marked `async` if using `await` inside
 export async function proxy(request: NextRequest) {
+  // Content block models: index.json is served by the content-block-model route, which checks the type
+  if (request.nextUrl.pathname.endsWith('/index.json')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/api/content-block-model';
+    url.search = `?url=${encodeURIComponent(request.nextUrl.pathname)}`;
+    return NextResponse.rewrite(url);
+  }
+
   const foundsite: { apiHostname: string; viewStatus: string; root: SiteNode } = await getAPIHostnameConfig(request);
 
   // Passing the apiHostname resolved as header to the app router

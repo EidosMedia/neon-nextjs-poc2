@@ -1,4 +1,4 @@
-import { getContentBlockLinks } from '@/lib/contentBlocks';
+import { getBlockLinkedObjects, getContentBlockLinks, toBlockJsonPath } from '@/lib/contentBlocks';
 
 const pageWith = (blocklink: unknown) =>
   ({ model: { data: { links: { pagelink: {}, blocklink } } } }) as never;
@@ -38,5 +38,33 @@ describe('getContentBlockLinks', () => {
 
   test('returns an empty list when the page has no blocklink', () => {
     expect(getContentBlockLinks(pageWith(undefined))).toEqual([]);
+  });
+});
+
+describe('toBlockJsonPath', () => {
+  test('replaces index.html with index.json', () => {
+    expect(toBlockJsonPath('/sport/0800-1024/index.html')).toBe('/sport/0800-1024/index.json');
+  });
+});
+
+describe('getBlockLinkedObjects', () => {
+  test('resolves the main zone items with their picture and link metadata', () => {
+    const items = getBlockLinkedObjects({
+      data: { links: { pagelink: { main: [{ targetId: 'a', metadata: { metadataType: 'pagelink' } }] } } },
+      nodes: {
+        a: { id: 'a', title: 'Article', links: { system: { mainPicture: [{ targetId: 'p' }] } } },
+        p: { id: 'p', resourceUrl: '/resources/p.jpg' },
+      },
+    });
+
+    expect(items).toEqual([
+      {
+        id: 'a',
+        title: 'Article',
+        links: { system: { mainPicture: [{ targetId: 'p' }] } },
+        mainPicture: '/resources/p.jpg',
+        linkMetadata: { metadataType: 'pagelink' },
+      },
+    ]);
   });
 });

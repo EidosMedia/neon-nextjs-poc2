@@ -1,35 +1,42 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import type { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import type { ContentBlockLink } from '@/lib/contentBlocks';
-import ArticleWebpage from '../ArticleWebpage';
+import { normalizeViewStatus, PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import {
+  getBlockLinkedObjects,
+  toBlockJsonPath,
+  type BlockModel,
+  type ContentBlockLink,
+} from '@/lib/contentBlocks';
+import { getZoneAccessoryShapes } from '@/lib/accessories/defaultThemeAccessories';
 import type { ZoneAccessoryShapes } from '@/lib/accessories/shapeClasses';
+import ArticleWebpage from '../ArticleWebpage';
 
 type ContentBlocksProps = {
   links: ContentBlockLink[];
+  theme: string;
+  viewStatus?: string;
 };
 
 type BlockState =
   | { status: 'loading' }
-  | { status: 'ready'; title: string; data: PageData<WebpageModel>; linkedObjects: WebpageNodeModel[]; accessories?: ZoneAccessoryShapes }
+  | {
+      status: 'ready';
+      title: string;
+      data: PageData<WebpageModel>;
+      linkedObjects: WebpageNodeModel[];
+      accessories?: ZoneAccessoryShapes;
+    }
   | { status: 'failed'; reason: string };
-
-type BlockResponse = {
-  title: string;
-  data: PageData<WebpageModel>;
-  linkedObjects: WebpageNodeModel[];
-  accessories?: ZoneAccessoryShapes;
-};
 
 const LOG_PREFIX = '[NEON][content-block]';
 
 /**
  * Renders each content block linked to the page with the webpage article renderers. The block is
- * loaded from /api/content-blocks, which resolves its items on the server. Every step is logged to
- * the browser console.
+ * loaded from its index.json url, and its items and accessories are resolved in the browser.
+ * Every step is logged to the browser console.
  */
-const ContentBlocks: React.FC<ContentBlocksProps> = ({ links }) => {
+const ContentBlocks: React.FC<ContentBlocksProps> = ({ links, theme, viewStatus }) => {
   const [blocks, setBlocks] = useState<Record<string, BlockState>>({});
 
   useEffect(() => {
@@ -43,31 +50,36 @@ const ContentBlocks: React.FC<ContentBlocksProps> = ({ links }) => {
 
     links.forEach(async link => {
       const id = `${link.zone}:${link.targetId}`;
-      const endpoint = `/api/content-blocks?url=${encodeURIComponent(link.url)}`;
-      console.log(`${LOG_PREFIX} fetching block`, { zone: link.zone, targetId: link.targetId, endpoint, key: link.key });
+      const jsonPath = toBlockJsonPath(link.url);
+      console.log(`${LOG_PREFIX} fetching block`, { zone: link.zone, targetId: link.targetId, jsonPath, key: link.key });
       update(id, { status: 'loading' });
 
       try {
-        const response = await fetch(endpoint, { headers: { Accept: 'application/json' }, credentials: 'include' });
+        const response = await fetch(jsonPath, { headers: { Accept: 'application/json' }, credentials: 'include' });
         console.log(`${LOG_PREFIX} response`, { targetId: link.targetId, status: response.status });
 
         if (!response.ok) {
-          console.warn(`${LOG_PREFIX} block not rendered: HTTP ${response.status}`, endpoint);
+          console.warn(`${LOG_PREFIX} block not rendered: HTTP ${response.status}`, jsonPath);
           update(id, { status: 'failed', reason: `HTTP ${response.status}` });
           return;
         }
 
-        const block = (await response.json()) as BlockResponse;
-        console.log(`${LOG_PREFIX} rendered block "${block.title}" with ${block.linkedObjects.length} item(s)`);
-        update(id, {
-          status: 'ready',
-          title: block.title,
-          data: block.data,
-          linkedObjects: block.linkedObjects,
-          accessories: block.accessories,
-        });
+        const model = (await response.json()) as BlockModel;
+        const linkedObjects = getBlockLinkedObjects(model);
+        const accessories =
+          theme === 'default'
+            ? getZoneAccessoryShapes({ model, siteNode: { attributes: { theme } } } as never, 'main', linkedObjects)
+            : undefined;
+        const title = model.data?.title ?? link.targetId;
+        const data = {
+          model,
+          siteData: { viewStatus: normalizeViewStatus(viewStatus ?? '') },
+        } as unknown as PageData<WebpageModel>;
+
+        console.log(`${LOG_PREFIX} rendered block "${title}" with ${linkedObjects.length} item(s)`);
+        update(id, { status: 'ready', title, data, linkedObjects, accessories });
       } catch (error) {
-        console.error(`${LOG_PREFIX} block fetch failed`, { endpoint, error });
+        console.error(`${LOG_PREFIX} block fetch failed`, { jsonPath, error });
         update(id, { status: 'failed', reason: String(error) });
       }
     });
@@ -75,7 +87,7 @@ const ContentBlocks: React.FC<ContentBlocksProps> = ({ links }) => {
     return () => {
       cancelled = true;
     };
-  }, [links]);
+  }, [links, theme, viewStatus]);
 
   return (
     <>
