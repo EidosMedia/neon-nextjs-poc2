@@ -242,6 +242,18 @@ The SDK also owns the accessory value types. Webpage zone overrides are delivere
 each page link's metadata separately as `WebpageNodeModel.linkMetadata`; do not merge link metadata
 into the linked node's `attributes`.
 
+Site configuration values (custom attributes on the site in Neon) arrive as `staticAttributes` on the
+site root and every page `siteNode`, and again as the page's `siteData.custom`. `redactSiteConfig()`
+(`utilities/siteConfig.ts`) removes secret keys from those objects in place: by default
+`DEFAULT_REDACTED_SITE_CONFIG_KEYS` (`invalidateNextJsHeaderName`, `invalidateNextJsHeaderValue`).
+`NeonConnection` takes `siteConfigRedaction: { expose?, keys? }` (`keys` replaces the default; an entry
+ending with `*` is a prefix; `expose: true` keeps everything, for debugging only). Sites are redacted
+when loaded; call `connection.redactSiteConfig(json)` on page JSON parsed from `makePageRequest()`.
+The app wires it from `NEON_EXPOSE_SITE_CONFIG_SECRETS` (`true` = keep secrets, debug only; logs a
+warning) and `NEON_REDACTED_SITE_CONFIG_KEYS` (comma-separated) in `src/instrumentation.ts`, and applies
+it in `src/utilities/pageCache.ts` and `src/app/_v2/blocks/fetchBlocks.tsx`. Never pass unredacted site
+or page data to a client component.
+
 When changing the SDK public contract, update its README, this section, and both mirrored
 `.agents/skills/neon-sdk-boundary/SKILL.md` and `.claude/skills/neon-sdk-boundary/SKILL.md`
 files. Run `npm run build --prefix src/neon-frontoffice-ts-sdk` and

@@ -19,7 +19,7 @@ export type FetchedBlock = {
 async function loadBlock(link: BlockLink, auth: AuthContext): Promise<PageData<any>> {
   const response: Response = await connection.makePageRequest(link.url, auth, { cache: 'no-store' });
   if (!response.ok) throw new Error(`status ${response.status}`);
-  return response.json();
+  return connection.redactSiteConfig(await response.json());
 }
 
 /** LIVE only: cached and tagged so `/api/cache` evicting the block node (or the site) purges it. */

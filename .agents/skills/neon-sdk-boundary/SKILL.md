@@ -32,6 +32,14 @@ Zone accessory sets are delivered in top-level `WebpageModel.zoneAccessories`. T
 `getDwxLinkedObjects()` adapter exposes a page link's metadata as `WebpageNodeModel.linkMetadata`,
 separate from the linked node's attributes.
 
+Site configuration values (custom attributes on the site in Neon) arrive as `staticAttributes` on the
+site root and every page `siteNode`, and again as the page's `siteData.custom`. `redactSiteConfig()`
+(`utilities/siteConfig.ts`) removes secret keys from those objects in place: by default
+`DEFAULT_REDACTED_SITE_CONFIG_KEYS` (`invalidateNextJsHeaderName`, `invalidateNextJsHeaderValue`).
+`NeonConnection` takes `siteConfigRedaction: { expose?, keys? }` (`keys` replaces the default; an entry
+ending with `*` is a prefix; `expose: true` keeps everything, for debugging only). Sites are redacted
+when loaded; call `connection.redactSiteConfig(json)` on page JSON parsed from `makePageRequest()`.
+
 ## Change Checklist
 
 1. Add or update the contract under `src/neon-frontoffice-ts-sdk/src/`.
