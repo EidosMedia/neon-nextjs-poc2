@@ -15,6 +15,17 @@
     background: var(--v2-bg);
     color: var(--v2-text);
     font-family: var(--v2-font-body);
+    /*
+     * The legacy base rule still matches the root itself (text-sm, leading-[134%]). A percentage line
+     * height is inherited as a fixed px value (~19px), which made large headings overlap; a unitless
+     * ratio scales with each element's own font size.
+     */
+    font-size: var(--v2-fs-body);
+    line-height: 1.5;
+    letter-spacing: normal;
+  }
+  .root[data-engine="v2"] :is(h1, h2, h3, h4, h5, h6) {
+    line-height: 1.15;
   }
 
   /* Legacy island: layout-transparent wrapper so sticky/fixed legacy chrome keeps its containing block. */
