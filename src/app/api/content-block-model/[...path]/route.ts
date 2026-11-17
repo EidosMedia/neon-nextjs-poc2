@@ -29,8 +29,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ path
     if (!result.data) {
       return Response.json({ error: 'not found' }, { status: 404 });
     }
-    if (!isContentBlockModel(result.data as BlockModel)) {
-      console.warn('[NEON][content-block-model] not a content block', result.data?.data?.sys);
+    const model = (result.data as { model?: BlockModel } | undefined)?.model;
+    if (!model || !isContentBlockModel(model)) {
+      console.warn('[NEON][content-block-model] not a content block', model?.data?.sys);
       return Response.json({ error: 'not a content block' }, { status: 404 });
     }
     return Response.json(result.data);

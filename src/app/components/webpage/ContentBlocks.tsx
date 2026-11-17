@@ -64,7 +64,8 @@ const ContentBlocks: React.FC<ContentBlocksProps> = ({ links, theme, viewStatus 
           return;
         }
 
-        const model = (await response.json()) as BlockModel;
+        const json = (await response.json()) as { model: BlockModel; siteData?: { viewStatus?: string } };
+        const model = json.model;
         const linkedObjects = getBlockLinkedObjects(model);
         const accessories =
           theme === 'default'
@@ -73,7 +74,7 @@ const ContentBlocks: React.FC<ContentBlocksProps> = ({ links, theme, viewStatus 
         const title = model.data?.title ?? link.targetId;
         const data = {
           model,
-          siteData: { viewStatus: normalizeViewStatus(viewStatus ?? '') },
+          siteData: { viewStatus: normalizeViewStatus(json.siteData?.viewStatus ?? viewStatus ?? '') },
         } as unknown as PageData<WebpageModel>;
 
         console.log(`${LOG_PREFIX} rendered block "${title}" with ${linkedObjects.length} item(s)`);
