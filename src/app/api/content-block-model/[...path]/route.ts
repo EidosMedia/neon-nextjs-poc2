@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getAPIHostnameConfig, handleServicesError } from '@/services/utils';
 import { getAuthOptions } from '@/utilities/security';
 import { fetchPageDataDirect } from '@/utilities/pageCache';
+import { isContentBlockModel, type BlockModel } from '@/lib/contentBlocks';
 
 /**
  * GET /api/content-block-model/<site path>/index.json
@@ -28,7 +29,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ path
     if (!result.data) {
       return Response.json({ error: 'not found' }, { status: 404 });
     }
-    if (result.data?.data?.sys?.baseType !== 'contentblock') {
+    if (!isContentBlockModel(result.data as BlockModel)) {
+      console.warn('[NEON][content-block-model] not a content block', result.data?.data?.sys);
       return Response.json({ error: 'not a content block' }, { status: 404 });
     }
     return Response.json(result.data);

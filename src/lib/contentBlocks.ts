@@ -16,6 +16,7 @@ type BlockLinkEntry = {
 export type BlockNode = {
   title?: string;
   resourceUrl?: string;
+  sys?: { baseType?: string; type?: string };
   links?: { system?: { mainPicture?: Array<{ targetId?: string }> } };
   [key: string]: unknown;
 };
@@ -44,6 +45,16 @@ export const getContentBlockLinks = (data: PageData<WebpageModel>): ContentBlock
     (Array.isArray(entries) ? entries : [])
       .filter(entry => !!entry?.targetId && !!entry?.url)
       .map(entry => ({ zone, targetId: entry.targetId as string, url: entry.url as string, key: entry.key })),
+  );
+};
+
+/** A content block model: its own sys says so, or its node in nodes does. */
+export const isContentBlockModel = (model: BlockModel): boolean => {
+  const ownId = model?.data?.id;
+  return (
+    model?.data?.sys?.baseType === 'contentblock' ||
+    model?.data?.sys?.type === 'contentblock' ||
+    (!!ownId && model?.nodes?.[ownId]?.sys?.baseType === 'contentblock')
   );
 };
 
