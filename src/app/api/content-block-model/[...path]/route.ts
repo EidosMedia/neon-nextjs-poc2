@@ -21,7 +21,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ path
   try {
     const { apiHostname } = await getAPIHostnameConfig(req);
     const auth = await getAuthOptions();
-    const result = await fetchPageDataDirect(`${apiHostname.replace(/\/$/, '')}${path}`, auth);
+    // The backend serves the model json on the html url
+    const backendPath = path.replace(/index\.json$/, 'index.html');
+    const result = await fetchPageDataDirect(`${apiHostname.replace(/\/$/, '')}${backendPath}`, auth);
 
     if (!result.data) {
       return Response.json({ error: 'not found' }, { status: 404 });
