@@ -1,5 +1,6 @@
 import type { ArticleModel } from '@/types/models';
 import { findElementsInContentJson, renderContent } from '@/utilities/content';
+import { hasText } from '../lib/leafView';
 
 type Props = {
   article: ArticleModel;
@@ -24,7 +25,9 @@ export default function LeafHeader({ article, hero, titleSize, imageUrl, showIma
   const [overhead] = findElementsInContentJson(['overhead'], content);
   const [headline] = findElementsInContentJson(['headline'], content);
   const [summary] = findElementsInContentJson(['summary'], content);
-  const [byline] = findElementsInContentJson(['byline'], content);
+  const [rawByline] = findElementsInContentJson(['byline'], content);
+  // An empty byline element would render as a bare "By" (and a dangling separator before the date).
+  const byline = hasText(rawByline) ? rawByline : undefined;
   const [caption] = findElementsInContentJson(['web-image-caption'], content);
   const date = formatDate(article.pubInfo?.publicationTime);
   const image = showImage ? imageUrl : undefined;

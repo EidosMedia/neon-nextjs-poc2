@@ -36,6 +36,8 @@ and brand modules only; page structure is shared.
    defining every name in `REQUIRED_TOKENS` (`registry.ts`: colours, `--v2-font-*`, radii, `--v2-space-*`,
    `--v2-fs-*`) and `color-scheme`. `src/test/v2-brands.test.ts` fails when one is missing. Import it
    from `src/app/globals.css` next to the other brand tokens, before `./_v2/styles/v2.css`.
+   Optional `--v2-brand-text`: brand colour for text (labels, active links) on `--v2-bg`; it defaults to
+   `--v2-brand`. Set it when `--v2-brand` on `--v2-bg` is below 4.5:1 (Next Frontier uses `#A894FF`).
 3. **Brand entry.** Add a `BRANDS` entry in `registry.ts`: `name`, `scheme`, `fontsHref` (Google Fonts
    URL), `header`/`footer` style keys, `leafRail`, `leafWidths` (`main`/`body`/`rail`),
    `compositionDefaults` per zone (used by `composition: auto`), and `moduleKeys`.

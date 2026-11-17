@@ -177,3 +177,11 @@ export function withoutAdblocks<T extends El>(node: T): T {
     elements: node.elements.filter(e => e?.nodeType !== 'adblock').map(e => withoutAdblocks(e)),
   };
 }
+
+/** True when a content element (any depth) holds visible text in a node `value`. */
+export function hasText(node: unknown, depth = 0): boolean {
+  if (!node || typeof node !== 'object' || depth > 32) return false;
+  const { value, elements } = node as { value?: unknown; elements?: unknown };
+  if (typeof value === 'string' && value.replace(/ /g, ' ').trim() !== '') return true;
+  return Array.isArray(elements) && elements.some(e => hasText(e, depth + 1));
+}

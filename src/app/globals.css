@@ -115,7 +115,8 @@
 
 /* BASE STYLES */
 @layer base {
-  * {
+  /* Legacy only: inside a v2 root, elements inherit the brand font, size and line height. */
+  *:where(:not(.root[data-engine="v2"] *), .v2-legacy *) {
     @apply font-[family-name:var(--font-body)] text-sm leading-[134%] tracking-normal;
   }
   body {

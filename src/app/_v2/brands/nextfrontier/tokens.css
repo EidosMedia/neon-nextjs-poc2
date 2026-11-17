@@ -13,6 +13,8 @@
   --v2-on-accent: #1D1930;
   --v2-live: #FBB3DA;
   --v2-link: #FEF445;
+  /* Brand colour for text on --v2-bg: the violet brand is ~2:1 on the dark background (PRD needs 4.5:1). */
+  --v2-brand-text: #A894FF;
 
   --v2-font-display: "Abril Fatface", Georgia, serif;
   --v2-font-heading: "PT Sans", system-ui, sans-serif;

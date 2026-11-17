@@ -11,7 +11,7 @@
     background: transparent; color: var(--v2-text-muted); border-color: var(--v2-rule);
   }
   .root[data-engine="v2"] .v2-btn--link {
-    padding: 0; border: 0; background: none; color: var(--v2-brand); border-radius: 0; text-decoration: underline; font-weight: 600;
+    padding: 0; border: 0; background: none; color: var(--v2-brand-text, var(--v2-brand)); border-radius: 0; text-decoration: underline; font-weight: 600;
   }
   .root[data-engine="v2"] .v2-btn:focus-visible,
   .root[data-engine="v2"] .v2-field__control:focus-visible,

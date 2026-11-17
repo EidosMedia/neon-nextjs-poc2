@@ -18,7 +18,7 @@
     font-size: var(--v2-fs-meta);
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--v2-brand);
+    color: var(--v2-brand-text, var(--v2-brand));
   }
   .root[data-engine="v2"] .v2-item__title {
     font-family: var(--v2-font-heading);

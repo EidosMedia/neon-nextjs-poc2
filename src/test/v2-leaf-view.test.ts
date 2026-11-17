@@ -1,5 +1,5 @@
 import {
-  extractGalleryImages, paywallMode, planAdSlots, planPageRail, planRail, relatedTargetIds, resolveArticleLeafView,
+  extractGalleryImages, hasText, paywallMode, planAdSlots, planPageRail, planRail, relatedTargetIds, resolveArticleLeafView,
   resolveLiveblogLeafView, splitAfterParagraphs, withoutAdblocks, withoutGalleries,
 } from '@/app/_v2/lib/leafView';
 
@@ -161,5 +161,14 @@ describe('planPageRail', () => {
   });
   it('shows for sidebar blocks alone', () => {
     expect(planPageRail([0, 0, 0, 0], 1)).toBe(true);
+  });
+});
+
+describe('hasText', () => {
+  it('finds text at any depth and ignores whitespace-only or missing values', () => {
+    expect(hasText({ nodeType: 'byline', elements: [{ nodeType: 'p', elements: [{ nodeType: 'plainText', value: 'Ada' }] }] })).toBe(true);
+    expect(hasText({ nodeType: 'byline', elements: [{ nodeType: 'p', elements: [{ nodeType: 'plainText', value: '  \n' }] }] })).toBe(false);
+    expect(hasText({ nodeType: 'byline', elements: [{ nodeType: 'p', elements: [] }] })).toBe(false);
+    expect(hasText(undefined)).toBe(false);
   });
 });
