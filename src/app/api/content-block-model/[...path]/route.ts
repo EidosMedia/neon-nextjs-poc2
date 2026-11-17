@@ -4,15 +4,17 @@ import { getAuthOptions } from '@/utilities/security';
 import { fetchPageDataDirect } from '@/utilities/pageCache';
 
 /**
- * GET /api/content-block-model?url=/sport/<id>/index.json
+ * GET /api/content-block-model/<site path>/index.json
  *
- * Serves the model json of a content block. The proxy rewrites every index.json request here.
- * Pages that are not content blocks answer 404. The backend host comes from getAPIHostnameConfig,
- * because /api routes do not receive the x-neon-* headers set by the proxy.
+ * Serves the model json of a content block. The proxy rewrites every index.json request here,
+ * keeping the site path in the route segments. Pages that are not content blocks answer 404.
+ * The backend host comes from getAPIHostnameConfig, because /api routes do not receive the
+ * x-neon-* headers set by the proxy.
  */
-export async function GET(req: NextRequest) {
-  const path = req.nextUrl.searchParams.get('url');
-  if (!path || !path.startsWith('/') || path.startsWith('//') || !path.endsWith('/index.json')) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
+  const segments = (await params).path ?? [];
+  const path = `/${segments.join('/')}`;
+  if (!path.endsWith('/index.json') || segments.some(segment => segment === '' || segment === '..')) {
     return Response.json({ error: 'url must be a site index.json path' }, { status: 400 });
   }
 
