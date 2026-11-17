@@ -34,8 +34,27 @@ export function normalizeTheme(theme: unknown): string {
   return typeof theme === 'string' && theme.trim() !== '' ? theme.trim() : 'default';
 }
 
+type ThemeSource = { attributes?: Record<string, unknown>; staticAttributes?: Record<string, unknown> } | null | undefined;
+
+/**
+ * The site's theme key. A theme set on the site root (`attributes.theme`) wins; otherwise the site
+ * configuration's custom `theme` value (`staticAttributes.theme`, delivered next to settings such as
+ * `invalidateNextJsTimeoutMs`) applies; otherwise `default`.
+ */
+export function siteThemeOf(node: ThemeSource): string {
+  const fromRoot = normalizeTheme(node?.attributes?.theme);
+  return fromRoot !== 'default' || hasExplicitDefault(node?.attributes?.theme)
+    ? fromRoot
+    : normalizeTheme(node?.staticAttributes?.theme);
+}
+
+/** `theme: "default"` set on the root is an explicit choice and still beats the site configuration. */
+function hasExplicitDefault(theme: unknown): boolean {
+  return typeof theme === 'string' && theme.trim() === 'default';
+}
+
 export function getActiveTheme(data: PageDataLike): string {
-  return normalizeTheme(data.siteNode?.attributes?.theme);
+  return siteThemeOf(data.siteNode);
 }
 
 function nodeContext(data: PageDataLike): Pick<AccessoryContext, 'theme' | 'type' | 'baseType'> {

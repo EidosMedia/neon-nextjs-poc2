@@ -108,6 +108,14 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 Single-slug specials (bypass CMS lookup): `search`, `about`, `login`, `ui`. `ui` is the v2 style guide:
 it renders only with an `editorialauth` cookie or when `NODE_ENV !== 'production'`, otherwise 404.
 
+Site theme: `siteThemeOf()` (`src/lib/accessories/defaultThemeAccessories.ts`) reads the theme set on the
+site root (`root.attributes.theme`) first, then the site configuration's custom `theme` value
+(`root.staticAttributes.theme`, next to settings such as `invalidateNextJsTimeoutMs`), else `default`. An
+explicit root `theme: "default"` beats the configuration. Every theme read (pages, specials, 404, `/ui`,
+newsletter, accessory context via `getActiveTheme`) goes through it. The site list refreshes every
+`SITES_REFRESH_INTERVAL` ms (default 120000, `src/instrumentation.ts`); cached pages keep the old theme
+until the site is evicted (`/api/cache`).
+
 Engine selection: `data-theme` is the site's theme; `data-engine="v2"` is set on the `.root` wrapper when
 the theme is in `V2_THEMES`. `_themeRouter.tsx` maps `default`, `theglobe`, `sportsarena` and
 `nextfrontier` to the v2 barrel (`src/app/_v2/index.ts`); legacy keys keep their own page folders. Use the

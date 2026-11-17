@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import * as DefaultPages from './_v2';
 import { resolvePageComponent, resolveRenderTheme } from './_themeRouter';
-import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
 
 export default async function NotFound() {
@@ -33,7 +33,7 @@ export default async function NotFound() {
     );
   }
 
-  const theme: string = normalizeTheme(site.root.attributes?.theme);
+  const theme: string = siteThemeOf(site.root);
   const NotFoundComponent =
     (resolvePageComponent('NotFound', theme) as React.ComponentType<any>) ?? DefaultPages.NotFound;
 

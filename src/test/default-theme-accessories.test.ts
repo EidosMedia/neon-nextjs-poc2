@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_CHROME, getPageChrome, normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { DEFAULT_PAGE_CHROME, getActiveTheme, getPageChrome, normalizeTheme, siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 
 function page(options: {
   theme?: string;
@@ -85,5 +85,25 @@ describe('getPageChrome', () => {
         }),
       ),
     ).toEqual(DEFAULT_PAGE_CHROME);
+  });
+});
+
+describe('siteThemeOf', () => {
+  it('uses the theme set on the site root first', () => {
+    expect(siteThemeOf({ attributes: { theme: 'nextfrontier' }, staticAttributes: { theme: 'sportsarena' } })).toBe('nextfrontier');
+  });
+  it('falls back to the site configuration theme (staticAttributes)', () => {
+    expect(siteThemeOf({ attributes: {}, staticAttributes: { theme: ' sportsarena ', invalidateNextJsTimeoutMs: '10000' } })).toBe('sportsarena');
+    expect(siteThemeOf({ attributes: { theme: '  ' }, staticAttributes: { theme: 'sportsarena' } })).toBe('sportsarena');
+  });
+  it('treats an explicit root "default" as a choice that beats the configuration', () => {
+    expect(siteThemeOf({ attributes: { theme: 'default' }, staticAttributes: { theme: 'sportsarena' } })).toBe('default');
+  });
+  it('is default when neither level sets a usable theme', () => {
+    expect(siteThemeOf({ staticAttributes: { theme: 42 } })).toBe('default');
+    expect(siteThemeOf(undefined)).toBe('default');
+  });
+  it('drives getActiveTheme from page data siteNode', () => {
+    expect(getActiveTheme({ siteNode: { staticAttributes: { theme: 'sportsarena' } } as never })).toBe('sportsarena');
   });
 });

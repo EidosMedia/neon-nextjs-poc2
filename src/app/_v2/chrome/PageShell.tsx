@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { BaseModel, PageData, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getBrand } from '../brands/registry';
 import { getPageSettings, V2_DEFAULTS } from '../lib/settings';
-import { getActiveTheme, normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { getActiveTheme, siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 import Header from './Header';
 import Footer from './Footer';
 import BlockSlot from '../blocks/BlockSlot';
@@ -29,7 +29,7 @@ export default async function PageShell(props: ModelProps | SiteProps) {
     settings = getPageSettings(data);
   } else {
     site = props.site;
-    theme = normalizeTheme(site.root?.attributes?.theme);
+    theme = siteThemeOf(site.root);
     siteLabel = site.root?.attributes?.sitename || site.siteName || site.root?.name;
     settings = { header: V2_DEFAULTS.header, footer: V2_DEFAULTS.footer };
   }

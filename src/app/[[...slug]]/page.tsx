@@ -4,7 +4,7 @@ import { resolvePageComponent, resolveRenderTheme } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
-import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
 import LegacyIsland from '../_v2/ui/LegacyIsland';
 import { canShowStyleGuide } from '../_v2/ui/gate';
@@ -48,7 +48,7 @@ export default async function Page({
       case 'ui': {
         const hasEditorialCookie = Boolean((await cookies()).get('editorialauth')?.value);
         if (!canShowStyleGuide(hasEditorialCookie, process.env.NODE_ENV)) notFound();
-        const theme = normalizeTheme(site?.root.attributes?.theme);
+        const theme = siteThemeOf(site?.root);
         return (
           <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
             {styleGuideElement(theme, site)}
@@ -58,7 +58,7 @@ export default async function Page({
 
       case 'search':
         if (site) {
-          const theme = normalizeTheme(site.root.attributes?.theme);
+          const theme = siteThemeOf(site.root);
           const SearchPage =
             (resolvePageComponent('SearchPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.SearchPage;
@@ -73,7 +73,7 @@ export default async function Page({
         }
       case 'about':
         if (site) {
-          const theme = normalizeTheme(site.root.attributes?.theme);
+          const theme = siteThemeOf(site.root);
           const AboutPage =
             (resolvePageComponent('AboutPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.AboutPage;
@@ -88,7 +88,7 @@ export default async function Page({
         }
       case 'login':
         if (site) {
-          const theme = normalizeTheme(site.root.attributes?.theme);
+          const theme = siteThemeOf(site.root);
           const LoginPage =
             (resolvePageComponent('LoginPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.LoginPage;
@@ -141,7 +141,7 @@ export default async function Page({
   pageDataJSON.liveHost = siteLive?.root.hostname;
   pageDataJSON.previewHost = sitePreview?.root.hostname;
 
-  const theme: string = normalizeTheme(pageDataJSON?.siteNode?.attributes?.theme);
+  const theme: string = siteThemeOf(pageDataJSON?.siteNode);
   const baseType = pageDataJSON?.model?.data?.sys?.baseType as string;
   const type = pageDataJSON?.model?.data?.sys?.type as string;
   console.log('Resolving page for baseType:', baseType, 'type:', type, 'theme:', theme);

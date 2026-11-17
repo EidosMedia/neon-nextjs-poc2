@@ -9,7 +9,7 @@ import { resolveArticleItemView, resolveGalleryItemView, resolveLiveblogItemView
 import type { ConcreteComposition } from '../lib/layout';
 import type { ArticleItemVariant } from '../lib/settings';
 import ZoneRenderer from '../zones/ZoneRenderer';
-import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import { getBrandModules } from '../brands/moduleRegistry';
 import { MODULE_FIXTURES, makeFixtureNode, makeFixtureNodes } from './fixtures';
@@ -137,7 +137,7 @@ function moduleCells(theme: string) {
 }
 
 export default async function StyleGuide({ site }: { site?: Site }) {
-  const theme = normalizeTheme(site?.root?.attributes?.theme);
+  const theme = siteThemeOf(site?.root);
   const body = (
     <div className="v2-container v2-ui">
       <h1 className="v2-ui__title">Style guide</h1>

@@ -1,4 +1,5 @@
 import { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 
 /**
  * Hand-extracted palette per theme, mirroring the CSS custom properties each
@@ -258,7 +259,7 @@ const renderCompactTeaserRow = (linkedObject: any, palette: NewsletterThemePalet
  * classes, since Outlook/Gmail strip those.
  */
 export async function renderNewsletterFragment(data: PageData<WebpageModel>): Promise<string> {
-  const theme = (data.siteNode?.attributes?.theme as string | undefined) ?? 'default';
+  const theme = siteThemeOf(data.siteNode);
   const palette = getThemePalette(theme);
 
   const siteName = data.siteData?.siteName || data.siteNode?.name;
@@ -333,7 +334,7 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
  * since Gmail strips <style> tags.
  */
 export async function renderNewsletterHtml(data: PageData<WebpageModel>): Promise<string> {
-  const theme = (data.siteNode?.attributes?.theme as string | undefined) ?? 'default';
+  const theme = siteThemeOf(data.siteNode);
   const palette = getThemePalette(theme);
   const fragment = await renderNewsletterFragment(data);
 
