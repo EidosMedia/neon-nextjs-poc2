@@ -18,6 +18,16 @@ describe('initialPostsFromModel', () => {
     ]);
   });
 
+  it('reads the children from model.data (page response shape) and skips posts not in nodes', () => {
+    const model = {
+      data: { children: ['a', 'missing'] },
+      nodes: { a: { files: { content: { data: { x: 1 } } }, sys: { postEventTime: '2026-03-03T10:00:00Z' } } },
+    };
+    expect(initialPostsFromModel(model)).toEqual([
+      { id: 'a', content: { x: 1 }, publicationTime: '2026-03-03T10:00:00Z' },
+    ]);
+  });
+
   it('returns [] without children', () => {
     expect(initialPostsFromModel({})).toEqual([]);
     expect(initialPostsFromModel(undefined)).toEqual([]);

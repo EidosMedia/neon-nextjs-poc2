@@ -1,6 +1,6 @@
 import type { BaseModel, PageData, WebpageModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { getActiveTheme, withSiteTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { decideBlockRender, getModuleKeys, type BlockArea } from '../lib/blocks';
 import BlockBoundary from './BlockBoundary';
 import ZoneRenderer from '../zones/ZoneRenderer';
@@ -32,7 +32,8 @@ export default async function BlockSlot({ data, area }: Props) {
       case 'webpage':
         return (
           <BlockBoundary key={key} fallback={viewStatus === ViewStatus.PREVIEW ? placeholder : null}>
-            <ZoneRenderer data={block as PageData<WebpageModel>} zone="main" />
+            {/* The block is cached on its own: render it with the host page's (current) theme. */}
+            <ZoneRenderer data={withSiteTheme(block as PageData<WebpageModel>, data.siteNode)} zone="main" />
           </BlockBoundary>
         );
       case 'placeholder':

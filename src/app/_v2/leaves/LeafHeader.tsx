@@ -35,8 +35,17 @@ export default function LeafHeader({ article, hero, titleSize, imageUrl, showIma
   const text = (
     <div className="v2-leaf-head__text">
       {overhead && <div className="v2-leaf-head__kicker">{renderContent(overhead, article)}</div>}
-      {headline && <div className="v2-leaf-head__title">{renderContent(headline, article)}</div>}
-      {summary && !hideSummary && <div className="v2-leaf-head__standfirst">{renderContent(summary, article)}</div>}
+      {/* Without a content document (loadContent failed) the plain title and summary still show. */}
+      {headline ? (
+        <div className="v2-leaf-head__title">{renderContent(headline, article)}</div>
+      ) : article.title ? (
+        <div className="v2-leaf-head__title"><h1>{article.title}</h1></div>
+      ) : null}
+      {!hideSummary && (summary ? (
+        <div className="v2-leaf-head__standfirst">{renderContent(summary, article)}</div>
+      ) : article.summary ? (
+        <div className="v2-leaf-head__standfirst"><p>{article.summary}</p></div>
+      ) : null)}
       <div className="v2-leaf-head__meta">
         {hero === 'portrait' && image && <img className="v2-leaf-head__portrait" src={image} alt="" />}
         <span className="v2-leaf-head__by">

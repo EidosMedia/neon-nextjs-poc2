@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { PaginatedSearchRagResult, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import SearchResultItem from './SearchResultItem';
+import SearchIcon from '../chrome/SearchIcon';
 import {
   buildSearchUrl, chatSearchParams, DEFAULT_TIME, emptyMessage, formatRefDate, parseAnswer, parseInline, resultHref,
   standardSearchParams, tabToBaseType, TABS, THREAD_ID_KEY, TIME_OPTIONS, urlParamToTab, type ActiveTab,
@@ -14,12 +15,6 @@ type ChatRound = { question: string; answer: string; references: Results };
 
 const REFS_COLLAPSED = 5;
 
-const SearchIcon = ({ size = 18 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-    <circle cx="8" cy="8" r="5.5" />
-    <path d="M12.5 12.5L16 16" />
-  </svg>
-);
 const EMPTY = {} as PaginatedSearchRagResult;
 
 function Inline({ text }: { text: string }) {

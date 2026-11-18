@@ -13,12 +13,17 @@ export const TIMELINE_VISIBLE_POSTS = 3;
 
 /** Posts already present in the page model (`children` are post ids; the post nodes carry the content). */
 export function initialPostsFromModel(model: any): LiveblogPost[] {
-  if (!Array.isArray(model?.children)) return [];
-  return model.children.map((postId: string) => ({
-    id: postId,
-    content: model.nodes?.[postId]?.files?.content?.data,
-    publicationTime: model.nodes?.[postId]?.sys?.postEventTime,
-  }));
+  // The page response puts the post ids on `model.data.children`; older shapes had `model.children`.
+  const children = Array.isArray(model?.data?.children) ? model.data.children
+    : Array.isArray(model?.children) ? model.children : [];
+  // Posts not embedded in `nodes` arrive with the first poll.
+  return children
+    .filter((postId: string) => model.nodes?.[postId])
+    .map((postId: string) => ({
+      id: postId,
+      content: model.nodes[postId].files?.content?.data,
+      publicationTime: model.nodes[postId].sys?.postEventTime,
+    }));
 }
 
 /** Merges polled posts (raw API shape or already mapped) into the known ones; the newest response wins per id. */

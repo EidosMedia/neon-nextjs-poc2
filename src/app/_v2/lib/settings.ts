@@ -1,7 +1,7 @@
 import type { WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import {
   buildZoneHead,
-  getActiveTheme,
+  getAccessoryTheme,
   type PageDataLike,
 } from '@/lib/accessories/defaultThemeAccessories';
 import { getAccessoryDefinitions } from '@/lib/accessories/definitions';
@@ -90,7 +90,7 @@ function resolve(
 
 function nodeContext(data: PageDataLike): Pick<AccessoryContext, 'theme' | 'type' | 'baseType'> {
   const sys = data.model?.data?.sys;
-  return { theme: getActiveTheme(data), type: sys?.type ?? '', baseType: sys?.baseType };
+  return { theme: getAccessoryTheme(data), type: sys?.type ?? '', baseType: sys?.baseType };
 }
 
 function readLeaf(resolved: ResolvedAccessoryValues | undefined, data: PageDataLike): LeafSettings | undefined {

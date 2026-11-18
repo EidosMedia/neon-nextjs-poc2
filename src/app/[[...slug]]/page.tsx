@@ -4,7 +4,7 @@ import { resolvePageComponent, resolveRenderTheme } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
-import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
+import { siteThemeOf, withSiteTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { isV2Theme } from '@/lib/accessories/definitions';
 import LegacyIsland from '../_v2/ui/LegacyIsland';
 import { canShowStyleGuide } from '../_v2/ui/gate';
@@ -131,12 +131,12 @@ export default async function Page({
     redirect(result.redirectLocation);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const pageDataJSON = result.data!;
-  console.log('Current page model', pageDataJSON);
-
   const siteLive = await connection.findSite(siteName ?? '', toSiteViewStatus(ViewStatus.LIVE));
   const sitePreview = await connection.findSite(siteName ?? '', toSiteViewStatus(ViewStatus.PREVIEW));
+
+  // The cached page JSON may carry an old theme: render with the site's current one, like the specials.
+  const pageDataJSON = withSiteTheme(result.data!, (isLiveView ? siteLive : sitePreview)?.root);
+  console.log('Current page model', pageDataJSON);
 
   pageDataJSON.liveHost = siteLive?.root.hostname;
   pageDataJSON.previewHost = sitePreview?.root.hostname;

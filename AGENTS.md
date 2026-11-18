@@ -112,10 +112,14 @@ it renders only with an `editorialauth` cookie or when `NODE_ENV !== 'production
 Site theme: `siteThemeOf()` (`src/lib/accessories/defaultThemeAccessories.ts`) reads the theme set on the
 site root (`root.attributes.theme`) first, then the site configuration's custom `theme` value
 (`root.staticAttributes.theme`, next to settings such as `invalidateNextJsTimeoutMs`), else `default`. An
-explicit root `theme: "default"` beats the configuration. Every theme read (pages, specials, 404, `/ui`,
+explicit root `theme: "default"` beats the configuration. Accessory values are matched with Neon's own theme
+resolution instead (`getAccessoryTheme`): Neon reads only the root `theme` attribute (else `default`), not
+the configuration, so a v2 site themed through its configuration stores and reads its values under
+`default`; on a legacy or unknown site theme no values apply. Every theme read (pages, specials, 404, `/ui`,
 newsletter, accessory context via `getActiveTheme`) goes through it. The site list refreshes every
-`SITES_REFRESH_INTERVAL` ms (default 120000, `src/instrumentation.ts`); cached pages keep the old theme
-until the site is evicted (`/api/cache`).
+`SITES_REFRESH_INTERVAL` ms (default 120000, `src/instrumentation.ts`). The page route overlays the current
+site theme on the cached page JSON (`withSiteTheme`), and `BlockSlot` does the same for cached blocks, so a
+theme change applies to every page within one refresh, without evicting the cache.
 
 Engine selection: `data-theme` is the site's theme; `data-engine="v2"` is set on the `.root` wrapper when
 the theme is in `V2_THEMES`. `_themeRouter.tsx` maps `default`, `theglobe`, `sportsarena` and
@@ -130,6 +134,12 @@ Unlayered legacy globals in `globals.css` are guarded with `:where(:not(.root[da
 `NewsletterWebpage`) are wrapped in `<div className="v2-legacy">` so they keep the legacy globals.
 
 The v2 paywall is visual only: the full model still reaches the client, so it is not access control.
+
+Embedded preview: inside the Neon app preview frame (`window.name === 'neonapp-preview'`, `isNeonAppPreview()`),
+`ReloadListener` installs `installPreviewGuard()` (`src/utilities/previewGuard.ts`): one capture listener on
+`window` cancels link clicks that leave the page and every form submit, for all themes and for elements
+rendered after mount. In-page `#` links and UI buttons (menus, tabs) keep working. Outside the frame
+nothing changes.
 
 ## Authentication Model
 

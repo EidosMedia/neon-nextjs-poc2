@@ -13,11 +13,12 @@ import LeafHeader from '../leaves/LeafHeader';
 import LeafLayout from '../leaves/LeafLayout';
 import Paywall from '../leaves/Paywall';
 import { heroImage } from '../leaves/heroImage';
+import { loadContent } from '../leaves/loadContent';
 
 type PageProps = { data: PageData<ArticleModel> };
 
 const ArticleLeaf = async ({ data }: PageProps) => {
-  const article = data.model.data;
+  const article = await loadContent(data.model.data);
   const leaf = getPageSettings(data).leaf;
   const settings = leaf?.kind === 'article' ? leaf : V2_DEFAULTS.articleLeaf;
   const brand = getBrand(getActiveTheme(data));

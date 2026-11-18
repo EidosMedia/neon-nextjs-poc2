@@ -1,5 +1,5 @@
 import type { BaseModel, PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { getAccessoryDefinitions } from './definitions';
+import { getAccessoryDefinitions, isV2Theme } from './definitions';
 import {
   resolveAccessoryValues,
   type AccessoryContext,
@@ -53,13 +53,52 @@ function hasExplicitDefault(theme: unknown): boolean {
   return typeof theme === 'string' && theme.trim() === 'default';
 }
 
+/**
+ * Page JSON is cached for hours (`fetchPageDataCached`), so its `siteNode` can carry a theme the site
+ * no longer has. Returns `data` with the theme sources (`attributes.theme`, `staticAttributes.theme`)
+ * taken from the current site root (the site list, refreshed every `SITES_REFRESH_INTERVAL`), so pages
+ * and the special routes always agree on the theme. Never mutates `data`; returns it as-is when the site
+ * is unknown.
+ */
+export function withSiteTheme<T extends { siteNode?: unknown }>(data: T, root: ThemeSource): T {
+  if (!root) return data;
+  const node = (data.siteNode ?? {}) as NonNullable<ThemeSource>;
+  return {
+    ...data,
+    siteNode: {
+      ...node,
+      attributes: { ...node.attributes, theme: root.attributes?.theme },
+      staticAttributes: { ...node.staticAttributes, theme: root.staticAttributes?.theme },
+    },
+  };
+}
+
 export function getActiveTheme(data: PageDataLike): string {
   return siteThemeOf(data.siteNode);
 }
 
+/**
+ * The theme Neon resolves when it serves definitions and stores accessory values: the site root `theme`
+ * attribute, else `default`. Neon does not read the site configuration theme (`staticAttributes.theme`),
+ * so a site themed only through its configuration stores its values under `default`.
+ */
+export function accessoryThemeOf(node: ThemeSource): string {
+  return normalizeTheme(node?.attributes?.theme);
+}
+
+/**
+ * Theme key for accessory lookups. On a v2 site it is Neon's theme (`accessoryThemeOf`), so stored values
+ * match whatever look the configuration picks; on a legacy or unknown site it is the site theme, which
+ * has no definitions, so no values apply there.
+ */
+export function getAccessoryTheme(data: PageDataLike): string {
+  const site = getActiveTheme(data);
+  return isV2Theme(site) ? accessoryThemeOf(data.siteNode) : site;
+}
+
 function nodeContext(data: PageDataLike): Pick<AccessoryContext, 'theme' | 'type' | 'baseType'> {
   const sys = data.model?.data?.sys;
-  return { theme: getActiveTheme(data), type: sys?.type ?? '', baseType: sys?.baseType };
+  return { theme: getAccessoryTheme(data), type: sys?.type ?? '', baseType: sys?.baseType };
 }
 
 function resolveForTheme(
@@ -126,7 +165,7 @@ export function getZoneShape(data: PageDataLike, zone: string): AccessoryShape |
 }
 
 export function getZoneHead(data: PageDataLike, zone: string): ZoneHeadContent | undefined {
-  return toHead(getActiveTheme(data), zoneValues(data, zone));
+  return toHead(getAccessoryTheme(data), zoneValues(data, zone));
 }
 
 export function getZoneAccessoryShapes(
@@ -137,7 +176,7 @@ export function getZoneAccessoryShapes(
   const values = zoneValues(data, zone);
   return {
     zone: toShape(values),
-    head: toHead(getActiveTheme(data), values),
+    head: toHead(getAccessoryTheme(data), values),
     links: getLinkShapes(data, zone, linkedObjects),
   };
 }

@@ -6,6 +6,7 @@ import type { FooterSettings, HeaderSettings } from '../lib/settings';
 import AccountLink from './AccountLink';
 import MenuToggle from './MenuToggle';
 import Nav from './Nav';
+import SearchIcon from './SearchIcon';
 import { getDrawerLinks, getFullLinks, getMainLinks } from './navLinks';
 
 export type SiteFrameProps = {
@@ -41,6 +42,13 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
     </Link>
   );
 
+  const search = !minimal && (
+    <Link href="/search" className="v2-header__search">
+      <SearchIcon />
+      <span>Search</span>
+    </Link>
+  );
+
   const actions = showActions && (
     <div className="v2-header__actions">
       <Link href="/login" className="v2-header__subscribe">
@@ -67,25 +75,23 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
           <>
             <div className="v2-header__tools">
               {!minimal && <MenuToggle items={fullLinks} drawerItems={drawerLinks} pathname={pathname} className="v2-menutoggle--desktop" />}
-              {!minimal && (
-                <Link href="/search" className="v2-header__search">
-                  Search
-                </Link>
-              )}
             </div>
             {wordmark}
-            {actions}
+            {/* Right cell: Search, a divider, then Subscribe and the account link. */}
+            {!minimal && (
+              <div className="v2-header__end">
+                {search}
+                {actions && <span className="v2-header__divider" aria-hidden="true" />}
+                {actions}
+              </div>
+            )}
           </>
         )}
         {brand.header === 'arena' && (
           <div className="v2-header__pill">
             {wordmark}
             {showNav && <Nav links={mainLinks} moreLinks={fullLinks} pathname={pathname} />}
-            {!minimal && (
-              <Link href="/search" className="v2-header__search">
-                Search
-              </Link>
-            )}
+            {search}
             {actions}
             {showNav && <MenuToggle items={drawerLinks} pathname={pathname} className="v2-menutoggle--mobile" actions={drawerActions} />}
           </div>
@@ -94,11 +100,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
           <>
             {wordmark}
             <div className="v2-header__tools">
-              {!minimal && (
-                <Link href="/search" className="v2-header__search">
-                  Search
-                </Link>
-              )}
+              {search}
               {actions}
             </div>
           </>

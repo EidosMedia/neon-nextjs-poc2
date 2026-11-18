@@ -13,6 +13,7 @@ import LeafLayout from '../leaves/LeafLayout';
 import PostsFeed from '../liveblog/PostsFeed';
 import { initialPostsFromModel } from '../liveblog/posts';
 import { heroImage } from '../leaves/heroImage';
+import { loadContent } from '../leaves/loadContent';
 
 type PageProps = { data: PageData<ArticleModel> };
 
@@ -24,7 +25,7 @@ const LiveTag = ({ label }: { label: string }) => (
 );
 
 const LiveblogLeaf = async ({ data }: PageProps) => {
-  const article = data.model.data;
+  const article = await loadContent(data.model.data);
   const leaf = getPageSettings(data).leaf;
   const settings = leaf?.kind === 'liveblog' ? leaf : V2_DEFAULTS.liveblogLeaf;
   const brand = getBrand(getActiveTheme(data));

@@ -10,6 +10,7 @@ import AdSlot from '../leaves/AdSlot';
 import LeafBody from '../leaves/LeafBody';
 import LeafHeader from '../leaves/LeafHeader';
 import LeafLayout from '../leaves/LeafLayout';
+import { loadContent } from '../leaves/loadContent';
 
 type Image = ReturnType<typeof extractGalleryImages>[number];
 type PageProps = { data: PageData<ArticleModel> };
@@ -68,7 +69,7 @@ function Frames({ images, captions }: { images: Image[]; captions: boolean }) {
 }
 
 const GalleryLeaf = async ({ data }: PageProps) => {
-  const article = data.model.data;
+  const article = await loadContent(data.model.data);
   const leaf = getPageSettings(data).leaf;
   const settings = leaf?.kind === 'gallery' ? leaf : V2_DEFAULTS.galleryLeaf;
   const brand = getBrand(getActiveTheme(data));
