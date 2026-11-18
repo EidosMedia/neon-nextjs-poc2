@@ -20,9 +20,9 @@ const DESKTOP_QUERY = '(min-width: 768px)';
 
 type Mode = 'drawer' | 'mega';
 
-/** Desktop full menu: one group per section (level 1 + up to MEGA_CAP level-2 links), loose links below. */
+/** Desktop full menu: every section in menu order, flowing in columns (heading + up to MEGA_CAP level-2 links). */
 function Mega({ links, pathname, onNavigate }: { links: MenuLink[]; pathname: string | null; onNavigate: () => void }) {
-  const { groups, loose } = megaGroups(links, MEGA_CAP, pathname);
+  const groups = megaGroups(links, MEGA_CAP, pathname);
   const label = (link: MenuLink, className: string) =>
     link.href ? (
       <Link href={link.href} className={className} onClick={onNavigate}
@@ -33,36 +33,30 @@ function Mega({ links, pathname, onNavigate }: { links: MenuLink[]; pathname: st
       <span className={className}>{link.label}</span>
     );
   return (
-    <>
-      {groups.length > 0 && (
-        <ul className="v2-mega__groups">
-          {groups.map(({ link, shown, hidden, active }, i) => (
-            <li key={`${i}-${link.label}`} className={`v2-mega__group${active ? ' v2-mega__group--active' : ''}`}>
-              <h3 className="v2-mega__heading">{label(link, 'v2-mega__heading-link')}</h3>
-              <ul className="v2-mega__links">
-                {shown.map((child, j) => (
-                  <li key={`${j}-${child.label}`}>{label(child, 'v2-mega__link')}</li>
-                ))}
-                {hidden > 0 && link.href && (
-                  <li>
-                    <Link href={link.href} className="v2-mega__all" onClick={onNavigate}>
-                      All in {link.label} ({shown.length + hidden})
-                    </Link>
-                  </li>
-                )}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      )}
-      {loose.length > 0 && (
-        <ul className="v2-mega__loose">
-          {loose.map((link, i) => (
-            <li key={`${i}-${link.label}`}>{label(link, 'v2-mega__link')}</li>
-          ))}
-        </ul>
-      )}
-    </>
+    <ul className="v2-mega__groups">
+      {groups.map(({ link, shown, hidden, active }, i) => (
+        <li
+          key={`${i}-${link.label}`}
+          className={`v2-mega__group${active ? ' v2-mega__group--active' : ''}${shown.length === 0 ? ' v2-mega__group--leaf' : ''}`}
+        >
+          <h3 className="v2-mega__heading">{label(link, 'v2-mega__heading-link')}</h3>
+          {shown.length > 0 && (
+            <ul className="v2-mega__links">
+              {shown.map((child, j) => (
+                <li key={`${j}-${child.label}`}>{label(child, 'v2-mega__link')}</li>
+              ))}
+              {hidden > 0 && link.href && (
+                <li>
+                  <Link href={link.href} className="v2-mega__all" onClick={onNavigate}>
+                    All in {link.label} ({shown.length + hidden})
+                  </Link>
+                </li>
+              )}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -147,7 +141,7 @@ function Tree({ links, parent, depth, isOpen, toggle, onNavigate, pathname }: Tr
 /**
  * Burger button + full site menu, shared by every brand (brands only restyle it).
  * - Desktop (≥768px, unless `variant="drawer"`): a panel under the header with one group per
- *   section (level 1 + up to 8 level-2 links, then "All in …"), loose top-level links below, and a
+ *   section in menu order (level 1 + up to 8 level-2 links, then "All in …"), flowing in columns, and a
  *   filter for large trees (the filtered view is the full tree, every level).
  * - Mobile: a side drawer with a site search field, the filter for large trees, an accordion tree
  *   of any depth with one open branch per level, and `actions` (Subscribe/Login) at the bottom.
@@ -159,10 +153,14 @@ export default function MenuToggle({
   label = 'Menu',
   className,
   pathname = null,
+  drawerItems,
   actions,
   variant = 'auto',
 }: {
+  /** Tree for the desktop panel (and for the drawer when `drawerItems` is not given). */
   items: MenuLink[];
+  /** Tree for the mobile drawer, where the inline navigation is hidden. */
+  drawerItems?: MenuLink[];
   label?: string;
   className?: string;
   pathname?: string | null;
@@ -181,9 +179,10 @@ export default function MenuToggle({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const total = useMemo(() => countLinks(items), [items]);
+  const tree = mode === 'drawer' ? (drawerItems ?? items) : items;
+  const total = useMemo(() => countLinks(tree), [tree]);
   const filtering = query.trim() !== '';
-  const visible = useMemo(() => filterLinks(items, query), [items, query]);
+  const visible = useMemo(() => filterLinks(tree, query), [tree, query]);
 
   /** Bottom edge of the header (the Arena pill when the header itself is an overlay). */
   const headerBottom = () => {
@@ -197,7 +196,7 @@ export default function MenuToggle({
     setMode(desktop ? 'mega' : 'drawer');
     if (desktop) setMegaTop(headerBottom());
     // One open branch per level: only the path to the current page starts open.
-    setExpanded(new Set(activeAncestorKeys(items, pathname)));
+    setExpanded(new Set(activeAncestorKeys(desktop ? items : (drawerItems ?? items), pathname)));
     setQuery('');
     setOpen(true);
   };

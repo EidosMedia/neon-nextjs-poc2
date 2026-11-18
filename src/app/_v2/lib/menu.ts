@@ -175,29 +175,21 @@ export type MegaGroup = {
 };
 
 /**
- * Desktop full menu: top-level entries with children become groups (level 1 heading + up to `cap`
- * level-2 links); top-level entries without children go to the bottom row (`loose`).
+ * Desktop full menu: every top-level entry, in menu order, as a group (its heading + up to `cap`
+ * level-2 links). Entries without children are a heading only; entries with neither a link nor
+ * children are dropped.
  */
-export function megaGroups(
-  links: MenuLink[],
-  cap: number,
-  pathname: string | null | undefined
-): { groups: MegaGroup[]; loose: MenuLink[] } {
-  const groups: MegaGroup[] = [];
-  const loose: MenuLink[] = [];
+export function megaGroups(links: MenuLink[], cap: number, pathname: string | null | undefined): MegaGroup[] {
   const limit = Math.max(0, Math.floor(cap));
-  for (const link of links) {
-    const items = link.items ?? [];
-    if (items.length === 0) {
-      if (link.href) loose.push(link);
-      continue;
-    }
-    groups.push({
-      link,
-      shown: items.slice(0, limit),
-      hidden: Math.max(0, items.length - limit),
-      active: containsActive(link, pathname),
+  return links
+    .filter(link => link.href || (link.items?.length ?? 0) > 0)
+    .map(link => {
+      const items = link.items ?? [];
+      return {
+        link,
+        shown: items.slice(0, limit),
+        hidden: Math.max(0, items.length - limit),
+        active: containsActive(link, pathname),
+      };
     });
-  }
-  return { groups, loose };
 }

@@ -6,7 +6,7 @@ import type { FooterSettings, HeaderSettings } from '../lib/settings';
 import AccountLink from './AccountLink';
 import MenuToggle from './MenuToggle';
 import Nav from './Nav';
-import { getFullLinks, getMainLinks } from './navLinks';
+import { getDrawerLinks, getFullLinks, getMainLinks } from './navLinks';
 
 export type SiteFrameProps = {
   site: Site;
@@ -25,6 +25,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
   const webauth = (await cookies()).get('webauth')?.value;
   const mainLinks = getMainLinks(site);
   const fullLinks = getFullLinks(site);
+  const drawerLinks = getDrawerLinks(site);
   const minimal = header.variant === 'minimal';
   const showActions = header.variant === 'regular';
   const showNav = header.sectionsMenu && !minimal;
@@ -65,7 +66,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
         {brand.header === 'globe' && (
           <>
             <div className="v2-header__tools">
-              {!minimal && <MenuToggle items={fullLinks} pathname={pathname} className="v2-menutoggle--desktop" />}
+              {!minimal && <MenuToggle items={fullLinks} drawerItems={drawerLinks} pathname={pathname} className="v2-menutoggle--desktop" />}
               {!minimal && (
                 <Link href="/search" className="v2-header__search">
                   Search
@@ -86,7 +87,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
               </Link>
             )}
             {actions}
-            {showNav && <MenuToggle items={fullLinks} pathname={pathname} className="v2-menutoggle--mobile" actions={drawerActions} />}
+            {showNav && <MenuToggle items={drawerLinks} pathname={pathname} className="v2-menutoggle--mobile" actions={drawerActions} />}
           </div>
         )}
         {brand.header === 'frontier' && (
@@ -106,7 +107,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
       {showNav && brand.header !== 'arena' && (
         <div className="v2-container v2-header__navrow">
           <Nav links={mainLinks} moreLinks={fullLinks} pathname={pathname} />
-          <MenuToggle items={fullLinks} pathname={pathname} className="v2-menutoggle--mobile" label="Sections" actions={drawerActions} />
+          <MenuToggle items={drawerLinks} pathname={pathname} className="v2-menutoggle--mobile" label="Sections" actions={drawerActions} />
         </div>
       )}
     </header>

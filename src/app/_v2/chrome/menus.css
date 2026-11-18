@@ -289,10 +289,20 @@
     overscroll-behavior: contain;
     padding: var(--v2-space-2) 36px 28px;
   }
+  /* Sections flow top to bottom, column after column, in menu order; a group never splits. */
   .root[data-engine="v2"] .v2-mega__groups {
-    display: grid;
-    grid-template-columns: repeat(var(--v2-mega-columns, 4), minmax(0, 1fr));
-    gap: 28px 36px;
+    columns: var(--v2-mega-columns, 4) 200px;
+    column-gap: 36px;
+  }
+  .root[data-engine="v2"] .v2-mega__group {
+    break-inside: avoid;
+    padding-bottom: 24px;
+  }
+  .root[data-engine="v2"] .v2-mega__group--leaf {
+    padding-bottom: 12px;
+  }
+  .root[data-engine="v2"] .v2-mega__group--leaf .v2-mega__heading {
+    margin-bottom: 0;
   }
   .root[data-engine="v2"] .v2-mega__heading {
     margin: 0 0 8px;
@@ -315,6 +325,8 @@
   .root[data-engine="v2"] .v2-mega .v2-mega__link,
   .root[data-engine="v2"] .v2-mega .v2-mega__all {
     display: block;
+    width: fit-content;
+    max-width: 100%;
     padding: 4px 0;
     color: var(--_menu-ink);
     font-family: var(--v2-font-body);
@@ -333,18 +345,6 @@
     font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 3px;
-  }
-  .root[data-engine="v2"] .v2-mega__loose {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 28px;
-    margin-top: 28px !important;
-    padding-top: 16px !important;
-    border-top: 1px solid var(--_menu-line);
-  }
-  .root[data-engine="v2"] .v2-mega__loose .v2-mega__link {
-    font-family: var(--v2-font-meta);
-    font-weight: 700;
   }
   /* Filtered view inside the panel: the full tree, in columns. */
   .root[data-engine="v2"] .v2-mega .v2-drawer__tree {
@@ -523,11 +523,6 @@
     outline-offset: -2px;
   }
 
-  @media (max-width: 1100px) {
-    .root[data-engine="v2"] .v2-mega__groups {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
     .root[data-engine="v2"] .v2-nav__flyout,
     .root[data-engine="v2"] .v2-drawer__chevron {

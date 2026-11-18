@@ -187,18 +187,23 @@ describe('megaGroups', () => {
     { label: 'Group', items: Array.from({ length: 11 }, (_, i) => ({ label: `L${i}`, href: `/g/${i}` })) },
     { label: 'Orphan label' },
   ];
-  it('splits groups and loose links, caps children and marks the active branch', () => {
-    const { groups, loose } = megaGroups(tree, 8, '/news/europe/italy/');
-    expect(groups.map(g => g.link.label)).toEqual(['News', 'Group']);
-    expect(loose.map(l => l.label)).toEqual(['Podcast']);
+  it('keeps menu order, caps children and marks the active branch', () => {
+    const groups = megaGroups(tree, 8, '/news/europe/italy/');
+    expect(groups.map(g => g.link.label)).toEqual(['News', 'Podcast', 'Group']);
     expect(groups[0].active).toBe(true);
-    expect(groups[1].active).toBe(false);
-    expect(groups[1].shown).toHaveLength(8);
-    expect(groups[1].hidden).toBe(3);
+    expect(groups[2].active).toBe(false);
+    expect(groups[1].shown).toEqual([]);
+    expect(groups[2].shown).toHaveLength(8);
+    expect(groups[2].hidden).toBe(3);
     expect(groups[0].hidden).toBe(0);
   });
+  it('marks a leaf section active and drops label-only leaves', () => {
+    const groups = megaGroups(tree, 8, '/podcast/');
+    expect(groups.find(g => g.link.label === 'Podcast')?.active).toBe(true);
+    expect(groups.some(g => g.link.label === 'Orphan label')).toBe(false);
+  });
   it('treats a negative cap as zero', () => {
-    expect(megaGroups(tree, -2, null).groups[0].shown).toEqual([]);
+    expect(megaGroups(tree, -2, null)[0].shown).toEqual([]);
   });
 });
 
