@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server';
 import { getAPIHostnameConfig, handleServicesError } from '@/services/utils';
 import { getAuthOptions } from '@/utilities/security';
-import { fetchPageDataDirect } from '@/utilities/pageCache';
+import { fetchPageDataCached, fetchPageDataDirect } from '@/utilities/pageCache';
 import { isContentBlockModel, type BlockModel } from '@/lib/contentBlocks';
+import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 /**
  * GET /api/content-block-model/<site path>/index.json
@@ -20,11 +21,14 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ path
   }
 
   try {
-    const { apiHostname } = await getAPIHostnameConfig(req);
+    const { apiHostname, viewStatus, root } = await getAPIHostnameConfig(req);
     const auth = await getAuthOptions();
-    // The backend serves the model json on the html url
-    const backendPath = path.replace(/index\.json$/, 'index.html');
-    const result = await fetchPageDataDirect(`${apiHostname.replace(/\/$/, '')}${backendPath}`, auth);
+    // The backend serves the model json on the html url; LIVE is cached as the page is
+    const backendUrl = `${apiHostname.replace(/\/$/, '')}${path.replace(/index\.json$/, 'index.html')}`;
+    const result =
+      viewStatus === ViewStatus.LIVE
+        ? await fetchPageDataCached(backendUrl, root.name, auth)
+        : await fetchPageDataDirect(backendUrl, auth);
 
     if (!result.data) {
       return Response.json({ error: 'not found' }, { status: 404 });
