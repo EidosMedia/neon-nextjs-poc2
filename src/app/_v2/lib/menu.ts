@@ -135,3 +135,69 @@ export function fitCount(widths: number[], available: number, moreWidth: number,
   }
   return count;
 }
+
+/**
+ * Accordion toggle with one open branch per level: opening `key` closes its siblings (and everything
+ * under them); closing `key` also closes its descendants. Returns a new set.
+ */
+export function toggleAccordion(expanded: ReadonlySet<string>, key: string): Set<string> {
+  const isUnder = (k: string, root: string) => k === root || k.startsWith(`${root}.`);
+  const next = new Set(expanded);
+  if (next.has(key)) {
+    for (const k of expanded) if (isUnder(k, key)) next.delete(k);
+    return next;
+  }
+  const parent = key.includes('.') ? key.slice(0, key.lastIndexOf('.')) : '';
+  const depth = key.split('.').length;
+  for (const k of expanded) {
+    const segs = k.split('.');
+    if (segs.length < depth) continue;
+    const sibling = segs.slice(0, depth).join('.');
+    const siblingParent = depth > 1 ? segs.slice(0, depth - 1).join('.') : '';
+    if (siblingParent === parent && sibling !== key) next.delete(k);
+  }
+  next.add(key);
+  return next;
+}
+
+/** True when `link` or any descendant points at `pathname`. */
+export function containsActive(link: MenuLink, pathname: string | null | undefined): boolean {
+  return isActiveHref(link.href, pathname) || (link.items ?? []).some(child => containsActive(child, pathname));
+}
+
+export type MegaGroup = {
+  link: MenuLink;
+  /** First `cap` children; the rest are reachable through the group's own page ("All in …"). */
+  shown: MenuLink[];
+  /** Children not shown. */
+  hidden: number;
+  active: boolean;
+};
+
+/**
+ * Desktop full menu: top-level entries with children become groups (level 1 heading + up to `cap`
+ * level-2 links); top-level entries without children go to the bottom row (`loose`).
+ */
+export function megaGroups(
+  links: MenuLink[],
+  cap: number,
+  pathname: string | null | undefined
+): { groups: MegaGroup[]; loose: MenuLink[] } {
+  const groups: MegaGroup[] = [];
+  const loose: MenuLink[] = [];
+  const limit = Math.max(0, Math.floor(cap));
+  for (const link of links) {
+    const items = link.items ?? [];
+    if (items.length === 0) {
+      if (link.href) loose.push(link);
+      continue;
+    }
+    groups.push({
+      link,
+      shown: items.slice(0, limit),
+      hidden: Math.max(0, items.length - limit),
+      active: containsActive(link, pathname),
+    });
+  }
+  return { groups, loose };
+}

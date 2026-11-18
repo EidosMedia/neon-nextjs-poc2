@@ -11,22 +11,27 @@ export type ChromeLink = MenuLink;
 function Flyout({ items, label }: { items: MenuLink[]; label: string }) {
   return (
     <div className={`v2-nav__flyout${items.length > 8 ? ' v2-nav__flyout--wide' : ''}`} role="group" aria-label={label}>
-      <ul>
-        {items.map((child, i) => (
-          <li key={`${i}-${child.label}`}>
-            <NavLabel link={child} className="v2-nav__flyout-link" />
-            {child.items && child.items.length > 0 && (
-              <ul className="v2-nav__flyout-sub">
-                {child.items.map((leaf, j) => (
-                  <li key={`${j}-${leaf.label}`}>
-                    <NavLabel link={leaf} className="v2-nav__flyout-link" />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="v2-nav__flyout-panel">
+        <p className="v2-nav__flyout-label" aria-hidden="true">
+          {label}
+        </p>
+        <ul>
+          {items.map((child, i) => (
+            <li key={`${i}-${child.label}`}>
+              <NavLabel link={child} className="v2-nav__flyout-link" />
+              {child.items && child.items.length > 0 && (
+                <ul className="v2-nav__flyout-sub">
+                  {child.items.map((leaf, j) => (
+                    <li key={`${j}-${leaf.label}`}>
+                      <NavLabel link={leaf} className="v2-nav__flyout-link" />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -80,8 +85,8 @@ export default function Nav({
           items.map(item => item.getBoundingClientRect().width),
           list.clientWidth,
           more?.getBoundingClientRect().width ?? 0,
-          gap
-        )
+          gap,
+        ),
       );
     };
     measure();
@@ -121,7 +126,12 @@ export default function Nav({
           );
         })}
         <li className={`v2-nav__more${overflowing || visible === null ? '' : ' v2-nav__item--hidden'}`}>
-          <MenuToggle items={moreLinks ?? links} pathname={pathname} label={moreLabel} className="v2-menutoggle--more" />
+          <MenuToggle
+            items={moreLinks ?? links}
+            pathname={pathname}
+            label={moreLabel}
+            className="v2-menutoggle--more"
+          />
         </li>
       </ul>
     </nav>

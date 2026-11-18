@@ -1,5 +1,5 @@
 import {
-  buildSearchUrl, chatSearchParams, cleanAnswer, formatResultDate, htmlToParts, optionToDate, optionToDays,
+  buildSearchUrl, chatSearchParams, cleanAnswer, emptyMessage, formatResultDate, htmlToParts, optionToDate, optionToDays,
   parseAnswer, parseInline, resultHref, standardSearchParams, tabToBaseType, tabToUrlParam, urlParamToTab,
 } from '@/app/_v2/special/searchLogic';
 
@@ -94,5 +94,17 @@ describe('result helpers', () => {
     expect(resultHref({ nodeData: { sys: { detailPage: '/b' } } })).toBe('/b');
     expect(resultHref({ nodeData: { sys: { importUrl: '/c' } } })).toBe('/c');
     expect(resultHref({ nodeData: {} })).toBe('#');
+  });
+});
+
+describe('emptyMessage', () => {
+  it('names the tab, query and period', () => {
+    expect(emptyMessage('videos', ' climate ', 'Last Year')).toBe(
+      'There are no videos for “climate” in the last year. Try a different keyword or a longer time period.'
+    );
+    expect(emptyMessage('chat', 'x', 'Today')).toContain('articles for “x” today.');
+  });
+  it('prompts for a keyword when there is no query', () => {
+    expect(emptyMessage('images', '  ', 'Last Year')).toBe('Type a keyword to search articles, images and videos.');
   });
 });

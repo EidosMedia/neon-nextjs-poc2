@@ -2,7 +2,10 @@
 import { useId, useState } from 'react';
 import useWebauth from '@/hooks/useWebauth';
 
-/** v2 web-user login: same endpoint and webauth flow as the legacy form, v2 markup. */
+/**
+ * v2 web-user login, shared by every brand: same endpoint and webauth flow as the legacy form.
+ * Brands restyle it through the form tokens (controls.css) and special.css; no per-brand markup.
+ */
 export default function LoginForm() {
   const { setUserName } = useWebauth();
   const [failed, setFailed] = useState(false);
@@ -37,15 +40,21 @@ export default function LoginForm() {
 
   return (
     <form className="v2-login" onSubmit={handleSubmit} aria-labelledby={`${id}-title`}>
-      <h1 id={`${id}-title`} className="v2-special__title">Log in</h1>
-      {/* The live region stays mounted so the error is announced when it appears. */}
-      <div role="alert" aria-live="assertive">
-        {failed && <p className="v2-field__error">Unable to login</p>}
-      </div>
-      <p className="v2-special__legal">
+      <h1 id={`${id}-title`} className="v2-login__title">Log in</h1>
+      <p className="v2-login__legal">
         Enter your credentials to access all products. By proceeding, you agree to our terms and conditions.
       </p>
-      <p className="v2-special__legal">For information about how we use your data, see our privacy policy.</p>
+      <p className="v2-login__legal">For information about how we use your data, see our privacy policy.</p>
+      {/* The live region stays mounted so the error is announced when it appears. */}
+      <div role="alert" aria-live="assertive" className="v2-login__alert">
+        {failed && (
+          <p className="v2-field__error">
+            <span>
+              <strong>Login failed.</strong> The username or password is not correct. Check them and try again.
+            </span>
+          </p>
+        )}
+      </div>
       <div className="v2-field">
         <label className="v2-field__label" htmlFor={`${id}-email`}>Username</label>
         <input
@@ -60,7 +69,7 @@ export default function LoginForm() {
           required autoComplete="current-password" aria-invalid={failed || undefined}
         />
       </div>
-      <button type="submit" className="v2-btn" disabled={submitting}>Login</button>
+      <button type="submit" className="v2-btn v2-btn--lg v2-login__submit" disabled={submitting}>Login</button>
     </form>
   );
 }

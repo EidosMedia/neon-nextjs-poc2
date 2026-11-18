@@ -24,3 +24,16 @@
   .root[data-engine="v2"] .v2-ui__label strong { color: var(--v2-text); }
   .root[data-engine="v2"] .v2-ui__composition { margin-bottom: var(--v2-space-5); }
 }
+
+@layer v2 {
+  /* /ui chrome preview: header styles without the sticky header. */
+  .root[data-engine="v2"] .v2-ui__chrome {
+    position: relative;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: var(--v2-space-2);
+    padding: var(--v2-space-2) 0;
+    margin-bottom: var(--v2-space-4);
+  }
+}

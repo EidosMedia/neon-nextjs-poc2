@@ -1,4 +1,5 @@
 import type { BaseModel, PageData, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import type { MenuLink } from '../lib/menu';
 
 /** Neutral inline SVG placeholder (no external hosts) labelled with its ratio. */
 export function placeholderImage(label: string, width = 640, height = 360): string {
@@ -136,3 +137,29 @@ export const MODULE_FIXTURES: Record<string, Record<string, PageData<BaseModel>>
     }),
   },
 };
+
+/** Large menu tree for /ui: 10 sections, one with 14 sub-sections (over the panel cap), one three levels deep. */
+export const MENU_FIXTURE: MenuLink[] = (() => {
+  const kids = (base: string, names: string[]): MenuLink[] =>
+    names.map(name => ({ label: name, href: `/ui-fixture/${base}/${name.toLowerCase().replace(/\W+/g, '-')}/` }));
+  return [
+    { label: 'News', href: '/ui-fixture/news/', items: kids('news', ['World', 'Europe', 'Politics', 'Local']) },
+    { label: 'Economy', href: '/ui-fixture/economy/', items: kids('economy', ['Markets', 'Business', 'Personal finance', 'Jobs']) },
+    {
+      label: 'Technology & Science',
+      href: '/ui-fixture/tech/',
+      items: [{ label: 'AI', href: '/ui-fixture/tech/ai/', items: kids('tech/ai', ['Models', 'Policy', 'Chips']) }, ...kids('tech', ['Space', 'Health'])],
+    },
+    {
+      label: 'Culture',
+      href: '/ui-fixture/culture/',
+      items: kids('culture', ['Film', 'Music', 'Books', 'Theatre', 'Art', 'Design', 'Games', 'TV', 'Podcasts', 'Comics', 'Dance', 'Photography', 'Architecture', 'Opera']),
+    },
+    { label: 'Life', href: '/ui-fixture/life/', items: kids('life', ['Travel', 'Food', 'Style']) },
+    { label: 'Sport', href: '/ui-fixture/sport/', items: kids('sport', ['Football', 'Tennis', 'Basketball', 'Cycling']) },
+    { label: 'Groups only', items: kids('groups', ['First', 'Second']) },
+    { label: 'Opinion', href: '/ui-fixture/opinion/' },
+    { label: 'Podcast', href: '/ui-fixture/podcast/' },
+    { label: 'Newsletter', href: '/ui-fixture/newsletter/' },
+  ];
+})();

@@ -12,7 +12,11 @@ import ZoneRenderer from '../zones/ZoneRenderer';
 import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import { getBrandModules } from '../brands/moduleRegistry';
-import { MODULE_FIXTURES, makeFixtureNode, makeFixtureNodes } from './fixtures';
+import { MENU_FIXTURE, MODULE_FIXTURES, makeFixtureNode, makeFixtureNodes } from './fixtures';
+import Link from 'next/link';
+import Nav from '../chrome/Nav';
+import MenuToggle from '../chrome/MenuToggle';
+import LoginForm from '../special/LoginForm';
 
 const ARTICLE_VARIANTS: ArticleItemVariant[] = [
   'standard', 'lead', 'compact', 'textOnly', 'overlay', 'opinion', 'highlight', 'sponsored',
@@ -152,6 +156,23 @@ export default async function StyleGuide({ site }: { site?: Site }) {
       <section className="v2-ui__section">
         <h2 className="v2-ui__heading">Brand modules</h2>
         {moduleCells(theme)}
+      </section>
+      <section className="v2-ui__section">
+        <h2 className="v2-ui__heading">Chrome and common pages</h2>
+        <p className="v2-ui__note">
+          Large fixture menu (10 sections, one over the 8-link cap, one three levels deep). Hover a section for its
+          dropdown; &quot;Full menu&quot; opens the desktop panel (the mobile drawer below 768px). Search:{' '}
+          <Link href="/search">/search</Link>.
+        </p>
+        <div className="v2-header v2-ui__chrome">
+          <div className="v2-header__navrow">
+            <Nav links={MENU_FIXTURE} moreLinks={MENU_FIXTURE} pathname="/ui-fixture/economy/markets/" />
+          </div>
+          <MenuToggle items={MENU_FIXTURE} pathname="/ui-fixture/economy/markets/" label="Full menu" />
+        </div>
+        <div className="v2-special--login">
+          <LoginForm />
+        </div>
       </section>
     </div>
   );

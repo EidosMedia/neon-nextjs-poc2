@@ -49,6 +49,16 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
     </div>
   );
 
+  // Bottom of the mobile drawer: same Subscribe and account entries as the header.
+  const drawerActions = showActions && (
+    <>
+      <Link href="/login" className="v2-drawer__subscribe">
+        Subscribe
+      </Link>
+      <AccountLink webauth={webauth} />
+    </>
+  );
+
   return (
     <header className={`v2-header v2-header--${brand.header} v2-header--${header.variant}`}>
       <div className="v2-container v2-header__inner">
@@ -76,7 +86,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
               </Link>
             )}
             {actions}
-            {showNav && <MenuToggle items={fullLinks} pathname={pathname} className="v2-menutoggle--mobile" />}
+            {showNav && <MenuToggle items={fullLinks} pathname={pathname} className="v2-menutoggle--mobile" actions={drawerActions} />}
           </div>
         )}
         {brand.header === 'frontier' && (
@@ -96,7 +106,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
       {showNav && brand.header !== 'arena' && (
         <div className="v2-container v2-header__navrow">
           <Nav links={mainLinks} moreLinks={fullLinks} pathname={pathname} />
-          <MenuToggle items={fullLinks} pathname={pathname} className="v2-menutoggle--mobile" label="Sections" />
+          <MenuToggle items={fullLinks} pathname={pathname} className="v2-menutoggle--mobile" label="Sections" actions={drawerActions} />
         </div>
       )}
     </header>

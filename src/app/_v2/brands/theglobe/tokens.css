@@ -38,4 +38,39 @@
   --v2-fs-body: 16px;
   --v2-fs-standfirst: 20px;
   --v2-fs-meta: 12px;
+
+  /* Component tokens: menus, drawer, forms, search (Chrome and common pages design). */
+  --v2-menu-bg: #FFFFFF;
+  --v2-menu-line: #AFAFAF;
+  --v2-menu-hover: #D6E1F1;
+  --v2-menu-active: #81A4D5;
+  --v2-menu-active-ink: #2F2F2F;
+  --v2-menu-radius: 8px;
+  --v2-menu-item-radius: 4px;
+  --v2-drawer-bg: #FFFFFF;
+  --v2-drawer-ink: #2F2F2F;
+  --v2-drawer-line: #81A4D5;
+  --v2-drawer-accent: #81A4D5;
+  --v2-drawer-field: #FFFFFF;
+  --v2-drawer-field-ink: #2F2F2F;
+  --v2-drawer-field-line: #AFAFAF;
+  --v2-drawer-btn: #3969AC;
+  --v2-drawer-btn-ink: #FFFFFF;
+  --v2-field-bg: #FFFFFF;
+  --v2-field-line: #AFAFAF;
+  --v2-focus: #3969AC;
+  --v2-danger: #D22D2D;
+  --v2-action: #3969AC;
+  --v2-action-ink: #FFFFFF;
+  --v2-ctl-radius: 4px;
+  --v2-btn-radius: 4px;
+  --v2-login-bg: #F3F3F4;
+  --v2-panel: #D6E1F1;
+  --v2-panel-ink: #2F2F2F;
+  --v2-bubble: #F3F3F4;
+  --v2-bubble-ink: #2F2F2F;
+  --v2-mark: #D6E1F1;
+  --v2-mark-ink: #2F2F2F;
+  --v2-tab-active: #3969AC;
+  --v2-placeholder: #D6E1F1;
 }

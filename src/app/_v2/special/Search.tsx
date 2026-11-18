@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import type { PaginatedSearchRagResult, Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import SearchResultItem from './SearchResultItem';
 import {
-  buildSearchUrl, chatSearchParams, DEFAULT_TIME, formatRefDate, parseAnswer, parseInline, resultHref,
+  buildSearchUrl, chatSearchParams, DEFAULT_TIME, emptyMessage, formatRefDate, parseAnswer, parseInline, resultHref,
   standardSearchParams, tabToBaseType, TABS, THREAD_ID_KEY, TIME_OPTIONS, urlParamToTab, type ActiveTab,
 } from './searchLogic';
 
@@ -13,6 +13,13 @@ type Results = PaginatedSearchRagResult['result'];
 type ChatRound = { question: string; answer: string; references: Results };
 
 const REFS_COLLAPSED = 5;
+
+const SearchIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <circle cx="8" cy="8" r="5.5" />
+    <path d="M12.5 12.5L16 16" />
+  </svg>
+);
 const EMPTY = {} as PaginatedSearchRagResult;
 
 function Inline({ text }: { text: string }) {
@@ -238,10 +245,20 @@ export default function Search({ data }: { data: Site }) {
       {!(chatActive && currentChatQuery) && (
         <form onSubmit={handleSearchSubmit} className="v2-search__form" role="search">
           <label className="v2-field__label" htmlFor={`${id}-q`}>Search {data.root?.title}</label>
-          <input
-            id={`${id}-q`} type="search" value={searchText} placeholder="Search..."
-            onChange={(e) => setSearchText(e.target.value)} className="v2-field__control"
-          />
+          <div className="v2-search__box">
+            <SearchIcon />
+            <input
+              id={`${id}-q`} type="search" value={searchText} placeholder="Search..."
+              onChange={(e) => setSearchText(e.target.value)} className="v2-search__input"
+            />
+            {searchText && (
+              <button type="button" className="v2-search__clear" aria-label="Clear search" onClick={() => setSearchText('')}>
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M3 3l12 12M15 3L3 15" />
+                </svg>
+              </button>
+            )}
+          </div>
         </form>
       )}
 
@@ -331,10 +348,9 @@ export default function Search({ data }: { data: Site }) {
               </section>
             )}
             {result.count > 0 && (
-              <header className="v2-search__summary">
-                <p className="v2-search__count">{result.count} results</p>
-                <h2 className="v2-search__query">{lastSearchText.current}</h2>
-              </header>
+              <h2 className="v2-search__count">
+                {result.count} {result.count === 1 ? 'result' : 'results'} for “{lastSearchText.current}”
+              </h2>
             )}
             {result?.count > 0 ? (
               activeTab === 'images' ? (
@@ -354,11 +370,17 @@ export default function Search({ data }: { data: Site }) {
               )
             ) : (
               <div className="v2-search__empty">
-                <h2>No results found</h2>
-                <p>
-                  Search content inside {data.root?.title}
-                  {activeTab === 'images' ? ' — images' : activeTab === 'videos' ? ' — videos' : ''}.
-                </p>
+                <SearchIcon size={44} />
+                <h2>{lastSearchText.current ? 'No results found' : `Search ${data.root?.title ?? ''}`.trim()}</h2>
+                <p>{emptyMessage(activeTab, lastSearchText.current, selectedOption)}</p>
+                {lastSearchText.current && selectedOption !== DEFAULT_TIME && (
+                  <button
+                    type="button" className="v2-btn v2-btn--ghost"
+                    onClick={() => router.push(buildSearchUrl(activeTab, lastSearchText.current, DEFAULT_TIME))}
+                  >
+                    Clear filters
+                  </button>
+                )}
               </div>
             )}
           </div>

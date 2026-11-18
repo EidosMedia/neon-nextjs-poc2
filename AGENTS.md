@@ -71,6 +71,7 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 | `src/app/_v2/lib/` | Pure modules: `layout`, `zoneItems`, `itemView`, `leafView`, `settings`, `share`, `blocks` |
 | `src/app/_v2/brands/` | `registry.ts` (`getBrand`, `REQUIRED_TOKENS`), `moduleRegistry.ts`, per-brand `tokens.css` and block `modules/` |
 | `src/app/_v2/{chrome,zones,items,leaves,blocks,pages,ui}/` | Header/footer, zone compositions, teaser items (`ItemFrame` editor contract), leaves, block slots, pages, `/ui` style guide and gate |
+| `src/app/_v2/special/` | Shared login and search (`LoginForm`, `Search`, `special.css`); brands restyle via component tokens and `brands/<key>/chrome.css` |
 | `src/app/_themeRouter.tsx` | `THEME_MAP` (theme key to `PageComponents`) |
 | `src/app/_pages/` | Legacy theme folders (`adn`, `oldtown`, `wire`, `foghorn`, `financier`, `business-globe`), `NewsletterWebpage`, `LiveblogPosts`, shared `accessories.json` |
 | `src/app/api/` | API endpoints — thin wrappers over the SDK with auth context |

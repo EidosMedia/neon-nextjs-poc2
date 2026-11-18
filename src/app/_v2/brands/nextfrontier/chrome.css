@@ -1,0 +1,31 @@
+/* Next Frontier: menus, login and search flavour (Chrome and common pages design). Dark panels with a
+   yellow top rule, violet highlight, Abril Fatface section names, square corners. */
+@layer v2 {
+  .root[data-theme="nextfrontier"] .v2-nav__flyout-panel,
+  .root[data-theme="nextfrontier"] .v2-mega {
+    border-top: 3px solid #FEF445;
+  }
+  .root[data-theme="nextfrontier"] .v2-mega {
+    border-inline: 0;
+    border-bottom: 0;
+  }
+  .root[data-theme="nextfrontier"] .v2-nav__flyout-panel::before {
+    display: none;
+  }
+  .root[data-theme="nextfrontier"] .v2-mega__heading,
+  .root[data-theme="nextfrontier"] .v2-login__title,
+  .root[data-theme="nextfrontier"] .v2-search__empty h2 {
+    font-family: var(--v2-font-display);
+    font-weight: 400;
+  }
+  .root[data-theme="nextfrontier"] .v2-mega__heading {
+    font-size: 24px;
+  }
+  /* The open section in the drawer turns yellow. */
+  .root[data-theme="nextfrontier"] .v2-drawer__tree > .v2-drawer__node:has(> .v2-drawer__row [aria-expanded="true"]) > .v2-drawer__row {
+    color: #FEF445;
+  }
+  .root[data-theme="nextfrontier"] .v2-search__answer-text strong {
+    color: #FEF445;
+  }
+}

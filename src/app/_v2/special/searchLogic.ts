@@ -185,3 +185,12 @@ type Resultish = { nodeData: { url?: string; sys?: { detailPage?: string; import
 /** Link target of a result, with the same fallbacks as the legacy list. */
 export const resultHref = (item: Resultish): string =>
   item.nodeData.url || item.nodeData.sys?.detailPage || item.nodeData.sys?.importUrl || '#';
+
+/** Copy of the empty state: what happened and what to try next. */
+export function emptyMessage(tab: ActiveTab, query: string, time: string): string {
+  const q = query.trim();
+  if (!q) return 'Type a keyword to search articles, images and videos.';
+  const what = tab === 'images' ? 'images' : tab === 'videos' ? 'videos' : 'articles';
+  const when = time === 'Today' ? 'today' : `in the ${time.toLowerCase()}`;
+  return `There are no ${what} for “${q}” ${when}. Try a different keyword or a longer time period.`;
+}

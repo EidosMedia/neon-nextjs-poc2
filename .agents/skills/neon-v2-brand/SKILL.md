@@ -44,6 +44,16 @@ and brand modules only; page structure is shared.
 4. **Chrome.** Add header and footer styles to `src/app/_v2/chrome/frame.css` (inside `@layer v2`),
    scoped to `.root[data-theme="<key>"]`, and extend the `header`/`footer` union types and the
    `Header.tsx`/`Footer.tsx` switches if the brand needs a new style key.
+   **Menus, login and search** are shared components (`chrome/Nav.tsx` dropdown, `chrome/MenuToggle.tsx`
+   desktop panel + mobile drawer, `special/LoginForm.tsx`, `special/Search.tsx`) with shared CSS
+   (`chrome/menus.css`, `special/special.css`, `styles/controls.css`). Never fork their markup per brand.
+   Style them with the optional component tokens in `tokens.css` (each falls back to a core token):
+   `--v2-menu-bg/-ink/-line/-label/-hover/-hover-ink/-active/-active-ink/-radius/-item-radius`,
+   `--v2-drawer-bg/-ink/-line/-accent/-field/-field-ink/-field-line/-btn/-btn-ink/-section-font/-section-size/-section-weight`,
+   `--v2-field-bg/-line`, `--v2-focus`, `--v2-danger`, `--v2-action/-ink`, `--v2-ctl-radius`, `--v2-btn-radius`,
+   `--v2-login-bg`, `--v2-panel/-ink`, `--v2-bubble/-ink`, `--v2-mark/-ink`, `--v2-tab-active`, `--v2-placeholder`.
+   Anything that is not a token (pill tabs, a top rule, a display font on headings, `--v2-mega-columns`)
+   goes in `src/app/_v2/brands/<key>/chrome.css`, imported at the end of `_v2/styles/v2.css`.
 5. **Brand modules.** A module is a server component taking `BrandModuleProps` (`{ block }`) in
    `src/app/_v2/brands/<key>/modules/`, with `keys.ts` exporting `MODULE_KEYS` (block `sys.type`
    values), a `modules.css` imported from `_v2/styles/v2.css`, and an entry in `BRAND_MODULES` in
@@ -93,7 +103,8 @@ otherwise 404. Never serve fixtures to anonymous LIVE readers.
       (`src/test/v2-*.test.ts`, `accessories-registry.test.ts`; `v2-brands.test.ts` enforces
       `REQUIRED_TOKENS`).
 - [ ] `/ui` on a site with the new theme: every item variant x toggles, composition, leaf variant and
-      the brand modules look like the boards.
+      the brand modules look like the boards; "Chrome and common pages" (dropdown, full menu panel and
+      drawer on the large fixture tree, login form) and `/search` look like the Chrome boards.
 - [ ] Manual pass in both PREVIEW and LIVE for Home, Section, Article (each leaf variant), Liveblog
       and Gallery: inspect highlight; in-context title/summary edit and save; publish/unpublish from
       the card; version panel and rollback; promotion; Preview/Live switch; sticky header under the bar.
