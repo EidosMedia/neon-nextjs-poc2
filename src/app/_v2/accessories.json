@@ -414,14 +414,19 @@
       "types": [
         "webpage",
         "homewebpage",
-        "sectionwebpage"
+        "sectionwebpage",
+        "contentblock"
       ],
       "zones": [
         "main",
         "context",
         "insight1",
         "insight2",
-        "insight3"
+        "insight3",
+        "headers",
+        "includes",
+        "sidebars",
+        "footers"
       ],
       "linkedTypes": [
         "article"
@@ -491,14 +496,19 @@
       "types": [
         "webpage",
         "homewebpage",
-        "sectionwebpage"
+        "sectionwebpage",
+        "contentblock"
       ],
       "zones": [
         "main",
         "context",
         "insight1",
         "insight2",
-        "insight3"
+        "insight3",
+        "headers",
+        "includes",
+        "sidebars",
+        "footers"
       ],
       "linkedTypes": [
         "liveblog"
@@ -548,14 +558,19 @@
       "types": [
         "webpage",
         "homewebpage",
-        "sectionwebpage"
+        "sectionwebpage",
+        "contentblock"
       ],
       "zones": [
         "main",
         "context",
         "insight1",
         "insight2",
-        "insight3"
+        "insight3",
+        "headers",
+        "includes",
+        "sidebars",
+        "footers"
       ],
       "linkedTypes": [
         "gallery"
