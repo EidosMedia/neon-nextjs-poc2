@@ -1,8 +1,18 @@
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import { BLOCK_LIMITS, blockCacheTags, blockContentTags, isFetchable, decideBlockRender, extractBlockLinks, getModuleKeys } from '@/app/_v2/lib/blocks';
+import { BLOCK_LIMITS, blockCacheTags, blockContentTags, isFetchable, decideBlockRender, extractBlockLinks, getModuleKeys, toBackendUrl } from '@/app/_v2/lib/blocks';
 
 const link = (id: string) => ({ targetId: id });
-const model = (pagelink: unknown, nodes: unknown = {}) => ({ data: { links: { pagelink } }, nodes });
+const model = (blocklink: unknown, nodes: unknown = {}) => ({ data: { links: { blocklink } }, nodes });
+
+describe('toBackendUrl', () => {
+  it('prefixes a site path with the backend host', () => {
+    expect(toBackendUrl('/sport/a/index.html', 'https://backend.test/')).toBe('https://backend.test/sport/a/index.html');
+  });
+  it('keeps absolute urls and urls without a host', () => {
+    expect(toBackendUrl('https://x.test/a/index.html', 'https://backend.test')).toBe('https://x.test/a/index.html');
+    expect(toBackendUrl('/a/index.html', '')).toBe('/a/index.html');
+  });
+});
 
 describe('extractBlockLinks', () => {
   it('returns [] for missing or odd shapes', () => {
@@ -14,6 +24,9 @@ describe('extractBlockLinks', () => {
   it('reads url and blockType from the node map', () => {
     const m = model({ footers: [link('a')] }, { a: { url: '/blocks/a/', sys: { type: 'menu', baseType: 'contentblock' } } });
     expect(extractBlockLinks(m, 'footers')).toEqual([{ area: 'footers', id: 'a', url: '/blocks/a/', blockType: 'menu' }]);
+  });
+  it('ignores zone pagelinks: blocks come only from blocklink', () => {
+    expect(extractBlockLinks({ data: { links: { pagelink: { footers: [link('a')] } } } }, 'footers')).toEqual([]);
   });
   it('leaves blockType undefined when the node is unknown', () => {
     expect(extractBlockLinks(model({ includes: [link('z')] }), 'includes')[0].blockType).toBeUndefined();

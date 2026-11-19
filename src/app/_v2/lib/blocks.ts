@@ -14,10 +14,10 @@ export type BlockLink = { area: BlockArea; id: string; url: string; blockType?: 
 const asRecord = (v: unknown): Record<string, unknown> | undefined =>
   v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
 
-/** Assumed shape: `model.data.links.pagelink[area]`, same as zone links. Unknown shapes yield []. */
+/** Blocks linked to a page: `model.data.links.blocklink[area]`, one key per block area. Unknown shapes yield []. */
 export function extractBlockLinks(model: unknown, area: BlockArea): BlockLink[] {
   const m = asRecord(model);
-  const links = asRecord(asRecord(asRecord(m?.data)?.links)?.pagelink)?.[area];
+  const links = asRecord(asRecord(asRecord(m?.data)?.links)?.blocklink)?.[area];
   if (!Array.isArray(links)) return [];
   const nodes = asRecord(m?.nodes);
   const out: BlockLink[] = [];
@@ -41,6 +41,10 @@ export function blockCacheTags(siteName: string, links: BlockLink[]): string[] {
 }
 
 export const isFetchable = (link: BlockLink): boolean => link.url.trim().length > 0;
+
+/** Absolute backend url of a site path (the page route builds it the same way from x-neon-backend-url). */
+export const toBackendUrl = (url: string, backendHost: string): string =>
+  url.startsWith('http') || !backendHost ? url : `${backendHost.replace(/\/$/, '')}${url}`;
 
 /** `neon:node:<id>` for every pagelink target (all zones) in a block's own model. */
 export function blockContentTags(blockModel: unknown): string[] {
