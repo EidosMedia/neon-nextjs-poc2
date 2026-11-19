@@ -69,7 +69,7 @@ Then add a matching export to every theme barrel (`_pages/adn/index.ts`, `_pages
 export { default as <Name> } from '../<Name>';   // re-exports default
 ```
 
-All theme barrels must export the same set of keys as the default barrel — the TypeScript type of `THEME_MAP` enforces this. If a theme needs a custom layout, create `src/app/_pages/<theme>/<Name>.tsx` and export that instead.
+All theme barrels must export the same set of keys as the default barrel — the `PageComponents` type used by `LEGACY_THEME_MAP` in `_themeRouter.tsx` enforces this. If a theme needs a custom layout, create `src/app/_pages/<theme>/<Name>.tsx` and export that instead.
 
 ### 4. Register the componentKey in the catch-all route
 

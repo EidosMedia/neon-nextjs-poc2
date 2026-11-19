@@ -1,0 +1,39 @@
+@layer v2 {
+  .root[data-engine="v2"] .v2-ui { padding-block: var(--v2-space-5); }
+  .root[data-engine="v2"] .v2-ui .v2-container { padding-inline: 0; }
+  .root[data-engine="v2"] .v2-ui__title { font-family: var(--v2-font-display); font-size: var(--v2-fs-h1); margin: 0; }
+  .root[data-engine="v2"] .v2-ui__note { color: var(--v2-text-muted); font-family: var(--v2-font-meta); }
+  .root[data-engine="v2"] .v2-ui__heading {
+    font-family: var(--v2-font-heading);
+    font-size: var(--v2-fs-h2);
+    margin: var(--v2-space-6) 0 var(--v2-space-3);
+    border-bottom: 1px solid var(--v2-rule);
+  }
+  .root[data-engine="v2"] .v2-ui__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--v2-space-4);
+  }
+  .root[data-engine="v2"] .v2-ui__cell { margin: 0; min-width: 0; }
+  .root[data-engine="v2"] .v2-ui__label {
+    font-family: var(--v2-font-meta);
+    font-size: var(--v2-fs-meta);
+    color: var(--v2-text-muted);
+    margin: 0 0 var(--v2-space-2);
+  }
+  .root[data-engine="v2"] .v2-ui__label strong { color: var(--v2-text); }
+  .root[data-engine="v2"] .v2-ui__composition { margin-bottom: var(--v2-space-5); }
+}
+
+@layer v2 {
+  /* /ui chrome preview: header styles without the sticky header. */
+  .root[data-engine="v2"] .v2-ui__chrome {
+    position: relative;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: var(--v2-space-2);
+    padding: var(--v2-space-2) 0;
+    margin-bottom: var(--v2-space-4);
+  }
+}

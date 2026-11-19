@@ -1,0 +1,81 @@
+@layer v2 {
+  .root[data-engine="v2"] .v2-section-head { padding-block: var(--v2-space-5) var(--v2-space-3); }
+  .root[data-engine="v2"] .v2-section-head__kicker {
+    margin: 0;
+    font-family: var(--v2-font-meta);
+    font-size: var(--v2-fs-meta);
+    text-transform: uppercase;
+    color: var(--v2-text-muted);
+  }
+  .root[data-engine="v2"] .v2-section-head__title {
+    margin: var(--v2-space-1) 0;
+    font-family: var(--v2-font-display);
+    font-size: var(--v2-fs-h1);
+  }
+  .root[data-engine="v2"] .v2-section-head__desc {
+    margin: 0;
+    max-width: 70ch;
+    font-size: var(--v2-fs-standfirst);
+    color: var(--v2-text-muted);
+  }
+
+  /* Web page: main 8/12, rail 4/12; stacks on mobile (frame.css collapses the grid). */
+  .root[data-engine="v2"] .v2-main--rail .v2-main__grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  .root[data-engine="v2"] .v2-web-rail [class*="v2-comp--"],
+  .root[data-engine="v2"] .v2-web-rail .v2-comp__stack { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 767px) {
+    .root[data-engine="v2"] .v2-main--rail .v2-main__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* Arena home: the lead item runs full-bleed under the floating pill. */
+  .root[data-engine="v2"] .v2-home-hero--overlay > .v2-container { max-width: none; padding-inline: 0; }
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-zone { margin-block: 0; }
+  /* The lead takes the full width; the rest of the zone drops below it as cards (ArenaHome board). */
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item { position: relative; min-height: 700px; overflow: hidden; }
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__media {
+    position: absolute; inset: 0; width: 100%; max-width: none; height: 100%; border-radius: 0;
+  }
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__media img {
+    width: 100%; max-width: none; height: 100%; object-fit: cover;
+  }
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__body {
+    position: absolute; inset: auto 0 0 0; padding: var(--v2-space-5) 80px;
+    color: var(--v2-on-brand);
+    background: linear-gradient(transparent, rgb(0 0 0 / 0.7));
+  }
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__kicker,
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__summary,
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__byline { color: var(--v2-on-brand); }
+  .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__stack {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--v2-space-4);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding: var(--v2-space-5) 80px 0;
+  }
+  @media (max-width: 767px) {
+    .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item { min-height: 480px; }
+    .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__lead .v2-item__body,
+    .root[data-engine="v2"] .v2-home-hero--overlay .v2-comp__stack { padding-inline: 16px; }
+  }
+
+  /* Special pages: about, 404 (login and search: special/special.css). */
+  .root[data-engine="v2"] .v2-special { padding-block: var(--v2-space-6, 48px); max-width: 72ch; }
+  .root[data-engine="v2"] .v2-special__title {
+    margin: 0 0 var(--v2-space-3);
+    font-family: var(--v2-font-display);
+    font-size: var(--v2-fs-h1);
+  }
+  .root[data-engine="v2"] .v2-special__code {
+    margin: 0;
+    font-family: var(--v2-font-display);
+    font-size: var(--v2-fs-h1);
+    color: var(--v2-brand-text, var(--v2-brand));
+  }
+  .root[data-engine="v2"] .v2-special__legal { color: var(--v2-text-muted); font-size: var(--v2-fs-meta); }
+  .root[data-engine="v2"] .v2-special :is(ul) { padding-inline-start: 1.25em; list-style: disc; }
+  .root[data-engine="v2"] .v2-special :is(a) { color: var(--v2-brand-text, var(--v2-brand)); text-decoration: underline; }
+}

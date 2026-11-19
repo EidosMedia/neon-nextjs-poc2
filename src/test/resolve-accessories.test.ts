@@ -182,3 +182,95 @@ describe('resolveAccessoryValues string and text properties', () => {
     expect(resolveAccessoryValues(noSize, stored({ zonetitle: 'x' }), zoneContext)).toEqual({ shape: {} });
   });
 });
+describe('exact type exclusion', () => {
+  const def = (name: string, extra: Record<string, unknown>) => ({
+    name,
+    version: '1.0',
+    types: ['article'],
+    ...extra,
+  });
+  const doc = {
+    version: '1.0',
+    theme: 'default',
+    pageAccessories: {
+      articleLeaf: def('articleLeaf', {}),
+      galleryLeaf: def('galleryLeaf', { types: ['gallery'] }),
+      header: def('header', {
+        types: ['article', 'liveblog', 'webpage', 'homewebpage', 'sectionwebpage', 'section', 'site'],
+      }),
+    },
+    linkAccessories: {
+      articleItem: def('articleItem', { types: ['homewebpage'], zones: ['main'], linkedTypes: ['article'] }),
+      galleryItem: def('galleryItem', { types: ['homewebpage'], zones: ['main'], linkedTypes: ['gallery'] }),
+    },
+  } as unknown as AccessoryDefinitions;
+
+  test('exact page type excludes baseType-only definitions of other names', () => {
+    const r = resolveAccessoryValues(doc, null, { theme: 'default', level: 'page', type: 'gallery', baseType: 'article' })!;
+    expect(Object.keys(r).sort()).toEqual(['galleryLeaf', 'header']);
+  });
+
+  test('unknown article subtype falls back to the article definition', () => {
+    const r = resolveAccessoryValues(doc, null, { theme: 'default', level: 'page', type: 'interview', baseType: 'article' })!;
+    expect(Object.keys(r).sort()).toEqual(['articleLeaf', 'header']);
+  });
+
+  test('exact linked type excludes baseType-only link definitions', () => {
+    const r = resolveAccessoryValues(doc, null, {
+      theme: 'default', level: 'link', type: 'homewebpage', baseType: 'webpage',
+      zone: 'main', linkedType: 'gallery', linkedBaseType: 'article',
+    })!;
+    expect(Object.keys(r)).toEqual(['galleryItem']);
+  });
+
+  test('a definition targeting many page types survives on a gallery page', () => {
+    const r = resolveAccessoryValues(doc, null, { theme: 'default', level: 'page', type: 'gallery', baseType: 'article' })!;
+    expect(Object.keys(r)).toContain('header');
+  });
+  test('zone level: exact page type excludes baseType-only zone definitions', () => {
+    const zoneDoc = {
+      version: '1.0',
+      theme: 'default',
+      zoneAccessories: {
+        articleZone: def('articleZone', { zones: ['main'] }),
+        galleryZone: def('galleryZone', { types: ['gallery'], zones: ['main'] }),
+      },
+    } as unknown as AccessoryDefinitions;
+    const r = resolveAccessoryValues(zoneDoc, null, {
+      theme: 'default', level: 'zone', type: 'gallery', baseType: 'article', zone: 'main',
+    })!;
+    expect(Object.keys(r)).toEqual(['galleryZone']);
+  });
+
+  test("a ['*'] definition survives next to an exact match", () => {
+    const starDoc = {
+      version: '1.0',
+      theme: 'default',
+      pageAccessories: {
+        everywhere: def('everywhere', { types: ['*'] }),
+        galleryLeaf: def('galleryLeaf', { types: ['gallery'] }),
+        articleLeaf: def('articleLeaf', {}),
+      },
+    } as unknown as AccessoryDefinitions;
+    const r = resolveAccessoryValues(starDoc, null, { theme: 'default', level: 'page', type: 'gallery', baseType: 'article' })!;
+    expect(Object.keys(r).sort()).toEqual(['everywhere', 'galleryLeaf']);
+  });
+
+  test("a link definition with linkedTypes ['article','gallery'] survives on a gallery link", () => {
+    const multiDoc = {
+      version: '1.0',
+      theme: 'default',
+      linkAccessories: {
+        anyItem: def('anyItem', { types: ['homewebpage'], zones: ['main'], linkedTypes: ['article', 'gallery'] }),
+        galleryItem: def('galleryItem', { types: ['homewebpage'], zones: ['main'], linkedTypes: ['gallery'] }),
+        articleItem: def('articleItem', { types: ['homewebpage'], zones: ['main'], linkedTypes: ['article'] }),
+      },
+    } as unknown as AccessoryDefinitions;
+    const r = resolveAccessoryValues(multiDoc, null, {
+      theme: 'default', level: 'link', type: 'homewebpage', baseType: 'webpage',
+      zone: 'main', linkedType: 'gallery', linkedBaseType: 'article',
+    })!;
+    expect(Object.keys(r).sort()).toEqual(['anyItem', 'galleryItem']);
+  });
+
+});

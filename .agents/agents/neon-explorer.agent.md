@@ -12,7 +12,7 @@ You never edit files.
 ## What you know
 
 - **Routing**: `src/app/[[...slug]]/page.tsx` dispatches CMS content by `baseType` (webpage, article, liveblog, etc.) and handles special single-slug paths (search, about, login).
-- **Content types**: Page components live in `src/app/_pages/`. Each receives `PageData<Model>` from the SDK or a bare `Site` object for static pages.
+- **Content types**: Page components for the default v2 engine live in `src/app/_v2/`; legacy (v1) themes keep their own folders in `src/app/_pages/`. Theme lists are in `src/app/themeKeys.ts` and `src/app/_themeRouter.tsx` picks the barrel. Each receives `PageData<Model>` from the SDK or a bare `Site` object for static pages.
 - **SDK**: `NeonConnection` is a global `connection` set up in `instrumentation.ts`. Main methods: `makePageRequest`, `search`, `login`, `getCurrentUserInfo`, `getLiveBlogsPosts`, `updateContentItem`, `promoteContentLive`.
 - **Auth**: Two httpOnly cookies — `webauth` (reader) and `editorialauth` (editor). Server-side: `getAuthOptions()` from `src/utilities/security.tsx`. Client-side: `useAuth` (React Query → `/api/users`) and `useWebauth` (Redux + localStorage).
 - **API contract**: Every route wraps SDK calls in try/catch with `getAuthOptions()` and `handleServicesError()` from `src/services/utils.ts`.

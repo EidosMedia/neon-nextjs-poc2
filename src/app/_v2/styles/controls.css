@@ -1,0 +1,55 @@
+@layer v2 {
+  /*
+   * Shared v2 form controls and buttons. Brands restyle them through component tokens (all optional,
+   * each falls back to a core token): --v2-action / --v2-action-ink (primary button),
+   * --v2-btn-radius, --v2-field-bg / --v2-field-line, --v2-ctl-radius, --v2-focus, --v2-danger.
+   */
+  .root[data-engine="v2"] .v2-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--v2-space-1);
+    box-sizing: border-box; min-height: 40px; padding: 0 20px; cursor: pointer;
+    border: 1px solid var(--v2-action, var(--v2-brand));
+    border-radius: var(--v2-btn-radius, var(--v2-radius-pill));
+    background: var(--v2-action, var(--v2-brand)); color: var(--v2-action-ink, var(--v2-on-brand));
+    font-family: var(--v2-font-meta); font-size: 14px; font-weight: 700; line-height: 1.2;
+    text-decoration: none;
+  }
+  .root[data-engine="v2"] .v2-btn--lg { min-height: 46px; }
+  .root[data-engine="v2"] .v2-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .root[data-engine="v2"] .v2-btn--ghost {
+    background: transparent; color: var(--v2-text); border-color: currentColor;
+  }
+  .root[data-engine="v2"] .v2-btn--link {
+    min-height: 0; padding: 0; border: 0; background: none; color: var(--v2-link); border-radius: 0;
+    text-decoration: underline; font-weight: 600;
+  }
+  .root[data-engine="v2"] .v2-btn:focus-visible,
+  .root[data-engine="v2"] .v2-field__control:focus-visible,
+  .root[data-engine="v2"] .v2-tabs__tab:focus-visible {
+    outline: 2px solid var(--v2-focus, var(--v2-brand)); outline-offset: 2px;
+  }
+
+  .root[data-engine="v2"] .v2-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--v2-space-2); }
+  .root[data-engine="v2"] .v2-field__label { font-family: var(--v2-font-meta); font-size: 13px; font-weight: 700; color: var(--v2-text); }
+  .root[data-engine="v2"] .v2-field__control {
+    box-sizing: border-box; width: 100%; min-height: 46px; padding: 0 14px;
+    background: var(--v2-field-bg, var(--v2-bg)); color: var(--v2-text);
+    border: 1px solid var(--v2-field-line, var(--v2-rule));
+    border-radius: var(--v2-ctl-radius, min(var(--v2-radius-card), 8px));
+    font-family: var(--v2-font-body); font-size: 15px; line-height: 1.5;
+  }
+  .root[data-engine="v2"] .v2-field__control[aria-invalid="true"] {
+    border-color: var(--v2-danger, var(--v2-live)); outline: 1px solid var(--v2-danger, var(--v2-live));
+  }
+  /* Error banner: dot + bold lead + explanation. */
+  .root[data-engine="v2"] .v2-field__error {
+    display: flex; gap: 10px; align-items: flex-start; margin: 0;
+    padding: 10px 14px; border: 1px solid var(--v2-danger, var(--v2-live));
+    border-radius: var(--v2-ctl-radius, min(var(--v2-radius-card), 8px));
+    color: var(--v2-text); font-family: var(--v2-font-body); font-size: 13px; line-height: 1.5;
+  }
+  .root[data-engine="v2"] .v2-field__error::before {
+    content: ""; flex: none; width: 8px; height: 8px; margin-top: 6px;
+    border-radius: 100px; background: var(--v2-danger, var(--v2-live));
+  }
+  .root[data-engine="v2"] .v2-field__error strong { font-family: var(--v2-font-meta); color: var(--v2-danger, var(--v2-live)); }
+}

@@ -31,7 +31,7 @@ export async function fetchPageDataDirect(
     };
   }
 
-  return { status: response.status, data: await response.json() };
+  return { status: response.status, data: connection.redactSiteConfig(await response.json()) };
 }
 
 /**
@@ -69,7 +69,7 @@ export async function fetchPageDataCached(
     };
   }
 
-  const data = await response.json();
+  const data = connection.redactSiteConfig(await response.json());
 
   // ── Cache tags + collection for logging ──────────────────────────────────────
 

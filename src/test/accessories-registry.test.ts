@@ -1,17 +1,17 @@
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { getAccessoryDefinitions, listAccessoryThemes } from '@/lib/accessories/definitions';
+import { getAccessoryDefinitions, listAccessoryThemes, isV2Theme, V2_THEMES } from '@/lib/accessories/definitions';
+import { BRAND_ACCESSORIES } from '@/app/_v2/brands/accessories';
+import sharedFile from '@/app/_v2/accessories.json';
 
-const pagesDir = join(process.cwd(), 'src/app/_pages');
+const v2Dir = join(process.cwd(), 'src/app/_v2');
+const brandsDir = join(v2Dir, 'brands');
 const NAME = /^[a-z][A-Za-z0-9]*$/;
 
-// The default theme lives at the root of _pages; every other theme in its own folder.
-const themeFiles: { theme: string; path: string }[] = [
-  ...(existsSync(join(pagesDir, 'accessories.json')) ? [{ theme: 'default', path: join(pagesDir, 'accessories.json') }] : []),
-  ...readdirSync(pagesDir, { withFileTypes: true })
-    .filter(entry => entry.isDirectory() && existsSync(join(pagesDir, entry.name, 'accessories.json')))
-    .map(entry => ({ theme: entry.name, path: join(pagesDir, entry.name, 'accessories.json') })),
-];
+// Brand overrides on disk: brands/<key>/accessories.json.
+const overrideFiles: { brand: string; path: string }[] = readdirSync(brandsDir, { withFileTypes: true })
+  .filter(entry => entry.isDirectory() && existsSync(join(brandsDir, entry.name, 'accessories.json')))
+  .map(entry => ({ brand: entry.name, path: join(brandsDir, entry.name, 'accessories.json') }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- the JSON documents are walked loosely on purpose
 type Json = Record<string, any>;
@@ -74,32 +74,88 @@ function problems(document: Json): string[] {
   return found;
 }
 
-describe('theme accessories.json files', () => {
-  test('the default theme has a file', () => {
-    expect(themeFiles.map(file => file.theme)).toContain('default');
-  });
-
-  test.each(themeFiles)('$theme is registered, names its own theme and follows the definition rules', ({ theme, path }) => {
-    const document: Json = JSON.parse(readFileSync(path, 'utf8'));
-
-    expect(getAccessoryDefinitions(theme)).toBeDefined();
-    expect(document.theme).toBe(theme);
-    expect(problems(document)).toEqual([]);
-  });
-
-  test('every registered theme has a file next to its pages', () => {
-    expect([...listAccessoryThemes()].sort()).toEqual(themeFiles.map(file => file.theme).sort());
-  });
-
-  test('registered documents are the files on disk', () => {
-    for (const { theme, path } of themeFiles) {
-      expect(getAccessoryDefinitions(theme)).toEqual(JSON.parse(readFileSync(path, 'utf8')));
+function expectValidDocument(path: string) {
+  const document: Json = JSON.parse(readFileSync(path, 'utf8'));
+  expect(document.version).toBe('2.0');
+  expect(problems(document)).toEqual([]);
+  for (const level of ['pageAccessories', 'zoneAccessories', 'linkAccessories']) {
+    for (const definition of Object.values<Json>(document[level] ?? {})) {
+      expect(definition.version).toBe('2.0');
     }
+  }
+}
+
+describe('shared v2 accessories.json', () => {
+  const path = join(v2Dir, 'accessories.json');
+
+  test('no accessories.json is left in the legacy page folders', () => {
+    const pagesDir = join(process.cwd(), 'src/app/_pages');
+    const stray = [
+      join(pagesDir, 'accessories.json'),
+      ...readdirSync(pagesDir, { withFileTypes: true })
+        .filter(entry => entry.isDirectory())
+        .map(entry => join(pagesDir, entry.name, 'accessories.json')),
+    ].filter(file => existsSync(file));
+    expect(stray).toEqual([]);
   });
 
-  test('a theme without a file has no definitions, including inherited object keys', () => {
-    for (const theme of ['adn', 'constructor', '__proto__', 'hasOwnProperty']) {
+  test('the file itself declares theme "default" and version "2.0"', () => {
+    expect(sharedFile.theme).toBe('default');
+    expect(sharedFile.version).toBe('2.0');
+  });
+
+  test('follows the definition rules and every definition is version 2.0', () => {
+    expectValidDocument(path);
+  });
+
+  test('the registered themes are the v2 themes', () => {
+    expect(listAccessoryThemes()).toEqual(['default', 'theglobe', 'sportsarena', 'nextfrontier']);
+    expect(V2_THEMES.every(theme => isV2Theme(theme))).toBe(true);
+    expect(isV2Theme('adn')).toBe(false);
+  });
+
+  test.each(['default', 'theglobe', 'sportsarena', 'nextfrontier'].filter(theme => !(theme in BRAND_ACCESSORIES)))(
+    '%s (no override) gets the shared document stamped with its theme',
+    theme => {
+      const doc = getAccessoryDefinitions(theme)!;
+      expect(doc.theme).toBe(theme);
+      expect({ ...doc, theme: 'default' }).toEqual(sharedFile);
+      expect(Object.isFrozen(doc)).toBe(true);
+    },
+  );
+
+  test.each(['adn', 'business-globe', 'business-globe2', 'constructor', '__proto__', 'hasOwnProperty'])(
+    '%s has no definitions',
+    theme => {
       expect(getAccessoryDefinitions(theme)).toBeUndefined();
+    },
+  );
+});
+
+describe('brand accessory overrides', () => {
+  test('every override file on disk is registered, and every registered brand has a file', () => {
+    expect(overrideFiles.map(file => file.brand).sort()).toEqual(Object.keys(BRAND_ACCESSORIES).sort());
+  });
+
+  test.each(overrideFiles.length ? overrideFiles : [{ brand: '(none)', path: '' }])('$brand override is a valid document', ({ path }) => {
+    if (path) {
+      expectValidDocument(path);
     }
+  });
+
+  test('a registered override replaces the shared document for that theme only', () => {
+    const override = { ...sharedFile, theme: 'default', pageAccessories: {} };
+    jest.isolateModules(() => {
+      jest.doMock('@/app/_v2/brands/accessories', () => ({ BRAND_ACCESSORIES: { sportsarena: override } }));
+      // eslint-disable-next-line @typescript-eslint/no-require-imports -- isolated module registry
+      const isolated = require('@/lib/accessories/definitions') as typeof import('@/lib/accessories/definitions');
+      const arena = isolated.getAccessoryDefinitions('sportsarena')!;
+      expect(arena.theme).toBe('sportsarena');
+      expect(arena.pageAccessories).toEqual({});
+      expect(Object.isFrozen(arena)).toBe(true);
+      expect({ ...isolated.getAccessoryDefinitions('theglobe')!, theme: 'default' }).toEqual(sharedFile);
+      expect(isolated.getAccessoryDefinitions('adn')).toBeUndefined();
+    });
+    jest.dontMock('@/app/_v2/brands/accessories');
   });
 });
