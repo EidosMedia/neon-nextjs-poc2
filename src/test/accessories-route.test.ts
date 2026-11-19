@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { GET } from '@/app/api/accessories/route';
-import defaultAccessoryDefinitions from '@/app/_pages/accessories.json';
+import defaultAccessoryDefinitions from '@/app/_v2/accessories.json';
 
 const mockWarn = jest.fn();
 const mockError = jest.fn();

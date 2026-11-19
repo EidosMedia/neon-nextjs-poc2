@@ -16,7 +16,7 @@ and brand modules only; page structure is shared.
 - `neon-v2-brand` (this skill): a new look on the shared v2 engine. Same zones, items, leaves and
   accessories contract; per-brand tokens, chrome and modules.
 - `neon-new-theme`: legacy structural themes (`adn`, `oldtown`, `wire`, `foghorn`, `financier`,
-  `business-globe`) that fork page templates under `src/app/_pages/<theme>/`. Only for a rendering
+  `business-globe`; listed in `LEGACY_THEMES`) that fork page templates under `src/app/_pages/<theme>/`. Only for a rendering
   that the v2 engine cannot express.
 
 ## Inputs
@@ -26,9 +26,10 @@ and brand modules only; page structure is shared.
 
 ## Steps
 
-1. **Register the key.** Add it to `V2_THEMES` in `src/lib/accessories/definitions.ts` (so
-   `/api/accessories?theme=<key>` serves the shared document stamped with it and `data-engine="v2"`
-   is set) and map it to `V2` in `THEME_MAP` in `src/app/_themeRouter.tsx`. In
+1. **Register the key.** Add it to `V2_THEMES` in `src/app/themeKeys.ts` (so
+   `/api/accessories?theme=<key>` serves the shared document stamped with it, `data-engine="v2"`
+   is set and `_themeRouter.tsx` renders it with the v2 barrel). The router has no per-brand map to
+   edit: every theme that is not in `LEGACY_THEMES` uses v2. In
    `src/app/_v2/brands/registry.ts` add the key to `BrandKey` and `THEME_TO_BRAND`
    (`getBrand` falls back to The Globe otherwise). Also add it to `V2_KEYS` in
    `scripts/scaffold-theme.mjs`.
@@ -62,7 +63,13 @@ and brand modules only; page structure is shared.
    the helpers in `brands/moduleData.ts` and route every link through `safeHref` (rejects unsafe
    schemes). Modules must not touch the Neon block model directly; `lib/blocks.ts` is the only
    module that knows it.
-6. **`/ui` fixtures.** Add the brand's module fixtures to `src/app/_v2/ui/fixtures.ts`
+6. **Accessories (optional).** By default the brand uses the shared `src/app/_v2/accessories.json`.
+   If it needs its own definitions, put a complete document (same format, `"version": "2.0"`) at
+   `src/app/_v2/brands/<key>/accessories.json` and register it with a static import in
+   `BRAND_ACCESSORIES` in `src/app/_v2/brands/accessories.ts`. The override replaces the shared
+   document for that theme (no merging). `src/test/accessories-registry.test.ts` fails when an
+   override file on disk is not registered or is invalid.
+7. **`/ui` fixtures.** Add the brand's module fixtures to `src/app/_v2/ui/fixtures.ts`
    (`MODULE_FIXTURES`) so the style guide shows them. No fixtures outside `/ui`.
 
 ## CSS conventions

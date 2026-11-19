@@ -32,11 +32,16 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 12. Site-level web-user authentication and access configured in Neon; web users remain separate
   from editorial users.
 13. Accessory definitions and page/zone/link metadata integration (contract version 2.0). One shared
-  `src/app/_pages/accessories.json` (`"version": "2.0"`, file `theme` `default`) is served for every
-  key in `V2_THEMES` (`default`, `theglobe`, `sportsarena`, `nextfrontier`) by `/api/accessories`;
-  `getAccessoryDefinitions(theme)` in `src/lib/accessories/definitions.ts` returns a frozen copy with
-  `theme` stamped to the requested key, so Neon stores values per theme and the resolver's exact-theme
-  rule still holds. Legacy themes (`adn`, `oldtown`, `wire`, `foghorn`, `financier`, `business-globe`),
+  `src/app/_v2/accessories.json` (`"version": "2.0"`, file `theme` `default`) is served for every
+  key in `V2_THEMES` (`default`, `theglobe`, `sportsarena`, `nextfrontier`, defined in
+  `src/app/themeKeys.ts`) by `/api/accessories`; `getAccessoryDefinitions(theme)` in
+  `src/lib/accessories/definitions.ts` returns a frozen copy with `theme` stamped to the requested key,
+  so Neon stores values per theme and the resolver's exact-theme rule still holds. A brand that needs
+  its own accessories adds a complete document (same format, version `2.0`) at
+  `src/app/_v2/brands/<key>/accessories.json` and registers it with a static import in
+  `BRAND_ACCESSORIES` (`src/app/_v2/brands/accessories.ts`, empty by default). The override replaces
+  the shared document for that theme (no merging); `src/test/accessories-registry.test.ts` checks that
+  every override file on disk is registered and valid. Legacy themes (`adn`, `oldtown`, `wire`, `foghorn`, `financier`, `business-globe`),
   unknown themes and prototype names get 404 and no values (`INVALIDATE_NEXTJS_HEADER_VALUE` must be set
   or every call is 404). The document is compiled into the image.
   - Page accessories: `header` (`enabled`, `sectionsMenu`, `variant`), `footer` (`enabled`, `menu`,
@@ -67,13 +72,14 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 |---|---|
 | `src/neon-frontoffice-ts-sdk/` | Local Neon CMS TypeScript SDK (source of truth for types/services) |
 | `src/app/[[...slug]]/page.tsx` | Catch-all route — resolves CMS `baseType` to a page component |
-| `src/app/_v2/` | v2 rendering engine for `default`/`theglobe`/`sportsarena`/`nextfrontier` (barrel `index.ts` implements `PageComponents`) |
+| `src/app/_v2/` | v2 rendering engine for `default`/`theglobe`/`sportsarena`/`nextfrontier` (barrel `index.ts` implements `PageComponents`), shared `accessories.json` |
 | `src/app/_v2/lib/` | Pure modules: `layout`, `zoneItems`, `itemView`, `leafView`, `settings`, `share`, `blocks` |
 | `src/app/_v2/brands/` | `registry.ts` (`getBrand`, `REQUIRED_TOKENS`), `moduleRegistry.ts`, per-brand `tokens.css` and block `modules/` |
 | `src/app/_v2/{chrome,zones,items,leaves,blocks,pages,ui}/` | Header/footer, zone compositions, teaser items (`ItemFrame` editor contract), leaves, block slots, pages, `/ui` style guide and gate |
 | `src/app/_v2/special/` | Shared login and search (`LoginForm`, `Search`, `special.css`); brands restyle via component tokens and `brands/<key>/chrome.css` |
-| `src/app/_themeRouter.tsx` | `THEME_MAP` (theme key to `PageComponents`) |
-| `src/app/_pages/` | Legacy theme folders (`adn`, `oldtown`, `wire`, `foghorn`, `financier`, `business-globe`), `NewsletterWebpage`, `LiveblogPosts`, shared `accessories.json` |
+| `src/app/themeKeys.ts` | Theme lists: `V2_THEMES`, `LEGACY_THEMES`, `THEME_KEYS`, `isLegacyTheme()`, `isV2Theme()`, `resolveRenderTheme()` |
+| `src/app/_themeRouter.tsx` | `LEGACY_THEME_MAP` (legacy theme key to `PageComponents`) and `pagesFor()`: legacy themes use their `_pages/<theme>` barrel, every other theme uses the v2 barrel |
+| `src/app/_pages/` | Legacy (v1) theme folders (`adn`, `oldtown`, `wire`, `foghorn`, `financier`, `business-globe`), `NewsletterWebpage`, `LiveblogPosts` |
 | `src/app/api/` | API endpoints — thin wrappers over the SDK with auth context |
 | `src/app/components/` | UI components (Navbar, Footer, shared layout) |
 | `src/types/models/` | Extended CMS model types (`ArticleModel`, `WebpageModel`, `LiveblogModel`) |
@@ -122,8 +128,10 @@ site theme on the cached page JSON (`withSiteTheme`), and `BlockSlot` does the s
 theme change applies to every page within one refresh, without evicting the cache.
 
 Engine selection: `data-theme` is the site's theme; `data-engine="v2"` is set on the `.root` wrapper when
-the theme is in `V2_THEMES`. `_themeRouter.tsx` maps `default`, `theglobe`, `sportsarena` and
-`nextfrontier` to the v2 barrel (`src/app/_v2/index.ts`); legacy keys keep their own page folders. Use the
+the theme is a v2 theme (`isV2Theme()`: a known key that is not legacy). v2 is the default engine:
+`_themeRouter.tsx` (`pagesFor()`) sends only the keys in `LEGACY_THEMES` (`adn`, `oldtown`, `wire`,
+`foghorn`, `business-globe`, `financier`) to their own page folders through `LEGACY_THEME_MAP`, and every
+other theme to the v2 barrel (`src/app/_v2/index.ts`). `src/app/themeKeys.ts` owns the lists. Use the
 `neon-v2-brand` skill for v2 brands and `neon-new-theme` for legacy structural themes.
 `data-theme`/`data-engine` use `resolveRenderTheme()` (`src/app/themeKeys.ts`): an unknown explicit theme
 renders with the `default` page components and look, while accessory lookups keep the raw site theme so it

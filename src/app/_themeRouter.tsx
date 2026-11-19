@@ -5,7 +5,7 @@ import * as Wire from './_pages/wire';
 import * as Foghorn from './_pages/foghorn';
 import * as BusinessGlobe from './_pages/business-globe';
 import * as Financier from './_pages/financier';
-import { THEME_KEYS, resolveRenderTheme } from './themeKeys';
+import { type LegacyTheme, isLegacyTheme, resolveRenderTheme } from './themeKeys';
 
 export { resolveRenderTheme };
 
@@ -29,30 +29,31 @@ export interface PageComponents {
   ArticleOrganism: React.ComponentType<any>;
   ArticleGallery?: React.ComponentType<any>;
 }
+type AnyComponent = React.ComponentType<any>;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
-const THEME_MAP: Record<(typeof THEME_KEYS)[number], PageComponents> = {
-  default: V2,
+// v2 renders every theme except the legacy ones, which keep their own page folders.
+const LEGACY_THEME_MAP: Record<LegacyTheme, PageComponents> = {
   adn: Adn,
   oldtown: Oldtown,
   wire: Wire,
-  foghorn:      Foghorn,
-  theglobe: V2,
-  sportsarena:  V2,
+  foghorn: Foghorn,
   'business-globe': BusinessGlobe,
-  'nextfrontier': V2,
-  'financier': Financier,
+  financier: Financier,
 };
 
-// componentKey must match a named export from the theme's index.ts barrel
-export function resolvePageComponent(componentKey: string, theme: string): React.ComponentType<any> | undefined {
-  const pages = THEME_MAP[resolveRenderTheme(theme) as keyof typeof THEME_MAP];
-  return (pages as unknown as Record<string, React.ComponentType<any>>)[componentKey];
+function pagesFor(theme: string): PageComponents {
+  const renderTheme = resolveRenderTheme(theme);
+  return isLegacyTheme(renderTheme) ? LEGACY_THEME_MAP[renderTheme] : V2;
 }
 
-// resolveComponent uses the same THEME_MAP for sub-page component overrides.
+// componentKey must match a named export from the theme's index.ts barrel
+export function resolvePageComponent(componentKey: string, theme: string): AnyComponent | undefined {
+  return (pagesFor(theme) as unknown as Record<string, AnyComponent>)[componentKey];
+}
+
+// resolveComponent uses the same mapping for sub-page component overrides.
 // Theme barrels export component overrides from their components/ subfolder.
-export function resolveComponent(componentKey: string, theme: string): React.ComponentType<any> | undefined {
-  const pages = THEME_MAP[resolveRenderTheme(theme) as keyof typeof THEME_MAP];
-  return (pages as unknown as Record<string, React.ComponentType<any>>)[componentKey];
+export function resolveComponent(componentKey: string, theme: string): AnyComponent | undefined {
+  return (pagesFor(theme) as unknown as Record<string, AnyComponent>)[componentKey];
 }

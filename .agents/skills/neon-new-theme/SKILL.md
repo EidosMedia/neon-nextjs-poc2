@@ -6,26 +6,26 @@ argument-hint: "Theme name in lowercase-kebab (e.g. 'adn', 'my-brand')"
 
 # Add a New Rendering Theme
 
-> For the three-brand v2 engine use `neon-v2-brand`; this skill covers legacy structural themes.
-> `default`, `theglobe`, `sportsarena` and `nextfrontier` are v2 keys (`src/app/_v2/`). Legacy themes
-> are `adn`, `oldtown`, `wire`, `foghorn`, `financier` and `business-globe`.
+> For the v2 engine use `neon-v2-brand`; this skill is the legacy (v1) path for structural themes.
+> v2 is the default engine: `default`, `theglobe`, `sportsarena` and `nextfrontier` are in `V2_THEMES`
+> (`src/app/themeKeys.ts`, rendered by `src/app/_v2/`). Legacy themes are listed in `LEGACY_THEMES`:
+> `adn`, `oldtown`, `wire`, `foghorn`, `financier` and `business-globe`.
 
 This project supports per-site structural themes: when `siteNode.attributes.theme` matches a registered key, the entire page rendering (Navbar, Footer, page layouts, and optionally individual components) switches to a theme-specific set. Theming works at two levels:
 
 - **Page level** — full page templates (HomeWebPage, Article, etc.) resolved via `resolvePageComponent`
 - **Component level** — shared sub-page components (ArticleOrganism, etc.) resolved via `resolveComponent`
 
-Both functions read from the same `THEME_MAP` in `_themeRouter.tsx`.
+Both functions go through `pagesFor()` in `_themeRouter.tsx`: a theme in `LEGACY_THEMES` uses its entry in `LEGACY_THEME_MAP`, every other theme uses the v2 barrel.
 
 ## Directory structure
 
 ```
 src/app/
-├── _v2/                           ← v2 engine: default, theglobe, sportsarena, nextfrontier
+├── _v2/                           ← v2 engine: default, theglobe, sportsarena, nextfrontier (incl. shared accessories.json)
 ├── _pages/
 │   ├── NewsletterWebpage.tsx      ← shared by legacy barrels (and re-exported by the v2 barrel)
 │   ├── LiveblogPosts.tsx
-│   ├── accessories.json           ← shared v2 accessories document
 │   └── <theme-name>/              ← one folder per legacy theme (adn, oldtown, wire, ...)
 │       ├── Navbar.tsx
 │       ├── Footer.tsx
@@ -34,7 +34,8 @@ src/app/
 │       ├── components/            ← theme-specific component overrides
 │       │   └── ArticleOrganism.tsx
 │       └── index.ts               ← barrel: exports pages + component overrides
-└── _themeRouter.tsx               ← THEME_MAP: theme key → PageComponents
+├── themeKeys.ts                   ← V2_THEMES, LEGACY_THEMES, isLegacyTheme, isV2Theme
+└── _themeRouter.tsx               ← LEGACY_THEME_MAP: legacy theme key → PageComponents; v2 for the rest
 ```
 
 Theme selection happens in `src/app/[[...slug]]/page.tsx`:
@@ -68,21 +69,26 @@ sed -i '' "s|from '../../components/Navbar'|from './Navbar'|g" src/app/_pages/<t
 sed -i '' "s|from '../../components/Footer'|from './Footer'|g" src/app/_pages/<theme-name>/*.tsx
 ```
 
-### 2. Register in `_themeRouter.tsx`
+### 2. Register the legacy theme
+
+Add the key to `LEGACY_THEMES` in `src/app/themeKeys.ts` (this also makes it a known key and keeps it out of
+`V2_THEMES`, so it gets no accessory values), then add the barrel to `LEGACY_THEME_MAP` in
+`_themeRouter.tsx`:
 
 ```ts
 // src/app/_themeRouter.tsx
 import * as Wire     from './_pages/wire';
 import * as MyTheme  from './_pages/<theme-name>';   // ← add this
 
-const THEME_MAP: Record<string, PageComponents> = {
-  default:        V2,
+const LEGACY_THEME_MAP: Record<LegacyTheme, PageComponents> = {
   wire:           Wire,
   '<theme-name>': MyTheme,                           // ← add this
+  // …other legacy themes
 };
 ```
 
-`resolvePageComponent` and `resolveComponent` require no changes — they both read `THEME_MAP`.
+`pagesFor`, `resolvePageComponent` and `resolveComponent` require no changes. Any theme not in
+`LEGACY_THEMES` is rendered by the v2 barrel.
 
 ### 3. Barrel shape
 
@@ -173,7 +179,7 @@ Add a Google Fonts `<link>` in `src/app/layout.tsx` and reference the font via `
 
 - [ ] `npm run scaffold:theme -- <theme-name> [--from <legacyTheme>]` ran successfully
 - [ ] **Navbar/Footer import paths checked** in all scaffold-copied pages (`../../components/Navbar` → `./Navbar`, same for Footer) — verify with `grep -rn "from '../../components/Navbar'" src/app/_pages/<theme-name>/`
-- [ ] Theme registered in `src/app/_themeRouter.tsx` (`import` + `THEME_MAP` entry)
+- [ ] Theme registered in `src/app/_themeRouter.tsx` (key in `LEGACY_THEMES` in `src/app/themeKeys.ts`, `import` + `LEGACY_THEME_MAP` entry)
 - [ ] `index.ts` satisfies `PageComponents` (`UIStyleGuide`, `ArticleOrganism` exported)
 - [ ] `Navbar.tsx` customised for the new brand
 - [ ] `Footer.tsx` customised for the new brand
