@@ -2,9 +2,24 @@ import {
   COMPOSITION_CAPACITY,
   groupByDate,
   planSlots,
+  resolveAreaComposition,
   resolveComposition,
   type ConcreteComposition,
 } from '@/app/_v2/lib/layout';
+
+describe('resolveAreaComposition', () => {
+  it('follows the host area when the block composition is auto', () => {
+    expect(resolveAreaComposition('headers', 'auto', 'leadList')).toBe('grid2x2');
+    expect(resolveAreaComposition('sidebars', 'auto', 'leadList')).toBe('threeUp');
+  });
+  it('keeps an explicit block composition over the area', () => {
+    expect(resolveAreaComposition('headers', 'split', 'leadList')).toBe('split');
+  });
+  it('uses the zone fallback for areas without a composition', () => {
+    expect(resolveAreaComposition('includes', 'auto', 'leadList')).toBe('leadList');
+    expect(resolveAreaComposition(undefined, 'auto', 'threeUp')).toBe('threeUp');
+  });
+});
 
 describe('resolveComposition', () => {
   it('returns a concrete composition unchanged', () => {

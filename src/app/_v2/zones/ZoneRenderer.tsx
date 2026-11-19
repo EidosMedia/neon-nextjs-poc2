@@ -2,7 +2,7 @@ import type { BaseModel, PageData, WebpageModel, WebpageNodeModel } from '@eidos
 import { normalizeViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
-import { COMPOSITION_CAPACITY, groupByDate, planSlots, resolveComposition, type ConcreteComposition } from '../lib/layout';
+import { COMPOSITION_CAPACITY, groupByDate, planSlots, resolveAreaComposition, resolveComposition, type ConcreteComposition } from '../lib/layout';
 import { getItemSettings, getZoneSettings, V2_DEFAULTS, type ItemSettings } from '../lib/settings';
 import { itemKind, nodePublicationDate } from '../lib/zoneItems';
 import ItemSwitch from './ItemSwitch';
@@ -16,7 +16,7 @@ import Split from './compositions/Split';
 import Sponsored from './compositions/Sponsored';
 import type { Cell } from './compositions/types';
 
-type ZoneForm = { data: PageData<WebpageModel>; zone: string; container?: boolean };
+type ZoneForm = { data: PageData<WebpageModel>; zone: string; container?: boolean; area?: string };
 type ItemsForm = { data: PageData<BaseModel>; items: WebpageNodeModel[]; composition: ConcreteComposition; title?: string; container?: boolean };
 export type ZoneRendererProps = ZoneForm | ItemsForm;
 
@@ -46,7 +46,11 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
     nodes = await connection.getDwxLinkedObjects(zoneData, props.zone);
     const zs = getZoneSettings(zoneData, props.zone);
     const baseType = zoneData.model?.data?.sys?.baseType ?? '';
-    composition = resolveComposition(zs.composition, props.zone, baseType, getBrand(getActiveTheme(zoneData)).compositionDefaults);
+    composition = resolveAreaComposition(
+      props.area,
+      zs.composition,
+      resolveComposition(zs.composition, props.zone, baseType, getBrand(getActiveTheme(zoneData)).compositionDefaults),
+    );
     if (zs.showTitle) titleProps = { head: zs.head, style: zs.titleStyle, moreLink: zs.moreLink };
     sponsorName = zs.sponsorName;
     settingsFor = (node) => getItemSettings(zoneData, props.zone, node);

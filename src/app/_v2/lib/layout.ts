@@ -24,6 +24,25 @@ export function resolveComposition(
   return ZONE_DEFAULTS[zone] ?? 'threeUp';
 }
 
+export const AREA_COMPOSITIONS: Record<string, ConcreteComposition> = {
+  headers: 'grid2x2',
+  footers: 'grid2x2',
+  sidebars: 'threeUp',
+};
+
+/**
+ * Composition of a block rendered in a host area: an explicit composition on the block wins, then the
+ * area's composition, then the zone composition the block would get on its own.
+ */
+export function resolveAreaComposition(
+  area: string | undefined,
+  c: Composition,
+  fallback: ConcreteComposition,
+): ConcreteComposition {
+  if (c !== 'auto') return c;
+  return (area && AREA_COMPOSITIONS[area]) || fallback;
+}
+
 const FIXED_SLOTS: Record<ConcreteComposition, SlotShape[] | null> = {
   leadList: ['lead', 'compact', 'compact', 'compact', 'compact'],
   threeUp: null,
