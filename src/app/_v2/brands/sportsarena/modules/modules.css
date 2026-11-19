@@ -1,0 +1,71 @@
+@layer v2 {
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-breaking--arena {
+    background: var(--v2-accent);
+    color: var(--v2-on-accent);
+    font-family: var(--v2-font-body);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-breaking__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--v2-space-2);
+    padding-block: var(--v2-space-1);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-breaking__label {
+    font-family: var(--v2-font-heading);
+    letter-spacing: 0.06em;
+    color: var(--v2-live);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-breaking__headline {
+    font-weight: 700;
+    color: inherit;
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-results {
+    padding-block: var(--v2-space-4);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-results__title {
+    font-family: var(--v2-font-heading);
+    font-size: var(--v2-fs-h3);
+    color: var(--v2-brand-strong);
+    margin: 0 0 var(--v2-space-2);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-results__row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--v2-space-2);
+  }
+  @media (max-width: 767px) {
+    .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-results__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match {
+    background: var(--v2-surface);
+    border-radius: var(--v2-radius-card);
+    padding: var(--v2-space-2);
+    text-align: center;
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match__competition,
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match__status {
+    margin: 0;
+    font-size: var(--v2-fs-meta);
+    color: var(--v2-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match__teams {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--v2-space-1);
+    margin: var(--v2-space-1) 0;
+    font-family: var(--v2-font-heading);
+    color: var(--v2-brand-strong);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match__score {
+    background: var(--v2-brand);
+    color: var(--v2-on-brand);
+    border-radius: var(--v2-radius-pill);
+    padding: 2px var(--v2-space-2);
+    font-size: var(--v2-fs-h4);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-scorecard { max-width: 300px; }
+}

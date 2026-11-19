@@ -1,0 +1,89 @@
+/* Sports Arena: menus, login and search flavour (Chrome and common pages design). Pills everywhere:
+   the open section, panel headings, search tabs and the drawer's sub-sections. */
+@layer v2 {
+  .root[data-theme="sportsarena"][data-engine="v2"] {
+    --v2-mega-columns: 5;
+  }
+  .root[data-theme="sportsarena"] .v2-mega {
+    background: #F3F7FB;
+    border: 0;
+  }
+  .root[data-theme="sportsarena"] .v2-mega__heading,
+  .root[data-theme="sportsarena"] .v2-mega__group--active .v2-mega__heading {
+    padding: 0;
+    margin-bottom: 10px;
+    border-bottom: 0;
+    background: none;
+    font-family: var(--v2-font-heading);
+    font-weight: 600;
+  }
+  .root[data-theme="sportsarena"] .v2-mega__heading-link {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: #004E98;
+    font-size: 15px;
+  }
+  .root[data-theme="sportsarena"] .v2-header .v2-mega .v2-mega__heading-link {
+    color: #FFFFFF;
+  }
+  .root[data-theme="sportsarena"] .v2-mega__group--active .v2-mega__heading-link {
+    outline: 2px solid #F8D3AF;
+    outline-offset: 2px;
+  }
+  /* Drawer: full blue, sub-sections as outline pills. */
+  .root[data-theme="sportsarena"] .v2-drawer {
+    border-right: 0;
+  }
+  .root[data-theme="sportsarena"] .v2-drawer__sub {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: 0 !important;
+    padding-left: 4px !important;
+    border-left: 0;
+  }
+  .root[data-theme="sportsarena"] .v2-drawer__sub > .v2-drawer__node {
+    display: contents;
+  }
+  .root[data-theme="sportsarena"] .v2-drawer__sub .v2-drawer__link {
+    flex: none;
+    min-height: 32px;
+    padding: 5px 14px;
+    border: 1.5px solid currentColor;
+    border-radius: 20px;
+    font-family: var(--v2-font-meta);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  /* A sub-section with its own children keeps the tree layout. */
+  .root[data-theme="sportsarena"] .v2-drawer__sub > .v2-drawer__node:has(> .v2-drawer__row .v2-drawer__toggle) {
+    display: block;
+    flex-basis: 100%;
+  }
+  /* Search tabs: pills, the active one filled. */
+  .root[data-theme="sportsarena"] .v2-tabs {
+    border-bottom: 0;
+  }
+  .root[data-theme="sportsarena"] .v2-tabs__list {
+    gap: 8px;
+  }
+  .root[data-theme="sportsarena"] .v2-tabs__tab {
+    border: 1.5px solid transparent;
+    border-radius: 100px;
+    font-family: var(--v2-font-heading);
+    font-weight: 600;
+  }
+  .root[data-theme="sportsarena"] .v2-tabs__tab--active {
+    background: #004E98;
+    color: #FFFFFF;
+    box-shadow: none;
+  }
+  .root[data-theme="sportsarena"] .v2-login {
+    border: 0;
+  }
+  .root[data-theme="sportsarena"] .v2-login__title,
+  .root[data-theme="sportsarena"] .v2-tabs__select {
+    font-family: var(--v2-font-heading);
+  }
+}

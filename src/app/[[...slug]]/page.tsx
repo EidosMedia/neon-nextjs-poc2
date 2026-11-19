@@ -1,18 +1,28 @@
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import { resolvePageComponent } from '../_themeRouter';
+import { resolvePageComponent, resolveRenderTheme } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
-import { normalizeTheme } from '@/lib/accessories/defaultThemeAccessories';
-import UIStyleGuide from '../components/baseComponents/UIStyleGuide';
-import * as DefaultPages from '../_pages';
+import { siteThemeOf, withSiteTheme } from '@/lib/accessories/defaultThemeAccessories';
+import { isV2Theme } from '@/lib/accessories/definitions';
+import LegacyIsland from '../_v2/ui/LegacyIsland';
+import { canShowStyleGuide } from '../_v2/ui/gate';
+import * as DefaultPages from '../_v2';
 import ContentBlockPage from '../_pages/ContentBlockPage';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
+import type { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { createElement } from 'react';
 import { normalizeViewStatus, toSiteViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 // Site, backend URL and view status come from request headers, so there is no static shell; LIVE content is cached in fetchPageDataCached.
 export const instant = false;
+
+/** Legacy themes keep their own style guide; v2 themes resolve the v2 one. */
+function styleGuideElement(theme: string, site: Site | undefined) {
+  const StyleGuide = resolvePageComponent('UIStyleGuide', theme) ?? DefaultPages.UIStyleGuide;
+  return createElement(StyleGuide, { site });
+}
 
 export default async function Page({
   params,
@@ -37,49 +47,57 @@ export default async function Page({
 
     switch (slug[0]) {
       case 'ui': {
-        const theme = site?.root.attributes?.theme ?? 'default';
+        const hasEditorialCookie = Boolean((await cookies()).get('editorialauth')?.value);
+        if (!canShowStyleGuide(hasEditorialCookie, process.env.NODE_ENV)) notFound();
+        const theme = siteThemeOf(site?.root);
         return (
-          <div className="root" data-theme={theme}>
-            <UIStyleGuide />
+          <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+            {styleGuideElement(theme, site)}
           </div>
         );
       }
 
       case 'search':
         if (site) {
-          const theme = site.root.attributes?.theme ?? 'default';
+          const theme = siteThemeOf(site.root);
           const SearchPage =
             (resolvePageComponent('SearchPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.SearchPage;
           return (
-            <div className="root" data-theme={theme}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+            <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+              <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+                <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              </LegacyIsland>
               <SearchPage data={site} />
             </div>
           );
         }
       case 'about':
         if (site) {
-          const theme = site.root.attributes?.theme ?? 'default';
+          const theme = siteThemeOf(site.root);
           const AboutPage =
             (resolvePageComponent('AboutPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.AboutPage;
           return (
-            <div className="root" data-theme={theme}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+            <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+              <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+                <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              </LegacyIsland>
               <AboutPage data={site} />
             </div>
           );
         }
       case 'login':
         if (site) {
-          const theme = site.root.attributes?.theme ?? 'default';
+          const theme = siteThemeOf(site.root);
           const LoginPage =
             (resolvePageComponent('LoginPage', theme) as React.ComponentType<{ data: typeof site }>) ??
             DefaultPages.LoginPage;
           return (
-            <div className="root" data-theme={theme}>
-              <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+            <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+              <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+                <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
+              </LegacyIsland>
               <LoginPage data={site} />
             </div>
           );
@@ -114,17 +132,17 @@ export default async function Page({
     redirect(result.redirectLocation);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const pageDataJSON = result.data!;
-  console.log('Current page model', pageDataJSON);
-
   const siteLive = await connection.findSite(siteName ?? '', toSiteViewStatus(ViewStatus.LIVE));
   const sitePreview = await connection.findSite(siteName ?? '', toSiteViewStatus(ViewStatus.PREVIEW));
+
+  // The cached page JSON may carry an old theme: render with the site's current one, like the specials.
+  const pageDataJSON = withSiteTheme(result.data!, (isLiveView ? siteLive : sitePreview)?.root);
+  console.log('Current page model', pageDataJSON);
 
   pageDataJSON.liveHost = siteLive?.root.hostname;
   pageDataJSON.previewHost = sitePreview?.root.hostname;
 
-  const theme: string = normalizeTheme(pageDataJSON?.siteNode?.attributes?.theme);
+  const theme: string = siteThemeOf(pageDataJSON?.siteNode);
   const baseType = pageDataJSON?.model?.data?.sys?.baseType as string;
   const type = pageDataJSON?.model?.data?.sys?.type as string;
   console.log('Resolving page for baseType:', baseType, 'type:', type, 'theme:', theme);
@@ -142,19 +160,25 @@ export default async function Page({
   const componentKey =
     baseType === 'article' && type === 'longform'
       ? 'ArticleLongform'
-      : baseType === 'webpage' && type === 'newsletter'
+      : baseType === 'article' && type === 'gallery'
+        ? 'ArticleGallery'
+        : baseType === 'webpage' && type === 'newsletter'
         ? 'NewsletterWebpage'
         : resolveBaseTypeKey(baseType);
-  const PageComponent = resolvePageComponent(componentKey, theme);
+  const PageComponent =
+    resolvePageComponent(componentKey, theme) ??
+    (componentKey === 'ArticleGallery' ? resolvePageComponent('Article', theme) : undefined);
 
   return (
-    <div className="root" data-theme={theme}>
-      <LoggedUserBar
-        data={{
-          ...pageDataJSON,
-          editUrl: `${process.env.NEON_APP_URL}/neon/app/open/${pageDataJSON.model.data.id}`,
-        }}
-      />
+    <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+      <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
+        <LoggedUserBar
+          data={{
+            ...pageDataJSON,
+            editUrl: `${process.env.NEON_APP_URL}/neon/app/open/${pageDataJSON.model.data.id}`,
+          }}
+        />
+      </LegacyIsland>
       {PageComponent ? <PageComponent data={pageDataJSON} /> : <DefaultPages.Article data={pageDataJSON} />}
     </div>
   );
@@ -207,6 +231,8 @@ export async function generateMetadata({
           return { title: 'About' };
         case 'login':
           return { title: 'Login' };
+        case 'ui':
+          return { title: 'Style guide', robots: { index: false } };
       }
     }
 

@@ -54,6 +54,19 @@ be derived from the actual response data:
 | `neon:node:<nodeId>` | Every live page | The page's **own** CMS node ID — `data.model.data.id` (applies to articles, webpages, sections, liveblogs, etc.) |
 | `neon:node:<targetId>` | Webpage pages | Every article node ID linked in any zone slot (`data.model.data.links.pagelink.*[].targetId`) |
 | `neon:node:<childId>` | Section / list pages | Every child node ID (`data.model.data.children[]`) |
+| `neon:site:<siteName>`, `neon:node:<blockId>` | Content blocks (v2) | Each block linked in `headers`/`includes`/`sidebars`/`footers`; cached as its own LIVE entry by `src/app/_v2/blocks/fetchBlocks.tsx` |
+| `neon:node:<targetId>` | Content blocks (v2) | Every pagelink target inside the block's own model (`blockContentTags` in `src/app/_v2/lib/blocks.ts`) |
+
+Zone tagging iterates every zone present in `links.pagelink`, so `insight3` is covered exactly
+like `main`, `context`, `insight1` and `insight2`; no per-zone list needs updating.
+
+**Blocks.** `src/app/_v2/lib/blocks.ts` is the only place that knows the block model (assumed
+`model.data.links.pagelink.<area>`; the body contract is not final in Neon). Each block is fetched
+server-side and cached in its own `'use cache'` entry (`fetchBlockCached`, `cacheLife('hours')`),
+LIVE only; PREVIEW fetches with `no-store`. The tags are on the block entry, not on the host
+page entry, so evicting a block node id (or the site) purges the block while the page entry is
+untouched. Blocks without a URL are skipped and failed fetches render nothing (PREVIEW shows a
+placeholder).
 
 > **Verified**: a webpage cache entry carries the webpage's own `neon:node:<pageId>` tag
 > **plus** one `neon:node:<articleId>` tag for every article that appears in its zones.

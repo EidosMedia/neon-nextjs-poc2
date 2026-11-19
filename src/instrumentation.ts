@@ -20,9 +20,25 @@ export async function register() {
     console.warn('NEON_FRONTOFFICE_SERVICE_KEY not specified in any .env file');
   }
 
+  // Site configuration secrets (staticAttributes such as invalidateNextJsHeaderValue) are removed from
+  // site and page data unless NEON_EXPOSE_SITE_CONFIG_SECRETS=true (debugging only: they then reach
+  // rendered pages). NEON_REDACTED_SITE_CONFIG_KEYS (comma-separated, `prefix*` allowed) replaces the
+  // default key list.
+  const exposeSiteConfig = process.env.NEON_EXPOSE_SITE_CONFIG_SECRETS === 'true';
+  const redactedKeys = process.env.NEON_REDACTED_SITE_CONFIG_KEYS?.split(',')
+    .map(key => key.trim())
+    .filter(Boolean);
+  if (exposeSiteConfig) {
+    console.warn('NEON_EXPOSE_SITE_CONFIG_SECRETS=true: site configuration secrets are sent to browsers.');
+  }
+
   const connection = new NeonConnection({
     neonFoUrl: process.env.BASE_NEON_FO_URL,
     frontOfficeServiceKey: process.env.NEON_FRONTOFFICE_SERVICE_KEY || '',
+    siteConfigRedaction: {
+      expose: exposeSiteConfig,
+      ...(redactedKeys && redactedKeys.length > 0 ? { keys: redactedKeys } : {}),
+    },
   });
 
   await connection.startup();

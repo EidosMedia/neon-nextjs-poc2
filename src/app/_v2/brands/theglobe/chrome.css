@@ -1,0 +1,7 @@
+/* The Globe: menus, login and search flavour (Chrome and common pages design). Colours and radii come
+   from the component tokens in tokens.css; only rules that are not a token live here. */
+@layer v2 {
+  :is(.root[data-theme="default"], .root[data-theme="theglobe"])[data-engine="v2"] {
+    --v2-mega-columns: 3;
+  }
+}

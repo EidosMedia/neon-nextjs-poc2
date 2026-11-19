@@ -1,0 +1,83 @@
+.root[data-theme="nextfrontier"] {
+  color-scheme: dark;
+  --v2-bg: #1D1930;
+  --v2-surface: #323742;
+  --v2-surface-raised: #461FD2;
+  --v2-text: #F2F6FF;
+  --v2-text-muted: #D3D8E6;
+  --v2-rule: #737B8E;
+  --v2-brand: #461FD2;
+  --v2-brand-strong: #1D1930;
+  --v2-on-brand: #FFFFFF;
+  --v2-accent: #FEF445;
+  --v2-on-accent: #1D1930;
+  --v2-live: #FBB3DA;
+  --v2-link: #FEF445;
+  /* Brand colour for text on --v2-bg: the violet brand is ~2:1 on the dark background (PRD needs 4.5:1). */
+  --v2-brand-text: #A894FF;
+
+  --v2-font-display: "Abril Fatface", Georgia, serif;
+  --v2-font-heading: "PT Sans", system-ui, sans-serif;
+  --v2-font-body: "Noto Sans", system-ui, sans-serif;
+  --v2-font-meta: "IBM Plex Mono", ui-monospace, monospace;
+
+  --v2-radius-card: 0px;
+  --v2-radius-media: 0px;
+  --v2-radius-pill: 100px;
+
+  --v2-space-1: 8px;
+  --v2-space-2: 16px;
+  --v2-space-3: 24px;
+  --v2-space-4: 32px;
+  --v2-space-5: 48px;
+  --v2-space-6: 80px;
+
+  --v2-fs-h1: 64px;
+  --v2-fs-h2: 36px;
+  --v2-fs-h3: 26px;
+  --v2-fs-h4: 20px;
+  --v2-fs-body: 17px;
+  --v2-fs-standfirst: 24px;
+  --v2-fs-meta: 12px;
+
+  /* Component tokens: menus, drawer, forms, search (Chrome and common pages design). */
+  --v2-menu-bg: #323742;
+  --v2-menu-ink: #F2F6FF;
+  --v2-menu-line: #737B8E;
+  --v2-menu-label: #D3D8E6;
+  --v2-menu-hover: #461FD2;
+  --v2-menu-hover-ink: #FFFFFF;
+  --v2-menu-active: #461FD2;
+  --v2-menu-active-ink: #FFFFFF;
+  --v2-menu-radius: 0px;
+  --v2-menu-item-radius: 0px;
+  --v2-drawer-bg: #1D1930;
+  --v2-drawer-ink: #F2F6FF;
+  --v2-drawer-line: #737B8E;
+  --v2-drawer-accent: #FEF445;
+  --v2-drawer-field: #323742;
+  --v2-drawer-field-ink: #F2F6FF;
+  --v2-drawer-field-line: #737B8E;
+  --v2-drawer-btn: #FEF445;
+  --v2-drawer-btn-ink: #1D1930;
+  --v2-drawer-section-font: "Abril Fatface", Georgia, serif;
+  --v2-drawer-section-size: 24px;
+  --v2-drawer-section-weight: 400;
+  --v2-field-bg: #323742;
+  --v2-field-line: #737B8E;
+  --v2-focus: #FEF445;
+  --v2-danger: #F75880;
+  --v2-action: #FEF445;
+  --v2-action-ink: #1D1930;
+  --v2-ctl-radius: 0px;
+  --v2-btn-radius: 0px;
+  --v2-login-bg: #323742;
+  --v2-panel: #323742;
+  --v2-panel-ink: #F2F6FF;
+  --v2-bubble: #461FD2;
+  --v2-bubble-ink: #FFFFFF;
+  --v2-mark: #FEF445;
+  --v2-mark-ink: #1D1930;
+  --v2-tab-active: #FEF445;
+  --v2-placeholder: #323742;
+}

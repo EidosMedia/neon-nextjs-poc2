@@ -3,6 +3,7 @@
 import { isNeonAppPreview } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { AlignCenter } from 'lucide-react';
 import { useEffect } from 'react';
+import { installPreviewGuard } from '@/utilities/previewGuard';
 
 export function ReloadListener() {
 
@@ -43,19 +44,13 @@ export function ReloadListener() {
     window.addEventListener('message', handleMessage);
     window.addEventListener('load', handleLoad);
 
-    if (isNeonAppPreview()) {
-      document.querySelectorAll('a').forEach(link => {
-        // disable links in the preview mode
-        link.addEventListener('click', e => {
-          e.preventDefault();
-          e.stopPropagation();
-        });
-      });
-    }
+    // Embedded in the Neon app preview: no navigation (links rendered later included).
+    const removeGuard = isNeonAppPreview() ? installPreviewGuard() : undefined;
 
     // Cleanup on unmount to remove event listener
     return () => {
       window.removeEventListener('message', handleMessage);
+      removeGuard?.();
     };
   }, []);
 
