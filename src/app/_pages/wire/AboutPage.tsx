@@ -2,11 +2,12 @@ import React from 'react';
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { getCachedTimestamp } from '@/lib/clock';
 
-const AboutPage = ({ data }: { data: Site }) => {
+const AboutPage = async ({ data }: { data: Site }) => {
   console.log('[NEON] render: wire/AboutPage');
 
-  const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+  const now = new Date(await getCachedTimestamp()).toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   const META = [
     { key: 'service',   value: 'Wire Feed API' },

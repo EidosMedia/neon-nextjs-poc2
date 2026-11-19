@@ -6,6 +6,7 @@ import { headers, cookies } from 'next/headers';
 import { Menu, Search } from 'lucide-react';
 import LoginButton from '../../components/LoginButton';
 import MenuToggle from './MenuToggle';
+import { getCachedTimestamp } from '@/lib/clock';
 
 const UTILITY_LINKS = [
   { label: 'Meteo', href: '/meteo' },
@@ -36,7 +37,7 @@ export default async function Navbar({
   const cookieStore = await cookies();
   const webauth = cookieStore.get('webauth')?.value;
 
-  const now = new Date();
+  const now = new Date(await getCachedTimestamp());
   const dateLabel = now.toLocaleDateString('it-IT', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });

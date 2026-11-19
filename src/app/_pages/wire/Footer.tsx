@@ -1,5 +1,6 @@
 import React from 'react';
 import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { getCachedTimestamp } from '@/lib/clock';
 
 const API_LINKS = [
   { label: 'REST API Docs', href: '/api/docs' },
@@ -32,7 +33,7 @@ export default async function Footer({
   console.log('[NEON] render: wire/Footer');
   const siteName = data.siteData?.siteName || data.siteNode?.name || 'Wire Feed';
   const siteLabel = data.siteNode?.attributes?.sitename || siteName;
-  const now = new Date();
+  const now = new Date(await getCachedTimestamp());
   const utcString = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   // Footer is non-critical chrome — fetch menus but never throw if the site lookup fails;

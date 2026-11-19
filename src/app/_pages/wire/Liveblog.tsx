@@ -10,6 +10,7 @@ import Footer from './Footer';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
+import { getCachedTimestamp } from '@/lib/clock';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -55,7 +56,7 @@ const Liveblog = async ({ data }: PageProps) => {
       }),
   );
 
-  const now = new Date();
+  const now = new Date(await getCachedTimestamp());
   const utcString = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   return (

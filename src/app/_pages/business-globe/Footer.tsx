@@ -1,5 +1,6 @@
 import React from 'react';
 import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { getCurrentYear } from '@/lib/clock';
 
 function flattenLinks(items: any[]): any[] {
   if (!Array.isArray(items)) return [];
@@ -16,7 +17,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
-  const year = new Date().getFullYear();
+  const year = await getCurrentYear();
 
   // Footer is non-critical chrome — fetch menus but never throw if the site lookup fails;
   // fall back to the hardcoded links instead.

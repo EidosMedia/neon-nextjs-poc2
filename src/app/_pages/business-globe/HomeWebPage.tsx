@@ -1,16 +1,10 @@
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
-import { cacheLife } from 'next/cache';
+import { getCachedTimestamp } from '@/lib/clock';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ArticleOrganism from './components/ArticleOrganism';
-
-async function getCachedTimestamp(): Promise<number> {
-  'use cache';
-  cacheLife('hours');
-  return Date.now();
-}
 
 type PageProps = {
   data: PageData<WebpageModel>;

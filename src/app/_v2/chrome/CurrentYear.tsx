@@ -1,5 +1,5 @@
-'use client';
+import { getCurrentYear } from '@/lib/clock';
 
-export default function CurrentYear() {
-  return <span suppressHydrationWarning>{new Date().getFullYear()}</span>;
+export default async function CurrentYear() {
+  return <span suppressHydrationWarning>{await getCurrentYear()}</span>;
 }

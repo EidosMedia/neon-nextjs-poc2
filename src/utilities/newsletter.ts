@@ -1,5 +1,6 @@
 import { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
+import { getCachedTimestamp } from '@/lib/clock';
 
 /**
  * Hand-extracted palette per theme, mirroring the CSS custom properties each
@@ -163,13 +164,13 @@ const renderTeaserRow = (linkedObject: any, palette: NewsletterThemePalette): st
 /**
  * Date/issue header shown under the masthead, e.g. "Thursday, June 12, 2026".
  */
-const renderDateLine = (palette: NewsletterThemePalette): string => {
+const renderDateLine = (palette: NewsletterThemePalette, now: Date): string => {
   const dateLabel = new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(new Date());
+  }).format(now);
 
   return `
         <tr>
@@ -294,7 +295,8 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
 
   const teaserRows = topStoriesSection + moreHeadlinesSection;
 
-  const year = new Date().getFullYear();
+  const now = new Date(await getCachedTimestamp());
+  const year = now.getFullYear();
 
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background: ${palette.bg};">
       <tr>
@@ -307,7 +309,7 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
                 </span>
               </td>
             </tr>
-            ${renderDateLine(palette)}
+            ${renderDateLine(palette, now)}
             ${renderIntroBlock(palette)}
             ${teaserRows}
             <tr>

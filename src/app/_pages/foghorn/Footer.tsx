@@ -1,6 +1,7 @@
 import React from 'react';
 import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon } from 'lucide-react';
+import { getCurrentYear } from '@/lib/clock';
 
 const FOOTER_COLUMNS = [
   {
@@ -27,6 +28,7 @@ const FOOTER_COLUMNS = [
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: foghorn/Footer');
+  const year = await getCurrentYear();
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
@@ -101,7 +103,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
         </div>
 
         <div className="foghorn-footer-legal flex flex-wrap justify-center gap-x-3 gap-y-1 text-center">
-          <a href="#">© {new Date().getFullYear()} Foghorn News &amp; Media Limited</a>
+          <a href="#">© {year} Foghorn News &amp; Media Limited</a>
           <span>·</span>
           <a href="#">Privacy policy</a>
           <span>·</span>
