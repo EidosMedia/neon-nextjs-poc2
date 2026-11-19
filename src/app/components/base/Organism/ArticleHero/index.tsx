@@ -13,14 +13,12 @@ type ArticleHeroProps = {
   accessoryShape?: AccessoryShape;
 };
 
-const extractSectionFromUrl = (url: string): string => url.split('/')[1];
-
 const ArticleHero: React.FC<ArticleHeroProps> = ({ data, linkedObject, accessoryShape }) => {
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url;
   const imageUrl = getTeaserOrMainImageUrl(linkedObject, 'Ultrawide_large');
 
-  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
+  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead;
 
   const titleId = linkedObject.attributes?.contentIds?.teaserTitle;
   const title = linkedObject.attributes?.teaser?.title || linkedObject.title;

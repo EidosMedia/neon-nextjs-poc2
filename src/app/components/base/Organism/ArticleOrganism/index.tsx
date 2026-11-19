@@ -17,8 +17,6 @@ type ArticleOrganismProps = {
   accessoryShape?: AccessoryShape;
 };
 
-const extractSectionFromUrl = (url: string): string => url.split('/')[1];
-
 const getArticleClasses = (type: string) => {
   // Centralized breakpoint values (for reference only - must be hardcoded in Tailwind classes)
   // BREAKPOINT_TABLET = 992px
@@ -87,7 +85,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`].url;
 
-  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
+  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead;
 
   const titleId = linkedObject.attributes?.contentIds?.teaserTitle;
   const summaryId = linkedObject.attributes?.contentIds?.teaserSummary;
