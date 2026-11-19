@@ -164,7 +164,6 @@ const Article = async ({ data }: PageProps) => {
           <div className="hidden lg:block" style={{ width: 240, flexShrink: 0 }}>
             <div className="wire-meta-panel sticky top-4">
               <div className="wire-meta-panel-title">Item Metadata</div>
-              <MetaRow label="id" value={String(slug)} />
               <MetaRow label="priority" value={priority} />
               <MetaRow label="section" value={section || '—'} />
               <MetaRow label="words" value={String(wordCount)} />
@@ -179,7 +178,7 @@ const Article = async ({ data }: PageProps) => {
                   className="block text-center text-xs font-bold py-1.5 border border-[#0050FF] hover:bg-[#EEF2FF] transition-colors"
                   style={{ fontFamily: 'var(--font-meta)', color: '#0050FF', letterSpacing: '0.08em' }}
                 >
-                  GET /api/v2/items/{String(slug).slice(0, 8)}…
+                  GET item JSON
                 </a>
                 <a
                   href={`/api/v2/items/${slug}.nitf`}

@@ -17,10 +17,7 @@ type PageProps = {
 };
 
 function getTag(item: WebpageNodeModel): string {
-  const overhead = (item as any)?.attributes?.overhead as string | undefined;
-  if (overhead) return overhead;
-  const url = (item as any)?.url ?? '';
-  return (url.split('/')[1] ?? '').toUpperCase();
+  return ((item as any)?.attributes?.overhead as string | undefined) ?? '';
 }
 
 function getTitle(item: WebpageNodeModel): string {

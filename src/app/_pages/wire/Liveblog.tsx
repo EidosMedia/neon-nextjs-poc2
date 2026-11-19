@@ -20,7 +20,6 @@ const Liveblog = async ({ data }: PageProps) => {
 
   const articleData = data.model.data;
   const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';
-  const slug = articleData?.sys?.id ?? '—';
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
@@ -111,10 +110,6 @@ const Liveblog = async ({ data }: PageProps) => {
               <div className="wire-meta-row">
                 <span className="wire-meta-key">type</span>
                 <span className="wire-meta-val">LIVEBLOG</span>
-              </div>
-              <div className="wire-meta-row">
-                <span className="wire-meta-key">id</span>
-                <span className="wire-meta-val">{String(slug).slice(0, 12)}…</span>
               </div>
               <div className="wire-meta-row">
                 <span className="wire-meta-key">section</span>

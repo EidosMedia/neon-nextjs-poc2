@@ -27,11 +27,11 @@ describe('resolveTeaserFields', () => {
       imageUrl: 'http://img/1.jpg', href: '/world/a/', byline: 'Jane', date: '2026-10-26T08:00:00Z',
     });
   });
-  it('falls back to node fields and first url segment; no ids', () => {
+  it('falls back to node fields without a kicker from the url; no ids', () => {
     const f = resolveTeaserFields(node({ title: 'T', summary: 'S', url: '/world/a/' }));
     expect(f.title).toBe('T');
     expect(f.summary).toBe('S');
-    expect(f.kicker).toBe('world');
+    expect(f.kicker).toBeUndefined();
     expect(f.titleId).toBeUndefined();
     expect(f.summaryId).toBeUndefined();
     expect(f.imageUrl).toBeUndefined();
