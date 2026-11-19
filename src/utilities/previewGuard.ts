@@ -6,11 +6,10 @@
  * working.
  */
 
-/** Whether following a link with this `href` would leave the current page. */
+/** Whether following a link with this `href` would leave the current page. Only in-page `#` anchors stay. */
 export function leavesPage(href: string | null | undefined): boolean {
   const value = (href ?? '').trim();
-  if (!value || value.startsWith('#')) return false;
-  return !/^javascript:/i.test(value);
+  return value !== '' && !value.startsWith('#');
 }
 
 /** Installs the guard; returns the cleanup. */

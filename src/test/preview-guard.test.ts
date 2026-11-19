@@ -12,6 +12,7 @@ describe('leavesPage (embedded preview guard)', () => {
     expect(leavesPage('#top')).toBe(false);
     expect(leavesPage('')).toBe(false);
     expect(leavesPage(null)).toBe(false);
-    expect(leavesPage('javascript:void(0)')).toBe(false);
+    expect(leavesPage('javascript:void(0)')).toBe(true);
+    expect(leavesPage('javascript:alert(1)')).toBe(true);
   });
 });

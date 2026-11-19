@@ -53,19 +53,22 @@ export function sortNewestFirst<T extends { publicationTime: string }>(posts: re
 export function formatFeedStamp(publicationTime: string): string {
   const date = new Date(publicationTime);
   const clock = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  const day = date
-    .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-    .replace(/(\d+)(?=,)/, (match) => `${match}th`);
-  return `${clock} - ${day}`;
+  return `${clock} - ${formatTimelineDate(publicationTime)}`;
 }
 
 export const formatTimelineTime = (publicationTime: string): string =>
   new Date(publicationTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
+/** "March 3rd, 2026". Day ordinals: 1st/2nd/3rd, except 11th-13th. */
 export const formatTimelineDate = (publicationTime: string): string =>
   new Date(publicationTime)
     .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-    .replace(/(\d+)(?=,)/, (match) => `${match}th`);
+    .replace(/\d+(?=,)/, (day) => `${day}${ordinalSuffix(Number(day))}`);
+
+function ordinalSuffix(n: number): string {
+  if (n % 100 >= 11 && n % 100 <= 13) return 'th';
+  return ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
+}
 
 export const isSameCalendarDate = (a: string, b: string): boolean =>
   new Date(a).toDateString() === new Date(b).toDateString();

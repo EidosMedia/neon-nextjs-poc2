@@ -94,6 +94,8 @@ describe('result helpers', () => {
     expect(resultHref({ nodeData: { sys: { detailPage: '/b' } } })).toBe('/b');
     expect(resultHref({ nodeData: { sys: { importUrl: '/c' } } })).toBe('/c');
     expect(resultHref({ nodeData: {} })).toBe('#');
+    expect(resultHref({ nodeData: { url: 'javascript:alert(1)' } })).toBe('#');
+    expect(resultHref({ nodeData: { sys: { detailPage: '//evil.example/x' } } })).toBe('#');
   });
 });
 

@@ -1,4 +1,5 @@
 // Pure search helpers: tabs, time windows, URLs and text rendering of backend HTML. No React here.
+import { isSafeHref } from '@/lib/accessories/sanitizeZoneSummary';
 
 export type ActiveTab = 'chat' | 'articles' | 'images' | 'videos';
 
@@ -183,8 +184,10 @@ export function parseAnswer(text: string): AnswerBlock[] {
 type Resultish = { nodeData: { url?: string; sys?: { detailPage?: string; importUrl?: string } } };
 
 /** Link target of a result, with the same fallbacks as the legacy list. */
-export const resultHref = (item: Resultish): string =>
-  item.nodeData.url || item.nodeData.sys?.detailPage || item.nodeData.sys?.importUrl || '#';
+export const resultHref = (item: Resultish): string => {
+  const href = item.nodeData.url || item.nodeData.sys?.detailPage || item.nodeData.sys?.importUrl || '';
+  return href && isSafeHref(href) ? href : '#';
+};
 
 /** Copy of the empty state: what happened and what to try next. */
 export function emptyMessage(tab: ActiveTab, query: string, time: string): string {

@@ -1,6 +1,6 @@
 import {
-  formatFeedStamp, initialPostsFromModel, isSameCalendarDate, mergePosts, sortNewestFirst, truncateTitle,
-  TIMELINE_VISIBLE_POSTS,
+  formatFeedStamp, formatTimelineDate, initialPostsFromModel, isSameCalendarDate, mergePosts, sortNewestFirst,
+  truncateTitle, TIMELINE_VISIBLE_POSTS,
 } from '@/app/_v2/liveblog/posts';
 
 describe('initialPostsFromModel', () => {
@@ -66,7 +66,16 @@ describe('sortNewestFirst', () => {
 
 describe('formatting helpers', () => {
   it('formats the feed stamp with the legacy ordinal suffix', () => {
-    expect(formatFeedStamp('2026-03-03T10:05:00Z')).toMatch(/ - March \d+th, 2026$/);
+    expect(formatFeedStamp('2026-03-03T12:05:00Z')).toMatch(/ - March 3rd, 2026$/);
+  });
+  it('uses 1st/2nd/3rd and th for 11th-13th and the rest', () => {
+    const day = (d: string) => formatTimelineDate(`2026-03-${d}T12:00:00Z`);
+    expect([day('01'), day('02'), day('03'), day('04')]).toEqual([
+      'March 1st, 2026', 'March 2nd, 2026', 'March 3rd, 2026', 'March 4th, 2026',
+    ]);
+    expect([day('11'), day('12'), day('13'), day('21'), day('22'), day('23')]).toEqual([
+      'March 11th, 2026', 'March 12th, 2026', 'March 13th, 2026', 'March 21st, 2026', 'March 22nd, 2026', 'March 23rd, 2026',
+    ]);
   });
   it('compares calendar dates', () => {
     expect(isSameCalendarDate('2026-03-03T10:00:00', '2026-03-03T23:00:00')).toBe(true);

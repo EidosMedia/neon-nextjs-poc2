@@ -38,7 +38,7 @@ export async function prepareBody(
         let apiData: Record<string, unknown> = {};
         try {
           const resp = await connection.makeApiRequest(`/api/nodes/${neonId}`, auth, {}, apiHostname);
-          if (resp.ok) apiData = await resp.json();
+          if (resp.ok) apiData = connection.redactSiteConfig(await resp.json());
           else console.warn('[v2 leaf] embed fetch failed:', resp.status, 'for node', neonId);
         } catch (err) {
           console.error('[v2 leaf] embed fetch error for node', neonId, ':', err);

@@ -128,7 +128,7 @@ const GalleryLeaf = async ({ data }: PageProps) => {
                 {captions && images[0].caption && <figcaption className="v2-essay__caption">{images[0].caption}</figcaption>}
               </figure>
             )}
-            <LeafLayout brand={brand} railAds={railAds} rail={rail}>
+            <LeafLayout brand={brand} data={data} railAds={railAds} rail={rail}>
               {afterHero}
               {body}
               <Frames images={images.slice(1)} captions={captions} />
