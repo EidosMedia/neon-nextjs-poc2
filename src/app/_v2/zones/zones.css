@@ -86,9 +86,39 @@
   /* Dated listing */
   .root[data-engine="v2"] .v2-comp--datedListing { gap: var(--v2-space-5); }
 
-  /* Banner: one full-width item */
-  .root[data-engine="v2"] .v2-comp--banner { display: block; }
-  .root[data-engine="v2"] .v2-comp--banner .v2-item__title { font-size: var(--v2-fs-h1); }
+  /* Banner: one full-width hero; the title, summary and byline sit over the image */
+  .root[data-engine="v2"] .v2-comp--banner { display: block; width: 100%; }
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: clamp(18rem, 42vw, 26rem);
+    overflow: hidden;
+    border-radius: var(--v2-radius-media);
+    color: var(--v2-on-brand);
+  }
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead .v2-item__media {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead .v2-item__body {
+    position: relative;
+    z-index: 1;
+    padding: var(--v2-space-5);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+  }
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead.v2-item--no-image {
+    min-height: 0;
+    background: var(--v2-brand);
+  }
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead.v2-item--no-image .v2-item__body { background: none; }
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead .v2-item__kicker,
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead .v2-item__summary,
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead .v2-item__byline { color: var(--v2-on-brand); }
+  .root[data-engine="v2"] .v2-comp--banner .v2-item--lead .v2-item__title { font-size: var(--v2-fs-h1); color: var(--v2-on-brand); }
 
   /* Highlight: the lead across the full width, the rest in a row underneath */
   .root[data-engine="v2"] .v2-comp--highlight { display: grid; gap: var(--v2-space-4); }
