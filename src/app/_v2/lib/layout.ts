@@ -52,6 +52,9 @@ const FIXED_SLOTS: Record<ConcreteComposition, SlotShape[] | null> = {
   overlayPair: ['overlay', 'overlay'],
   datedListing: null,
   sponsored: ['overlay', 'overlay'],
+  banner: ['lead'],
+  highlight: ['lead', 'compact', 'compact', 'compact'],
+  carousel: null,
 };
 
 export const COMPOSITION_CAPACITY: Record<ConcreteComposition, number> = {
@@ -63,6 +66,9 @@ export const COMPOSITION_CAPACITY: Record<ConcreteComposition, number> = {
   overlayPair: 2,
   datedListing: Number.POSITIVE_INFINITY,
   sponsored: 2,
+  banner: 1,
+  highlight: 4,
+  carousel: Number.POSITIVE_INFINITY,
 };
 
 export function planSlots(c: ConcreteComposition, count: number): SlotShape[] {

@@ -3,13 +3,16 @@ import { normalizeViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import { COMPOSITION_CAPACITY, groupByDate, planSlots, resolveAreaComposition, resolveComposition, type ConcreteComposition } from '../lib/layout';
-import { getItemSettings, getZoneSettings, V2_DEFAULTS, type ItemSettings } from '../lib/settings';
+import { getItemSettings, getZoneSettings, V2_DEFAULTS, type ItemSettings, type ZoneSettings } from '../lib/settings';
 import { itemKind, nodePublicationDate } from '../lib/zoneItems';
 import ItemSwitch from './ItemSwitch';
 import ZoneTitle from './ZoneTitle';
+import Banner from './compositions/Banner';
 import Cards from './compositions/Cards';
+import Carousel from './compositions/Carousel';
 import DatedListing from './compositions/DatedListing';
 import Grid2x2 from './compositions/Grid2x2';
+import Highlight from './compositions/Highlight';
 import LeadList from './compositions/LeadList';
 import OverlayPair from './compositions/OverlayPair';
 import Split from './compositions/Split';
@@ -34,6 +37,7 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
   let composition: ConcreteComposition;
   let titleProps: { head?: Parameters<typeof ZoneTitle>[0]['head']; style: 'bar' | 'column'; moreLink?: string } | undefined;
   let sponsorName: string | undefined;
+  let zoneSettings: Pick<ZoneSettings, 'autoplay' | 'dots'> = { autoplay: false, dots: true };
   let settingsFor: (node: WebpageNodeModel) => ItemSettings;
 
   if ('items' in props) {
@@ -53,6 +57,7 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
     );
     if (zs.showTitle) titleProps = { head: zs.head, style: zs.titleStyle, moreLink: zs.moreLink };
     sponsorName = zs.sponsorName;
+    zoneSettings = { autoplay: zs.autoplay, dots: zs.dots };
     settingsFor = (node) => getItemSettings(zoneData, props.zone, node);
   }
 
@@ -86,6 +91,9 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
     case 'threeUp': body = <Cards cells={cells} columns={3} />; break;
     case 'fourUp': body = <Cards cells={cells} columns={4} />; break;
     case 'sponsored': body = <Sponsored cells={drawn} sponsorName={sponsorName} />; break;
+    case 'banner': body = <Banner cells={drawn} />; break;
+    case 'highlight': body = <Highlight cells={drawn} />; break;
+    case 'carousel': body = <Carousel cells={cells} autoplay={zoneSettings.autoplay} dots={zoneSettings.dots} />; break;
     case 'datedListing': {
       const byKey = new Map(cells.map((c, i) => [nodes[i], c] as const));
       const groups = groupByDate(nodes, nodePublicationDate).map((g) => ({

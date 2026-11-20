@@ -314,6 +314,16 @@
           "name": "showTitle",
           "label": "Show zone title",
           "default": true
+        },
+        {
+          "name": "autoplay",
+          "label": "Carousel: autoplay",
+          "default": false
+        },
+        {
+          "name": "dots",
+          "label": "Carousel: show dots",
+          "default": true
         }
       ],
       "properties": [
@@ -357,6 +367,18 @@
             {
               "name": "sponsored",
               "label": "Sponsored"
+            },
+            {
+              "name": "banner",
+              "label": "Banner"
+            },
+            {
+              "name": "highlight",
+              "label": "Highlight"
+            },
+            {
+              "name": "carousel",
+              "label": "Carousel"
             }
           ]
         },
@@ -441,6 +463,11 @@
           "name": "standfirst",
           "label": "Show standfirst",
           "default": false
+        },
+        {
+          "name": "kicker",
+          "label": "Show kicker",
+          "default": true
         }
       ],
       "properties": [

@@ -61,7 +61,7 @@ describe('resolveArticleItemView', () => {
   const base = V2_DEFAULTS.articleItem;
   it('auto takes the slot', () => {
     expect(resolveArticleItemView(base, 'lead', true, true)).toEqual({
-      variant: 'lead', showImage: true, showStandfirst: false, solidBlock: false,
+      variant: 'lead', showImage: true, showStandfirst: false, showKicker: true, solidBlock: false,
     });
   });
   it('explicit variant wins', () => {
@@ -72,6 +72,9 @@ describe('resolveArticleItemView', () => {
   });
   it('image setting false hides image', () => {
     expect(resolveArticleItemView({ ...base, image: false }, 'standard', true, false).showImage).toBe(false);
+  });
+  it('kicker setting hides the kicker', () => {
+    expect(resolveArticleItemView({ ...base, kicker: false }, 'lead', true, true).showKicker).toBe(false);
   });
   it('no image: overlay gets solid block', () => {
     expect(resolveArticleItemView(base, 'overlay', false, false)).toMatchObject({

@@ -24,7 +24,8 @@ export type LeafSettings =
   | { kind: 'liveblog'; variant: LiveblogLeafVariant; liveTag: boolean; pinnedSummary: boolean; adDensity: AdDensity }
   | { kind: 'gallery'; variant: GalleryLeafVariant; captions: boolean; thumbnails: boolean; adDensity: AdDensity };
 export type Composition =
-  | 'auto' | 'leadList' | 'threeUp' | 'fourUp' | 'split' | 'grid2x2' | 'overlayPair' | 'datedListing' | 'sponsored';
+  | 'auto' | 'leadList' | 'threeUp' | 'fourUp' | 'split' | 'grid2x2' | 'overlayPair' | 'datedListing' | 'sponsored'
+  | 'banner' | 'highlight' | 'carousel';
 export type ZoneSettings = {
   showTitle: boolean;
   composition: Composition;
@@ -32,11 +33,15 @@ export type ZoneSettings = {
   head?: ZoneHeadContent;
   moreLink?: string;
   sponsorName?: string;
+  /** Carousel only: advance the slides on a timer (not with reduced motion). */
+  autoplay: boolean;
+  /** Carousel only: show one dot per slide. */
+  dots: boolean;
 };
 export type ArticleItemVariant =
   | 'standard' | 'lead' | 'compact' | 'textOnly' | 'overlay' | 'opinion' | 'highlight' | 'sponsored';
 export type ItemSettings =
-  | { kind: 'article'; variant: ArticleItemVariant | 'auto'; image: boolean; standfirst: boolean }
+  | { kind: 'article'; variant: ArticleItemVariant | 'auto'; image: boolean; standfirst: boolean; kicker: boolean }
   | { kind: 'liveblog'; variant: 'panel' | 'feed' | 'pinnedSummary' | 'auto'; image: boolean; share: boolean }
   | { kind: 'gallery'; variant: 'fullBleed' | 'panelWithThumbs' | 'grid' | 'auto'; captions: boolean; thumbnails: boolean };
 
@@ -47,7 +52,7 @@ type GalleryLeaf = Extract<LeafSettings, { kind: 'gallery' }>;
 export const V2_DEFAULTS = {
   header: { enabled: true, sectionsMenu: true, variant: 'regular' } as HeaderSettings,
   footer: { enabled: true, menu: true, variant: 'regular' } as FooterSettings,
-  zone: { showTitle: true, composition: 'auto', titleStyle: 'bar' } as ZoneSettings,
+  zone: { showTitle: true, composition: 'auto', titleStyle: 'bar', autoplay: false, dots: true } as ZoneSettings,
   articleLeaf: { kind: 'article', variant: 'standard', correlates: 3, adDensity: 'medium' } as ArticleLeaf,
   liveblogLeaf: {
     kind: 'liveblog', variant: 'livePage', liveTag: true, pinnedSummary: true, adDensity: 'medium',
@@ -55,7 +60,7 @@ export const V2_DEFAULTS = {
   galleryLeaf: {
     kind: 'gallery', variant: 'heroGallery', captions: true, thumbnails: true, adDensity: 'medium',
   } as GalleryLeaf,
-  articleItem: { kind: 'article', variant: 'auto', image: true, standfirst: false } as Extract<ItemSettings, { kind: 'article' }>,
+  articleItem: { kind: 'article', variant: 'auto', image: true, standfirst: false, kicker: true } as Extract<ItemSettings, { kind: 'article' }>,
   liveblogItem: { kind: 'liveblog', variant: 'auto', image: false, share: true } as Extract<ItemSettings, { kind: 'liveblog' }>,
   galleryItem: { kind: 'gallery', variant: 'auto', captions: true, thumbnails: true } as Extract<ItemSettings, { kind: 'gallery' }>,
 };
@@ -168,6 +173,7 @@ export function getPageSettings(data: PageDataLike): { header: HeaderSettings; f
 
 const COMPOSITIONS = [
   'auto', 'leadList', 'threeUp', 'fourUp', 'split', 'grid2x2', 'overlayPair', 'datedListing', 'sponsored',
+  'banner', 'highlight', 'carousel',
 ] as const;
 
 export function getZoneSettings(data: PageDataLike, zone: string): ZoneSettings {
@@ -179,6 +185,8 @@ export function getZoneSettings(data: PageDataLike, zone: string): ZoneSettings 
   const sponsorName = text(v, 'sponsorName');
   return {
     showTitle: bool(v, 'showTitle', V2_DEFAULTS.zone.showTitle),
+    autoplay: bool(v, 'autoplay', V2_DEFAULTS.zone.autoplay),
+    dots: bool(v, 'dots', V2_DEFAULTS.zone.dots),
     composition: pick(v, 'composition', COMPOSITIONS, V2_DEFAULTS.zone.composition),
     titleStyle: pick(v, 'titleStyle', ['bar', 'column'], V2_DEFAULTS.zone.titleStyle),
     ...(head ? { head } : {}),
@@ -227,5 +235,6 @@ export function getItemSettings(data: PageDataLike, zone: string, node: WebpageN
     ),
     image: bool(v, 'image', d.image),
     standfirst: bool(v, 'standfirst', d.standfirst),
+    kicker: bool(v, 'kicker', d.kicker),
   };
 }

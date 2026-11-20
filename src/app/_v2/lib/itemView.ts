@@ -49,6 +49,7 @@ export type ArticleItemView = {
   variant: ArticleItemVariant;
   showImage: boolean;
   showStandfirst: boolean;
+  showKicker: boolean;
   solidBlock: boolean;
 };
 
@@ -64,6 +65,7 @@ export function resolveArticleItemView(
     variant,
     showImage,
     showStandfirst: s.standfirst && hasStandfirst,
+    showKicker: s.kicker,
     solidBlock: variant === 'overlay' && !showImage,
   };
 }
