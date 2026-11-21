@@ -14,6 +14,7 @@ import PostsFeed from '../liveblog/PostsFeed';
 import { initialPostsFromModel } from '../liveblog/posts';
 import { heroImage } from '../leaves/heroImage';
 import { loadContent } from '../leaves/loadContent';
+import LeafAccess from '../leaves/LeafAccess';
 
 type PageProps = { data: PageData<ArticleModel> };
 
@@ -65,22 +66,24 @@ const LiveblogLeaf = async ({ data }: PageProps) => {
     <PageShell data={data}>
       <article className={`v2-leaf-liveblog v2-leaf-liveblog--${view.variant}`} data-leaf="liveblog">
         <LeafLayout brand={brand} data={data} railAds={rail ? 1 : 0} header={header} rail={rail}>
-          {showPinned && (
-            <section className="v2-liveblog__pinned">
-              <span className="v2-liveblog__pinned-kicker">Pinned summary</span>
-              <div className="v2-liveblog__pinned-text">{renderContent(summary, article)}</div>
-            </section>
-          )}
-          {slots.includes('afterHero') && <AdSlot placement="afterHero" />}
-          <LeafBody
-            article={article}
-            pageNodes={data.model.nodes}
-            text={text}
-            insertAfter={slots.includes('midBody') ? <AdSlot placement="midBody" /> : undefined}
-          />
-          <div className="v2-liveblog__posts">
-            <PostsFeed liveblogId={article.id} initialPosts={initialPostsFromModel(data.model)} />
-          </div>
+          <LeafAccess data={data} article={article}>
+            {showPinned && (
+              <section className="v2-liveblog__pinned">
+                <span className="v2-liveblog__pinned-kicker">Pinned summary</span>
+                <div className="v2-liveblog__pinned-text">{renderContent(summary, article)}</div>
+              </section>
+            )}
+            {slots.includes('afterHero') && <AdSlot placement="afterHero" />}
+            <LeafBody
+              article={article}
+              pageNodes={data.model.nodes}
+              text={text}
+              insertAfter={slots.includes('midBody') ? <AdSlot placement="midBody" /> : undefined}
+            />
+            <div className="v2-liveblog__posts">
+              <PostsFeed liveblogId={article.id} initialPosts={initialPostsFromModel(data.model)} />
+            </div>
+          </LeafAccess>
           {slots.includes('end') && <AdSlot placement="end" />}
         </LeafLayout>
       </article>

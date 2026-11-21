@@ -1,9 +1,8 @@
 import {
-  extractGalleryImages, hasText, paywallMode, planAdSlots, planPageRail, planRail, relatedTargetIds, resolveArticleLeafView,
+  extractGalleryImages, hasText, planAdSlots, planPageRail, planRail, relatedTargetIds, resolveArticleLeafView,
   resolveLiveblogLeafView, splitAfterParagraphs, withoutAdblocks, withoutGalleries,
 } from '@/app/_v2/lib/leafView';
 
-import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { LeafSettings, ArticleLeafVariant } from '@/app/_v2/lib/settings';
 
 type ArticleLeaf = Extract<LeafSettings, { kind: 'article' }>;
@@ -42,15 +41,14 @@ describe('resolveArticleLeafView', () => {
     kind: 'article', variant, correlates, adDensity: 'low',
   });
   it.each([
-    ['standard', 'above', 'standard', false],
-    ['fullBleedHero', 'behind', 'large', false],
-    ['textLed', 'none', 'large', false],
-    ['opinion', 'portrait', 'standard', false],
-    ['paywalled', 'above', 'standard', true],
-  ] as const)('%s with image', (variant, hero, titleSize, paywall) => {
-    expect(resolveArticleLeafView(s(variant), true)).toEqual({ variant, hero, titleSize, paywall, correlates: 2 });
+    ['standard', 'above', 'standard'],
+    ['fullBleedHero', 'behind', 'large'],
+    ['textLed', 'none', 'large'],
+    ['opinion', 'portrait', 'standard'],
+  ] as const)('%s with image', (variant, hero, titleSize) => {
+    expect(resolveArticleLeafView(s(variant), true)).toEqual({ variant, hero, titleSize, correlates: 2 });
   });
-  it.each(['standard', 'fullBleedHero', 'opinion', 'paywalled'] as const)('%s without image has no hero', variant => {
+  it.each(['standard', 'fullBleedHero', 'opinion'] as const)('%s without image has no hero', variant => {
     expect(resolveArticleLeafView(s(variant), false).hero).toBe('none');
   });
 });
@@ -129,18 +127,6 @@ describe('relatedTargetIds', () => {
   it('returns [] for missing links', () => {
     expect(relatedTargetIds(undefined)).toEqual([]);
     expect(relatedTargetIds({ hyperlink: { image: [{ targetId: 'x' }] } })).toEqual([]);
-  });
-});
-
-describe('paywallMode', () => {
-  it('is off without paywall', () => {
-    expect(paywallMode(false, ViewStatus.LIVE)).toBe('off');
-    expect(paywallMode(false, ViewStatus.PREVIEW)).toBe('off');
-  });
-  it('marks in PREVIEW and truncates in LIVE', () => {
-    expect(paywallMode(true, ViewStatus.PREVIEW)).toBe('marker');
-    expect(paywallMode(true, ViewStatus.LIVE)).toBe('truncate');
-    expect(paywallMode(true, undefined)).toBe('truncate');
   });
 });
 

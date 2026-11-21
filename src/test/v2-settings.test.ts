@@ -89,6 +89,13 @@ describe('getPageSettings', () => {
     expect(s.leaf).toMatchObject({ kind: 'article', variant: 'fullBleedHero' });
   });
 
+  test('removed paywalled accessory variant falls back to the standard visual layout', () => {
+    const s = getPageSettings(page({
+      pageAccessories: pageSet('default', 'article', { articleLeaf: { variant: 'paywalled' } }),
+    }));
+    expect(s.leaf).toMatchObject({ kind: 'article', variant: 'standard' });
+  });
+
   test('gallery page yields a gallery leaf', () => {
     const s = getPageSettings(page({
       type: 'gallery',
@@ -166,5 +173,27 @@ describe('getItemSettings', () => {
     expect(
       getItemSettings(data, 'main', link({ type: 'gallery', baseType: 'article' }, { variant: 'grid', captions: false }, 'galleryItem')),
     ).toEqual({ kind: 'gallery', variant: 'grid', captions: false, thumbnails: true });
+  });
+
+  test('liveblog zone images default on but respect an explicit opt-out', () => {
+    const sys = { type: 'liveblog', baseType: 'liveblog' };
+    expect(getItemSettings(data, 'main', link(sys))).toMatchObject({ kind: 'liveblog', image: true });
+    expect(
+      getItemSettings(data, 'main', link(sys, { image: false }, 'liveblogItem')),
+    ).toMatchObject({ kind: 'liveblog', image: false });
+  });
+
+  test('liveblog sharing defaults off but respects an explicit opt-in', () => {
+    const sys = { type: 'liveblog', baseType: 'liveblog' };
+    expect(getItemSettings(data, 'main', link(sys))).toMatchObject({ kind: 'liveblog', share: false });
+    expect(
+      getItemSettings(data, 'main', link(sys, { share: true }, 'liveblogItem')),
+    ).toMatchObject({ kind: 'liveblog', share: true });
+  });
+
+  test('accepts the compact liveblog accessory variant', () => {
+    expect(getItemSettings(data, 'main', link(
+      { type: 'liveblog', baseType: 'liveblog' }, { variant: 'compact' }, 'liveblogItem',
+    ))).toMatchObject({ kind: 'liveblog', variant: 'compact', image: true, share: false });
   });
 });

@@ -9,6 +9,7 @@ import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
 import { useState } from 'react';
 import { absoluteUrl } from '../lib/share';
 import { resolveTeaserFields, type TeaserFields } from '../lib/itemView';
+import { ContentEditingProvider } from '@/app/components/utilities/ContentEditingContext';
 
 export type HeadingLevel = 2 | 3;
 
@@ -88,26 +89,31 @@ export default function ItemFrame({ node, viewStatus, className, format, showSha
   };
 
   return (
-    <ArticleOverlay data={node as never} viewStatus={viewStatus} width="max">
-      <div className="v2-item-wrap">
-        <Link
-          id={node.id.replaceAll('-', '_')}
-          className={clsx('v2-item__link', className)}
-          href={loggedUserInfo.inspectItems ? '' : href}
-        >
-          {children(fields, editable)}
-        </Link>
-        {showShare && (
-          <div className="v2-item__share">
-            <button type="button" className="v2-item__share-btn" onClick={onShare}>
-              Share
-            </button>
-            <span className="v2-item__share-note" aria-live="polite">
-              {copied ? 'Link copied' : ''}
-            </span>
-          </div>
-        )}
-      </div>
-    </ArticleOverlay>
+    <ContentEditingProvider objectId={node.id} viewStatus={viewStatus} lockedBy={node.sys?.lockedBy}>
+      <ArticleOverlay data={node as never} viewStatus={viewStatus} width="max">
+        <div className="v2-item-wrap">
+          <Link
+            id={node.id.replaceAll('-', '_')}
+            className={clsx('v2-item__link', className)}
+            href={loggedUserInfo.inspectItems ? '' : href}
+            onClick={event => {
+              if (loggedUserInfo.inspectItems) event.preventDefault();
+            }}
+          >
+            {children(fields, editable)}
+          </Link>
+          {showShare && (
+            <div className="v2-item__share">
+              <button type="button" className="v2-item__share-btn" onClick={onShare}>
+                Share
+              </button>
+              <span className="v2-item__share-note" aria-live="polite">
+                {copied ? 'Link copied' : ''}
+              </span>
+            </div>
+          )}
+        </div>
+      </ArticleOverlay>
+    </ContentEditingProvider>
   );
 }

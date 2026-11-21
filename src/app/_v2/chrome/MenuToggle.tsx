@@ -151,6 +151,7 @@ function Tree({ links, parent, depth, isOpen, toggle, onNavigate, pathname }: Tr
 export default function MenuToggle({
   items,
   label = 'Menu',
+  iconOnly = false,
   className,
   pathname = null,
   drawerItems,
@@ -162,6 +163,7 @@ export default function MenuToggle({
   /** Tree for the mobile drawer, where the inline navigation is hidden. */
   drawerItems?: MenuLink[];
   label?: string;
+  iconOnly?: boolean;
   className?: string;
   pathname?: string | null;
   /** Shown at the bottom of the mobile drawer (Subscribe, Login). */
@@ -329,7 +331,7 @@ export default function MenuToggle({
         onClick={() => (open ? close(false) : openMenu())}
       >
         <span className="v2-menutoggle__icon" aria-hidden="true" />
-        <span>{label}</span>
+        <span className={iconOnly ? 'v2-visually-hidden' : undefined}>{label}</span>
       </button>
       {open && (
         <>

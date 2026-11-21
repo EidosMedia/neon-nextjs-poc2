@@ -16,7 +16,7 @@ import type { ZoneHeadContent } from '@/lib/accessories/zoneHeadTypes';
 export type HeaderSettings = { enabled: boolean; sectionsMenu: boolean; variant: 'regular' | 'compact' | 'minimal' };
 export type FooterSettings = { enabled: boolean; menu: boolean; variant: 'regular' | 'lite' };
 export type AdDensity = 'low' | 'medium' | 'high';
-export type ArticleLeafVariant = 'standard' | 'fullBleedHero' | 'textLed' | 'opinion' | 'paywalled';
+export type ArticleLeafVariant = 'standard' | 'fullBleedHero' | 'textLed' | 'opinion';
 export type LiveblogLeafVariant = 'livePage' | 'resultsPanel' | 'endedArchive';
 export type GalleryLeafVariant = 'heroGallery' | 'storyGallery' | 'photoEssay';
 export type LeafSettings =
@@ -37,7 +37,7 @@ export type ArticleItemVariant =
   | 'standard' | 'lead' | 'compact' | 'textOnly' | 'overlay' | 'opinion' | 'highlight' | 'sponsored';
 export type ItemSettings =
   | { kind: 'article'; variant: ArticleItemVariant | 'auto'; image: boolean; standfirst: boolean }
-  | { kind: 'liveblog'; variant: 'panel' | 'feed' | 'pinnedSummary' | 'auto'; image: boolean; share: boolean }
+  | { kind: 'liveblog'; variant: 'panel' | 'feed' | 'pinnedSummary' | 'compact' | 'auto'; image: boolean; share: boolean }
   | { kind: 'gallery'; variant: 'fullBleed' | 'panelWithThumbs' | 'grid' | 'auto'; captions: boolean; thumbnails: boolean };
 
 type ArticleLeaf = Extract<LeafSettings, { kind: 'article' }>;
@@ -56,7 +56,7 @@ export const V2_DEFAULTS = {
     kind: 'gallery', variant: 'heroGallery', captions: true, thumbnails: true, adDensity: 'medium',
   } as GalleryLeaf,
   articleItem: { kind: 'article', variant: 'auto', image: true, standfirst: false } as Extract<ItemSettings, { kind: 'article' }>,
-  liveblogItem: { kind: 'liveblog', variant: 'auto', image: false, share: true } as Extract<ItemSettings, { kind: 'liveblog' }>,
+  liveblogItem: { kind: 'liveblog', variant: 'auto', image: true, share: false } as Extract<ItemSettings, { kind: 'liveblog' }>,
   galleryItem: { kind: 'gallery', variant: 'auto', captions: true, thumbnails: true } as Extract<ItemSettings, { kind: 'gallery' }>,
 };
 
@@ -137,7 +137,7 @@ function readLeaf(resolved: ResolvedAccessoryValues | undefined, data: PageDataL
     const d = V2_DEFAULTS.articleLeaf;
     return forceHero({
       kind,
-      variant: pick(v, 'variant', ['standard', 'fullBleedHero', 'textLed', 'opinion', 'paywalled'], d.variant),
+      variant: pick(v, 'variant', ['standard', 'fullBleedHero', 'textLed', 'opinion'], d.variant),
       correlates: Number(pick(v, 'correlates', CORRELATES, '3')) as 0 | 1 | 2 | 3,
       adDensity: pick(v, 'adDensity', AD_DENSITY, d.adDensity),
     });
@@ -212,7 +212,7 @@ export function getItemSettings(data: PageDataLike, zone: string, node: WebpageN
     const d = V2_DEFAULTS.liveblogItem;
     return {
       kind,
-      variant: pick(v, 'variant', ['panel', 'feed', 'pinnedSummary', 'auto'], d.variant),
+      variant: pick(v, 'variant', ['panel', 'feed', 'pinnedSummary', 'compact', 'auto'], d.variant),
       image: bool(v, 'image', d.image),
       share: bool(v, 'share', d.share),
     };

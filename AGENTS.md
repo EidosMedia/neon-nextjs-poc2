@@ -50,6 +50,22 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
     `zonesummary`, `moreLink`, `sponsorName`. Link accessories `articleItem`, `liveblogItem`,
     `galleryItem`. All of these are rendered by the v2 engine; the special routes (`search`, `about`,
     `login`, NotFound) have no page model and always render header and footer with defaults.
+  - Sports Arena keeps its hamburger visible on desktop and mobile when `header.sectionsMenu`
+    is enabled (except the minimal header). Its icon-only button has a 44px hit target, centered
+    vertically in the pill, with a visually hidden accessible label. Desktop uses `FullMenu` or the sitemap alongside
+    inline `MainMenu`; mobile uses `FullMenu`, then `MainMenu`, then the sitemap.
+  - v2 liveblog teasers show entry images by default in basic section/site listings and webpage
+    zones, including the `pinnedSummary` variant. An explicit link accessory `image: false` hides
+    the image. Sharing defaults off; an explicit link accessory `share: true` enables it.
+    `/ui` demonstrates both image-on and image-off variants.
+  - Liveblog `compact` teasers reuse article compact sizing (120x80 thumbnail and h4 title),
+    placing the red dot and Live label left of the overhead, with the article-style byline/date
+    and no post timeline or summary. `auto` selects compact for compact slots; explicit variants
+    remain unchanged. `/ui` includes all image/share combinations as LIV-13 through LIV-16.
+  - All themes share `useLiveblogPosts` (`src/hooks/useLiveblogPosts.ts`) and a first-load skeleton
+    for timelines and leaf feeds. Embedded initial posts render immediately; background polls
+    retain visible posts. Empty and failed responses are distinct from loading, and failures
+    without existing posts show a retry status. Skeleton animation respects reduced motion.
   - Exact-type exclusion (`resolveAccessories.ts`): when any definition at a level matches the exact
     `type` (page `types`, or `linkedTypes` at link level), definitions matching only through the
     `baseType` are dropped whatever their names. So `article/gallery` gets only `galleryLeaf`
@@ -141,13 +157,62 @@ Unlayered legacy globals in `globals.css` are guarded with `:where(:not(.root[da
 (zero specificity). Legacy islands rendered inside a v2 root (`LoggedUserBar`, the legacy
 `NewsletterWebpage`) are wrapped in `<div className="v2-legacy">` so they keep the legacy globals.
 
-The v2 paywall is visual only: the full model still reaches the client, so it is not access control.
+### v2 reader access (demo only)
+
+`pubInfo.paywallLevel` alone controls restriction: `FREE`, `FREEMIUM`, `METERED`, `PREMIUM`.
+Missing levels mean FREE; unknown nonempty levels warn and are treated as PREMIUM. Accessory
+variants are visual layouts only; the removed `paywalled` article variant falls back to `standard`.
+Article, liveblog and gallery items/leaves use the same Lucide Crown icon for all non-FREE tiers.
+
+On LIVE, all non-FREE leaves require a `webauth` cookie. FREEMIUM then opens; METERED allows
+10 distinct canonical article paths per UTC day (revisits remain accessible after exhaustion).
+PREMIUM assumes every signed-in reader is a subscriber **for this demo only**, pending real
+subscription entitlements. Editorial authentication is not reader authentication.
+
+The v2 PREVIEW admin bar has a **Reader view** selector: FREE simulates anonymous access,
+REGISTERED opens FREEMIUM and metered content but blocks PREMIUM, and PREMIUM opens every tier
+without consuming the meter. Its Redux selection survives client navigation, resets to PREMIUM on
+reload, and is ignored in LIVE. The preview meter uses separate storage and never consumes LIVE
+allowances. PREMIUM is the default to preserve full editorial access, including the embedded Neon
+preview where the admin bar remains hidden.
+
+`lib/paywall.ts` owns policy and URL/date normalization; `LeafAccess` reads the httpOnly cookie
+server-side and passes only its presence to `ReaderGate`. `useMeteredAccess` persists per-site,
+per-browser daily URL history in localStorage (`neon:v2:meter:live:<site>` or
+`neon:v2:meter:preview:<site>`), serializes updates with Web Locks when available, refreshes across
+tabs and resets at 00:00 UTC. Storage errors block metered content with an explicit message rather
+than silently resetting the allowance. Legacy themes are unchanged.
+
+This is visual demo gating, **not access control**: the full model/body still reaches the client.
+Local history can be cleared or altered; real enforcement requires backend authorization and metering.
 
 Embedded preview: inside the Neon app preview frame (`window.name === 'neonapp-preview'`, `isNeonAppPreview()`),
 `ReloadListener` installs `installPreviewGuard()` (`src/utilities/previewGuard.ts`): one capture listener on
 `window` cancels link clicks that leave the page and every form submit, for all themes and for elements
 rendered after mount. In-page `#` links and UI buttons (menus, tabs) keep working. Outside the frame
 nothing changes.
+
+### v2 content-item editing
+
+`PageShell` and `ZoneRenderer` supply `ContentEditingProvider` with the object's ID, view status and lock.
+Shared `renderContent` wrappers inherit that status; do not let an omitted `ContentEditable.viewStatus`
+silently turn a PREVIEW leaf into a LIVE editor. Parent LIVE status takes precedence, but locks are
+scoped to the owning object's ID, never inherited across objects. Only an element with a content-item `id` and an owning object `id`
+can be edited when **Edit Content Items** is on. `ItemFrame` uses the linked object's
+`attributes.contentIds.teaserTitle`/`teaserSummary` and saves against that object's ID, not the host
+webpage. This edits the target object's teaser; page-specific teaser override persistence is unverified.
+In PREVIEW, editing temporarily reveals the body regardless of the reader simulation and never consumes
+the meter; turning editing off restores the selected reader view. LIVE access is never bypassed.
+For `webpage`, `homewebpage` and `sectionwebpage`, the admin-bar switch is independent of host-page
+version history: PREVIEW edits linked targets' teasers, while LIVE offers read-only additional
+information. History loading/refetching must not hide that switch or turn its active mode off.
+Leaf editing remains restricted to the latest editable PREVIEW version.
+
+Every Neon lock blocks that object's v2 inline editing (including `CollaborationEditor`). A locked
+webpage or content block does not block unlocked linked objects' teasers: `ItemFrame` establishes each
+target's own scope. Fresh lock metadata loaded by `ArticleOverlay` applies only to that target; an
+explicit unlocked result clears its stale initial lock. Locking does not disable the block-level Info/Publish/Unpublish toolbar or the admin
+bar's Open in Editor action. Inspect-mode teaser clicks must not navigate away from the editor.
 
 ## Authentication Model
 

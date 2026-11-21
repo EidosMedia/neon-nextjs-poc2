@@ -1,13 +1,7 @@
 'use client';
 import { findElementsInContentJson, findText } from '@/utilities/content';
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
-
-type LiveblogPost = {
-  id: string;
-  content: any;
-  publicationTime: string;
-};
+import { useLiveblogPosts } from '@/hooks/useLiveblogPosts';
+import LiveblogPostsStatus from '@/app/components/LiveblogPostsStatus';
 
 type LiveblogOrganismPostsProps = {
   liveblogId: string;
@@ -34,29 +28,7 @@ const formatGroupDate = (publicationTime: string): string =>
 const isSameCalendarDate = (a: string, b: string): boolean => new Date(a).toDateString() === new Date(b).toDateString();
 
 const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogId }) => {
-  const [liveblogPosts, setLiveblogPosts] = useState<LiveblogPost[]>([]);
-
-  useEffect(() => {
-    const getLiveblogPosts = async () => {
-      const response = await fetch(`/api/liveblogs/${liveblogId}`, { cache: 'no-store' });
-      const posts = await response.json();
-      setLiveblogPosts(oldResults =>
-        _.uniqBy([...posts, ...oldResults], 'id').map(post => ({
-          id: post.id,
-          content: post.content || post.files?.content?.data,
-          publicationTime: post.publicationTime || post.sys?.postEventTime,
-        })),
-      );
-    };
-
-    getLiveblogPosts();
-
-    const interval = setInterval(() => getLiveblogPosts(), 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [liveblogId]);
+  const { posts: liveblogPosts, isLoading, error } = useLiveblogPosts(liveblogId);
 
   const visiblePosts = [...liveblogPosts]
     .sort((a, b) => new Date(b.publicationTime).getTime() - new Date(a.publicationTime).getTime())
@@ -65,7 +37,9 @@ const LiveblogOrganismPosts: React.FC<LiveblogOrganismPostsProps> = ({ liveblogI
 
   return (
     <div className="flex flex-col">
-      {visiblePosts.length > 0 ? (
+      {isLoading || (error && visiblePosts.length === 0) ? (
+        <LiveblogPostsStatus loading={isLoading} />
+      ) : visiblePosts.length > 0 ? (
         <div className="relative flex flex-col gap-3 pl-4">
           <span className="absolute left-[3px] top-1 bottom-1 w-px bg-neutral-light-2" aria-hidden="true" />
           {visiblePosts.map((post, index) => {

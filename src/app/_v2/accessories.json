@@ -120,10 +120,6 @@
             {
               "name": "opinion",
               "label": "Opinion"
-            },
-            {
-              "name": "paywalled",
-              "label": "Paywalled"
             }
           ]
         },
@@ -507,12 +503,12 @@
         {
           "name": "image",
           "label": "Show entry image",
-          "default": false
+          "default": true
         },
         {
           "name": "share",
           "label": "Show share",
-          "default": true
+          "default": false
         }
       ],
       "properties": [
@@ -536,6 +532,10 @@
             {
               "name": "pinnedSummary",
               "label": "Pinned Summary"
+            },
+            {
+              "name": "compact",
+              "label": "Compact"
             }
           ]
         }

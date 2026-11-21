@@ -95,16 +95,27 @@ describe('resolveArticleItemView', () => {
 
 describe('resolveLiveblogItemView', () => {
   const base = V2_DEFAULTS.liveblogItem;
-  it('auto maps lead/overlay to panel, others to feed', () => {
+  it('auto maps lead/overlay to panel, compact to compact, and standard to feed', () => {
     expect(resolveLiveblogItemView(base, 'lead').variant).toBe('panel');
     expect(resolveLiveblogItemView(base, 'overlay').variant).toBe('panel');
-    expect(resolveLiveblogItemView(base, 'compact').variant).toBe('feed');
+    expect(resolveLiveblogItemView(base, 'compact').variant).toBe('compact');
     expect(resolveLiveblogItemView(base, 'standard').variant).toBe('feed');
+  });
+  it('basic listing defaults show images in panel and feed; explicit opt-out hides them', () => {
+    expect(resolveLiveblogItemView(base, 'lead').showImage).toBe(true);
+    expect(resolveLiveblogItemView(base, 'standard').showImage).toBe(true);
+    expect(resolveLiveblogItemView({ ...base, image: false }, 'lead').showImage).toBe(false);
+  });
+  it('basic listings hide sharing unless explicitly enabled', () => {
+    expect(resolveLiveblogItemView(base, 'lead').showShare).toBe(false);
+    expect(resolveLiveblogItemView({ ...base, share: true }, 'standard').showShare).toBe(true);
   });
   it('explicit wins and flags pass through', () => {
     expect(resolveLiveblogItemView({ ...base, variant: 'pinnedSummary', image: true, share: false }, 'lead')).toEqual({
       variant: 'pinnedSummary', showImage: true, showShare: false,
     });
+    expect(resolveLiveblogItemView({ ...base, variant: 'compact' }, 'lead').variant).toBe('compact');
+    expect(resolveLiveblogItemView({ ...base, variant: 'pinnedSummary' }, 'compact').variant).toBe('pinnedSummary');
   });
 });
 

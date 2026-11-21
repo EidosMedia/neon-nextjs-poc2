@@ -17,11 +17,14 @@ import Link from 'next/link';
 import Nav from '../chrome/Nav';
 import MenuToggle from '../chrome/MenuToggle';
 import LoginForm from '../special/LoginForm';
+import { PAYWALL_LEVELS } from '../lib/paywall';
+import PreviewReaderSelect from '../chrome/PreviewReaderSelect';
+import ReaderGate from '../leaves/ReaderGate';
 
 const ARTICLE_VARIANTS: ArticleItemVariant[] = [
   'standard', 'lead', 'compact', 'textOnly', 'overlay', 'opinion', 'highlight', 'sponsored',
 ];
-const LIVEBLOG_VARIANTS = ['panel', 'feed', 'pinnedSummary'] as const;
+const LIVEBLOG_VARIANTS = ['panel', 'feed', 'pinnedSummary', 'compact'] as const;
 const GALLERY_VARIANTS = ['fullBleed', 'panelWithThumbs', 'grid'] as const;
 const COMPOSITIONS: ConcreteComposition[] = [
   'leadList', 'threeUp', 'fourUp', 'split', 'grid2x2', 'overlayPair', 'datedListing', 'sponsored',
@@ -145,10 +148,38 @@ export default async function StyleGuide({ site }: { site?: Site }) {
   const body = (
     <div className="v2-container v2-ui">
       <h1 className="v2-ui__title">Style guide</h1>
-      <p className="v2-ui__note">Fixture content only. Spec IDs match the SpecArticle and SpecLiveGallery boards.</p>
+      <p className="v2-ui__note">Fixture content only. Original spec IDs match the SpecArticle and SpecLiveGallery boards; LIV-13 to LIV-16 add compact liveblogs.</p>
       <Section title="Article items (ART-01 to ART-32)">{articleCells()}</Section>
-      <Section title="Live blog items (LIV-01 to LIV-12)">{liveblogCells()}</Section>
+      <Section title="Live blog items (LIV-01 to LIV-16)">{liveblogCells()}</Section>
       <Section title="Gallery items (GAL-01 to GAL-12)">{galleryCells()}</Section>
+      <Section title="Paywall tiers (PAY-01 to PAY-04)">
+        {PAYWALL_LEVELS.map((level, index) => {
+          const node = makeFixtureNode('article', index + 1);
+          node.pubInfo = { ...node.pubInfo, paywallLevel: level };
+          return (
+            <Cell key={level} specId={id('PAY', index + 1)} props={level}>
+              <ArticleItem
+                node={node}
+                view={resolveArticleItemView({ kind: 'article', variant: 'compact', image: true, standfirst: false }, 'compact', true, true)}
+                viewStatus={ViewStatus.LIVE} headingLevel={3}
+              />
+            </Cell>
+          );
+        })}
+      </Section>
+      <section className="v2-ui__section">
+        <h2 className="v2-ui__heading">Preview reader access</h2>
+        <p>Demo only. This fixture has its own preview meter, separate from site allowances.</p>
+        <div className="bg-gray-800 w-fit rounded py-2"><PreviewReaderSelect /></div>
+        {PAYWALL_LEVELS.map(level => (
+          <div key={level}>
+            <h3>{level}</h3>
+            <ReaderGate level={level} registered={false} siteName="v2-styleguide" url={`/ui/${level.toLowerCase()}`} preview>
+              <p>{level} article body.</p>
+            </ReaderGate>
+          </div>
+        ))}
+      </section>
       <section className="v2-ui__section">
         <h2 className="v2-ui__heading">Compositions</h2>
         {await compositions()}

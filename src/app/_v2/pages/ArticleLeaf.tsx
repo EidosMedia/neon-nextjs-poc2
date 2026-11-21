@@ -1,17 +1,17 @@
-import { normalizeViewStatus, type PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import type { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { ArticleModel } from '@/types/models';
 import { findElementsInContentJson } from '@/utilities/content';
 import { getActiveTheme } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import PageShell from '../chrome/PageShell';
-import { paywallMode, planAdSlots, resolveArticleLeafView, withoutAdblocks } from '../lib/leafView';
+import { planAdSlots, resolveArticleLeafView, withoutAdblocks } from '../lib/leafView';
 import { getPageSettings, V2_DEFAULTS } from '../lib/settings';
 import AdSlot from '../leaves/AdSlot';
 import Correlates from '../leaves/Correlates';
 import LeafBody from '../leaves/LeafBody';
 import LeafHeader from '../leaves/LeafHeader';
 import LeafLayout from '../leaves/LeafLayout';
-import Paywall from '../leaves/Paywall';
+import LeafAccess from '../leaves/LeafAccess';
 import { heroImage } from '../leaves/heroImage';
 import { loadContent } from '../leaves/loadContent';
 
@@ -28,10 +28,7 @@ const ArticleLeaf = async ({ data }: PageProps) => {
   const slots = planAdSlots(settings.adDensity, brand.leafRail);
   const [rawText] = findElementsInContentJson(['text'], article.files.content.data);
   const text = rawText ? withoutAdblocks(rawText) : undefined;
-  const mode = paywallMode(view.paywall, normalizeViewStatus(data.siteData?.viewStatus));
-
-  const midBody = slots.includes('midBody') && !view.paywall;
-  const insertAfter = mode !== 'off' ? <Paywall marker={mode === 'marker'} /> : midBody ? <AdSlot placement="midBody" /> : undefined;
+  const insertAfter = slots.includes('midBody') ? <AdSlot placement="midBody" /> : undefined;
   const railAds = slots.includes('rail') ? 1 : 0;
   const afterHero = slots.includes('afterHero') && <AdSlot placement="afterHero" />;
   const behind = view.hero === 'behind';
@@ -49,14 +46,9 @@ const ArticleLeaf = async ({ data }: PageProps) => {
           rail={slots.includes('rail') ? <AdSlot placement="rail" /> : undefined}
         >
           {afterHero}
-          <LeafBody
-            article={article}
-            pageNodes={data.model.nodes}
-            text={text}
-            insertAfter={insertAfter}
-            insertWhenShort={mode !== 'off'}
-            hideTail={mode === 'truncate'}
-          />
+          <LeafAccess data={data} article={article}>
+            <LeafBody article={article} pageNodes={data.model.nodes} text={text} insertAfter={insertAfter} />
+          </LeafAccess>
           {slots.includes('end') && <AdSlot placement="end" />}
           <Correlates data={data} count={view.correlates} />
         </LeafLayout>

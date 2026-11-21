@@ -15,6 +15,7 @@ import OverlayPair from './compositions/OverlayPair';
 import Split from './compositions/Split';
 import Sponsored from './compositions/Sponsored';
 import type { Cell } from './compositions/types';
+import { ContentEditingProvider } from '@/app/components/utilities/ContentEditingContext';
 
 type ZoneForm = { data: PageData<WebpageModel>; zone: string; container?: boolean };
 type ItemsForm = { data: PageData<BaseModel>; items: WebpageNodeModel[]; composition: ConcreteComposition; title?: string; container?: boolean };
@@ -109,5 +110,9 @@ export default async function ZoneRenderer(props: ZoneRendererProps) {
       </div>
     </section>
   );
-  return props.container ? <div className="v2-container">{section}</div> : section;
+  return (
+    <ContentEditingProvider objectId={data.model.data.id} viewStatus={viewStatus} lockedBy={data.model?.data?.sys?.lockedBy}>
+      {props.container ? <div className="v2-container">{section}</div> : section}
+    </ContentEditingProvider>
+  );
 }

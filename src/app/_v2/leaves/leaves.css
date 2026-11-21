@@ -19,6 +19,12 @@
 
   /* ---------- Header ---------- */
   .root[data-engine="v2"] .v2-leaf-head { margin-bottom: var(--v2-space-4); }
+  .root[data-engine="v2"] .v2-leaf-head__kicker {
+    display: flex;
+    align-items: baseline;
+    gap: var(--v2-space-1);
+    color: var(--v2-brand-text, var(--v2-brand));
+  }
   .root[data-engine="v2"] .v2-leaf-head__kicker h5 {
     margin: 0 0 var(--v2-space-1);
     font-family: var(--v2-font-meta);
@@ -138,9 +144,9 @@
   }
 
   /* ---------- Paywall ---------- */
-  .root[data-engine="v2"] .v2-paywall { position: relative; margin-top: calc(var(--v2-space-5) * -1); }
-  .root[data-engine="v2"] .v2-paywall__fade {
-    height: 140px; background: linear-gradient(to bottom, transparent, var(--v2-bg));
+  .root[data-engine="v2"] .v2-paywall { position: relative; margin-block: var(--v2-space-3); }
+  .root[data-engine="v2"] .v2-leaf-gallery > :is(.v2-paywall, .v2-access-notice) {
+    width: min(900px, calc(100% - 32px)); margin-inline: auto;
   }
   .root[data-engine="v2"] .v2-paywall__card {
     position: relative; padding: var(--v2-space-4); text-align: center;
@@ -149,15 +155,21 @@
   }
   .root[data-engine="v2"] .v2-paywall__title { margin: 0 0 var(--v2-space-2); font-family: var(--v2-font-display); font-size: var(--v2-fs-h2); }
   .root[data-engine="v2"] .v2-paywall__button {
+    display: inline-block;
     padding: var(--v2-space-1) var(--v2-space-3); border: 0; cursor: pointer;
     border-radius: var(--v2-radius-pill); background: var(--v2-brand); color: var(--v2-on-brand);
     font-family: var(--v2-font-meta); font-weight: 700;
+    text-decoration: none;
   }
-
-  .root[data-engine="v2"] .v2-paywall--marker { margin-top: var(--v2-space-3); }
-  .root[data-engine="v2"] .v2-paywall__marker {
-    margin: 0 0 var(--v2-space-1); font-family: var(--v2-font-meta); font-size: var(--v2-fs-meta);
-    text-transform: uppercase; color: var(--v2-text-muted);
+  .root[data-engine="v2"] .v2-access-notice {
+    padding: var(--v2-space-2);
+    margin-block: var(--v2-space-2);
+    background: var(--v2-surface);
+    color: var(--v2-text);
+    border: 1px solid var(--v2-rule);
+    border-radius: var(--v2-radius-card);
+    font-family: var(--v2-font-meta);
+    font-size: var(--v2-fs-meta);
   }
 
   /* ---------- Correlates ---------- */

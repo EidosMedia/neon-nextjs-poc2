@@ -1,11 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import type { PreviewReaderTier } from '@/app/_v2/lib/paywall';
 
 interface LoggedUserState {
   inspectItemsVisible: boolean;
   inspectItems: boolean;
   analytics: boolean;
   viewStatus?: ViewStatus;
+  previewReaderTier: PreviewReaderTier;
 }
 
 const initialState: LoggedUserState = {
@@ -13,6 +15,8 @@ const initialState: LoggedUserState = {
   inspectItems: false,
   analytics: false,
   viewStatus: undefined,
+  // Keep editorial content editable (including embedded preview) until simulation is selected.
+  previewReaderTier: 'PREMIUM',
 };
 
 export const loggedUserSlice = createSlice({
@@ -37,11 +41,14 @@ export const loggedUserSlice = createSlice({
     setViewStatus: (state, action) => {
       state.viewStatus = action.payload;
     },
+    setPreviewReaderTier: (state, action: PayloadAction<PreviewReaderTier>) => {
+      state.previewReaderTier = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setInspectItemsVisible, setInspectItems, setAnalytics, setViewStatus } = loggedUserSlice.actions;
+export const { setInspectItemsVisible, setInspectItems, setAnalytics, setViewStatus, setPreviewReaderTier } = loggedUserSlice.actions;
 
 // Selectors
 export const getInspectItemsVisible = (state: any) => {

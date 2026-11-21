@@ -2,7 +2,8 @@
 import { useRef } from 'react';
 import { renderContent } from '@/utilities/content';
 import { formatFeedStamp, sortNewestFirst, type LiveblogPost } from './posts';
-import { useLiveblogPosts } from './useLiveblogPosts';
+import { useLiveblogPosts } from '@/hooks/useLiveblogPosts';
+import LiveblogPostsStatus from '@/app/components/LiveblogPostsStatus';
 
 type Props = { liveblogId: string; initialPosts: LiveblogPost[] };
 
@@ -11,7 +12,8 @@ const SCROLL_OFFSET = 72;
 
 /** v2 live blog feed: polls the posts endpoint and renders each post's content through renderContent. */
 export default function PostsFeed({ liveblogId, initialPosts }: Props) {
-  const posts = sortNewestFirst(useLiveblogPosts(liveblogId, initialPosts));
+  const { posts: loaded, isLoading, error } = useLiveblogPosts(liveblogId, initialPosts);
+  const posts = sortNewestFirst(loaded);
   const topRef = useRef<HTMLElement>(null);
 
   const backToTop = () => {
@@ -26,7 +28,9 @@ export default function PostsFeed({ liveblogId, initialPosts }: Props) {
         <span className="v2-feed__dot" aria-hidden="true" />
         Live blog
       </div>
-      {posts.length > 0 ? (
+      {isLoading || (error && posts.length === 0) ? (
+        <LiveblogPostsStatus loading={isLoading} variant="feed" />
+      ) : posts.length > 0 ? (
         <ol className="v2-feed__list" aria-live="polite">
           {posts.map((post) => (
             <li key={post.id} className="v2-feed__post">

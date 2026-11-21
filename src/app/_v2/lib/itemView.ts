@@ -71,8 +71,10 @@ export function resolveArticleItemView(
 export function resolveLiveblogItemView(
   s: Extract<ItemSettings, { kind: 'liveblog' }>,
   slot: SlotShape,
-): { variant: 'panel' | 'feed' | 'pinnedSummary'; showImage: boolean; showShare: boolean } {
-  const variant = s.variant === 'auto' ? (slot === 'lead' || slot === 'overlay' ? 'panel' : 'feed') : s.variant;
+): { variant: 'panel' | 'feed' | 'pinnedSummary' | 'compact'; showImage: boolean; showShare: boolean } {
+  const variant = s.variant === 'auto'
+    ? slot === 'compact' ? 'compact' : slot === 'lead' || slot === 'overlay' ? 'panel' : 'feed'
+    : s.variant;
   return { variant, showImage: s.image, showShare: s.share };
 }
 

@@ -1,6 +1,5 @@
 import useVersions from '@/hooks/useVersions';
 import {
-  getInspectItems,
   loggedUserSlice,
   setInspectItemsVisible as setInspectItemsVisibleAction,
   setInspectItems as setInspectItemsAction,
@@ -9,7 +8,7 @@ import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-t
 import clsx from 'clsx';
 import { Clock, LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Close from '../icons/close';
 import { useEffect, useState } from 'react';
 import { isEqual } from 'lodash';
@@ -52,8 +51,6 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
   console.log('data in history', data);
 
   const dispatch = useDispatch();
-
-  const inspectItems = useSelector(getInspectItems);
 
   function removeDashNumber(url?: string) {
     if (!url) return '';
@@ -142,60 +139,48 @@ const History: React.FC<UserLayerProps> = ({ data }) => {
       prevTsVersion: 0,
     } as NodeVersion);
 
-  const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
-    if (normalizedViewStatus !== ViewStatus.PREVIEW) {
-      return null;
-    }
-
-    try {
-      const fetchUrl = data.model.data.url.replace(/(-\d{4})[^/]*(?=\/index\.html)/, '$1');
-
-      const res = await fetch(fetchUrl + '?neon.outputMode=RAW');
-      const json = await res.json();
-      return json?.model?.data?.sys ?? null;
-    } catch (err) {
-      console.warn('Error fetching sys data:', err);
-      return null;
-    }
-  };
-
-  const liveWebPageType =
-    ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
-    normalizedViewStatus === ViewStatus.LIVE;
+  const webPageType = ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType);
+  const hasVersions = Boolean(historyData.versions?.length);
 
   useEffect(() => {
-    if (liveWebPageType) {
-      setLoadingHistory(false);
-      dispatch(setInspectItemsVisibleAction(true));
-      return;
-    }
-
-    if (
-      historyData?.versions &&
-      historyData.versions.length > 0 &&
-      latestEditNodeVersion.nodeId === data.model.data.version
-    ) {
+    let active = true;
+    const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
+      try {
+        const fetchUrl = data.model.data.url.replace(/(-\d{4})[^/]*(?=\/index\.html)/, '$1');
+        const res = await fetch(fetchUrl + '?neon.outputMode=RAW');
+        const json = await res.json();
+        return json?.model?.data?.sys ?? null;
+      } catch (err) {
+        console.warn('Error fetching sys data:', err);
+        return null;
+      }
+    };
+    if (webPageType) {
       dispatch(setInspectItemsVisibleAction(true));
     } else {
-      dispatch(setInspectItemsVisibleAction(false));
+      dispatch(setInspectItemsVisibleAction(
+        hasVersions && latestEditNodeVersion.nodeId === data.model.data.version,
+      ));
+      dispatch(setInspectItemsAction(false));
     }
-
-    dispatch(setInspectItemsAction(false));
 
     const url = data.model.data.url;
     const regex = /-n[0-9a-zA-Z]+/;
     const match = url.match(regex);
     const isVersion = match !== null;
-    if (isVersion) {
+    if (isVersion && normalizedViewStatus === ViewStatus.PREVIEW) {
       fetchLatestPreviewSysData().then(sys => {
-        if (!isEqual(sys, latestPreviewSysData)) {
-          setLatestPreviewSysData(sys);
+        if (active) {
+          setLatestPreviewSysData(previous => isEqual(sys, previous) ? previous : sys);
         }
       });
     }
     setLoadingHistory(false);
-
-  }, [historyData, latestEditNodeVersion, data.model.data.version]);
+    return () => { active = false; };
+  }, [
+    dispatch, webPageType, normalizedViewStatus, hasVersions, latestEditNodeVersion.nodeId,
+    data.model.data.id, data.model.data.version, data.model.data.url,
+  ]);
 
   return (
     <>

@@ -16,6 +16,9 @@ import EditedChip from './EditedChip';
 import { isNeonAppPreview } from '@/neon-frontoffice-ts-sdk/src';
 import useAuthContext from '@/hooks/useAuthContext';
 import { normalizeViewStatus, ViewStatus as ViewStatusEnum } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import PreviewReaderSelect from '@/app/_v2/chrome/PreviewReaderSelect';
+import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
+import { isV2Theme, resolveRenderTheme } from '@/app/themeKeys';
 
 const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
   const { data: loggedUserInfo, changeInspectItems } = useLoggedUserInfo();
@@ -57,14 +60,14 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     return null;
   }
 
-  const liveWebPageType =
+  const webPageType =
     'model' in data &&
-    ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
-    normalizedViewStatus === ViewStatusEnum.LIVE;
+    ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType);
 
   const shouldShowInspectSwitch =
-    inspectItemsVisible && (liveWebPageType || normalizedViewStatus === ViewStatusEnum.PREVIEW);
+    'model' in data && (webPageType || (inspectItemsVisible && normalizedViewStatus === ViewStatusEnum.PREVIEW));
   const canUseVersions = normalizedViewStatus === ViewStatusEnum.PREVIEW || authContext.hasEditorialAuth;
+  const v2 = isV2Theme(resolveRenderTheme(siteThemeOf('model' in data ? data.siteNode : data.siteData.root)));
 
   return (
     <div
@@ -73,6 +76,7 @@ const LoggedUserBar: React.FC<LoggedUserBarProps> = ({ data, siteName }) => {
     >
       <div className="flex items-center">
         <ViewStatus data={data} />
+        {v2 && normalizedViewStatus === ViewStatusEnum.PREVIEW && <PreviewReaderSelect />}
         {shouldShowInspectSwitch && (
           <Switch
             label={normalizedViewStatus === ViewStatusEnum.LIVE ? 'View Additional Information' : 'Edit Content Items'}

@@ -11,6 +11,7 @@ import LeafBody from '../leaves/LeafBody';
 import LeafHeader from '../leaves/LeafHeader';
 import LeafLayout from '../leaves/LeafLayout';
 import { loadContent } from '../leaves/loadContent';
+import LeafAccess from '../leaves/LeafAccess';
 
 type Image = ReturnType<typeof extractGalleryImages>[number];
 type PageProps = { data: PageData<ArticleModel> };
@@ -101,39 +102,45 @@ const GalleryLeaf = async ({ data }: PageProps) => {
         {variant === 'heroGallery' && (
           <>
             <div className="v2-container v2-leaf-gallery__intro">{header}</div>
-            <div className="v2-leaf-gallery__bleed">
-              <Slider images={images} captions={captions} thumbnails={thumbnails} />
-            </div>
-            <LeafLayout brand={brand} data={data} railAds={railAds} rail={rail}>
-              {afterHero}
-              {body}
-              {tail}
-            </LeafLayout>
+            <LeafAccess data={data} article={article}>
+              <div className="v2-leaf-gallery__bleed">
+                <Slider images={images} captions={captions} thumbnails={thumbnails} />
+              </div>
+              <LeafLayout brand={brand} data={data} railAds={railAds} rail={rail}>
+                {afterHero}
+                {body}
+                {tail}
+              </LeafLayout>
+            </LeafAccess>
           </>
         )}
         {variant === 'storyGallery' && (
           <LeafLayout brand={brand} data={data} railAds={railAds} header={header} rail={rail}>
-            {afterHero}
-            <Slider images={images} captions={captions} thumbnails={thumbnails} />
-            {body}
-            {tail}
+            <LeafAccess data={data} article={article}>
+              {afterHero}
+              <Slider images={images} captions={captions} thumbnails={thumbnails} />
+              {body}
+              {tail}
+            </LeafAccess>
           </LeafLayout>
         )}
         {variant === 'photoEssay' && (
           <>
             <div className="v2-container v2-leaf-gallery__intro">{header}</div>
-            {images[0] && (
-              <figure className="v2-essay__opener">
-                <img src={images[0].src} alt={images[0].caption ?? ''} />
-                {captions && images[0].caption && <figcaption className="v2-essay__caption">{images[0].caption}</figcaption>}
-              </figure>
-            )}
-            <LeafLayout brand={brand} data={data} railAds={railAds} rail={rail}>
-              {afterHero}
-              {body}
-              <Frames images={images.slice(1)} captions={captions} />
-              {tail}
-            </LeafLayout>
+            <LeafAccess data={data} article={article}>
+              {images[0] && (
+                <figure className="v2-essay__opener">
+                  <img src={images[0].src} alt={images[0].caption ?? ''} />
+                  {captions && images[0].caption && <figcaption className="v2-essay__caption">{images[0].caption}</figcaption>}
+                </figure>
+              )}
+              <LeafLayout brand={brand} data={data} railAds={railAds} rail={rail}>
+                {afterHero}
+                {body}
+                <Frames images={images.slice(1)} captions={captions} />
+                {tail}
+              </LeafLayout>
+            </LeafAccess>
           </>
         )}
       </article>

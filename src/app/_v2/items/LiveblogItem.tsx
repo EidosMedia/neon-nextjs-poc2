@@ -6,9 +6,10 @@ import ItemFrame, { type HeadingLevel } from './ItemFrame';
 import Kicker from './Kicker';
 import Media from './Media';
 import LiveTag from './LiveTag';
+import Byline from './Byline';
 
 export type LiveblogItemView = {
-  variant: 'panel' | 'feed' | 'pinnedSummary';
+  variant: 'panel' | 'feed' | 'pinnedSummary' | 'compact';
   showImage: boolean;
   showShare: boolean;
 };
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export default function LiveblogItem({ node, view, viewStatus, headingLevel, posts }: Props) {
+  const compact = view.variant === 'compact';
   return (
     <ItemFrame
       node={node}
@@ -33,13 +35,23 @@ export default function LiveblogItem({ node, view, viewStatus, headingLevel, pos
     >
       {(f, { Title, Summary }) => (
         <>
-          {view.showImage && view.variant !== 'pinnedSummary' && <Media url={f.imageUrl} ratio="16-9" />}
+          {view.showImage && <Media url={f.imageUrl} ratio={compact ? '3-2' : '16-9'} />}
           <div className="v2-item__body">
-            <LiveTag />
-            <Kicker text={f.kicker} />
+            {compact ? (
+              <div className="v2-item__overhead">
+                <LiveTag />
+                <Kicker text={f.kicker} paywallLevel={node.pubInfo?.paywallLevel} />
+              </div>
+            ) : (
+              <>
+                <LiveTag />
+                <Kicker text={f.kicker} paywallLevel={node.pubInfo?.paywallLevel} />
+              </>
+            )}
             {Title({ level: headingLevel, className: 'v2-item__title' })}
+            {compact && <Byline byline={f.byline} date={f.date} />}
             {view.variant === 'pinnedSummary' && Summary({ className: 'v2-item__summary v2-item__pinned' })}
-            {view.variant !== 'pinnedSummary' && posts !== false && (
+            {(view.variant === 'panel' || view.variant === 'feed') && posts !== false && (
               <div className="v2-item__posts">
                 <PostsTimeline liveblogId={node.id} />
               </div>

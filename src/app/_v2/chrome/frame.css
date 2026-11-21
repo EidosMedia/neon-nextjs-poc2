@@ -204,6 +204,16 @@
   .root[data-engine="v2"] .v2-header__pill .v2-nav {
     flex: 1;
   }
+  .root[data-engine="v2"] .v2-header__pill > .v2-menutoggle {
+    display: flex;
+    flex: none;
+  }
+  .root[data-engine="v2"] .v2-header__pill > .v2-menutoggle > .v2-menutoggle__button {
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    gap: 0;
+  }
   .root[data-engine="v2"] .v2-header__pill .v2-nav > ul {
     justify-content: flex-start;
   }
@@ -389,7 +399,7 @@
     .root[data-engine="v2"] .v2-header--arena .v2-header__search {
       display: none;
     }
-    .root[data-engine="v2"] .v2-header__pill .v2-menutoggle--mobile {
+    .root[data-engine="v2"] .v2-header__pill > .v2-menutoggle {
       margin-left: auto;
     }
     .root[data-engine="v2"] .v2-header__pill {

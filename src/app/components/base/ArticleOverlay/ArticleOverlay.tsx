@@ -3,6 +3,7 @@ import React, { useEffect, useState, FC } from 'react';
 import { SiteNode } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import ArticleActions from './components/ArticleActions';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
+import { ContentEditingProvider, useContentEditingContext } from '@/app/components/utilities/ContentEditingContext';
 
 interface OverlayProps {
   data: SiteNode;
@@ -87,6 +88,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
   const [objectNotFound, setObjectNotFound] = useState(false);
 
   const { data: loggedUserInfo } = useLoggedUserInfo();
+  const editingContext = useContentEditingContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,6 +96,7 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
         const response = await fetch(`/nodes/${data.id}`);
         if (response.ok) {
           const data = await response.json();
+          const lockedBy = data.model.data.sys?.lockedBy;
 
           const overlayObj: OverlayDataObj = {
             id: data.model.data.id,
@@ -104,10 +107,9 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
               publicationTime: data.model.data.pubInfo?.publicationTime,
             },
             sys: {
-              lockedBy: {
-                id: data.model.data.sys?.lockedBy?.userId,
-                name: data.model.data.sys?.lockedBy?.userName,
-              },
+              lockedBy: typeof lockedBy === 'string' && lockedBy
+                ? { id: lockedBy, name: lockedBy }
+                : lockedBy ? { id: lockedBy.userId, name: lockedBy.userName } : undefined,
               lockedTime: data.model.data.sys?.lockedTime,
             },
           };
@@ -131,6 +133,16 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
     return null;
   }
 
+  const content = editingContext ? (
+    <ContentEditingProvider
+      objectId={data.id}
+      viewStatus={editingContext.viewStatus}
+      lockedBy={overlayData && overlayData.id === data.id ? overlayData.sys.lockedBy ?? null : undefined}
+    >
+      {children}
+    </ContentEditingProvider>
+  ) : children;
+
   return (
     <>
       {loggedUserInfo.inspectItems && overlayData ? (
@@ -142,10 +154,10 @@ const ArticleOverlay: FC<OverlayProps> = ({ data, viewStatus, width = 'normal', 
           {showActions && (
             <ArticleActions data={data} viewStatus={viewStatus} overlayData={overlayData} width={width} />
           )}
-          {children}
+          {content}
         </div>
       ) : (
-        children
+        content
       )}
     </>
   );

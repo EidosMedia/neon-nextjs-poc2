@@ -93,7 +93,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
             {showNav && <Nav links={mainLinks} moreLinks={fullLinks} pathname={pathname} />}
             {search}
             {actions}
-            {showNav && <MenuToggle items={drawerLinks} pathname={pathname} className="v2-menutoggle--mobile" actions={drawerActions} />}
+            {showNav && <MenuToggle items={fullLinks} drawerItems={drawerLinks} pathname={pathname} actions={drawerActions} iconOnly />}
           </div>
         )}
         {brand.header === 'frontier' && (
