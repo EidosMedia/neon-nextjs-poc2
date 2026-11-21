@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { PreviewReaderTier } from '@/app/_v2/lib/paywall';
+import type { EditorialViewport, ViewportOrientation } from '@/app/components/LoggedUserOverlay/viewport';
 
 interface LoggedUserState {
   inspectItemsVisible: boolean;
@@ -8,6 +9,9 @@ interface LoggedUserState {
   analytics: boolean;
   viewStatus?: ViewStatus;
   previewReaderTier: PreviewReaderTier;
+  editorialViewport: EditorialViewport;
+  viewportOrientation: ViewportOrientation;
+  editorialBarVisible: boolean;
 }
 
 const initialState: LoggedUserState = {
@@ -17,6 +21,9 @@ const initialState: LoggedUserState = {
   viewStatus: undefined,
   // Keep editorial content editable (including embedded preview) until simulation is selected.
   previewReaderTier: 'PREMIUM',
+  editorialViewport: 'responsive',
+  viewportOrientation: 'portrait',
+  editorialBarVisible: false,
 };
 
 export const loggedUserSlice = createSlice({
@@ -44,11 +51,20 @@ export const loggedUserSlice = createSlice({
     setPreviewReaderTier: (state, action: PayloadAction<PreviewReaderTier>) => {
       state.previewReaderTier = action.payload;
     },
+    setEditorialViewport: (state, action: PayloadAction<EditorialViewport>) => {
+      state.editorialViewport = action.payload;
+    },
+    setViewportOrientation: (state, action: PayloadAction<ViewportOrientation>) => {
+      state.viewportOrientation = action.payload;
+    },
+    setEditorialBarVisible: (state, action: PayloadAction<boolean>) => {
+      state.editorialBarVisible = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setInspectItemsVisible, setInspectItems, setAnalytics, setViewStatus, setPreviewReaderTier } = loggedUserSlice.actions;
+export const { setInspectItemsVisible, setInspectItems, setAnalytics, setViewStatus, setPreviewReaderTier, setEditorialViewport, setViewportOrientation, setEditorialBarVisible } = loggedUserSlice.actions;
 
 // Selectors
 export const getInspectItemsVisible = (state: any) => {

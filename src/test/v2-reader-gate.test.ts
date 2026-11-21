@@ -3,10 +3,12 @@ import React, { createElement, type ComponentProps } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { makeStore } from '@/lib/store';
-import { setPreviewReaderTier, setInspectItems } from '@/lib/features/loggedUserSlice';
+import { setPreviewReaderTier, setInspectItems, setEditorialBarVisible } from '@/lib/features/loggedUserSlice';
+import { setUserName } from '@/lib/features/webauthSlice';
 import ReaderGate from '@/app/_v2/leaves/ReaderGate';
 import PaywallIcon from '@/app/_v2/items/PaywallIcon';
 import PreviewReaderSelect from '@/app/_v2/chrome/PreviewReaderSelect';
+import HeaderActions from '@/app/_v2/chrome/HeaderActions';
 import LoggedUserBar from '@/app/components/LoggedUserOverlay/LoggedUserBar';
 import { PAYWALL_LEVELS, type PreviewReaderTier } from '@/app/_v2/lib/paywall';
 import * as meter from '@/app/_v2/leaves/useMeteredAccess';
@@ -29,7 +31,6 @@ jest.mock('@/hooks/useVersions', () => ({
 }));
 jest.mock('@/app/components/LoggedUserOverlay/ViewStatus', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/app/components/LoggedUserOverlay/History', () => ({ __esModule: true, default: () => null }));
-jest.mock('@/app/components/LoggedUserOverlay/VisibilityChip', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/app/components/LoggedUserOverlay/EditedChip', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/app/components/LoggedUserOverlay/InfoTooltip', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/app/components/PromotionButton', () => ({ __esModule: true, default: () => null }));
@@ -204,8 +205,85 @@ test('selector reflects the Redux simulation level', () => {
   const html = renderToStaticMarkup(createElement(Provider, {
     store, children: createElement(PreviewReaderSelect),
   }));
-  expect(html).toContain('value="REGISTERED" selected=""');
+  expect(html).toContain('aria-label="Reader view: Registered"');
   expect(html).toContain('Reader view');
+});
+
+function renderHeaderActions(tier: PreviewReaderTier, authenticated: boolean, preview: boolean, barVisible: boolean, drawer = false) {
+  const store = makeStore();
+  store.dispatch(setPreviewReaderTier(tier));
+  store.dispatch(setEditorialBarVisible(barVisible));
+  store.dispatch(setUserName('Actual reader'));
+  return renderToStaticMarkup(createElement(Provider, {
+    store, children: createElement(HeaderActions, { authenticated, preview, drawer }),
+  }));
+}
+
+test.each([false, true])('preview header and drawer simulate all reader tiers (drawer: %s)', drawer => {
+  for (const authenticated of [false, true]) {
+    const free = renderHeaderActions('FREE', authenticated, true, true, drawer);
+    expect(free).toContain('>Subscribe</a>');
+    expect(free).toContain('>Login</a>');
+    expect(free).not.toContain('Actual reader');
+
+    const registered = renderHeaderActions('REGISTERED', authenticated, true, true, drawer);
+    expect(registered).toContain('>Subscribe</a>');
+    expect(registered).toContain('Registered reader');
+    expect(registered).toMatch(/<button[^>]*disabled=""[^>]*>Logout<\/button>/);
+    expect(registered).not.toContain('Actual reader');
+
+    const premium = renderHeaderActions('PREMIUM', authenticated, true, true, drawer);
+    expect(premium).not.toContain('>Subscribe</a>');
+    expect(premium).toContain('Premium subscriber');
+    expect(premium).toMatch(/<button[^>]*disabled=""[^>]*>Logout<\/button>/);
+    expect(premium).not.toContain('>Login</a>');
+  }
+});
+
+test.each([[false, true], [true, false]])(
+  'header uses real reader session outside active editorial preview (preview: %s, bar visible: %s)',
+  (preview, barVisible) => {
+    const anonymous = renderHeaderActions('PREMIUM', false, preview, barVisible);
+    expect(anonymous).toContain('>Subscribe</a>');
+    expect(anonymous).toContain('>Login</a>');
+    const signedIn = renderHeaderActions('FREE', true, preview, barVisible);
+    expect(signedIn).toContain('>Subscribe</a>');
+    expect(signedIn).toContain('Actual reader');
+    expect(signedIn).toMatch(/<button(?![^>]*disabled)[^>]*>Logout<\/button>/);
+  },
+);
+
+test('reader menu describes all simulation levels and marks the selected level', () => {
+  const store = makeStore();
+  store.dispatch(setPreviewReaderTier('REGISTERED'));
+  const state = jest.spyOn(React, 'useState').mockReturnValueOnce([true, jest.fn()]);
+  try {
+    const html = renderToStaticMarkup(createElement(Provider, {
+      store, children: createElement(PreviewReaderSelect),
+    }));
+    expect(html.match(/role="menuitemradio"/g)).toHaveLength(3);
+    expect(html).toContain('Anonymous reader');
+    expect(html).toContain('Signed-in reader');
+    expect(html).toContain('Premium subscriber');
+    expect(html).toMatch(/aria-checked="true"[^>]*>.*Signed-in reader/);
+  } finally { state.mockRestore(); }
+});
+
+test('admin bar displays the Neon symbol without the wordmark', () => {
+  const html = renderToStaticMarkup(createElement(Provider, {
+    store: makeStore(), children: createElement(LoggedUserBar, { data: webpageData('webpage', 'preview') }),
+  }));
+  expect(html).toMatch(/class="neon-admin__brand"><svg[^>]*aria-label="Neon"[^>]*><path d="M296\.92,23\.25/);
+  expect(html).toMatch(/<path d="M296\.92,23\.25[^"]*"><\/path><\/svg><\/span>/);
+});
+
+test('visibility notice appears immediately before the site name', () => {
+  const data = webpageData('article', 'preview');
+  data.model.data.pubInfo = { endVisible: '2030-01-22T15:46:00Z' };
+  const html = renderToStaticMarkup(createElement(Provider, {
+    store: makeStore(), children: createElement(LoggedUserBar, { data }),
+  }));
+  expect(html).toMatch(/class="neon-admin__visibility".*This item will expire on .*<\/span><span class="neon-admin__site">Test<\/span>/);
 });
 
 test.each([

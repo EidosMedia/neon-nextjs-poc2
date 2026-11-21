@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { X } from 'lucide-react';
 import { MenuItem } from '@eidosmedia/neon-frontoffice-ts-sdk';
@@ -11,13 +11,15 @@ type FullMenuOverlayProps = {
 };
 
 const FullMenuOverlay: React.FC<FullMenuOverlayProps> = ({ items, open, onClose }) => {
+  const overlayRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    const view = overlayRef.current?.ownerDocument.defaultView ?? window;
+    view.addEventListener('keydown', handleKeyDown);
+    return () => view.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
   if (!open || !items || items.length === 0) {
@@ -26,6 +28,7 @@ const FullMenuOverlay: React.FC<FullMenuOverlayProps> = ({ items, open, onClose 
 
   return (
     <div
+      ref={overlayRef}
       className="full-menu-overlay fixed inset-0 z-[200] bg-black/70 flex items-start justify-end"
       onClick={onClose}
     >

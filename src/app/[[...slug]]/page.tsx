@@ -1,7 +1,9 @@
 import { cookies, headers } from 'next/headers';
+import { connection as requestConnection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { resolvePageComponent, resolveRenderTheme } from '../_themeRouter';
 import LoggedUserBar from '../components/LoggedUserOverlay/LoggedUserBar';
+import ViewportFrame from '../components/LoggedUserOverlay/ViewportFrame';
 import type { Metadata } from 'next';
 import { getAuthOptions } from '@/utilities/security';
 import { siteThemeOf, withSiteTheme } from '@/lib/accessories/defaultThemeAccessories';
@@ -30,6 +32,7 @@ export default async function Page({
   params: Promise<{ slug: string[] }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  await requestConnection();
   const currentHeaders = await headers();
   const hostname = currentHeaders.get('x-neon-backend-url');
   const siteName = currentHeaders.get('x-neon-site-name');
@@ -67,7 +70,9 @@ export default async function Page({
               <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
                 <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               </LegacyIsland>
-              <SearchPage data={site} />
+              <ViewportFrame theme={resolveRenderTheme(theme)} engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+                <SearchPage data={site} />
+              </ViewportFrame>
             </div>
           );
         }
@@ -82,7 +87,9 @@ export default async function Page({
               <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
                 <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               </LegacyIsland>
-              <AboutPage data={site} />
+              <ViewportFrame theme={resolveRenderTheme(theme)} engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+                <AboutPage data={site} />
+              </ViewportFrame>
             </div>
           );
         }
@@ -97,7 +104,9 @@ export default async function Page({
               <LegacyIsland enabled={isV2Theme(resolveRenderTheme(theme))}>
                 <LoggedUserBar data={{ siteData: { ...site, viewStatus: siteViewStatus } }} />
               </LegacyIsland>
-              <LoginPage data={site} />
+              <ViewportFrame theme={resolveRenderTheme(theme)} engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+                <LoginPage data={site} />
+              </ViewportFrame>
             </div>
           );
         }
@@ -111,15 +120,12 @@ export default async function Page({
 
   try {
     result = isLiveView ? await fetchPageDataCached(url, siteName ?? '', auth) : await fetchPageDataDirect(url, auth);
-  } catch (error: any) {
-    if (error.status === 404) {
+  } catch (error) {
+    if (error && typeof error === 'object' && 'status' in error
+      && [401, 403, 404, 410].includes(Number(error.status))) {
       notFound();
     }
-
-    // handle 401, 403, and 410 unauthorized / gone
-    if (error.status === 401 || error.status === 403 || error.status === 410) {
-      notFound();
-    }
+    throw error;
   }
 
   if (!result) {
@@ -169,7 +175,9 @@ export default async function Page({
           }}
         />
       </LegacyIsland>
-      {PageComponent ? <PageComponent data={pageDataJSON} /> : <DefaultPages.Article data={pageDataJSON} />}
+      <ViewportFrame theme={resolveRenderTheme(theme)} engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
+        {PageComponent ? <PageComponent data={pageDataJSON} /> : <DefaultPages.Article data={pageDataJSON} />}
+      </ViewportFrame>
     </div>
   );
 }
@@ -199,6 +207,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
+  await requestConnection();
   const currentHeaders = await headers();
 
   const hostname = currentHeaders.get('x-neon-backend-url');

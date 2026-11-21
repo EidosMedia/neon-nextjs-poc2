@@ -2,9 +2,10 @@ import React, { useRef, useEffect, useState, SyntheticEvent } from 'react';
 import { priorityOptions } from '../base/ArticleOverlay/ArticleOverlay';
 import { Info } from 'lucide-react';
 import clsx from 'clsx';
+import type { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 
 interface InfoTooltipProps {
-  pageData: any;
+  pageData: PageData<BaseModel>;
 }
 
 const getPriorityString = (priority: number) => {
@@ -26,6 +27,7 @@ const getPublicationDateString = (publicationTime: string) => {
 const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
   const [opened, setOpened] = useState(false);
   const data = pageData.model.data;
+  const author = 'authors' in data && Array.isArray(data.authors) ? data.authors[0] : undefined;
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleOnClick = (event: SyntheticEvent) => {
@@ -47,17 +49,19 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
   }, []);
 
   return (
-    <div className="relative">
-      <a
+    <div className="relative" ref={wrapperRef}>
+      <button type="button"
         onClick={handleOnClick}
-        className={clsx('cursor-pointer', opened ? 'text-(--color-live-background)' : 'text-white')}
+        className={clsx('neon-admin__icon', opened && 'is-active')}
         aria-label="Info"
+        aria-expanded={opened}
+        title="Info"
       >
-        <Info />
-      </a>
+        <Info size={18} />
+      </button>
       {opened && (
         <div
-          className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white p-2.5 shadow-lg border border-gray-300 rounded-xs
+          className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white text-[#3f3c4e] p-2.5 shadow-lg border border-gray-300 rounded-xs
             grid grid-cols-2 gap-5 w-max text-xs"
           style={{ maxWidth: 'calc(100vw - 20px)' }} // Ensure tooltip fits within viewport
         >
@@ -78,7 +82,7 @@ const InfoTooltip: React.FC<InfoTooltipProps> = ({ pageData }) => {
             </div>
             <div className="flex flex-col gap-1">
               <h5 className="font-semibold">Author</h5>
-              <p>{data.authors?.[0]}</p>
+              <p>{author}</p>
             </div>
           </div>
           {/* DIVIDER */}

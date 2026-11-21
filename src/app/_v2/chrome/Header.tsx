@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { cookies, headers } from 'next/headers';
-import type { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { normalizeViewStatus, ViewStatus, type Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { Brand } from '../brands/registry';
 import type { FooterSettings, HeaderSettings } from '../lib/settings';
-import AccountLink from './AccountLink';
+import HeaderActions from './HeaderActions';
 import MenuToggle from './MenuToggle';
 import Nav from './Nav';
 import SearchIcon from './SearchIcon';
@@ -22,8 +22,10 @@ import { initials } from './initials';
 
 export default async function Header({ site, header, brand, siteLabel }: Omit<SiteFrameProps, 'footer'>) {
   const label = siteLabel || site.siteName || site.root?.name || '';
-  const pathname = (await headers()).get('x-neon-pathname');
-  const webauth = (await cookies()).get('webauth')?.value;
+  const requestHeaders = await headers();
+  const pathname = requestHeaders.get('x-neon-pathname');
+  const preview = normalizeViewStatus(requestHeaders.get('x-neon-view-status')) === ViewStatus.PREVIEW;
+  const authenticated = Boolean((await cookies()).get('webauth')?.value);
   const mainLinks = getMainLinks(site);
   const fullLinks = getFullLinks(site);
   const drawerLinks = getDrawerLinks(site);
@@ -51,21 +53,13 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
 
   const actions = showActions && (
     <div className="v2-header__actions">
-      <Link href="/login" className="v2-header__subscribe">
-        Subscribe
-      </Link>
-      <AccountLink webauth={webauth} />
+      <HeaderActions authenticated={authenticated} preview={preview} />
     </div>
   );
 
   // Bottom of the mobile drawer: same Subscribe and account entries as the header.
   const drawerActions = showActions && (
-    <>
-      <Link href="/login" className="v2-drawer__subscribe">
-        Subscribe
-      </Link>
-      <AccountLink webauth={webauth} />
-    </>
+    <HeaderActions authenticated={authenticated} preview={preview} drawer />
   );
 
   return (

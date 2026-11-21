@@ -175,6 +175,10 @@ without consuming the meter. Its Redux selection survives client navigation, res
 reload, and is ignored in LIVE. The preview meter uses separate storage and never consumes LIVE
 allowances. PREMIUM is the default to preserve full editorial access, including the embedded Neon
 preview where the admin bar remains hidden.
+While the selector is visible, v2 headers and mobile drawers mirror the selected reader: FREE shows
+Subscribe and Login, REGISTERED shows Subscribe and a simulated account, and PREMIUM shows only a
+simulated account. Simulated Logout is disabled and never changes the real web-user session. LIVE
+and pages without the editorial bar continue to show the real reader session.
 
 `lib/paywall.ts` owns policy and URL/date normalization; `LeafAccess` reads the httpOnly cookie
 server-side and passes only its presence to `ReaderGate`. `useMeteredAccess` persists per-site,
@@ -191,6 +195,16 @@ Embedded preview: inside the Neon app preview frame (`window.name === 'neonapp-p
 `window` cancels link clicks that leave the page and every form submit, for all themes and for elements
 rendered after mount. In-page `#` links and UI buttons (menus, tabs) keep working. Outside the frame
 nothing changes.
+
+The editorial admin bar offers a view-status menu, a version-history panel and a viewport menu.
+Viewport previews use a same-origin iframe with the page rendered through a React portal, so CSS
+media queries see a real 768 × 1024px tablet or 390 × 844px phone viewport, with portrait/landscape
+rotation, while Redux/editor controls remain shared. Responsive is the default; the selection and
+orientation are remembered in session storage and carried through
+Preview/Live switches. The control is hidden below 720px and in embedded Neon preview. Page UI that
+inspects its window or document must use the rendered element's `ownerDocument` when possible so it
+works in the frame. The history panel's latest-published badge describes the latest history entry,
+not proof that the object is currently published.
 
 ### v2 content-item editing
 
@@ -315,6 +329,10 @@ paths). Shared Neon CMS value types and helpers originate in the SDK and are exp
 
 The SDK owns the view-status contract:
 
+`NeonConnection.refreshSites()` atomically refreshes LIVE and PREVIEW, shares concurrent refreshes,
+and rejects on failure without replacing the previous list. Background callers must handle that
+rejection. The single-view refresh methods preserve the other view's entries.
+
 - `ViewStatus` is the uppercase editorial value: `LIVE` or `PREVIEW`.
 - `SiteViewStatus` is the lowercase site API value: `live` or `preview`.
 - Convert canonical values with `toSiteViewStatus()`. Normalize raw headers, query parameters,
@@ -390,6 +408,11 @@ listing page that references it in a zone — the full invalidation loop is clos
 selection does not check whether `editorialauth` is present. Do not assume that every
 editorial request bypasses the cache or that authenticated LIVE responses are isolated
 without verifying the deployed cache-key behavior.
+
+The page and metadata entry points explicitly await Next.js `connection()` before SDK work to
+exclude request-time clocks and logging from prerendering. Upstream page failures other than
+401/403/404/410 propagate to the error boundary, rather than being rendered as missing content.
+Periodic site refresh failures are logged and retain the last successful LIVE/PREVIEW snapshot.
 
 **Logging**: Every cache build (`neon-fo:page-cache`) and every invalidation call
 (`neon-fo:cache-api`) emit structured pino JSON logs with node IDs, zone contents, and paths.

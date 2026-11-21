@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import { WebVitals } from './components/utilities/WebVitals';
 import './globals.css';
+import './components/LoggedUserOverlay/adminBar.css';
 import { ReloadListener } from './components/utilities/ReloadListener';
 import StoreProvider from './StoreProvider';
 import QueryProvider from './components/utilities/QueryProvider';

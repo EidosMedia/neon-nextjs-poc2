@@ -1,0 +1,110 @@
+.neon-admin {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 18px;
+  min-height: 58px;
+  padding: 8px 16px;
+  border-bottom: 3px solid #829ce3;
+  background: #0f0f61;
+  color: #fff;
+  font: 14px/1.2 "Source Sans 3", system-ui, sans-serif;
+}
+.neon-admin *, .neon-history *, .neon-viewport-stage * { box-sizing: border-box; }
+.neon-admin button, .neon-history button, .neon-viewport-stage button { cursor: pointer; font: inherit; }
+.neon-admin button:focus-visible, .neon-admin a:focus-visible, .neon-history button:focus-visible,
+.neon-history a:focus-visible, .neon-viewport-stage button:focus-visible { outline: 2px solid #829ce3; outline-offset: 2px; }
+.neon-admin__group { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.neon-admin__actions { margin-left: auto; }
+.neon-admin__brand { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 8px; background: #fff; }
+#loggedUserBar .neon-admin__visibility { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-height: 26px; padding: 3px 10px; border: 1px solid #ffab02; border-radius: 8px; background: #ffeecc; color: #3f3c4e; font-size: 13px; font-weight: 600; line-height: 1.2; }
+.neon-admin__visibility svg { flex: none; }
+.neon-admin__site, .neon-admin__user { font-weight: 600; white-space: nowrap; }
+.neon-admin__site { display: inline-flex; align-items: center; gap: 10px; }
+.neon-admin__actions .neon-admin__promotion { display: flex; align-items: center; gap: 10px; }
+.neon-admin__visibility + .neon-admin__site::before,
+.neon-admin__actions .neon-admin__promotion:has(button)::after { content: ""; flex: none; width: 1px; height: 24px; background: #ffffff47; }
+.neon-admin__user { display: flex; align-items: center; gap: 8px; padding-left: 10px; border-left: 1px solid #ffffff47; }
+.neon-admin__avatar { width: 26px; height: 26px; border-radius: 50%; background: #c2cdff; }
+.neon-admin__icon { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 0; border-radius: 8px; color: #fff; background: transparent; }
+.neon-admin__icon:hover, .neon-admin__icon.is-active { background: #ffffff2e; }
+.neon-admin__actions .neon-admin__icon svg { width: 18px; height: 18px; }
+.neon-admin__actions > div > button:not(.neon-admin__icon),
+.neon-admin__promotion > div > button { border-radius: 8px; background: #1a57ff; border: 1px solid #829ce3; font-weight: 600; }
+.neon-admin__dropdown { position: relative; }
+.neon-admin__mode, .neon-admin__select { height: 36px; display: inline-flex; align-items: center; gap: 8px; border-radius: 8px; padding: 0 11px; }
+.neon-admin__mode { border: 1px solid #ffffff66; color: white; background: transparent; font-size: 12px !important; font-weight: 700 !important; letter-spacing: .06em; text-transform: uppercase; }
+#loggedUserBar .neon-admin__mode-label { font-size: inherit; line-height: 1; }
+.neon-admin__mode.is-version { background: #f1f0f4; color: #0f0f61; border-color: #f1f0f4; }
+.neon-admin__select { background: #fff; color: #3f3c4e; border: 0; }
+.neon-admin__select.is-active { background: #e5ecff; color: #0a2ee6; }
+.neon-admin__dot { display: inline-block; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #ffd11a; }
+.neon-admin__dot.is-live { background: #27c92e; }
+.neon-admin__menu { position: absolute; z-index: 110; top: calc(100% + 8px); left: 0; min-width: 185px; padding: 6px; border: 1px solid #dddce5; border-radius: 10px; background: #fff; color: #3f3c4e; box-shadow: 0 4px 16px #1d193033; }
+.neon-admin__menu button { width: 100%; display: flex; align-items: center; gap: 9px; padding: 8px 10px; border: 0; border-radius: 7px; color: inherit; background: transparent; text-align: left; }
+.neon-admin__menu button:hover, .neon-admin__menu button.is-selected { color: white; background: #0a2ee6; }
+.neon-admin__menu button > span:not(.neon-admin__dot) { flex: 1; }
+.neon-admin__menu small { display: block; opacity: .8; font-size: 11px; }
+.neon-admin__error { margin: 6px; color: #a21c30; font-size: 12px; }
+.neon-admin__switch { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; cursor: pointer; }
+.neon-admin__switch input { position: absolute; opacity: 0; }
+.neon-admin__switch-track { position: relative; width: 40px; height: 24px; border: 1px solid #ffffff8c; border-radius: 20px; background: #ffffff47; }
+.neon-admin__switch-track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: white; transition: transform .15s; }
+.neon-admin__switch input:checked + .neon-admin__switch-track { background: #1a57ff; }
+.neon-admin__switch input:checked + .neon-admin__switch-track::after { transform: translateX(16px); }
+.neon-admin__switch input:focus-visible + .neon-admin__switch-track { outline: 2px solid white; outline-offset: 2px; }
+.neon-admin__reader { display: flex; align-items: center; gap: 8px; color: white; font: 14px/1.2 "Source Sans 3", system-ui, sans-serif; white-space: nowrap; }
+.neon-admin__reader .neon-admin__select { min-width: 135px; justify-content: space-between; padding-right: 12px; font: inherit; font-weight: 600; cursor: pointer; }
+.neon-admin__reader .neon-admin__menu button { font: inherit; cursor: pointer; }
+.neon-admin__reader button:focus-visible { outline: 2px solid #829ce3; outline-offset: 2px; }
+.neon-history { position: fixed; z-index: 101; top: var(--neon-bar-height, 58px); right: 0; bottom: 0; width: min(360px, 100vw); display: flex; flex-direction: column; border-left: 1px solid #dddce5; background: #f9f9fb; color: #3f3c4e; font: 14px/1.4 "Source Sans 3", system-ui, sans-serif; box-shadow: -4px 4px 14px #1d19301a; }
+.neon-history__header { display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 14px; border-bottom: 1px solid #dddce5; background: white; color: #0a2ee6; font-weight: 600; }
+.neon-history__header > span { display: flex; align-items: center; gap: 8px; }
+.neon-history__header small { color: #69667f; font-weight: 400; }
+.neon-history__close { display: grid; place-items: center; border: 0; background: transparent; color: #605d74; }
+.neon-history__filters { display: flex; gap: 2px; padding: 8px 14px; border-bottom: 1px solid #dddce5; background: white; }
+.neon-history__filters button { padding: 5px 12px; border: 0; border-radius: 6px; color: #605d74; background: #f1f0f4; font-weight: 600; }
+.neon-history__filters button[aria-pressed="true"] { color: #0a2ee6; background: #e5ecff; }
+.neon-history__error { padding: 10px 14px; color: #a21c30; background: #fff0f1; }
+.neon-history__scroll { flex: 1; min-height: 0; overflow-y: auto; }
+.neon-history__empty { padding: 24px; color: #605d74; }
+.neon-history__empty button { color: #0a2ee6; text-decoration: underline; }
+.neon-history__list { position: relative; margin: 0; padding: 14px 12px 14px 40px; list-style: none; }
+.neon-history__list::before { content: ""; position: absolute; left: 22px; top: 14px; bottom: 14px; width: 2px; background: #d7d6e1; }
+.neon-history__date { margin: 10px 0 6px; color: #69667f; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.neon-history__row { position: relative; margin-bottom: 8px; padding: 10px 12px; border: 1px solid #dddce5; border-radius: 8px; background: white; }
+.neon-history__row::before { content: ""; position: absolute; left: -24px; top: 14px; width: 12px; height: 12px; border: 2px solid #f9f9fb; border-radius: 50%; background: #bfbfca; }
+.neon-history__row.is-live::before { background: #27c92e; }
+.neon-history__row.is-current { border-color: #0a2ee6; background: #e5ecff; box-shadow: inset 3px 0 #0a2ee6; }
+.neon-history__row.is-current::before { background: #0a2ee6; }
+.neon-history__row.is-working { border-style: dashed; }
+.neon-history__link { display: block; color: inherit; text-decoration: none; }
+.neon-history__row-head { display: flex; align-items: baseline; gap: 8px; }
+.neon-history__row-head strong { font-size: 16px; color: #1d1930; }
+.neon-history__row-head > span:not(.neon-history__badges) { color: #69667f; font-size: 12px; }
+.neon-history__badges { display: flex; flex-wrap: wrap; gap: 4px; margin-left: auto; }
+.neon-history__badges b { padding: 1px 7px; border: 1px solid #bfbfca; border-radius: 20px; font-size: 10px; text-transform: uppercase; white-space: nowrap; }
+.neon-history__badges .is-live { border-color: #27c92e; color: #1f7a2a; background: #e8f8e9; }
+.neon-history__badges .is-latest { border-color: #0a2ee6; color: #0a2ee6; background: #eef3ff; }
+.neon-history__title { margin-top: 3px; font-size: 12px; font-style: italic; overflow-wrap: anywhere; }
+.neon-history__meta { margin-top: 4px; color: #605d74; font-size: 12px; }
+.neon-history__meta span { margin-left: 7px; padding: 1px 5px; border-radius: 4px; background: #f1f0f4; }
+.neon-history__viewing { margin-top: 6px; color: #0a2ee6; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.neon-history__restore { margin-top: 8px; padding: 5px 9px; border: 1px solid #0a2ee6; border-radius: 6px; color: #0a2ee6; background: white; font-size: 12px !important; font-weight: 600 !important; }
+.neon-history__restore:disabled { opacity: .5; cursor: wait; }
+.neon-viewport-stage { min-height: calc(100vh - var(--neon-bar-height, 58px)); background: #3f3c4e; background-image: radial-gradient(#ffffff18 1px, transparent 1px); background-size: 14px 14px; overflow: hidden; }
+.neon-viewport-stage.has-history { margin-right: 360px; }
+.neon-viewport-strip { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; min-height: 46px; padding: 8px; color: white; font: 13px "Source Sans 3", system-ui, sans-serif; }
+.neon-viewport-strip button { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border: 1px solid #ffffff66; border-radius: 6px; background: transparent; color: white; }
+.neon-viewport-orientation { display: inline-flex; gap: 4px; }
+.neon-viewport-orientation button[aria-pressed="true"] { background: #e5ecff; color: #0a2ee6; }
+.neon-viewport-frame { margin: 0 auto; overflow: hidden; outline: 1px solid #ffffff47; border-radius: 12px 12px 0 0; box-shadow: 0 8px 24px #0006; background: white; }
+.neon-viewport-frame iframe { display: block; border: 0; background: white; }
+@media (max-width: 719px) {
+  .neon-admin__viewport { display: none; }
+  .neon-admin__visibility + .neon-admin__site::before { display: none; }
+}

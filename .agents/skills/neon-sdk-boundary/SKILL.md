@@ -12,6 +12,14 @@ own source and external packages; it must not import from the Next.js applicatio
 
 ## Shared Contracts
 
+`NeonConnection.refreshSites()` atomically refreshes both views, shares concurrent refreshes, and
+rejects on failure while retaining the last successful list. Background callers must handle
+rejections. Single-view refresh methods preserve the other view's entries.
+
+`NeonConnection.refreshSites()` atomically refreshes both views, shares concurrent refreshes, and
+rejects on failure while retaining the last successful list. Background callers must handle
+rejections. Single-view refresh methods preserve the other view's entries.
+
 Define Neon CMS types, enums, mappings, and helpers in the SDK when both the SDK and front office
 need them. Export them from `src/neon-frontoffice-ts-sdk/src/index.ts`; application code imports
 them through `@eidosmedia/neon-frontoffice-ts-sdk`.

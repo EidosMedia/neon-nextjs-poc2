@@ -40,7 +40,7 @@ const useVersions = ({
   };
 
   // Queries
-  const { data, refetch } = useQuery({
+  const { data, refetch, isLoading, isError } = useQuery({
     queryKey: ['versions', getFamilyRef(currentNode?.id || ''), normalizedViewStatus],
     queryFn: fetchQueries,
     enabled:
@@ -168,6 +168,8 @@ const useVersions = ({
     getLatestViewVersion,
     changeEdited,
     refetch,
+    isLoading,
+    isError,
   };
 };
 

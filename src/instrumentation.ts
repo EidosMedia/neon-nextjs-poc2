@@ -1,4 +1,5 @@
 import { NeonConnection } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import logger from './lib/logger';
 // import { logger } from './lib/logger';
 
 export async function register() {
@@ -44,12 +45,15 @@ export async function register() {
   await connection.startup();
 
   const refreshSitesData = async () => {
-    connection.refreshLiveSites();
-    connection.refreshPreviewSites();
+    try {
+      await connection.refreshSites();
+    } catch (error) {
+      logger.error({ event: 'site-refresh-failed', err: error }, 'Unable to refresh sites; retaining the last successful site list');
+    }
   };
 
   setInterval(() => {
-    refreshSitesData();
+    void refreshSitesData();
   }, parseInt(process.env.SITES_REFRESH_INTERVAL || '') || 120000);
 
   Object.assign(globalThis, {
