@@ -5,11 +5,15 @@ import {
 } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getAuthOptions } from './security';
 import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from './pageCache';
+import { getContentBlockLinks } from '@/lib/contentBlocks';
+import { extractBlockLinks } from '@/app/_v2/lib/blocks';
 
 const LIMIT = 4;
 
 export function sectionHasObjects(data: PageData<BaseModel>): boolean {
   if (data.model.data.children?.length) return true;
+  if (getContentBlockLinks(data).length || (['headers', 'includes', 'sidebars', 'footers'] as const)
+    .some(area => extractBlockLinks(data.model, area).length > 0)) return true;
   const links = data.model.data.links;
   if (!links || !('pagelink' in links) || !links.pagelink || typeof links.pagelink !== 'object') return false;
   return Object.values(links.pagelink).some(zone => Array.isArray(zone) && zone.some(link =>

@@ -54,6 +54,11 @@ test('section webpages with any linked object or block are not empty', () => {
   data.model.data.links.pagelink = { headers: [{ targetId: 'block' }] };
   expect(sectionHasObjects(data as never)).toBe(true);
   data.model.data.links.pagelink = {};
+  Object.assign(data.model.data.links, { blocklink: { includes: [{ targetId: 'block' }] } });
+  expect(sectionHasObjects(data as never)).toBe(true);
+  Object.assign(data.model.data.links, { blocklink: { main: [{ targetId: 'block', url: '/block/' }] } });
+  expect(sectionHasObjects(data as never)).toBe(true);
+  Object.assign(data.model.data.links, { blocklink: {} });
   data.model.data.children = ['article'];
   expect(sectionHasObjects(data as never)).toBe(true);
 });
