@@ -111,6 +111,13 @@ describe('getPageSettings', () => {
 });
 
 describe('getZoneSettings', () => {
+  test('carousel: autoplay and dots are zone toggles, the new compositions are accepted', () => {
+    const z = getZoneSettings(wp({ main: zoneSet({ composition: 'carousel', autoplay: true, dots: false }) }), 'main');
+    expect(z).toMatchObject({ composition: 'carousel', autoplay: true, dots: false });
+    expect(getZoneSettings(wp({ main: zoneSet({ composition: 'banner' }) }), 'main').composition).toBe('banner');
+    expect(getZoneSettings(wp({ main: zoneSet({ composition: 'highlight' }) }), 'main').composition).toBe('highlight');
+  });
+
   test('defaults', () => {
     expect(getZoneSettings(wp(undefined), 'main')).toEqual(V2_DEFAULTS.zone);
   });
@@ -164,7 +171,7 @@ describe('getItemSettings', () => {
     expect(getItemSettings(data, 'main', link({ type: 'article', baseType: 'article' }))).toEqual(V2_DEFAULTS.articleItem);
     expect(
       getItemSettings(data, 'main', link({ type: 'article', baseType: 'article' }, { variant: 'lead', standfirst: true })),
-    ).toEqual({ kind: 'article', variant: 'lead', image: true, standfirst: true });
+    ).toEqual({ kind: 'article', variant: 'lead', image: true, standfirst: true, kicker: true });
   });
 
   test('kind comes from node sys', () => {

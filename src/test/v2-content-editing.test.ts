@@ -89,7 +89,7 @@ test.each([
     node: article(lockedBy),
     viewStatus: ViewStatus.PREVIEW,
     headingLevel: 2,
-    view: { variant: 'standard', showImage: false, showStandfirst: true, solidBlock: false },
+    view: { variant: 'standard', showImage: false, showStandfirst: true, showKicker: true, solidBlock: false },
   }), ViewStatus.PREVIEW, { userId: 'editor', userName: 'Page lock owner' }, 'host-webpage');
   expect(html).toContain('Target teaser');
   expect(html).not.toContain('Locked by Page lock owner');
@@ -162,7 +162,7 @@ test('locking one linked item does not disable its unlocked sibling', () => {
   };
   const teaser = (node: ArticleModel) => createElement(ArticleItem, {
     node, viewStatus: ViewStatus.PREVIEW, headingLevel: 2,
-    view: { variant: 'standard', showImage: false, showStandfirst: true, solidBlock: false },
+    view: { variant: 'standard', showImage: false, showStandfirst: true, showKicker: true, solidBlock: false },
   });
   const html = render(createElement('div', null, teaser(article()), teaser(locked)),
     ViewStatus.PREVIEW, 'page-lock', 'host-webpage');
@@ -177,7 +177,7 @@ test('v2 teaser editors retain the target object and teaser content-item IDs', (
     node: target,
     viewStatus: ViewStatus.PREVIEW,
     headingLevel: 2,
-    view: { variant: 'standard', showImage: false, showStandfirst: true, solidBlock: false },
+    view: { variant: 'standard', showImage: false, showStandfirst: true, showKicker: true, solidBlock: false },
   }));
   expect(html.match(/contentEditable="true"/gi)).toHaveLength(2);
   expect(html).toContain('id="teaser-title-id"');

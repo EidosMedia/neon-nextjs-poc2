@@ -18,8 +18,7 @@ const Article = async ({ data }: PageProps) => {
 
   const articleData = data.model.data;
 
-  const tag = ((articleData as any)?.attributes?.overhead as string | undefined)
-    || (articleData?.url?.split?.('/')?.[1] ?? '').toUpperCase();
+  const tag = (articleData as any)?.attributes?.overhead as string | undefined;
 
   const articleImageUrl = getTeaserOrMainImageUrl(articleData, 'Wide_large', 'main');
 
@@ -115,8 +114,7 @@ const Article = async ({ data }: PageProps) => {
               {relatedItems.map((item, i) => {
                 const url = item.url || '#';
                 const itemTitle = item.attributes?.teaser?.title ?? item.title ?? '';
-                const itemTag = (item.attributes?.overhead as string | undefined)
-                  || (url.split('/')[1] ?? '').toUpperCase();
+                const itemTag = item.attributes?.overhead as string | undefined;
                 return (
                   <div key={item.id ?? i}>
                     <a href={url} className="bgl-rail-stub">

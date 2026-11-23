@@ -17,8 +17,6 @@ type ArticleOrganismProps = {
   imageFormat?: string;
 };
 
-const extractSectionFromUrl = (url: string): string => url.split('/')[1];
-
 const getArticleClasses = (type: string) => {
   const classMap: Record<string, {
     container: string;
@@ -68,7 +66,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, l
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`].url;
 
-  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
+  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead;
   const isPremium = !!linkedObject.pubInfo?.paywallLevel;
 
   const titleId = linkedObject.attributes?.contentIds?.teaserTitle;

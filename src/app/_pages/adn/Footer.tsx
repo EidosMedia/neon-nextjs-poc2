@@ -3,10 +3,12 @@ import Image from 'next/image';
 import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { InstagramIcon, FacebookIcon, TwitterIcon, YoutubeIcon, LinkedinIcon, RssIcon } from 'lucide-react';
 import FooterMenu from '../../components/FooterMenu';
+import { getCurrentYear } from '@/lib/clock';
 
 export default async function Footer({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: adn/Footer');
+  const year = await getCurrentYear();
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   if (!siteName) {
     throw new Error('Site node data is missing');
@@ -93,7 +95,7 @@ export default async function Footer({
       {/* Copyright */}
       <div className="w-full max-w-[1280px] mx-auto px-4 pb-6">
         <p className="text-center footer-legal">
-          © {new Date().getFullYear()} ADNKronos — Tutti i diritti riservati
+          © {year} ADNKronos — Tutti i diritti riservati
         </p>
       </div>
     </footer>

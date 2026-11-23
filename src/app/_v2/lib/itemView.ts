@@ -37,7 +37,7 @@ export function resolveTeaserFields(node: WebpageNodeModel, format = 'Wide_small
     summary: str(attrs?.teaser?.summary) ?? str(n.summary),
     titleId: str(attrs?.contentIds?.teaserTitle),
     summaryId: str(attrs?.contentIds?.teaserSummary),
-    kicker: str(attrs?.overhead) ?? str(n.overhead) ?? str(url.split('/')[1]),
+    kicker: str(attrs?.overhead) ?? str(n.overhead),
     imageUrl: resolveTeaserImageUrl(node, format),
     href: url,
     byline: str(n.author),
@@ -49,6 +49,7 @@ export type ArticleItemView = {
   variant: ArticleItemVariant;
   showImage: boolean;
   showStandfirst: boolean;
+  showKicker: boolean;
   solidBlock: boolean;
 };
 
@@ -64,6 +65,7 @@ export function resolveArticleItemView(
     variant,
     showImage,
     showStandfirst: s.standfirst && hasStandfirst,
+    showKicker: s.kicker,
     solidBlock: variant === 'overlay' && !showImage,
   };
 }

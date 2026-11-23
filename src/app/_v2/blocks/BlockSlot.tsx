@@ -33,7 +33,7 @@ export default async function BlockSlot({ data, area }: Props) {
         return (
           <BlockBoundary key={key} fallback={viewStatus === ViewStatus.PREVIEW ? placeholder : null}>
             {/* The block is cached on its own: render it with the host page's (current) theme. */}
-            <ZoneRenderer data={withSiteTheme(block as PageData<WebpageModel>, data.siteNode)} zone="main" />
+            <ZoneRenderer data={withSiteTheme(block as PageData<WebpageModel>, data.siteNode)} zone="main" area={area} />
           </BlockBoundary>
         );
       case 'placeholder':

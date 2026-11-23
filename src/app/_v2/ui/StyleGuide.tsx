@@ -31,6 +31,7 @@ const LIVEBLOG_VARIANTS = ['panel', 'feed', 'pinnedSummary', 'compact'] as const
 const GALLERY_VARIANTS = ['fullBleed', 'panelWithThumbs', 'grid'] as const;
 const COMPOSITIONS: ConcreteComposition[] = [
   'leadList', 'threeUp', 'fourUp', 'split', 'grid2x2', 'overlayPair', 'datedListing', 'sponsored',
+  'banner', 'highlight', 'carousel',
 ];
 
 const yn = (b: boolean) => (b ? 'yes' : 'no');
@@ -66,7 +67,7 @@ function articleCells() {
     for (const [image, standfirst] of [[true, true], [true, false], [false, true], [false, false]] as const) {
       n += 1;
       const node = makeFixtureNode('article', n);
-      const view = resolveArticleItemView({ kind: 'article', variant, image, standfirst }, variant, true, true);
+      const view = resolveArticleItemView({ kind: 'article', variant, image, standfirst, kicker: true }, variant, true, true);
       cells.push(
         <Cell key={n} specId={id('ART', n)} props={`${variant} · image ${yn(image)} · standfirst ${yn(standfirst)}`}>
           <ArticleItem node={node} view={view} viewStatus={ViewStatus.LIVE} headingLevel={3} />
@@ -195,7 +196,7 @@ export default async function StyleGuide({ site }: { site?: Site }) {
             <Cell key={level} specId={id('PAY', index + 1)} props={level}>
               <ArticleItem
                 node={node}
-                view={resolveArticleItemView({ kind: 'article', variant: 'compact', image: true, standfirst: false }, 'compact', true, true)}
+                view={resolveArticleItemView({ kind: 'article', variant: 'compact', image: true, standfirst: false, kicker: true }, 'compact', true, true)}
                 viewStatus={ViewStatus.LIVE} headingLevel={3}
               />
             </Cell>

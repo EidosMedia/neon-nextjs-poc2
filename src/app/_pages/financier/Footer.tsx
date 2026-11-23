@@ -1,6 +1,7 @@
 import React from 'react';
 import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { FacebookIcon, TwitterIcon, LinkedinIcon, YoutubeIcon } from 'lucide-react';
+import { getCurrentYear } from '@/lib/clock';
 
 const FOOTER_COLUMNS = [
   {
@@ -19,6 +20,7 @@ const FOOTER_COLUMNS = [
 
 export default async function Footer({ data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: financier/Footer');
+  const year = await getCurrentYear();
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   const siteLabel = data.siteNode?.attributes?.sitename || siteName;
   if (!siteName) throw new Error('Site node data is missing');
@@ -93,7 +95,7 @@ export default async function Footer({ data }: { data: Partial<PageData<BaseMode
         </div>
 
         <div className="financier-footer-legal flex flex-wrap justify-center gap-x-3 gap-y-1 text-center">
-          <a href="#">© {new Date().getFullYear()} {siteLabel}</a>
+          <a href="#">© {year} {siteLabel}</a>
           <span>·</span>
           <a href="#">Privacy policy</a>
           <span>·</span>

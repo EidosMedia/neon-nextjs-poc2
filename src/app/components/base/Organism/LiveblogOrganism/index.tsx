@@ -19,8 +19,6 @@ type LiveblogOrganismProps = {
   accessoryShape?: AccessoryShape;
 };
 
-const extractSectionFromUrl = (url: string): string => url.split('/')[1];
-
 const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({
   data,
   linkedObject,
@@ -32,7 +30,7 @@ const LiveblogOrganism: React.FC<LiveblogOrganismProps> = ({
 }) => {
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`].url;
-  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
+  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead;
   const titleId = linkedObject.attributes?.contentIds?.teaserTitle;
   const summaryId = linkedObject.attributes?.contentIds?.teaserSummary;
 

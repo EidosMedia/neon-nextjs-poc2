@@ -24,6 +24,25 @@ export function resolveComposition(
   return ZONE_DEFAULTS[zone] ?? 'threeUp';
 }
 
+export const AREA_COMPOSITIONS: Record<string, ConcreteComposition> = {
+  headers: 'grid2x2',
+  footers: 'grid2x2',
+  sidebars: 'threeUp',
+};
+
+/**
+ * Composition of a block rendered in a host area: an explicit composition on the block wins, then the
+ * area's composition, then the zone composition the block would get on its own.
+ */
+export function resolveAreaComposition(
+  area: string | undefined,
+  c: Composition,
+  fallback: ConcreteComposition,
+): ConcreteComposition {
+  if (c !== 'auto') return c;
+  return (area && AREA_COMPOSITIONS[area]) || fallback;
+}
+
 const FIXED_SLOTS: Record<ConcreteComposition, SlotShape[] | null> = {
   leadList: ['lead', 'compact', 'compact', 'compact', 'compact'],
   threeUp: null,
@@ -33,6 +52,9 @@ const FIXED_SLOTS: Record<ConcreteComposition, SlotShape[] | null> = {
   overlayPair: ['overlay', 'overlay'],
   datedListing: null,
   sponsored: ['overlay', 'overlay'],
+  banner: ['lead'],
+  highlight: ['lead', 'compact', 'compact', 'compact'],
+  carousel: null,
 };
 
 export const COMPOSITION_CAPACITY: Record<ConcreteComposition, number> = {
@@ -44,6 +66,9 @@ export const COMPOSITION_CAPACITY: Record<ConcreteComposition, number> = {
   overlayPair: 2,
   datedListing: Number.POSITIVE_INFINITY,
   sponsored: 2,
+  banner: 1,
+  highlight: 4,
+  carousel: Number.POSITIVE_INFINITY,
 };
 
 export function planSlots(c: ConcreteComposition, count: number): SlotShape[] {

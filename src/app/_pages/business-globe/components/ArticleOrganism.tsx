@@ -23,8 +23,7 @@ const ArticleOrganism: React.FC<ArticleOrganismProps> = ({
 
   const url = linkedObject.url || linkedObjects[`${index}`]?.url || '#';
   const title = linkedObject.attributes?.teaser?.title ?? linkedObject.title ?? '';
-  const overhead = linkedObject.attributes?.overhead as string | undefined;
-  const tag = overhead || (url.split('/')[1] ?? '').toUpperCase();
+  const tag = linkedObject.attributes?.overhead as string | undefined;
 
   const thumbUrl = getTeaserOrMainImageUrl(linkedObject, 'Square_large');
 

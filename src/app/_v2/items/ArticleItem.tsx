@@ -38,7 +38,7 @@ export default function ArticleItem({ node, view, viewStatus, headingLevel }: Pr
         <>
           {view.showImage && <Media url={f.imageUrl} ratio={RATIO[view.variant]} />}
           <div className="v2-item__body">
-            <Kicker text={f.kicker} paywallLevel={node.pubInfo?.paywallLevel} />
+            <Kicker text={view.showKicker ? f.kicker : undefined} paywallLevel={node.pubInfo?.paywallLevel} />
             {Title({ level: headingLevel, className: 'v2-item__title' })}
             {view.showStandfirst && Summary({ className: 'v2-item__summary' })}
             <Byline byline={f.byline} date={f.date} />

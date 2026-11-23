@@ -408,6 +408,16 @@
           "name": "showTitle",
           "label": "Show zone title",
           "default": true
+        },
+        {
+          "name": "autoplay",
+          "label": "Carousel: autoplay",
+          "default": false
+        },
+        {
+          "name": "dots",
+          "label": "Carousel: show dots",
+          "default": true
         }
       ],
       "properties": [
@@ -451,6 +461,18 @@
             {
               "name": "sponsored",
               "label": "Sponsored"
+            },
+            {
+              "name": "banner",
+              "label": "Banner"
+            },
+            {
+              "name": "highlight",
+              "label": "Highlight"
+            },
+            {
+              "name": "carousel",
+              "label": "Carousel"
             }
           ]
         },
@@ -508,14 +530,19 @@
       "types": [
         "webpage",
         "homewebpage",
-        "sectionwebpage"
+        "sectionwebpage",
+        "contentblock"
       ],
       "zones": [
         "main",
         "context",
         "insight1",
         "insight2",
-        "insight3"
+        "insight3",
+        "headers",
+        "includes",
+        "sidebars",
+        "footers"
       ],
       "linkedTypes": [
         "article"
@@ -530,6 +557,11 @@
           "name": "standfirst",
           "label": "Show standfirst",
           "default": false
+        },
+        {
+          "name": "kicker",
+          "label": "Show kicker",
+          "default": true
         }
       ],
       "properties": [
@@ -585,14 +617,19 @@
       "types": [
         "webpage",
         "homewebpage",
-        "sectionwebpage"
+        "sectionwebpage",
+        "contentblock"
       ],
       "zones": [
         "main",
         "context",
         "insight1",
         "insight2",
-        "insight3"
+        "insight3",
+        "headers",
+        "includes",
+        "sidebars",
+        "footers"
       ],
       "linkedTypes": [
         "liveblog"
@@ -646,14 +683,19 @@
       "types": [
         "webpage",
         "homewebpage",
-        "sectionwebpage"
+        "sectionwebpage",
+        "contentblock"
       ],
       "zones": [
         "main",
         "context",
         "insight1",
         "insight2",
-        "insight3"
+        "insight3",
+        "headers",
+        "includes",
+        "sidebars",
+        "footers"
       ],
       "linkedTypes": [
         "gallery"
