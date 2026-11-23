@@ -9,7 +9,11 @@ export default function MatchCard({ match }: { match: MatchData }) {
         <span className="v2-mod-match__score">{match.score ?? 'v'}</span>
         <span>{match.away}</span>
       </p>
-      {match.status && <p className="v2-mod-match__status">{match.status}</p>}
+      {match.status && (
+        <p className={`v2-mod-match__status${/^live\b/i.test(match.status.trim()) ? ' v2-mod-match__status--live' : ''}`}>
+          {match.status}
+        </p>
+      )}
     </article>
   );
 }

@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { REQUIRED_TOKENS, getBrand } from '@/app/_v2/brands/registry';
+import arenaTokens from '@/app/_v2/brands/sportsarena/tokens.json';
 
 const BRANDS_DIR = join(process.cwd(), 'src/app/_v2/brands');
 
@@ -103,6 +104,40 @@ describe('v2 brand tokens', () => {
     expect(getBrand('nextfrontier').scheme).toBe('dark');
     expect(getBrand('theglobe').scheme).toBe('light');
     expect(getBrand('sportsarena').scheme).toBe('light');
+  });
+});
+
+describe('Sports Arena color contract', () => {
+  const colors = Object.fromEntries(arenaTokens.color.tokens.map(token => [token.name, token.value]));
+  const css = readFileSync(join(BRANDS_DIR, 'sportsarena', 'tokens.css'), 'utf8');
+  const luminance = (hex: string) => {
+    const channels = hex.slice(1).match(/../g)!.map(pair => parseInt(pair, 16) / 255)
+      .map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+  };
+  const contrast = (a: string, b: string) => {
+    const values = [luminance(a), luminance(b)].sort((x, y) => x - y);
+    return (values[1] + 0.05) / (values[0] + 0.05);
+  };
+
+  it('keeps the design tokens and CSS variables in sync', () => {
+    expect(colors).toMatchObject({
+      'primary-500': '#CF3B24', 'primary-600': '#A82A16', 'primary-700': '#3B1519',
+      'primary-100': '#FFEAE2', 'accent-300': '#FFB496', 'neutral-200': '#FFF6F2',
+      'neutral-300': '#EADBD4', 'live-500': '#0E7C4A', 'error-500': '#B00020',
+    });
+    for (const [name, value] of Object.entries(colors)) {
+      expect(css).toContain(`--arena-${name}: ${value};`);
+    }
+    expect(css).not.toMatch(/#(?:004e98|7fa6cc|dce9f5)\b/i);
+  });
+
+  it('meets AA contrast for the requested combinations', () => {
+    expect(contrast(colors['neutral-100'], colors['primary-500'])).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(colors['neutral-100'], colors['primary-700'])).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(colors['neutral-900'], colors['accent-300'])).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(colors['primary-600'], colors['primary-100'])).toBeGreaterThanOrEqual(5);
+    expect(contrast(colors['live-500'], colors['neutral-100'])).toBeGreaterThanOrEqual(4.5);
   });
 });
 

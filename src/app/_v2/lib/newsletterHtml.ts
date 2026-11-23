@@ -4,16 +4,27 @@ import { isSafeHref } from '@/lib/accessories/sanitizeZoneSummary';
 import type { SummaryInline } from '@/lib/accessories/zoneHeadTypes';
 import { resolveTeaserFields } from './itemView';
 import { getNewsletterPageSettings, getNewsletterZoneSettings } from './newsletter';
+import arenaTokens from '../brands/sportsarena/tokens.json';
 
 type Settings = ReturnType<typeof getNewsletterPageSettings>;
 type ZoneSettings = ReturnType<typeof getNewsletterZoneSettings>;
-type Palette = { background: string; text: string; muted: string; brand: string; surface: string; footer: string; heading: string; body: string };
+type Palette = { background: string; text: string; muted: string; brand: string; surface: string; footer: string; heading: string; body: string; tintInk?: string };
+
+function arenaColor(name: string): string {
+  const token = arenaTokens.color.tokens.find(item => item.name === name);
+  if (!token) throw new Error(`Missing Sports Arena color token: ${name}`);
+  return token.value;
+}
+
+export const sportsArenaNewsletterPalette: Palette = {
+  background: arenaColor('neutral-100'), text: arenaColor('neutral-900'), muted: '#4A4A4A',
+  brand: arenaColor('primary-500'), surface: arenaColor('primary-100'), footer: arenaColor('primary-500'),
+  tintInk: arenaColor('primary-600'),
+  heading: "'Fredoka', sans-serif", body: "'Open Sans', sans-serif",
+};
 
 function palette(theme: string): Palette {
-  if (theme === 'sportsarena') return {
-    background: '#FFFFFF', text: '#1A1A1A', muted: '#4A4A4A', brand: '#004E98', surface: '#E8F3FA',
-    footer: '#004E98', heading: "'Fredoka', sans-serif", body: "'Open Sans', sans-serif",
-  };
+  if (theme === 'sportsarena') return sportsArenaNewsletterPalette;
   if (theme === 'nextfrontier') return {
     background: '#1D1930', text: '#F2F6FF', muted: '#D3D8E6', brand: '#FEF445', surface: '#31294C',
     footer: '#161327', heading: "'Abril Fatface', Georgia, serif", body: "'Noto Sans', sans-serif",
@@ -129,24 +140,26 @@ function zoneHtml(name: 'main' | 'context' | 'insight1', items: WebpageNodeModel
   const head = s.zone.head;
   const title = head?.title || (name === 'main' ? 'Top stories' : name === 'context' ? 'In context' : 'More stories');
   const summary = s.heading === 'summary' ? head?.summary?.map(paragraph => `<p style="margin:8px 0">${inline(paragraph.children)}</p>`).join('') ?? '' : '';
-  const more = s.zone.moreLink ? `<a href="${escapeNewsletterText(publicUrl(data, s.zone.moreLink))}" style="color:${p.brand}">See all →</a>` : '';
+  const boxed = name === 'context' && s.contextStyle === 'box';
+  const zonePalette = boxed && p.tintInk ? { ...p, brand: p.tintInk } : p;
+  const more = s.zone.moreLink ? `<a href="${escapeNewsletterText(publicUrl(data, s.zone.moreLink))}" style="color:${zonePalette.brand}">See all →</a>` : '';
   const heading = s.heading !== 'hidden' && s.zone.showTitle
     ? `<div style="padding:20px 0 8px"><h2 style="margin:0;font:700 19px ${p.heading};color:${p.text}">${escapeNewsletterText(title)}</h2><div style="font:14px/1.5 ${p.body};color:${p.muted}">${summary}${more}</div></div>` : '';
   let rows: string;
   if (s.layout === 'cards') {
-    const lead = teaser(items[0], data, p, s, 'lead', 0);
+    const lead = teaser(items[0], data, zonePalette, s, 'lead', 0);
     const cards: string[] = [];
     for (let i = 1; i < items.length; i += 2) {
       const card = (item: WebpageNodeModel | undefined, index: number) => item
-        ? `<td class="neon-newsletter-card" width="50%" valign="top" style="padding:8px"><table role="presentation" width="100%">${teaser(item, data, p, s, 'card', index)}</table></td>` : '<td class="neon-newsletter-card" width="50%"></td>';
+        ? `<td class="neon-newsletter-card" width="50%" valign="top" style="padding:8px"><table role="presentation" width="100%">${teaser(item, data, zonePalette, s, 'card', index)}</table></td>` : '<td class="neon-newsletter-card" width="50%"></td>';
       cards.push(`<tr>${card(items[i], i)}${card(items[i + 1], i + 1)}</tr>`);
     }
     rows = `${lead}<tr><td><table role="presentation" width="100%">${cards.join('')}</table></td></tr>`;
   } else {
-    rows = items.map((item, index) => teaser(item, data, p, s,
+    rows = items.map((item, index) => teaser(item, data, zonePalette, s,
       s.layout === 'numbered' ? 'numbered' : s.layout === 'list' ? 'row' : index === 0 ? 'lead' : 'row', index)).join('');
   }
-  const bg = name === 'context' && s.contextStyle === 'box' ? p.surface : p.background;
+  const bg = boxed ? p.surface : p.background;
   return `<tr><td style="padding:0 24px 24px;background:${bg}">${heading}<table role="presentation" cellpadding="0" cellspacing="0" width="100%">${rows}</table></td></tr>`;
 }
 

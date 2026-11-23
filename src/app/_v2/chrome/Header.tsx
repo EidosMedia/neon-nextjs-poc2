@@ -7,6 +7,7 @@ import HeaderActions from './HeaderActions';
 import MenuToggle from './MenuToggle';
 import Nav from './Nav';
 import SearchIcon from './SearchIcon';
+import SiteMark from './SiteMark';
 import { getDrawerLinks, getFullLinks, getMainLinks } from './navLinks';
 
 export type SiteFrameProps = {
@@ -17,8 +18,6 @@ export type SiteFrameProps = {
   /** Wordmark text shown in header and footer. */
   siteLabel?: string;
 };
-
-import { initials } from './initials';
 
 export default async function Header({ site, header, brand, siteLabel }: Omit<SiteFrameProps, 'footer'>) {
   const label = siteLabel || site.siteName || site.root?.name || '';
@@ -35,11 +34,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
 
   const wordmark = (
     <Link href="/" className="v2-header__wordmark" aria-label={`${label} home`}>
-      {brand.header !== 'globe' && (
-        <span className="v2-header__disc" aria-hidden="true">
-          {brand.header === 'arena' ? initials(label) : ''}
-        </span>
-      )}
+      <SiteMark key={site.logoUrl || ''} logoUrl={site.logoUrl} label={label} showInitials={brand.header === 'arena'} />
       <span className="v2-header__name">{label}</span>
     </Link>
   );

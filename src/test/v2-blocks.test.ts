@@ -1,4 +1,7 @@
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import MatchCard from '@/app/_v2/brands/sportsarena/modules/MatchCard';
 import { BLOCK_LIMITS, blockCacheTags, blockContentTags, isFetchable, decideBlockRender, extractBlockLinks, getModuleKeys } from '@/app/_v2/lib/blocks';
 
 const link = (id: string) => ({ targetId: id });
@@ -63,6 +66,15 @@ describe('getModuleKeys', () => {
   it('returns the module keys of each brand', () => {
     expect(getModuleKeys('sportsarena')).toEqual(['breakingnews', 'results', 'scorecard']);
     expect(getModuleKeys('nextfrontier')).toEqual(['breakingnews', 'liveticker', 'topstories', 'hottopics', 'verdict', 'specs']);
+  });
+
+  test('only live Sports Arena match statuses receive the live styling', () => {
+    const render = (status: string) => renderToStaticMarkup(createElement(MatchCard, {
+      match: { home: 'Home', away: 'Away', status },
+    }));
+    expect(render("Live 63'")).toContain('v2-mod-match__status--live');
+    expect(render('Final')).not.toContain('v2-mod-match__status--live');
+    expect(render('Liverpool')).not.toContain('v2-mod-match__status--live');
   });
   it('maps default, theglobe and unknown themes to the Globe keys', () => {
     for (const t of ['default', 'theglobe', '', 'x']) expect(getModuleKeys(t)).toEqual(['newsletter']);

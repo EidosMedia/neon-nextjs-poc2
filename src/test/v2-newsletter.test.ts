@@ -37,7 +37,7 @@ function fixture(theme: string) {
 test.each([
   ['default', '#ffffff', '#3969AC', 'Gabarito'],
   ['theglobe', '#ffffff', '#3969AC', 'Gabarito'],
-  ['sportsarena', '#FFFFFF', '#004E98', 'Fredoka'],
+  ['sportsarena', '#FFFFFF', '#CF3B24', 'Fredoka'],
   ['nextfrontier', '#1D1930', '#FEF445', 'Abril Fatface'],
 ])('%s newsletter preview and email export share the brand palette and stories', async (theme, bg, accent, font) => {
   const data = fixture(theme);
@@ -55,6 +55,18 @@ test.each([
   expect(fragment.indexOf('Third story')).toBeLessThan(fragment.indexOf('In context'));
   expect(fragment.indexOf('In context')).toBeLessThan(fragment.indexOf('Fourth story'));
   expect(fragment).toContain('width="640"');
+});
+
+test('Sports Arena uses darker link text on the peach newsletter context box', async () => {
+  const data = fixture('sportsarena');
+  data.model.data.zoneAccessories = {
+    context: { theme: 'sportsarena', type: 'webpage/newsletter', zone: 'context', items: {
+      zone: { version: '1.0', values: { moreLink: '/more/' } },
+    } },
+  };
+  const html = await renderNewsletterFragment(data);
+  expect(html).toContain('background:#FFEAE2');
+  expect(html).toContain('style="color:#A82A16">See all');
 });
 
 test('newsletter page and zone accessories control the email without unsafe markup or links', async () => {

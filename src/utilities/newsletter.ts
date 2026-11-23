@@ -1,7 +1,7 @@
 import { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 import { isLegacyTheme } from '@/app/themeKeys';
-import { renderV2NewsletterWebpage } from '@/app/_v2/lib/newsletterHtml';
+import { renderV2NewsletterWebpage, sportsArenaNewsletterPalette } from '@/app/_v2/lib/newsletterHtml';
 
 /**
  * Hand-extracted palette per theme, mirroring the CSS custom properties each
@@ -42,12 +42,12 @@ const NEWSLETTER_THEME_STYLES: Record<string, NewsletterThemePalette> = {
     bodyFont: "'Noto Sans', system-ui, sans-serif",
   },
   sportsarena: {
-    bg: '#FFFFFF',
-    text: '#1A1A1A',
-    muted: '#4A4A4A',
-    accent: '#004E98',
-    headlineFont: "'Fredoka', system-ui, sans-serif",
-    bodyFont: "'Open Sans', system-ui, sans-serif",
+    bg: sportsArenaNewsletterPalette.background,
+    text: sportsArenaNewsletterPalette.text,
+    muted: sportsArenaNewsletterPalette.muted,
+    accent: sportsArenaNewsletterPalette.brand,
+    headlineFont: sportsArenaNewsletterPalette.heading,
+    bodyFont: sportsArenaNewsletterPalette.body,
   },
   'business-globe': {
     bg: '#FFF1E5',

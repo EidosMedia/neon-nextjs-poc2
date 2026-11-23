@@ -59,6 +59,11 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
     is enabled (except the minimal header). Its icon-only button has a 44px hit target, centered
     vertically in the pill, with a visually hidden accessible label. Desktop uses `FullMenu` or the sitemap alongside
     inline `MainMenu`; mobile uses `FullMenu`, then `MainMenu`, then the sitemap.
+    Its warm palette is defined in `brands/sportsarena/tokens.json` and mirrored in `tokens.css`;
+    live match status is green, while form errors remain crimson.
+  - The v2 header shows the site's `logoUrl` beside its name when the image loads; a brand-colored
+    disc remains visible while loading or if the logo is missing or fails. Arena's disc uses initials.
+    Legacy site-logo paths beginning `/neon/api/site/resources/` use the frontend `/resources/` proxy.
   - v2 liveblog teasers show entry images by default in basic section/site listings and webpage
     zones, including the `pinnedSummary` variant. An explicit link accessory `image: false` hides
     the image. Sharing defaults off; an explicit link accessory `share: true` enables it.

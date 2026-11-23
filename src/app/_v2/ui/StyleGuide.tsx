@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { BaseModel, ContentElement, PageData, Site, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import type { ContentElement, PageData, Site, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { ArticleModel } from '@/types/models';
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import PageShell from '../chrome/PageShell';
@@ -37,7 +37,7 @@ const yn = (b: boolean) => (b ? 'yes' : 'no');
 const id = (prefix: string, n: number) => `${prefix}-${String(n).padStart(2, '0')}`;
 
 // Fixtures render as LIVE so the inspect overlay stays inert; they carry no contentIds so nothing is editable.
-const FAKE_PAGE = { siteData: { viewStatus: 'live' } } as unknown as PageData<BaseModel>;
+const FAKE_PAGE = makeFixtureBlock({ type: 'style-guide', title: 'Style guide' });
 
 function Cell({ specId, props, children }: { specId: string; props: string; children: ReactNode }) {
   return (
