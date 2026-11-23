@@ -1,11 +1,11 @@
 {
-  "version": "2.0",
+  "version": "1.0",
   "theme": "default",
   "pageAccessories": {
     "header": {
       "name": "header",
       "label": "Header",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "article",
         "liveblog",
@@ -52,7 +52,7 @@
     "footer": {
       "name": "footer",
       "label": "Footer",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "article",
         "liveblog",
@@ -95,7 +95,7 @@
     "articleLeaf": {
       "name": "articleLeaf",
       "label": "Article",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "article"
       ],
@@ -170,7 +170,7 @@
     "liveblogLeaf": {
       "name": "liveblogLeaf",
       "label": "Live blog",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "liveblog"
       ],
@@ -230,7 +230,7 @@
     "galleryLeaf": {
       "name": "galleryLeaf",
       "label": "Gallery",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "gallery"
       ],
@@ -292,7 +292,7 @@
     "zone": {
       "name": "zone",
       "label": "Zone",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "webpage",
         "homewebpage",
@@ -406,7 +406,7 @@
     "articleItem": {
       "name": "articleItem",
       "label": "Article item",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "webpage",
         "homewebpage",
@@ -483,7 +483,7 @@
     "liveblogItem": {
       "name": "liveblogItem",
       "label": "Live blog item",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "webpage",
         "homewebpage",
@@ -544,7 +544,7 @@
     "galleryItem": {
       "name": "galleryItem",
       "label": "Gallery item",
-      "version": "2.0",
+      "version": "1.0",
       "types": [
         "webpage",
         "homewebpage",
