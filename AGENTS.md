@@ -31,13 +31,13 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 11. Neon push invalidation integration.
 12. Site-level web-user authentication and access configured in Neon; web users remain separate
   from editorial users.
-13. Accessory definitions and page/zone/link metadata integration (contract version 2.0). One shared
-  `src/app/_v2/accessories.json` (`"version": "2.0"`, file `theme` `default`) is served for every
+13. Accessory definitions and page/zone/link metadata integration (contract version 1.0). One shared
+  `src/app/_v2/accessories.json` (`"version": "1.0"`, file `theme` `default`) is served for every
   key in `V2_THEMES` (`default`, `theglobe`, `sportsarena`, `nextfrontier`, defined in
   `src/app/themeKeys.ts`) by `/api/accessories`; `getAccessoryDefinitions(theme)` in
   `src/lib/accessories/definitions.ts` returns a frozen copy with `theme` stamped to the requested key,
   so Neon stores values per theme and the resolver's exact-theme rule still holds. A brand that needs
-  its own accessories adds a complete document (same format, version `2.0`) at
+  its own accessories adds a complete document (same format, version `1.0`) at
   `src/app/_v2/brands/<key>/accessories.json` and registers it with a static import in
   `BRAND_ACCESSORIES` (`src/app/_v2/brands/accessories.ts`, empty by default). The override replaces
   the shared document for that theme (no merging); `src/test/accessories-registry.test.ts` checks that
@@ -50,6 +50,11 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
     `zonesummary`, `moreLink`, `sponsorName`. Link accessories `articleItem`, `liveblogItem`,
     `galleryItem`. All of these are rendered by the v2 engine; the special routes (`search`, `about`,
     `login`, NotFound) have no page model and always render header and footer with defaults.
+  - Newsletter page accessory `newsletter` controls the email header, title block, footer, links and
+    optional forward text for `newsletter` and `newsletterstory`. `newsletterZone` controls heading,
+    item layout and image/summary/label visibility in newsletter `main` and `context`; the generic
+    `zone` accessory supplies zone title, summary and more link. Fully qualified stored types such as
+    `webpage/newsletter` match the corresponding base type and subtype; version mismatches still do not.
   - Sports Arena keeps its hamburger visible on desktop and mobile when `header.sectionsMenu`
     is enabled (except the minimal header). Its icon-only button has a 44px hit target, centered
     vertically in the pill, with a visually hidden accessible label. Desktop uses `FullMenu` or the sitemap alongside
@@ -154,8 +159,15 @@ renders with the `default` page components and look, while accessory lookups kee
 consumes no accessory values.
 
 Unlayered legacy globals in `globals.css` are guarded with `:where(:not(.root[data-engine="v2"] *), .v2-legacy *)`
-(zero specificity). Legacy islands rendered inside a v2 root (`LoggedUserBar`, the legacy
-`NewsletterWebpage`) are wrapped in `<div className="v2-legacy">` so they keep the legacy globals.
+(zero specificity). Legacy islands rendered inside a v2 root, such as `LoggedUserBar`, are wrapped
+in `<div className="v2-legacy">` so they keep the legacy globals.
+
+The v2 newsletter webpage preview and `/api/newsletter/[id]` share the email-compatible
+`renderNewsletterFragment`; Main and Context stay separate and existing Insight1 content is preserved.
+The newsletter story uses the shared article-body renderer, reader gate and content-editing scope.
+Free newsletter stories export through `renderNewsletterStoryHtml`; restricted stories return 403
+because the API cannot enforce the browser's demo meter. Unsupported story export nodes return 422
+instead of silently losing content. Keep email markup inline and aligned with v2 brand tokens.
 
 ### v2 reader access (demo only)
 
@@ -426,3 +438,13 @@ When cache behavior changes, verify the implementation in `src/utilities/pageCac
 `src/app/api/cache/route.ts`, then update this Cache Invalidation section and both mirrored
 skill files: `.agents/skills/frontend-cache-management/SKILL.md` and
 `.claude/skills/frontend-cache-management/SKILL.md`. Keep the two skill files synchronized.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

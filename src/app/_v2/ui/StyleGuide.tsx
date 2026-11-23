@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import type { BaseModel, PageData, Site, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import type { BaseModel, ContentElement, PageData, Site, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import type { ArticleModel } from '@/types/models';
 import { ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import PageShell from '../chrome/PageShell';
 import ArticleItem from '../items/ArticleItem';
@@ -12,7 +13,7 @@ import ZoneRenderer from '../zones/ZoneRenderer';
 import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
 import { getBrand } from '../brands/registry';
 import { getBrandModules } from '../brands/moduleRegistry';
-import { MENU_FIXTURE, MODULE_FIXTURES, makeFixtureNode, makeFixtureNodes } from './fixtures';
+import { MENU_FIXTURE, MODULE_FIXTURES, makeFixtureBlock, makeFixtureNode, makeFixtureNodes } from './fixtures';
 import Link from 'next/link';
 import Nav from '../chrome/Nav';
 import MenuToggle from '../chrome/MenuToggle';
@@ -20,6 +21,8 @@ import LoginForm from '../special/LoginForm';
 import { PAYWALL_LEVELS } from '../lib/paywall';
 import PreviewReaderSelect from '../chrome/PreviewReaderSelect';
 import ReaderGate from '../leaves/ReaderGate';
+import NewsletterWebpage from '../pages/NewsletterWebpage';
+import NewsletterStory from '../pages/NewsletterStory';
 
 const ARTICLE_VARIANTS: ArticleItemVariant[] = [
   'standard', 'lead', 'compact', 'textOnly', 'overlay', 'opinion', 'highlight', 'sponsored',
@@ -145,6 +148,38 @@ function moduleCells(theme: string) {
 
 export default async function StyleGuide({ site }: { site?: Site }) {
   const theme = siteThemeOf(site?.root);
+  const newsletter = makeFixtureBlock({
+    type: 'newsletter',
+    title: 'The morning digest',
+    items: [
+      { title: 'The stories shaping today' },
+      { title: 'A new perspective on the week' },
+      { title: 'What to watch next' },
+      { title: 'More from the newsroom' },
+    ],
+  }) as PageData<WebpageModel>;
+  newsletter.model.data.sys = { baseType: 'webpage', type: 'newsletter' };
+  newsletter.model.data.links.pagelink.context = newsletter.model.data.links.pagelink.main.splice(3);
+  const story = makeFixtureBlock({ type: 'newsletterstory', title: 'A story from the newsroom' }) as PageData<ArticleModel>;
+  const element = (nodeType: string, elements: ContentElement[] = [], value = ''): ContentElement =>
+    ({ nodeType, elements, value, attributes: {} });
+  story.model.data.sys = { baseType: 'article', type: 'newsletterstory' };
+  story.model.data.pubInfo = { publicationTime: '2026-11-23T12:00:00Z', publishedBy: { userName: '' }, visible: true };
+  story.model.data.files = { content: { data: element('doc', [
+    element('story', [
+      element('grouphead', [element('headline', [element('p', [element('plainText', [], 'A story from the newsroom')])])]),
+      element('text', [
+        element('p', [element('plainText', [], 'A long-form newsletter opens with the writer’s perspective.')]),
+        element('p', [element('plainText', [], 'More reporting, related links and notes follow in the story body.')]),
+      ]),
+    ]),
+  ]) } };
+  if (site) {
+    newsletter.siteNode = site.root;
+    newsletter.siteData = site;
+    story.siteNode = site.root;
+    story.siteData = site;
+  }
   const body = (
     <div className="v2-container v2-ui">
       <h1 className="v2-ui__title">Style guide</h1>
@@ -187,6 +222,16 @@ export default async function StyleGuide({ site }: { site?: Site }) {
       <section className="v2-ui__section">
         <h2 className="v2-ui__heading">Brand modules</h2>
         {moduleCells(theme)}
+      </section>
+      <section className="v2-ui__section">
+        <h2 className="v2-ui__heading">Newsletter webpage</h2>
+        <p className="v2-ui__note">Email preview for this brand, using the same markup as the HTML export.</p>
+        <NewsletterWebpage data={newsletter} />
+      </section>
+      <section className="v2-ui__section">
+        <h2 className="v2-ui__heading">Newsletter story</h2>
+        <p className="v2-ui__note">Editorial newsletter using the article body.</p>
+        <NewsletterStory data={story} />
       </section>
       <section className="v2-ui__section">
         <h2 className="v2-ui__heading">Chrome and common pages</h2>

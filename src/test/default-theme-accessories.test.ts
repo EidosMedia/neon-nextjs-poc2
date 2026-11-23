@@ -22,7 +22,7 @@ function page(options: {
 const headerSet = (values: Record<string, unknown>, theme = 'default', type = 'article') => ({
   theme,
   type,
-  items: { header: { version: '2.0', values } },
+  items: { header: { version: '1.0', values } },
 });
 
 describe('normalizeTheme', () => {
@@ -47,8 +47,8 @@ describe('getPageChrome', () => {
           theme: 'default',
           type: 'article',
           items: {
-            header: { version: '2.0', values: { enabled: false } },
-            footer: { version: '2.0', values: { menu: false } },
+            header: { version: '1.0', values: { enabled: false } },
+            footer: { version: '1.0', values: { menu: false } },
           },
         },
       }),

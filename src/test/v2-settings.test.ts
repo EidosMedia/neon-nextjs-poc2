@@ -18,11 +18,11 @@ function page(o: {
 const pageSet = (theme: string, type: string, items: Record<string, Record<string, unknown>>) => ({
   theme,
   type,
-  items: Object.fromEntries(Object.entries(items).map(([k, values]) => [k, { version: '2.0', values }])),
+  items: Object.fromEntries(Object.entries(items).map(([k, values]) => [k, { version: '1.0', values }])),
 });
 
 const zoneSet = (values: Record<string, unknown>, theme = 'sportsarena', type = 'webpage', zone = 'main') => ({
-  theme, type, zone, items: { zone: { version: '2.0', values } },
+  theme, type, zone, items: { zone: { version: '1.0', values } },
 });
 
 const wp = (zoneAccessories: unknown) =>
@@ -155,7 +155,7 @@ describe('getItemSettings', () => {
   const link = (sys: Record<string, string>, values?: Record<string, unknown>, key = 'articleItem', linkedType = sys.type) => ({
     sys,
     linkMetadata: values
-      ? { linkAccessories: { theme: 'sportsarena', type: 'webpage', zone: 'main', linkedType, items: { [key]: { version: '2.0', values } } } }
+      ? { linkAccessories: { theme: 'sportsarena', type: 'webpage', zone: 'main', linkedType, items: { [key]: { version: '1.0', values } } } }
       : undefined,
   }) as never;
   const data = wp(undefined);

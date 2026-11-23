@@ -14,10 +14,12 @@ import LeafLayout from '../leaves/LeafLayout';
 import LeafAccess from '../leaves/LeafAccess';
 import { heroImage } from '../leaves/heroImage';
 import { loadContent } from '../leaves/loadContent';
+import NewsletterStory from './NewsletterStory';
 
 type PageProps = { data: PageData<ArticleModel> };
 
 const ArticleLeaf = async ({ data }: PageProps) => {
+  if (data.model.data.sys?.type === 'newsletterstory') return <NewsletterStory data={data} />;
   const article = await loadContent(data.model.data);
   const leaf = getPageSettings(data).leaf;
   const settings = leaf?.kind === 'article' ? leaf : V2_DEFAULTS.articleLeaf;

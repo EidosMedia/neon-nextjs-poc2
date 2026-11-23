@@ -8,7 +8,7 @@ const data = (siteNode: unknown, pageAccessories?: unknown) =>
     siteNode,
     model: { data: { sys: { type: 'article', baseType: 'article' }, pubInfo: { attributes: { pageAccessories } } } },
   }) as never;
-const header = (theme: string) => ({ theme, type: 'article', items: { header: { version: '2.0', values: { enabled: false } } } });
+const header = (theme: string) => ({ theme, type: 'article', items: { header: { version: '1.0', values: { enabled: false } } } });
 
 describe('accessory theme (Neon resolution)', () => {
   it('ignores the site configuration theme', () => {

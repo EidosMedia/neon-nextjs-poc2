@@ -2,6 +2,58 @@
   "version": "1.0",
   "theme": "default",
   "pageAccessories": {
+    "newsletter": {
+      "name": "newsletter",
+      "label": "Newsletter",
+      "version": "1.0",
+      "types": ["newsletter", "newsletterstory"],
+      "toggles": [
+        { "name": "showForward", "label": "Show forward line", "default": false }
+      ],
+      "properties": [
+        {
+          "name": "titleVariant",
+          "label": "Title block",
+          "default": "auto",
+          "options": [
+            { "name": "auto", "label": "Brand default" },
+            { "name": "summary", "label": "With summary" },
+            { "name": "title", "label": "Title only" }
+          ]
+        },
+        {
+          "name": "headerVariant",
+          "label": "Newsletter header",
+          "default": "auto",
+          "options": [
+            { "name": "auto", "label": "Brand default" },
+            { "name": "standard", "label": "Standard" },
+            { "name": "compact", "label": "Compact" }
+          ]
+        },
+        {
+          "name": "footerVariant",
+          "label": "Newsletter footer",
+          "default": "auto",
+          "options": [
+            { "name": "auto", "label": "Brand default" },
+            { "name": "standard", "label": "Standard" },
+            { "name": "minimal", "label": "Minimal" }
+          ]
+        },
+        { "name": "preheader", "label": "Preheader", "type": "string", "size": 256, "default": "" },
+        { "name": "edition", "label": "Edition", "type": "string", "size": 128, "default": "" },
+        { "name": "browserUrl", "label": "View in browser URL", "type": "string", "size": 256, "default": "" },
+        { "name": "unsubscribeUrl", "label": "Unsubscribe URL", "type": "string", "size": 256, "default": "" },
+        { "name": "preferencesUrl", "label": "Preferences URL", "type": "string", "size": 256, "default": "" },
+        { "name": "facebookUrl", "label": "Facebook URL", "type": "string", "size": 256, "default": "" },
+        { "name": "instagramUrl", "label": "Instagram URL", "type": "string", "size": 256, "default": "" },
+        { "name": "youtubeUrl", "label": "YouTube URL", "type": "string", "size": 256, "default": "" },
+        { "name": "telegramUrl", "label": "Telegram URL", "type": "string", "size": 256, "default": "" },
+        { "name": "legal", "label": "Legal line", "type": "string", "size": 256, "default": "" },
+        { "name": "forwardText", "label": "Forward line", "type": "string", "size": 256, "default": "" }
+      ]
+    },
     "header": {
       "name": "header",
       "label": "Header",
@@ -289,6 +341,52 @@
     }
   },
   "zoneAccessories": {
+    "newsletterZone": {
+      "name": "newsletterZone",
+      "label": "Newsletter zone",
+      "version": "1.0",
+      "types": ["newsletter"],
+      "zones": ["main", "context"],
+      "toggles": [
+        { "name": "image", "label": "Show images", "default": true },
+        { "name": "summary", "label": "Show summaries", "default": true },
+        { "name": "label", "label": "Show labels", "default": true }
+      ],
+      "properties": [
+        {
+          "name": "heading",
+          "label": "Zone heading",
+          "default": "summary",
+          "options": [
+            { "name": "summary", "label": "With summary" },
+            { "name": "title", "label": "Title only" },
+            { "name": "hidden", "label": "Hidden" }
+          ]
+        },
+        {
+          "name": "layout",
+          "label": "Item layout",
+          "default": "auto",
+          "options": [
+            { "name": "auto", "label": "Brand default" },
+            { "name": "stream", "label": "Stream" },
+            { "name": "cards", "label": "Cards" },
+            { "name": "list", "label": "List" },
+            { "name": "numbered", "label": "Numbered list" }
+          ]
+        },
+        {
+          "name": "contextStyle",
+          "label": "Context style",
+          "default": "auto",
+          "options": [
+            { "name": "auto", "label": "Brand default" },
+            { "name": "plain", "label": "Plain list" },
+            { "name": "box", "label": "Box" }
+          ]
+        }
+      ]
+    },
     "zone": {
       "name": "zone",
       "label": "Zone",
