@@ -6,6 +6,8 @@ import Context from '../../components/webpage/Context';
 import Insight1 from '../../components/webpage/Insight1';
 import Insight2 from '../../components/webpage/Insight2';
 import Footer from './Footer';
+import EmptySection from '../../components/EmptySection';
+import { sectionHasObjects } from '@/utilities/sectionRecirculation';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -17,6 +19,8 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
   return (
     <div className="container mx-auto">
       <Navbar data={data} />
+      {!sectionHasObjects(data) ? <EmptySection data={data} /> : (
+      <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         <div className="col-span-1 relative group">
           <Main data={data} />
@@ -37,6 +41,8 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
           <Insight2 data={data} />
         </div>
       </div>
+      </>
+      )}
       <Footer data={data} />
     </div>
   );

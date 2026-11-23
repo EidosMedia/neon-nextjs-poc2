@@ -6,6 +6,8 @@ import Context from '../../components/webpage/Context';
 import Insight1 from '../../components/webpage/Insight1';
 import Insight2 from '../../components/webpage/Insight2';
 import Footer from './Footer';
+import EmptySection from '../../components/EmptySection';
+import { sectionHasObjects } from '@/utilities/sectionRecirculation';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -39,6 +41,7 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
       )}
 
       <div className="w-full max-w-[1300px] mx-auto px-4 py-6">
+        {!sectionHasObjects(data) ? <EmptySection data={data} /> : (
         <div className="flex flex-col gap-6">
           <section>
             <div className="foghorn-section-header">Top Stories</div>
@@ -57,6 +60,7 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
             <Insight2 data={data} />
           </section>
         </div>
+        )}
       </div>
 
       <Footer data={data} />

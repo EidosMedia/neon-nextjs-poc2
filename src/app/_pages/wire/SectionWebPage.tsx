@@ -7,6 +7,8 @@ import Main from '../../components/webpage/Main';
 import Context from '../../components/webpage/Context';
 import Insight1 from '../../components/webpage/Insight1';
 import Insight2 from '../../components/webpage/Insight2';
+import EmptySection from '../../components/EmptySection';
+import { sectionHasObjects } from '@/utilities/sectionRecirculation';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -34,7 +36,7 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
           </span>
         </div>
 
-        <div className="flex gap-4">
+        {!sectionHasObjects(data) ? <EmptySection data={data} /> : <div className="flex gap-4">
 
           {/* ── Main feed ────────────────────────────────────────────── */}
           <div className="flex-1 min-w-0">
@@ -68,7 +70,7 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
             </div>
           </div>
 
-        </div>
+        </div>}
       </div>
 
       <Footer data={data} />

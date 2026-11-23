@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Footer from './Footer';
 import ArticleOrganism from './components/ArticleOrganism';
+import EmptySection from '../../components/EmptySection';
+import { sectionHasObjects } from '@/utilities/sectionRecirculation';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -35,7 +37,9 @@ const Section: React.FC<PageProps> = ({ data }) => {
           </div>
         )}
 
-        {linkedObjects.length === 0 ? (
+        {linkedObjects.length === 0 && data.model.data.sys?.baseType === 'section' && !sectionHasObjects(data) ? (
+          <EmptySection data={data} />
+        ) : linkedObjects.length === 0 ? (
           <div className="flex items-center justify-center py-12" style={{ color: 'var(--color-neutral-light-2)' }}>
             No articles found.
           </div>
@@ -50,7 +54,7 @@ const Section: React.FC<PageProps> = ({ data }) => {
             />
             {rest.length > 0 && (
               <div className="financier-default-grid">
-                {rest.map((linkedObject: any, idx: number) => (
+                {rest.map((linkedObject, idx) => (
                   <ArticleOrganism
                     key={linkedObject.id ?? idx}
                     data={data}

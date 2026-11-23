@@ -141,6 +141,11 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 Single-slug specials (bypass CMS lookup): `search`, `about`, `login`, `ui`. `ui` is the v2 style guide:
 it renders only with an `editorialauth` cookie or when `NODE_ENV !== 'production'`, otherwise 404.
 
+An empty `section` or `sectionwebpage` with no children or linked objects shows an editorial empty state.
+It collects up to four distinct articles from nearest ancestor section paths, then the site root,
+using the same auth and LIVE/PREVIEW page-fetch policy as the current request. If none are available,
+only the empty message appears. Authored section webpages with linked objects and empty site roots are unchanged.
+
 Site theme: `siteThemeOf()` (`src/lib/accessories/defaultThemeAccessories.ts`) reads the theme set on the
 site root (`root.attributes.theme`) first, then the site configuration's custom `theme` value
 (`root.staticAttributes.theme`, next to settings such as `invalidateNextJsTimeoutMs`), else `default`. An
