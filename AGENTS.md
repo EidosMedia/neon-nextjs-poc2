@@ -31,13 +31,13 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 11. Neon push invalidation integration.
 12. Site-level web-user authentication and access configured in Neon; web users remain separate
   from editorial users.
-13. Accessory definitions and page/zone/link metadata integration (contract version 2.0). One shared
-  `src/app/_v2/accessories.json` (`"version": "2.0"`, file `theme` `default`) is served for every
+13. Accessory definitions and page/zone/link metadata integration (contract version 1.0). One shared
+  `src/app/_v2/accessories.json` (`"version": "1.0"`, file `theme` `default`) is served for every
   key in `V2_THEMES` (`default`, `theglobe`, `sportsarena`, `nextfrontier`, defined in
   `src/app/themeKeys.ts`) by `/api/accessories`; `getAccessoryDefinitions(theme)` in
   `src/lib/accessories/definitions.ts` returns a frozen copy with `theme` stamped to the requested key,
   so Neon stores values per theme and the resolver's exact-theme rule still holds. A brand that needs
-  its own accessories adds a complete document (same format, version `2.0`) at
+  its own accessories adds a complete document (same format, version `1.0`) at
   `src/app/_v2/brands/<key>/accessories.json` and registers it with a static import in
   `BRAND_ACCESSORIES` (`src/app/_v2/brands/accessories.ts`, empty by default). The override replaces
   the shared document for that theme (no merging); `src/test/accessories-registry.test.ts` checks that
@@ -50,6 +50,32 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
     `zonesummary`, `moreLink`, `sponsorName`. Link accessories `articleItem`, `liveblogItem`,
     `galleryItem`. All of these are rendered by the v2 engine; the special routes (`search`, `about`,
     `login`, NotFound) have no page model and always render header and footer with defaults.
+  - Newsletter page accessory `newsletter` controls the email header, title block, footer, links and
+    optional forward text for `newsletter` and `newsletterstory`. `newsletterZone` controls heading,
+    item layout and image/summary/label visibility in newsletter `main` and `context`; the generic
+    `zone` accessory supplies zone title, summary and more link. Fully qualified stored types such as
+    `webpage/newsletter` match the corresponding base type and subtype; version mismatches still do not.
+  - Sports Arena keeps its hamburger visible on desktop and mobile when `header.sectionsMenu`
+    is enabled (except the minimal header). Its icon-only button has a 44px hit target, centered
+    vertically in the pill, with a visually hidden accessible label. Desktop uses `FullMenu` or the sitemap alongside
+    inline `MainMenu`; mobile uses `FullMenu`, then `MainMenu`, then the sitemap.
+    Its warm palette is defined in `brands/sportsarena/tokens.json` and mirrored in `tokens.css`;
+    live match status is green, while form errors remain crimson.
+  - The v2 header shows the site's `logoUrl` beside its name when the image loads; a brand-colored
+    disc remains visible while loading or if the logo is missing or fails. Arena's disc uses initials.
+    Legacy site-logo paths beginning `/neon/api/site/resources/` use the frontend `/resources/` proxy.
+  - v2 liveblog teasers show entry images by default in basic section/site listings and webpage
+    zones, including the `pinnedSummary` variant. An explicit link accessory `image: false` hides
+    the image. Sharing defaults off; an explicit link accessory `share: true` enables it.
+    `/ui` demonstrates both image-on and image-off variants.
+  - Liveblog `compact` teasers reuse article compact sizing (120x80 thumbnail and h4 title),
+    placing the red dot and Live label left of the overhead, with the article-style byline/date
+    and no post timeline or summary. `auto` selects compact for compact slots; explicit variants
+    remain unchanged. `/ui` includes all image/share combinations as LIV-13 through LIV-16.
+  - All themes share `useLiveblogPosts` (`src/hooks/useLiveblogPosts.ts`) and a first-load skeleton
+    for timelines and leaf feeds. Embedded initial posts render immediately; background polls
+    retain visible posts. Empty and failed responses are distinct from loading, and failures
+    without existing posts show a retry status. Skeleton animation respects reduced motion.
   - Exact-type exclusion (`resolveAccessories.ts`): when any definition at a level matches the exact
     `type` (page `types`, or `linkedTypes` at link level), definitions matching only through the
     `baseType` are dropped whatever their names. So `article/gallery` gets only `galleryLeaf`
@@ -115,6 +141,11 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
 Single-slug specials (bypass CMS lookup): `search`, `about`, `login`, `ui`. `ui` is the v2 style guide:
 it renders only with an `editorialauth` cookie or when `NODE_ENV !== 'production'`, otherwise 404.
 
+An empty `section` or `sectionwebpage` with no children or linked objects shows an editorial empty state.
+It collects up to four distinct articles from nearest ancestor section paths, then the site root,
+using the same auth and LIVE/PREVIEW page-fetch policy as the current request. If none are available,
+only the empty message appears. Authored section webpages with linked objects and empty site roots are unchanged.
+
 Site theme: `siteThemeOf()` (`src/lib/accessories/defaultThemeAccessories.ts`) reads the theme set on the
 site root (`root.attributes.theme`) first, then the site configuration's custom `theme` value
 (`root.staticAttributes.theme`, next to settings such as `invalidateNextJsTimeoutMs`), else `default`. An
@@ -138,16 +169,86 @@ renders with the `default` page components and look, while accessory lookups kee
 consumes no accessory values.
 
 Unlayered legacy globals in `globals.css` are guarded with `:where(:not(.root[data-engine="v2"] *), .v2-legacy *)`
-(zero specificity). Legacy islands rendered inside a v2 root (`LoggedUserBar`, the legacy
-`NewsletterWebpage`) are wrapped in `<div className="v2-legacy">` so they keep the legacy globals.
+(zero specificity). Legacy islands rendered inside a v2 root, such as `LoggedUserBar`, are wrapped
+in `<div className="v2-legacy">` so they keep the legacy globals.
 
-The v2 paywall is visual only: the full model still reaches the client, so it is not access control.
+The v2 newsletter webpage preview and `/api/newsletter/[id]` share the email-compatible
+`renderNewsletterFragment`; Main and Context stay separate and existing Insight1 content is preserved.
+The newsletter story uses the shared article-body renderer, reader gate and content-editing scope.
+Free newsletter stories export through `renderNewsletterStoryHtml`; restricted stories return 403
+because the API cannot enforce the browser's demo meter. Unsupported story export nodes return 422
+instead of silently losing content. Keep email markup inline and aligned with v2 brand tokens.
+
+### v2 reader access (demo only)
+
+`pubInfo.paywallLevel` alone controls restriction: `FREE`, `FREEMIUM`, `METERED`, `PREMIUM`.
+Missing levels mean FREE; unknown nonempty levels warn and are treated as PREMIUM. Accessory
+variants are visual layouts only; the removed `paywalled` article variant falls back to `standard`.
+Article, liveblog and gallery items/leaves use the same Lucide Crown icon for all non-FREE tiers.
+
+On LIVE, all non-FREE leaves require a `webauth` cookie. FREEMIUM then opens; METERED allows
+10 distinct canonical article paths per UTC day (revisits remain accessible after exhaustion).
+PREMIUM assumes every signed-in reader is a subscriber **for this demo only**, pending real
+subscription entitlements. Editorial authentication is not reader authentication.
+
+The v2 PREVIEW admin bar has a **Reader view** selector: FREE simulates anonymous access,
+REGISTERED opens FREEMIUM and metered content but blocks PREMIUM, and PREMIUM opens every tier
+without consuming the meter. Its Redux selection survives client navigation, resets to PREMIUM on
+reload, and is ignored in LIVE. The preview meter uses separate storage and never consumes LIVE
+allowances. PREMIUM is the default to preserve full editorial access, including the embedded Neon
+preview where the admin bar remains hidden.
+While the selector is visible, v2 headers and mobile drawers mirror the selected reader: FREE shows
+Subscribe and Login, REGISTERED shows Subscribe and a simulated account, and PREMIUM shows only a
+simulated account. Simulated Logout is disabled and never changes the real web-user session. LIVE
+and pages without the editorial bar continue to show the real reader session.
+
+`lib/paywall.ts` owns policy and URL/date normalization; `LeafAccess` reads the httpOnly cookie
+server-side and passes only its presence to `ReaderGate`. `useMeteredAccess` persists per-site,
+per-browser daily URL history in localStorage (`neon:v2:meter:live:<site>` or
+`neon:v2:meter:preview:<site>`), serializes updates with Web Locks when available, refreshes across
+tabs and resets at 00:00 UTC. Storage errors block metered content with an explicit message rather
+than silently resetting the allowance. Legacy themes are unchanged.
+
+This is visual demo gating, **not access control**: the full model/body still reaches the client.
+Local history can be cleared or altered; real enforcement requires backend authorization and metering.
 
 Embedded preview: inside the Neon app preview frame (`window.name === 'neonapp-preview'`, `isNeonAppPreview()`),
 `ReloadListener` installs `installPreviewGuard()` (`src/utilities/previewGuard.ts`): one capture listener on
 `window` cancels link clicks that leave the page and every form submit, for all themes and for elements
 rendered after mount. In-page `#` links and UI buttons (menus, tabs) keep working. Outside the frame
 nothing changes.
+
+The editorial admin bar offers a view-status menu, a version-history panel and a viewport menu.
+Viewport previews use a same-origin iframe with the page rendered through a React portal, so CSS
+media queries see a real 768 × 1024px tablet or 390 × 844px phone viewport, with portrait/landscape
+rotation, while Redux/editor controls remain shared. Responsive is the default; the selection and
+orientation are remembered in session storage and carried through
+Preview/Live switches. The control is hidden below 720px and in embedded Neon preview. Page UI that
+inspects its window or document must use the rendered element's `ownerDocument` when possible so it
+works in the frame. The history panel's latest-published badge describes the latest history entry,
+not proof that the object is currently published.
+
+### v2 content-item editing
+
+`PageShell` and `ZoneRenderer` supply `ContentEditingProvider` with the object's ID, view status and lock.
+Shared `renderContent` wrappers inherit that status; do not let an omitted `ContentEditable.viewStatus`
+silently turn a PREVIEW leaf into a LIVE editor. Parent LIVE status takes precedence, but locks are
+scoped to the owning object's ID, never inherited across objects. Only an element with a content-item `id` and an owning object `id`
+can be edited when **Edit Content Items** is on. `ItemFrame` uses the linked object's
+`attributes.contentIds.teaserTitle`/`teaserSummary` and saves against that object's ID, not the host
+webpage. This edits the target object's teaser; page-specific teaser override persistence is unverified.
+In PREVIEW, editing temporarily reveals the body regardless of the reader simulation and never consumes
+the meter; turning editing off restores the selected reader view. LIVE access is never bypassed.
+For `webpage`, `homewebpage` and `sectionwebpage`, the admin-bar switch is independent of host-page
+version history: PREVIEW edits linked targets' teasers, while LIVE offers read-only additional
+information. History loading/refetching must not hide that switch or turn its active mode off.
+Leaf editing remains restricted to the latest editable PREVIEW version.
+
+Every Neon lock blocks that object's v2 inline editing (including `CollaborationEditor`). A locked
+webpage or content block does not block unlocked linked objects' teasers: `ItemFrame` establishes each
+target's own scope. Fresh lock metadata loaded by `ArticleOverlay` applies only to that target; an
+explicit unlocked result clears its stale initial lock. Locking does not disable the block-level Info/Publish/Unpublish toolbar or the admin
+bar's Open in Editor action. Inspect-mode teaser clicks must not navigate away from the editor.
 
 ## Authentication Model
 
@@ -250,6 +351,10 @@ paths). Shared Neon CMS value types and helpers originate in the SDK and are exp
 
 The SDK owns the view-status contract:
 
+`NeonConnection.refreshSites()` atomically refreshes LIVE and PREVIEW, shares concurrent refreshes,
+and rejects on failure without replacing the previous list. Background callers must handle that
+rejection. The single-view refresh methods preserve the other view's entries.
+
 - `ViewStatus` is the uppercase editorial value: `LIVE` or `PREVIEW`.
 - `SiteViewStatus` is the lowercase site API value: `live` or `preview`.
 - Convert canonical values with `toSiteViewStatus()`. Normalize raw headers, query parameters,
@@ -326,6 +431,11 @@ selection does not check whether `editorialauth` is present. Do not assume that 
 editorial request bypasses the cache or that authenticated LIVE responses are isolated
 without verifying the deployed cache-key behavior.
 
+The page and metadata entry points explicitly await Next.js `connection()` before SDK work to
+exclude request-time clocks and logging from prerendering. Upstream page failures other than
+401/403/404/410 propagate to the error boundary, rather than being rendered as missing content.
+Periodic site refresh failures are logged and retain the last successful LIVE/PREVIEW snapshot.
+
 **Logging**: Every cache build (`neon-fo:page-cache`) and every invalidation call
 (`neon-fo:cache-api`) emit structured pino JSON logs with node IDs, zone contents, and paths.
 
@@ -338,3 +448,13 @@ When cache behavior changes, verify the implementation in `src/utilities/pageCac
 `src/app/api/cache/route.ts`, then update this Cache Invalidation section and both mirrored
 skill files: `.agents/skills/frontend-cache-management/SKILL.md` and
 `.claude/skills/frontend-cache-management/SKILL.md`. Keep the two skill files synchronized.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

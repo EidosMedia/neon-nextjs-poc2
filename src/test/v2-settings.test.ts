@@ -18,11 +18,11 @@ function page(o: {
 const pageSet = (theme: string, type: string, items: Record<string, Record<string, unknown>>) => ({
   theme,
   type,
-  items: Object.fromEntries(Object.entries(items).map(([k, values]) => [k, { version: '2.0', values }])),
+  items: Object.fromEntries(Object.entries(items).map(([k, values]) => [k, { version: '1.0', values }])),
 });
 
 const zoneSet = (values: Record<string, unknown>, theme = 'sportsarena', type = 'webpage', zone = 'main') => ({
-  theme, type, zone, items: { zone: { version: '2.0', values } },
+  theme, type, zone, items: { zone: { version: '1.0', values } },
 });
 
 const wp = (zoneAccessories: unknown) =>
@@ -89,6 +89,13 @@ describe('getPageSettings', () => {
     expect(s.leaf).toMatchObject({ kind: 'article', variant: 'fullBleedHero' });
   });
 
+  test('removed paywalled accessory variant falls back to the standard visual layout', () => {
+    const s = getPageSettings(page({
+      pageAccessories: pageSet('default', 'article', { articleLeaf: { variant: 'paywalled' } }),
+    }));
+    expect(s.leaf).toMatchObject({ kind: 'article', variant: 'standard' });
+  });
+
   test('gallery page yields a gallery leaf', () => {
     const s = getPageSettings(page({
       type: 'gallery',
@@ -104,6 +111,13 @@ describe('getPageSettings', () => {
 });
 
 describe('getZoneSettings', () => {
+  test('carousel: autoplay and dots are zone toggles, the new compositions are accepted', () => {
+    const z = getZoneSettings(wp({ main: zoneSet({ composition: 'carousel', autoplay: true, dots: false }) }), 'main');
+    expect(z).toMatchObject({ composition: 'carousel', autoplay: true, dots: false });
+    expect(getZoneSettings(wp({ main: zoneSet({ composition: 'banner' }) }), 'main').composition).toBe('banner');
+    expect(getZoneSettings(wp({ main: zoneSet({ composition: 'highlight' }) }), 'main').composition).toBe('highlight');
+  });
+
   test('defaults', () => {
     expect(getZoneSettings(wp(undefined), 'main')).toEqual(V2_DEFAULTS.zone);
   });
@@ -148,7 +162,7 @@ describe('getItemSettings', () => {
   const link = (sys: Record<string, string>, values?: Record<string, unknown>, key = 'articleItem', linkedType = sys.type) => ({
     sys,
     linkMetadata: values
-      ? { linkAccessories: { theme: 'sportsarena', type: 'webpage', zone: 'main', linkedType, items: { [key]: { version: '2.0', values } } } }
+      ? { linkAccessories: { theme: 'sportsarena', type: 'webpage', zone: 'main', linkedType, items: { [key]: { version: '1.0', values } } } }
       : undefined,
   }) as never;
   const data = wp(undefined);
@@ -157,7 +171,7 @@ describe('getItemSettings', () => {
     expect(getItemSettings(data, 'main', link({ type: 'article', baseType: 'article' }))).toEqual(V2_DEFAULTS.articleItem);
     expect(
       getItemSettings(data, 'main', link({ type: 'article', baseType: 'article' }, { variant: 'lead', standfirst: true })),
-    ).toEqual({ kind: 'article', variant: 'lead', image: true, standfirst: true });
+    ).toEqual({ kind: 'article', variant: 'lead', image: true, standfirst: true, kicker: true });
   });
 
   test('kind comes from node sys', () => {
@@ -166,5 +180,27 @@ describe('getItemSettings', () => {
     expect(
       getItemSettings(data, 'main', link({ type: 'gallery', baseType: 'article' }, { variant: 'grid', captions: false }, 'galleryItem')),
     ).toEqual({ kind: 'gallery', variant: 'grid', captions: false, thumbnails: true });
+  });
+
+  test('liveblog zone images default on but respect an explicit opt-out', () => {
+    const sys = { type: 'liveblog', baseType: 'liveblog' };
+    expect(getItemSettings(data, 'main', link(sys))).toMatchObject({ kind: 'liveblog', image: true });
+    expect(
+      getItemSettings(data, 'main', link(sys, { image: false }, 'liveblogItem')),
+    ).toMatchObject({ kind: 'liveblog', image: false });
+  });
+
+  test('liveblog sharing defaults off but respects an explicit opt-in', () => {
+    const sys = { type: 'liveblog', baseType: 'liveblog' };
+    expect(getItemSettings(data, 'main', link(sys))).toMatchObject({ kind: 'liveblog', share: false });
+    expect(
+      getItemSettings(data, 'main', link(sys, { share: true }, 'liveblogItem')),
+    ).toMatchObject({ kind: 'liveblog', share: true });
+  });
+
+  test('accepts the compact liveblog accessory variant', () => {
+    expect(getItemSettings(data, 'main', link(
+      { type: 'liveblog', baseType: 'liveblog' }, { variant: 'compact' }, 'liveblogItem',
+    ))).toMatchObject({ kind: 'liveblog', variant: 'compact', image: true, share: false });
   });
 });

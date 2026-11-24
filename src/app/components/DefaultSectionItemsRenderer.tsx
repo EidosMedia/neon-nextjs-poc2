@@ -1,50 +1,17 @@
-'use client';
-import React from 'react';
-import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import ArticleOrganism from './base/Organism/ArticleOrganism';
+import type { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import EmptySection from './EmptySection';
+import SectionItemsClient from './SectionItemsClient';
+import { sectionHasObjects } from '@/utilities/sectionRecirculation';
 
 type DefaultSectionItemsRendererProps = {
   data: PageData<BaseModel>;
 };
 
-const DefaultSectionItemsRenderer: React.FC<DefaultSectionItemsRendererProps> = ({ data }) => {
-  console.log('[NEON] render: DefaultSectionItemsRenderer');
-  
-  const linkedObjects = data.model.data.children ? data.model.data.children.map(item => data.model.nodes[item]) : [];
-
-  //console.log('Linked Objects:', linkedObjects);
-
-  if (linkedObjects.length === 0) {
-    return <div className="container mx-auto flex align-center justify-center">No articles found.</div>;
+function DefaultSectionItemsRenderer({ data }: DefaultSectionItemsRendererProps) {
+  if (data.model.data.sys?.baseType === 'section' && !sectionHasObjects(data)) {
+    return <EmptySection data={data} />;
   }
-
-  return (
-    <>
-      <ArticleOrganism
-        linkedObjects={linkedObjects}
-        linkedObject={linkedObjects.shift()}
-        index={0}
-        data={data}
-        type="article-xl"
-      />
-      <div className="grid grid-cols-12">
-        <div className="col-span-8">
-          {linkedObjects.map((linkedObject: any, index: number) => (
-            <div key={linkedObject.id} className="relative group">
-              <ArticleOrganism
-                linkedObject={linkedObject}
-                linkedObjects={linkedObjects}
-                index={index}
-                data={data}
-                type="article-md"
-              />
-            </div>
-          ))}
-        </div>
-        <div className="col-span-4"></div>
-      </div>
-    </>
-  );
-};
+  return <SectionItemsClient data={data} />;
+}
 
 export default DefaultSectionItemsRenderer;

@@ -76,11 +76,11 @@ function problems(document: Json): string[] {
 
 function expectValidDocument(path: string) {
   const document: Json = JSON.parse(readFileSync(path, 'utf8'));
-  expect(document.version).toBe('2.0');
+  expect(document.version).toBe('1.0');
   expect(problems(document)).toEqual([]);
   for (const level of ['pageAccessories', 'zoneAccessories', 'linkAccessories']) {
     for (const definition of Object.values<Json>(document[level] ?? {})) {
-      expect(definition.version).toBe('2.0');
+      expect(definition.version).toBe('1.0');
     }
   }
 }
@@ -99,12 +99,12 @@ describe('shared v2 accessories.json', () => {
     expect(stray).toEqual([]);
   });
 
-  test('the file itself declares theme "default" and version "2.0"', () => {
+  test('the file itself declares theme "default" and version "1.0"', () => {
     expect(sharedFile.theme).toBe('default');
-    expect(sharedFile.version).toBe('2.0');
+    expect(sharedFile.version).toBe('1.0');
   });
 
-  test('follows the definition rules and every definition is version 2.0', () => {
+  test('follows the definition rules and every definition is version 1.0', () => {
     expectValidDocument(path);
   });
 

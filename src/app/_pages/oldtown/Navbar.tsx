@@ -5,6 +5,7 @@ import { headers, cookies } from 'next/headers';
 import { Search } from 'lucide-react';
 import LoginButton from '../../components/LoginButton';
 import MenuToggle from './MenuToggle';
+import { getCachedTimestamp } from '@/lib/clock';
 
 const UTILITY_LINKS = [
   { label: 'Today\'s Paper', href: '/todays-paper' },
@@ -36,7 +37,7 @@ export default async function Navbar({
   const cookieStore = await cookies();
   const webauth = cookieStore.get('webauth')?.value;
 
-  const now = new Date();
+  const now = new Date(await getCachedTimestamp());
   const dateLabel = now.toLocaleDateString('en-US', {
     weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
   });

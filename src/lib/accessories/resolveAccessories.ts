@@ -158,13 +158,15 @@ function isMoreSpecific(candidate: number[], current: number[]): boolean {
 }
 
 function matchesContext(stored: AccessorySet, context: AccessoryContext): boolean {
+  const matchesType = (storedType: string | undefined, type: string | undefined, baseType: string | undefined) =>
+    storedType === type || Boolean(baseType && type && storedType === `${baseType}/${type}`);
   const zoneMatches = context.level === 'page'
     ? stored.zone === undefined
     : stored.zone === context.zone;
   const linkedTypeMatches = context.level === 'link'
-    ? stored.linkedType === context.linkedType
+    ? matchesType(stored.linkedType, context.linkedType, context.linkedBaseType)
     : stored.linkedType === undefined;
-  return stored.theme === context.theme && stored.type === context.type && zoneMatches && linkedTypeMatches;
+  return stored.theme === context.theme && matchesType(stored.type, context.type, context.baseType) && zoneMatches && linkedTypeMatches;
 }
 
 function defaultValues(definition: AccessoryDefinition): Record<string, boolean | string> {

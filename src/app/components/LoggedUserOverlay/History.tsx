@@ -1,347 +1,165 @@
-import useVersions from '@/hooks/useVersions';
-import {
-  getInspectItems,
-  loggedUserSlice,
-  setInspectItemsVisible as setInspectItemsVisibleAction,
-  setInspectItems as setInspectItemsAction,
-} from '@/lib/features/loggedUserSlice';
-import { BaseModel, NodeVersion, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
-import clsx from 'clsx';
-import { Clock, LoaderCircle } from 'lucide-react';
-import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
-import Close from '../icons/close';
+'use client';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { isEqual } from 'lodash';
+import { History as HistoryIcon, LoaderCircle, X } from 'lucide-react';
+import Link from 'next/link';
+import clsx from 'clsx';
+import { type BaseModel, type NodeVersion, type PageData, normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import useVersions from '@/hooks/useVersions';
 import useAuthContext from '@/hooks/useAuthContext';
-import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { setInspectItemsVisible, setInspectItems } from '@/lib/features/loggedUserSlice';
 
-type SysData = {
-  baseType: string;
-  type: string;
-  lockedBy?: {
-    userId: string;
-    userName: string;
-  };
-  lockedTime?: string;
-};
+type SysData = { baseType: string; type: string; lockedBy?: { userId: string; userName: string }; lockedTime?: string };
 
-type UserLayerProps = {
-  data: PageData<BaseModel>;
-};
+function dateGroup(item: NodeVersion): string {
+  const date = new Date(item.versionDate);
+  if (item.versionTimestamp === -1 || Number.isNaN(date.getTime())) return 'Working copy';
+  return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+}
 
-const History: React.FC<UserLayerProps> = ({ data }) => {
+export default function History({ data }: { data: PageData<BaseModel> }) {
   const [latestPreviewSysData, setLatestPreviewSysData] = useState<SysData | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [rollbackError, setRollbackError] = useState<string | null>(null);
   const [rollbackingId, setRollbackingId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'all' | 'live'>('all');
   const { data: authContext } = useAuthContext();
-  const normalizedViewStatus = normalizeViewStatus(data.siteData.viewStatus);
-  const canUseVersions = normalizedViewStatus === ViewStatus.PREVIEW || authContext.hasEditorialAuth;
-
-  const {
-    data: historyData,
-    setPanelOpened,
-    panelOpened,
-  } = useVersions({
-    currentNode: data.model.data,
-    viewStatus: normalizedViewStatus,
-    enabled: canUseVersions,
+  const viewStatus = normalizeViewStatus(data.siteData.viewStatus);
+  const canUseVersions = viewStatus === ViewStatus.PREVIEW || authContext.hasEditorialAuth;
+  const { data: historyData, setPanelOpened, panelOpened, isLoading, isError, refetch } = useVersions({
+    currentNode: data.model.data, viewStatus, enabled: canUseVersions,
   });
-
-  console.log('data in history', data);
-
   const dispatch = useDispatch();
+  const versions = historyData.versions ?? [];
+  const latestLive = versions.find(item => item.live);
+  const latestEdit = versions.find(item => !item.live && item.versionTimestamp !== -1);
+  const webPageType = ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType);
+  const hasVersions = Boolean(versions.length);
+  const filteredVersions = versions.filter(item => filter === 'all' || item.live);
 
-  const inspectItems = useSelector(getInspectItems);
-
-  function removeDashNumber(url?: string) {
-    if (!url) return '';
-    return url.replace(/(-n?\d{10,20})(?=\/|$)/, '');
-  }
-
-  async function rollbackTo(nodeId: string, baseType: string, versionName: string) {
-    if (!confirm(`Are you sure you want to Rollback to version ${versionName}`)) {
-      console.log('roll back not confirmed');
-      return;
+  useEffect(() => {
+    let active = true;
+    const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
+      try {
+        const fetchUrl = data.model.data.url.replace(/(-\d{4})[^/]*(?=\/index\.html)/, '$1');
+        const res = await fetch(fetchUrl + '?neon.outputMode=RAW');
+        const json = await res.json();
+        return json?.model?.data?.sys ?? null;
+      } catch (error) {
+        console.warn('Error fetching sys data:', error);
+        return null;
+      }
+    };
+    if (webPageType) {
+      dispatch(setInspectItemsVisible(true));
+    } else {
+      dispatch(setInspectItemsVisible(hasVersions && latestEdit?.nodeId === data.model.data.version));
+      dispatch(setInspectItems(false));
     }
-
-    // go to roll back!
-    setRollbackError(null);
-    setRollbackingId(nodeId);
-
-    try {
-      const response = await fetch(`/api/versions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nodeId: nodeId,
-          baseType: baseType,
-        }),
+    if (/-n[0-9a-zA-Z]+/.test(data.model.data.url) && viewStatus === ViewStatus.PREVIEW) {
+      fetchLatestPreviewSysData().then(sys => {
+        if (active) setLatestPreviewSysData(previous => isEqual(sys, previous) ? previous : sys);
       });
+    }
+    setLoadingHistory(false);
+    return () => { active = false; };
+  }, [dispatch, webPageType, viewStatus, hasVersions, latestEdit?.nodeId,
+    data.model.data.id, data.model.data.version, data.model.data.url]);
 
+  async function rollbackTo(item: NodeVersion) {
+    const versionName = `${item.major}.${item.minor}`;
+    if (!confirm(`Are you sure you want to Rollback to version ${versionName}`)) return;
+    setRollbackError(null);
+    setRollbackingId(item.nodeId);
+    try {
+      const response = await fetch('/api/versions', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nodeId: item.nodeId, baseType: data.model.data.sys.baseType }),
+      });
       if (!response.ok) {
-        console.error('Failed to rollback version with response:', response);
         setRollbackError(`Rollback to version ${versionName} failed (HTTP ${response.status}). Please try again.`);
         return;
       }
-
-      const rollbacked = await response.json();
-
-      if (!rollbacked?.nodeRef) {
-        console.error('Rollback response missing nodeRef:', rollbacked);
+      const result = await response.json();
+      if (!result?.nodeRef) {
         setRollbackError(`Rollback to version ${versionName} did not return a valid result. Please refresh and check.`);
         return;
       }
-
-      console.log('Rollbacked to version ', versionName, ' with new node:', rollbacked.nodeRef);
-
-      window.location.href = removeDashNumber(window.location.href).replace(
-        removeDashNumber(data.model.data.id),
-        rollbacked.nodeRef,
-      );
-    } catch (err) {
-      console.error('Error during rollback:', err);
+      const removeVersion = (url: string) => url.replace(/(-n?\d{10,20})(?=\/|$)/, '');
+      window.location.href = removeVersion(window.location.href).replace(removeVersion(data.model.data.id), result.nodeRef);
+    } catch (error) {
+      console.error('Error during rollback:', error);
       setRollbackError(`Rollback to version ${versionName} failed due to a network error. Please try again.`);
     } finally {
       setRollbackingId(null);
     }
   }
 
-  function getPrevVersionName(prevTsVersion: number) {
-    if (!prevTsVersion) {
-      return null;
-    }
-    const prevVersion =
-      Array.isArray(historyData.versions) &&
-      historyData.versions.find((v: NodeVersion) => v.versionTimestamp === prevTsVersion);
-    if (prevVersion) {
-      return `${prevVersion.major}.${prevVersion.minor}`;
-    }
-
-    return null;
-  }
-
-  const latestLiveVersionIndex = historyData?.versions
-    ? historyData.versions.findIndex((v: NodeVersion) => v.live)
-    : -1;
-
-  const viewStatus = normalizedViewStatus;
-
-  const latestEditNodeVersion: NodeVersion =
-    historyData?.versions?.find((v: NodeVersion) => !v.live && v.versionTimestamp !== -1) ||
-    ({
-      nodeId: '',
-      major: 0,
-      minor: 0,
-      pubInfo: { canonical: '', publicationTime: '', publishedBy: { userName: '' } },
-      live: false,
-      versionTimestamp: -1,
-      prevTsVersion: 0,
-    } as NodeVersion);
-
-  const fetchLatestPreviewSysData = async (): Promise<SysData | null> => {
-    if (normalizedViewStatus !== ViewStatus.PREVIEW) {
-      return null;
-    }
-
-    try {
-      const fetchUrl = data.model.data.url.replace(/(-\d{4})[^/]*(?=\/index\.html)/, '$1');
-
-      const res = await fetch(fetchUrl + '?neon.outputMode=RAW');
-      const json = await res.json();
-      return json?.model?.data?.sys ?? null;
-    } catch (err) {
-      console.warn('Error fetching sys data:', err);
-      return null;
-    }
-  };
-
-  const liveWebPageType =
-    ['webpage', 'homewebpage', 'sectionwebpage'].includes(data.model.data.sys.baseType) &&
-    normalizedViewStatus === ViewStatus.LIVE;
-
-  useEffect(() => {
-    if (liveWebPageType) {
-      setLoadingHistory(false);
-      dispatch(setInspectItemsVisibleAction(true));
-      return;
-    }
-
-    if (
-      historyData?.versions &&
-      historyData.versions.length > 0 &&
-      latestEditNodeVersion.nodeId === data.model.data.version
-    ) {
-      dispatch(setInspectItemsVisibleAction(true));
-    } else {
-      dispatch(setInspectItemsVisibleAction(false));
-    }
-
-    dispatch(setInspectItemsAction(false));
-
-    const url = data.model.data.url;
-    const regex = /-n[0-9a-zA-Z]+/;
-    const match = url.match(regex);
-    const isVersion = match !== null;
-    if (isVersion) {
-      fetchLatestPreviewSysData().then(sys => {
-        if (!isEqual(sys, latestPreviewSysData)) {
-          setLatestPreviewSysData(sys);
-        }
-      });
-    }
-    setLoadingHistory(false);
-
-  }, [historyData, latestEditNodeVersion, data.model.data.version]);
-
   return (
     <>
-      <a
-        onClick={() => setPanelOpened(!panelOpened)}
-        className="flex items-center justify-center text-white cursor-pointer"
-        aria-label="Versions history"
-        title="Versions history"
-      >
-        <Clock />
-      </a>
+      <button type="button" onClick={() => setPanelOpened(!panelOpened)} className={`neon-admin__icon ${panelOpened ? 'is-active' : ''}`}
+        aria-label="Versions history" aria-expanded={Boolean(panelOpened)} aria-controls="neon-history-panel" title="Versions history">
+        <HistoryIcon size={18} />
+      </button>
       {panelOpened && (
-        <div
-          className="min-w-xs absolute text-black top-[56px] right-0 z-10 flex flex-col"
-          style={{ height: 'calc(100vh - 56px)' }}
-          data-panel="history"
-        >
-          <div className="text-black relative grow-1 min-h-0 flex flex-col">
-            <div className="flex items-center justify-between py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-              <span className="flex items-center gap-2 text-(--color-panel-text-header) ml-1">
-                <Clock />
-                <span>Versions history</span>
-              </span>
-              <a onClick={() => setPanelOpened(false)} className="cursor-pointer mr-1">
-                <Close />
-              </a>
-            </div>
-            {rollbackError && (
-              <div className="px-4 py-2 text-sm text-red-700 bg-red-100 border-b border-red-200">{rollbackError}</div>
-            )}
-            <div className="p-4 bg-gray-100 dark:bg-gray-900 grow-1 min-h-0 overflow-y-auto">
-              {loadingHistory ? (
-                <div className="text-gray-500 italic">
-                  <LoaderCircle className="animate-spin" />
-                </div>
-              ) : (
-                <ol className="relative border-s border-gray-300 dark:border-gray-200 list-none">
-                  {historyData &&
-                    historyData.versions &&
-                    historyData.versions.map((item: NodeVersion, index: number) => {
-                      const rewrittenPath = new URL(item.pubInfo.canonical, window.location.origin).pathname;
-                      const isVersionShown = item.nodeId === data.model.data.version;
-                      const isLatestLiveVersion = item.live && latestLiveVersionIndex === index;
-                      const isLatestPreviewVersion = !item.live && latestEditNodeVersion?.nodeId === item.nodeId;
-
-                      return (
-                        <li className="mb-10 ms-4" key={item.nodeId}>
-                          <div
-                            className={clsx(
-                              'absolute w-5 h-5 rounded-full mt-0 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700',
-                              isVersionShown ? 'bg-gray-600' : 'bg-gray-300',
-                            )}
-                          ></div>
-                          <div className="relative flex flex-1 min-w-xs">
-                            <Link
-                              href={rewrittenPath || '#'}
-                              className="flex-1 min-w-0"
-                              data-version={`${item.major}.${item.minor}`}
-                              {...(getPrevVersionName(item.prevTsVersion)
-                                ? { 'data-prev-version': getPrevVersionName(item.prevTsVersion) }
-                                : {})}
-                            >
-                              <div
-                                className={clsx('p-4 rounded-sm mr-1 ', isVersionShown ? 'bg-blue-100' : 'bg-white')}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    {isNaN(new Date(item.versionDate).getTime())
-                                      ? `Checkout`
-                                      : `Version ${item.major}.${item.minor}`}
-                                    {(() => {
-                                      const prevVersionName = getPrevVersionName(item.prevTsVersion);
-                                      return prevVersionName ? ` from ${prevVersionName}` : '';
-                                    })()}
-                                  </h3>
-
-                                  {(() => {
-                                    const getBadgeConfig = () => {
-                                      const isLatest = latestLiveVersionIndex === index;
-                                      
-                                      if (item.live) {
-                                        return {
-                                          label: 'LIVE',
-                                          className: isLatest ? 
-                                            clsx(
-                                              'text-xs text-green-600 bg-green-100 border border-green-600 rounded-full px-3 py-0.5',
-                                              isLatestLiveVersion ? 'font-bold' : 'font-normal',
-                                            ) :
-                                            'text-xs text-gray-600 bg-gray-100 border border-gray-600 rounded-full px-3 py-0.5 font-normal',
-                                        };
-                                      }
-
-                                      if (isLatestPreviewVersion) {
-                                        return {
-                                          label: 'LATEST',
-                                          className: 'text-xs text-blue-600 bg-blue-100 border border-blue-600 rounded-full px-3 py-0.5 font-bold',
-                                        };
-                                      }
-
-                                      return null;
-                                    };
-
-                                    const badge = getBadgeConfig();
-                                    return badge ? <div className={badge.className}>{badge.label}</div> : null;
-                                  })()}
-                                </div>
-                                <div className="flex items-center justify-between ">
-                                  <div className="mb-4 font-normal text-gray-500 dark:text-gray-400">
-                                    {(() => {
-                                      const d = new Date(item.versionDate);
-                                      return isNaN(d.getTime()) ? <em>My working copy</em> : d.toLocaleString();
-                                    })()}
-                                    {item.workflowStatus && <div>{item.workflowStatus}</div>}
-                                    {item.pubInfo.publishedBy.userName && (
-                                      <div>Edited by {item.pubInfo.publishedBy.userName}</div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </Link>
-                            {index > 0 && !item.live && !isLatestPreviewVersion && !latestPreviewSysData?.lockedBy && (
-                              <button
-                                className="z-20 absolute right-2 bottom-2 fit-content cursor-pointer px-2 py-1 rounded-[2px] text-white bg-[#2847E2] hover:bg-[#191FBD] duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                                title="Rollback to this version"
-                                disabled={rollbackingId === item.nodeId}
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  e.nativeEvent.stopImmediatePropagation();
-                                  rollbackTo(item.nodeId, data.model.data.sys.baseType, `${item.major}.${item.minor}`);
-                                }}
-                              >
-                                {rollbackingId === item.nodeId ? 'Rolling back…' : 'Rollback'}
-                              </button>
-                            )}
-                          </div>
-                        </li>
-                      );
-                    })}
-                </ol>
-              )}
-            </div>
+        <aside id="neon-history-panel" className="neon-history" aria-label="Versions history" data-panel="history">
+          <div className="neon-history__header"><span><HistoryIcon size={17} /> Versions history <small>{versions.length}</small></span>
+            <button type="button" className="neon-history__close" aria-label="Close versions history" onClick={() => setPanelOpened(false)}><X size={18} /></button>
           </div>
-        </div>
+          <div className="neon-history__filters" aria-label="Filter versions">
+            {(['all', 'live'] as const).map(value => <button key={value} type="button" aria-pressed={filter === value}
+              onClick={() => setFilter(value)}>{value === 'all' ? 'All' : 'Live'}</button>)}
+          </div>
+          {rollbackError && <p className="neon-history__error" role="alert">{rollbackError}</p>}
+          <div className="neon-history__scroll">
+            {loadingHistory || isLoading ? <p className="neon-history__empty"><LoaderCircle className="animate-spin" size={20} /> Loading history…</p>
+              : isError ? <div className="neon-history__empty" role="alert">Could not load versions. <button type="button" onClick={() => refetch()}>Try again</button></div>
+              : !filteredVersions.length
+                ? <p className="neon-history__empty">{filter === 'live' ? 'No live versions yet.' : 'No versions available.'}</p>
+                : <ol className="neon-history__list">
+                  {filteredVersions.map((item, filteredIndex) => {
+                    const index = versions.indexOf(item);
+                    const shown = item.nodeId === data.model.data.version || (viewStatus === ViewStatus.LIVE && item.nodeId === data.model.data.id);
+                    const working = item.versionTimestamp === -1 || Number.isNaN(new Date(item.versionDate).getTime());
+                    const previous = item.prevTsVersion ? versions.find(version => version.versionTimestamp === item.prevTsVersion) : undefined;
+                    const canRollback = index > 0 && !item.live && item.nodeId !== latestEdit?.nodeId && !latestPreviewSysData?.lockedBy;
+                    let href = '#';
+                    try { href = new URL(item.pubInfo.canonical, 'http://localhost').pathname; }
+                    catch (error) { console.warn('Invalid version URL', error); }
+                    return <li key={`${item.nodeId}-${item.versionTimestamp}`}>
+                      {(filteredIndex === 0 || dateGroup(item) !== dateGroup(filteredVersions[filteredIndex - 1])) &&
+                        <div className="neon-history__date">{dateGroup(item)}</div>}
+                      <div className={clsx('neon-history__row', {
+                      'is-current': shown, 'is-live': item.live, 'is-working': working,
+                    })}>
+                      <Link href={href} className="neon-history__link" data-version={`${item.major}.${item.minor}`}
+                        {...(previous ? { 'data-prev-version': `${previous.major}.${previous.minor}` } : {})}>
+                        <div className="neon-history__row-head"><strong>{working ? 'Working copy' : `${item.major}.${item.minor}`}</strong>
+                          {previous && <span>from {previous.major}.{previous.minor}</span>}
+                          <span className="neon-history__badges">
+                            {item.live && <b className={item === latestLive ? 'is-live' : ''}>{item === latestLive ? 'Latest published' : 'Published'}</b>}
+                            {item === latestEdit && <b className="is-latest">Latest</b>}
+                            {working && <b>Draft</b>}
+                          </span>
+                        </div>
+                        {item.title && <div className="neon-history__title">{item.title}</div>}
+                        <div className="neon-history__meta">
+                          {!working && new Date(item.versionDate).toLocaleString()}
+                          {item.live && item.pubInfo.publishedBy?.userName && <> · {item.pubInfo.publishedBy.userName}</>}
+                          {item.workflowStatus && <span>{item.workflowStatus}</span>}
+                        </div>
+                        {shown && <div className="neon-history__viewing">Viewing in {viewStatus === ViewStatus.LIVE ? 'Live' : 'Preview'}</div>}
+                      </Link>
+                      {shown && canRollback && <button type="button" className="neon-history__restore" disabled={Boolean(rollbackingId)}
+                        onClick={() => rollbackTo(item)}>{rollbackingId === item.nodeId ? 'Rolling back…' : 'Restore this version'}</button>}
+                      </div>
+                    </li>;
+                  })}
+                </ol>}
+          </div>
+        </aside>
       )}
     </>
   );
-};
-
-export default History;
+}

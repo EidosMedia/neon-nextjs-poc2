@@ -1,12 +1,21 @@
 'use client';
-import { useState, useRef } from 'react';
+import { Children, isValidElement, useState, useRef } from 'react';
 import { X, Check, LockKeyhole } from 'lucide-react';
 import useLoggedUserInfo from '@/hooks/useLoggedUserInfo';
-import { isString } from 'lodash';
 import useVersions from '@/hooks/useVersions';
 import { ArticleModel } from '@/types/models/ArticleModel';
 import useAuthContext from '@/hooks/useAuthContext';
 import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { useContentEditingContext } from './ContentEditingContext';
+
+const lockLabel = (lock: unknown): string => {
+  if (typeof lock === 'string') return lock;
+  if (lock && typeof lock === 'object') {
+    if ('userName' in lock && typeof lock.userName === 'string') return lock.userName;
+    if ('name' in lock && typeof lock.name === 'string') return lock.name;
+  }
+  return 'another editor';
+};
 
 type ContentEditableProps = {
   data?: ArticleModel;
@@ -24,24 +33,28 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   minimal,
 }) => {
   const articleId = data?.id;
+  const editingContext = useContentEditingContext();
+  const child = Children.toArray(children)[0];
+  const contentItemId = isValidElement<{ id?: string }>(child) ? child.props.id : undefined;
 
-  // NEON-2129
-  const lockedBy = data?.sys?.lockedBy === 'CollaborationEditor' ? null : data?.sys?.lockedBy;
-  showLockedByTooltip = lockedBy ? true : false;
+  // Preserve the legacy collaboration exception; v2 blocks inline editing for every Neon lock.
+  const ownLock = !editingContext && data?.sys?.lockedBy === 'CollaborationEditor' ? null : data?.sys?.lockedBy;
+  const scopedLock = editingContext && editingContext.objectId === articleId ? editingContext.lockedBy : undefined;
+  const lockedBy = scopedLock === undefined ? ownLock : scopedLock;
   const divRef = useRef<HTMLDivElement>(null);
   const divButtonsRef = useRef<HTMLDivElement>(null);
   //console.log('data in contentEditable', data);
 
   const { data: authContext } = useAuthContext();
-  const normalizedViewStatus = normalizeViewStatus(viewStatus);
+  const normalizedViewStatus = normalizeViewStatus(editingContext?.viewStatus ?? viewStatus);
   const canUseVersions = normalizedViewStatus === ViewStatus.PREVIEW || authContext.hasEditorialAuth;
 
   const { changeEdited, refetch: refetchVersions } = useVersions({
-    currentNode: data as any,
+    currentNode: data,
     viewStatus: normalizedViewStatus,
     notLoadOnInit: minimal,
     enabled: canUseVersions,
-  }); // TODO: Replace 'any' with proper PageData<BaseModel> type conversion if available
+  });
   const { data: loggedUserInfo } = useLoggedUserInfo();
 
   const [previousContentString, setPreviousContentString] = useState<string>('');
@@ -84,13 +97,18 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
 
   const handleSave = (event?: React.MouseEvent) => {
     event?.stopPropagation();
+    if (!canEdit || !contentItemId) return;
 
     if (divRef.current) {
-      const firstChild = divRef.current?.firstChild as HTMLElement;
-      const dataId = firstChild?.getAttribute('id') || '';
-      const content = firstChild?.innerHTML;
+      const firstChild = divRef.current.firstElementChild;
+      if (!firstChild || firstChild.id !== contentItemId) {
+        console.warn('Cannot save content item: edited element is missing or changed', { articleId, contentItemId });
+        alert('The editable content item has changed. Reload the page before trying again.');
+        return;
+      }
+      const content = firstChild.innerHTML;
 
-      handleUpdateContentItem(dataId, content);
+      handleUpdateContentItem(contentItemId, content);
       setPreviousContentString(divRef?.current?.innerHTML);
       changeEdited(true); // Mark as edited
       hideDivButtons(); // Hide buttons after save
@@ -119,7 +137,8 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   };
 
   const canEdit =
-    !!loggedUserInfo?.inspectItems && normalizedViewStatus !== ViewStatus.LIVE && !loggedUserInfo?.preview;
+    !!articleId && !!contentItemId && !!loggedUserInfo?.inspectItems &&
+    normalizedViewStatus === ViewStatus.PREVIEW && !loggedUserInfo?.preview && !lockedBy;
 
   return lockedBy ? (
     <div className="relative group">
@@ -141,7 +160,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
               <LockKeyhole />
             </span>
             <div className="hidden px-2 py-1 rounded bg-black text-white text-xs whitespace-nowrap shadow-lg z-10">
-              Locked by {isString(lockedBy) ? lockedBy : (lockedBy as any).userName}
+              Locked by {lockLabel(lockedBy)}
             </div>
           </>
         )}
@@ -158,11 +177,11 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
         className={`relative rounded z-10 ${
           canEdit ? 'border-1 border-neutral-light/30 hover:border-primary p-1 cursor-text' : ''
         }`}
-        tabIndex={0}
+        tabIndex={canEdit ? 0 : undefined}
       >
         {children}
       </div>
-      {loggedUserInfo?.inspectItems && (
+      {canEdit && (
         <div className="relative">
           <div
             ref={divButtonsRef}

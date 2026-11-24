@@ -3,6 +3,7 @@ import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { Search } from 'lucide-react';
 import { cookies } from 'next/headers';
 import LoginButton from '../../components/LoginButton';
+import { getCachedTimestamp } from '@/lib/clock';
 
 const PILLARS = [
   { label: 'News',      href: '/news' },
@@ -27,7 +28,7 @@ export default async function Navbar({ data }: { data: Partial<PageData<BaseMode
   const cookieStore = await cookies();
   const webauth = cookieStore.get('webauth')?.value;
 
-  const now = new Date();
+  const now = new Date(await getCachedTimestamp());
   const dateLabel = now.toLocaleDateString('en-GB', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });

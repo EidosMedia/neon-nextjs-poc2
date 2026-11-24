@@ -1,6 +1,8 @@
 import type { ArticleModel } from '@/types/models';
 import { findElementsInContentJson, renderContent } from '@/utilities/content';
 import { hasText } from '../lib/leafView';
+import PaywallIcon from '../items/PaywallIcon';
+import { resolvePaywallLevel } from '../lib/paywall';
 
 type Props = {
   article: ArticleModel;
@@ -31,10 +33,16 @@ export default function LeafHeader({ article, hero, titleSize, imageUrl, showIma
   const [caption] = findElementsInContentJson(['web-image-caption'], content);
   const date = formatDate(article.pubInfo?.publicationTime);
   const image = showImage ? imageUrl : undefined;
+  const level = resolvePaywallLevel(article.pubInfo?.paywallLevel);
 
   const text = (
     <div className="v2-leaf-head__text">
-      {overhead && <div className="v2-leaf-head__kicker">{renderContent(overhead, article)}</div>}
+      {(overhead || level !== 'FREE') && (
+        <div className="v2-leaf-head__kicker">
+          <PaywallIcon level={level} />
+          {overhead && renderContent(overhead, article)}
+        </div>
+      )}
       {/* Without a content document (loadContent failed) the plain title and summary still show. */}
       {headline ? (
         <div className="v2-leaf-head__title">{renderContent(headline, article)}</div>

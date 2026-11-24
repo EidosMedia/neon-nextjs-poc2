@@ -4,7 +4,7 @@ import pino from 'pino';
 import { normalizeViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { AuthContext, BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { getAuthOptions } from '@/utilities/security';
-import { blockCacheTags, blockContentTags, isFetchable, extractBlockLinks, type BlockArea, type BlockLink } from '../lib/blocks';
+import { blockCacheTags, blockContentTags, isFetchable, extractBlockLinks, toBackendUrl, type BlockArea, type BlockLink } from '../lib/blocks';
 
 const logger = pino({ name: 'neon-fo:page-cache' });
 
@@ -37,8 +37,10 @@ export async function fetchBlocks(data: PageData<BaseModel>, area: BlockArea): P
   const links = extractBlockLinks(data.model, area);
   if (links.length === 0) return [];
   const live = normalizeViewStatus(data.siteData?.viewStatus) === ViewStatus.LIVE;
+  const requestHeaders = await headers();
   // Same site name the page cache tags with (x-neon-site-name), read outside the cached function.
-  const siteName = (await headers()).get('x-neon-site-name') || data.siteData?.siteName || data.siteNode?.name || '';
+  const siteName = requestHeaders.get('x-neon-site-name') || data.siteData?.siteName || data.siteNode?.name || '';
+  const backendHost = requestHeaders.get('x-neon-backend-url') ?? '';
   const auth = await getAuthOptions();
   return Promise.all(
     links.map(async (link): Promise<FetchedBlock> => {
@@ -46,10 +48,11 @@ export async function fetchBlocks(data: PageData<BaseModel>, area: BlockArea): P
         logger.warn({ event: 'block-fetch-skipped', nodeId: link.id, area }, '[page-cache] block has no url');
         return { link };
       }
+      const target = { ...link, url: toBackendUrl(link.url, backendHost) };
       try {
-        return { link, data: live ? await fetchBlockCached(link, siteName, auth) : await loadBlock(link, auth) };
+        return { link, data: live ? await fetchBlockCached(target, siteName, auth) : await loadBlock(target, auth) };
       } catch (error) {
-        logger.warn({ event: 'block-fetch-failed', url: link.url, nodeId: link.id, area, error: String(error) }, '[page-cache] block fetch failed');
+        logger.warn({ event: 'block-fetch-failed', url: target.url, nodeId: link.id, area, error: String(error) }, '[page-cache] block fetch failed');
         return { link };
       }
     }),

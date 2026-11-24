@@ -3,11 +3,12 @@ import Link from 'next/link';
 import { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { getCachedTimestamp } from '@/lib/clock';
 
-const NotFound = ({ data }: { data: Site }) => {
+const NotFound = async ({ data }: { data: Site }) => {
   console.log('[NEON] render: wire/NotFound');
 
-  const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+  const now = new Date(await getCachedTimestamp()).toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#F5F5F5' }}>

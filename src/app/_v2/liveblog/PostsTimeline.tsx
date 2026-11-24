@@ -3,7 +3,8 @@ import { findElementsInContentJson, findText } from '@/utilities/content';
 import {
   formatTimelineDate, formatTimelineTime, isSameCalendarDate, sortNewestFirst, TIMELINE_VISIBLE_POSTS, truncateTitle,
 } from './posts';
-import { useLiveblogPosts } from './useLiveblogPosts';
+import { useLiveblogPosts } from '@/hooks/useLiveblogPosts';
+import LiveblogPostsStatus from '@/app/components/LiveblogPostsStatus';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function postTitle(content: any): string {
@@ -14,7 +15,10 @@ function postTitle(content: any): string {
 
 /** v2 item-panel timeline: the three newest posts, grouped by date, polled like the feed. */
 export default function PostsTimeline({ liveblogId }: { liveblogId: string }) {
-  const posts = sortNewestFirst(useLiveblogPosts(liveblogId)).slice(0, TIMELINE_VISIBLE_POSTS);
+  const { posts: loaded, isLoading, error } = useLiveblogPosts(liveblogId);
+  const posts = sortNewestFirst(loaded).slice(0, TIMELINE_VISIBLE_POSTS);
+
+  if (isLoading || (error && posts.length === 0)) return <LiveblogPostsStatus loading={isLoading} />;
 
   if (posts.length === 0) return <p className="v2-timeline__empty">Live</p>;
 

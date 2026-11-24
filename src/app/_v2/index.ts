@@ -1,4 +1,4 @@
-// v2 page barrel: every PageComponents key is a v2 component except the two legacy re-exports below.
+// v2 page barrel: ArticleOrganism remains a legacy re-export.
 export { default as HomeWebPage } from './pages/HomePage';
 export { default as SectionWebPage } from './pages/SectionPage';
 export { default as WebpageColumnsLayout } from './pages/WebPage';
@@ -11,6 +11,5 @@ export { default as SearchPage } from './pages/SearchPage';
 export { default as AboutPage } from './pages/AboutPage';
 export { default as LoginPage } from './pages/LoginPage';
 export { default as NotFound } from './pages/NotFound';
-// Legacy re-exports (not yet v2).
-export { default as NewsletterWebpage } from './pages/NewsletterLegacy';
+export { default as NewsletterWebpage } from './pages/NewsletterWebpage';
 export { default as ArticleOrganism } from '../components/base/Organism/ArticleOrganism';

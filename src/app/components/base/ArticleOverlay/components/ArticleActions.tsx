@@ -32,13 +32,14 @@ const ArticleActions: React.FC<ArticleActionsProps> = ({ data, viewStatus, overl
     const overlayDiv = infoRef.current?.closest('.group');
     const handleOverlayMouseLeave = () => setShowInfo(false);
 
-    document.addEventListener('mousedown', handleClick);
+    const doc = infoRef.current?.ownerDocument ?? document;
+    doc.addEventListener('mousedown', handleClick);
     if (overlayDiv) {
       overlayDiv.addEventListener('mouseleave', handleOverlayMouseLeave);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClick);
+      doc.removeEventListener('mousedown', handleClick);
       if (overlayDiv) {
         overlayDiv.removeEventListener('mouseleave', handleOverlayMouseLeave);
       }

@@ -14,11 +14,20 @@
     min-width: 0;
   }
   .root[data-engine="v2"] .v2-item__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-family: var(--v2-font-meta);
     font-size: var(--v2-fs-meta);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--v2-brand-text, var(--v2-brand));
+  }
+  .root[data-engine="v2"] .v2-paywall-icon {
+    display: inline-flex;
+    flex: none;
+    vertical-align: middle;
+    color: inherit;
   }
   .root[data-engine="v2"] .v2-item__title {
     font-family: var(--v2-font-heading);
@@ -43,11 +52,16 @@
 
   /* ---------- Media ---------- */
   .root[data-engine="v2"] .v2-item__media {
+    position: relative;
+    width: 100%;
     overflow: hidden;
     border-radius: var(--v2-radius-media);
     background: var(--v2-surface);
   }
+  /* Fill the ratio box absolutely: a percentage height inside aspect-ratio falls back to the natural height. */
   .root[data-engine="v2"] .v2-item__media img {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
@@ -74,9 +88,17 @@
   .root[data-engine="v2"] .v2-item--compact {
     flex-direction: row;
     align-items: flex-start;
+    gap: var(--v2-space-3);
   }
-  .root[data-engine="v2"] .v2-item--compact .v2-item__media { flex: 0 0 120px; }
-  .root[data-engine="v2"] .v2-item--compact .v2-item__title { font-size: var(--v2-fs-h4); }
+  .root[data-engine="v2"] .v2-item--compact .v2-item__media { flex: 0 0 clamp(96px, 35%, 180px); }
+  .root[data-engine="v2"] .v2-item--compact .v2-item__body { flex: 1 1 auto; }
+  .root[data-engine="v2"] .v2-item--compact .v2-item__title {
+    font-size: var(--v2-fs-h4);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
   .root[data-engine="v2"] .v2-item--textOnly .v2-item__title { font-size: var(--v2-fs-h4); }
   .root[data-engine="v2"] .v2-item--opinion {
     flex-direction: row;
@@ -141,6 +163,12 @@
   }
 
   /* ---------- Live blog ---------- */
+  .root[data-engine="v2"] .v2-item__overhead {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--v2-space-1);
+  }
   .root[data-engine="v2"] .v2-item--panel {
     background: var(--v2-brand-strong);
     color: var(--v2-on-brand);

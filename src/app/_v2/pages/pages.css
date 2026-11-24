@@ -1,4 +1,17 @@
 @layer v2 {
+  .root[data-engine="v2"] .v2-newsletter-preview { width: 100%; padding: 16px; }
+  .root[data-engine="v2"] .v2-newsletter-story { width: 100%; max-width: 640px; margin-inline: auto; }
+  .root[data-engine="v2"] .v2-newsletter-story__header { padding: 24px; }
+  .root[data-engine="v2"] .v2-newsletter-story__content { padding: 0 24px 24px; }
+  .root[data-engine="v2"] .v2-newsletter-story__content time { font-size: 13px; }
+  .root[data-engine="v2"] .v2-newsletter-story__title h1 { margin: 14px 0 24px; font-size: 32px; line-height: 1.2; }
+  .root[data-engine="v2"] .v2-newsletter-story__summary { margin-bottom: 24px; }
+  .root[data-engine="v2"] .v2-newsletter-story__body { font-size: 16px; line-height: 1.65; }
+  .root[data-engine="v2"] .v2-newsletter-story__body img { max-width: 100%; height: auto; }
+  .root[data-engine="v2"] .v2-newsletter-story__forward { margin-top: 32px; font-style: italic; }
+  @media (max-width: 480px) {
+    .root[data-engine="v2"] .neon-newsletter-card { display: block !important; width: 100% !important; }
+  }
   .root[data-engine="v2"] .v2-section-head { padding-block: var(--v2-space-5) var(--v2-space-3); }
   .root[data-engine="v2"] .v2-section-head__kicker {
     margin: 0;
@@ -17,6 +30,17 @@
     max-width: 70ch;
     font-size: var(--v2-fs-standfirst);
     color: var(--v2-text-muted);
+  }
+  .root[data-engine="v2"] .v2-empty-section { padding-block: var(--v2-space-5) var(--v2-space-6); }
+  .root[data-engine="v2"] .v2-empty-section__section {
+    margin: 0 0 var(--v2-space-3);
+    font-family: var(--v2-font-display);
+    font-size: var(--v2-fs-h1);
+  }
+  .root[data-engine="v2"] .v2-empty-section__message {
+    margin: 0;
+    font-family: var(--v2-font-heading);
+    font-size: var(--v2-fs-h3);
   }
 
   /* Web page: main 8/12, rail 4/12; stacks on mobile (frame.css collapses the grid). */

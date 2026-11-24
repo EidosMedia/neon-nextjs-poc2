@@ -27,11 +27,11 @@ describe('resolveTeaserFields', () => {
       imageUrl: 'http://img/1.jpg', href: '/world/a/', byline: 'Jane', date: '2026-10-26T08:00:00Z',
     });
   });
-  it('falls back to node fields and first url segment; no ids', () => {
+  it('falls back to node fields without a kicker from the url; no ids', () => {
     const f = resolveTeaserFields(node({ title: 'T', summary: 'S', url: '/world/a/' }));
     expect(f.title).toBe('T');
     expect(f.summary).toBe('S');
-    expect(f.kicker).toBe('world');
+    expect(f.kicker).toBeUndefined();
     expect(f.titleId).toBeUndefined();
     expect(f.summaryId).toBeUndefined();
     expect(f.imageUrl).toBeUndefined();
@@ -61,7 +61,7 @@ describe('resolveArticleItemView', () => {
   const base = V2_DEFAULTS.articleItem;
   it('auto takes the slot', () => {
     expect(resolveArticleItemView(base, 'lead', true, true)).toEqual({
-      variant: 'lead', showImage: true, showStandfirst: false, solidBlock: false,
+      variant: 'lead', showImage: true, showStandfirst: false, showKicker: true, solidBlock: false,
     });
   });
   it('explicit variant wins', () => {
@@ -72,6 +72,9 @@ describe('resolveArticleItemView', () => {
   });
   it('image setting false hides image', () => {
     expect(resolveArticleItemView({ ...base, image: false }, 'standard', true, false).showImage).toBe(false);
+  });
+  it('kicker setting hides the kicker', () => {
+    expect(resolveArticleItemView({ ...base, kicker: false }, 'lead', true, true).showKicker).toBe(false);
   });
   it('no image: overlay gets solid block', () => {
     expect(resolveArticleItemView(base, 'overlay', false, false)).toMatchObject({
@@ -95,16 +98,27 @@ describe('resolveArticleItemView', () => {
 
 describe('resolveLiveblogItemView', () => {
   const base = V2_DEFAULTS.liveblogItem;
-  it('auto maps lead/overlay to panel, others to feed', () => {
+  it('auto maps lead/overlay to panel, compact to compact, and standard to feed', () => {
     expect(resolveLiveblogItemView(base, 'lead').variant).toBe('panel');
     expect(resolveLiveblogItemView(base, 'overlay').variant).toBe('panel');
-    expect(resolveLiveblogItemView(base, 'compact').variant).toBe('feed');
+    expect(resolveLiveblogItemView(base, 'compact').variant).toBe('compact');
     expect(resolveLiveblogItemView(base, 'standard').variant).toBe('feed');
+  });
+  it('basic listing defaults show images in panel and feed; explicit opt-out hides them', () => {
+    expect(resolveLiveblogItemView(base, 'lead').showImage).toBe(true);
+    expect(resolveLiveblogItemView(base, 'standard').showImage).toBe(true);
+    expect(resolveLiveblogItemView({ ...base, image: false }, 'lead').showImage).toBe(false);
+  });
+  it('basic listings hide sharing unless explicitly enabled', () => {
+    expect(resolveLiveblogItemView(base, 'lead').showShare).toBe(false);
+    expect(resolveLiveblogItemView({ ...base, share: true }, 'standard').showShare).toBe(true);
   });
   it('explicit wins and flags pass through', () => {
     expect(resolveLiveblogItemView({ ...base, variant: 'pinnedSummary', image: true, share: false }, 'lead')).toEqual({
       variant: 'pinnedSummary', showImage: true, showShare: false,
     });
+    expect(resolveLiveblogItemView({ ...base, variant: 'compact' }, 'lead').variant).toBe('compact');
+    expect(resolveLiveblogItemView({ ...base, variant: 'pinnedSummary' }, 'compact').variant).toBe('pinnedSummary');
   });
 });
 

@@ -41,14 +41,12 @@ const IMPORTANCE_CLASS: Record<number, string> = {
   9: 'wire-priority--breaking',
 };
 
-const extractSectionFromUrl = (url: string): string => url.split('/')[1] ?? '';
-
 const ArticleOrganism: React.FC<ArticleOrganismProps> = ({ data, linkedObject, linkedObjects, index, type }) => {
   React.useEffect(() => { console.log('[NEON] mount: wire/ArticleOrganism'); }, []);
 
   const { data: loggedUserInfo } = useLoggedUserInfo();
   const url = linkedObject.url || linkedObjects[`${index}`]?.url;
-  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead || extractSectionFromUrl(url);
+  const overhead = linkedObject.attributes?.overhead || linkedObject.overhead;
   const importance: number = linkedObject.pubInfo?.importance ?? 4;
   const priorityLabel = IMPORTANCE_LABEL[importance] ?? IMPORTANCE_LABEL[4];
   const priorityClass = IMPORTANCE_CLASS[importance] ?? IMPORTANCE_CLASS[4];

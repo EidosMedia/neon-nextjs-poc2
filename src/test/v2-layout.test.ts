@@ -2,9 +2,24 @@ import {
   COMPOSITION_CAPACITY,
   groupByDate,
   planSlots,
+  resolveAreaComposition,
   resolveComposition,
   type ConcreteComposition,
 } from '@/app/_v2/lib/layout';
+
+describe('resolveAreaComposition', () => {
+  it('follows the host area when the block composition is auto', () => {
+    expect(resolveAreaComposition('headers', 'auto', 'leadList')).toBe('grid2x2');
+    expect(resolveAreaComposition('sidebars', 'auto', 'leadList')).toBe('threeUp');
+  });
+  it('keeps an explicit block composition over the area', () => {
+    expect(resolveAreaComposition('headers', 'split', 'leadList')).toBe('split');
+  });
+  it('uses the zone fallback for areas without a composition', () => {
+    expect(resolveAreaComposition('includes', 'auto', 'leadList')).toBe('leadList');
+    expect(resolveAreaComposition(undefined, 'auto', 'threeUp')).toBe('threeUp');
+  });
+});
 
 describe('resolveComposition', () => {
   it('returns a concrete composition unchanged', () => {
@@ -65,6 +80,11 @@ describe('planSlots', () => {
     expect(planSlots('overlayPair', 3)).toEqual(['overlay', 'overlay', 'compact']);
     expect(planSlots('sponsored', 2)).toEqual(['overlay', 'overlay']);
   });
+  it('banner takes one lead, highlight a lead then compacts, carousel stays standard', () => {
+    expect(planSlots('banner', 1)).toEqual(['lead']);
+    expect(planSlots('highlight', 4)).toEqual(['lead', 'compact', 'compact', 'compact']);
+    expect(planSlots('carousel', 3)).toEqual(Array(3).fill('standard'));
+  });
   it('count 0 gives []', () => {
     expect(planSlots('overlayPair', 0)).toEqual([]);
     expect(planSlots('threeUp', 0)).toEqual([]);
@@ -82,6 +102,9 @@ describe('COMPOSITION_CAPACITY', () => {
       overlayPair: 2,
       datedListing: Infinity,
       sponsored: 2,
+      banner: 1,
+      highlight: 4,
+      carousel: Infinity,
     };
     expect(COMPOSITION_CAPACITY).toEqual(c);
   });

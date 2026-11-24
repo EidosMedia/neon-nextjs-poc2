@@ -1,20 +1,17 @@
+import { Info } from 'lucide-react';
 import { LoggedUserBarComponentProps } from './LoggedUserOverlay.types';
 
-const calculateExpireString = (pubInfo: any): string => {
-  if (pubInfo.startVisible && pubInfo.endVisible) {
-    const startDate = new Date(pubInfo.startVisible);
-    const endDate = new Date(pubInfo.endVisible);
-    return `VISIBLE BETWEEN ${startDate.toLocaleDateString()} - ${startDate.toLocaleTimeString()} AND ${endDate.toLocaleDateString()} - ${endDate.toLocaleTimeString()}`;
-  }
-  if (pubInfo.startVisible) {
-    const startDate = new Date(pubInfo.startVisible);
-    return `VISIBLE FROM ${startDate.toLocaleDateString()} - ${startDate.toLocaleTimeString()}`;
-  }
-  if (pubInfo.endVisible) {
-    const endDate = new Date(pubInfo.endVisible);
-    return `EXPIRES ON ${endDate.toLocaleDateString()} - ${endDate.toLocaleTimeString()}`;
-  }
+const formatDate = (value: string | number) => {
+  const date = new Date(value);
+  return `${date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })} ${date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
+};
 
+const calculateExpireString = (pubInfo?: { startVisible?: string | number; endVisible?: string | number }): string => {
+  if (pubInfo?.startVisible && pubInfo.endVisible) {
+    return `This item will be visible from ${formatDate(pubInfo.startVisible)} and will expire on ${formatDate(pubInfo.endVisible)}`;
+  }
+  if (pubInfo?.startVisible) return `This item will be visible from ${formatDate(pubInfo.startVisible)}`;
+  if (pubInfo?.endVisible) return `This item will expire on ${formatDate(pubInfo.endVisible)}`;
   return '';
 };
 
@@ -22,9 +19,10 @@ const VisibilityChip: React.FC<LoggedUserBarComponentProps> = ({ data }) => {
   const expireString = calculateExpireString(data.model.data.pubInfo);
 
   return expireString ? (
-    <div className="relative flex items-center justify-center text-orange-500 bg-orange-200 border-orange-500 rounded-full h-7 px-2 font-bold">
+    <span className="neon-admin__visibility">
+      <Info size={14} aria-hidden="true" />
       {expireString}
-    </div>
+    </span>
   ) : null;
 };
 

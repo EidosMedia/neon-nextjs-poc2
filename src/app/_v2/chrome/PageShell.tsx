@@ -6,6 +6,8 @@ import { getActiveTheme, siteThemeOf } from '@/lib/accessories/defaultThemeAcces
 import Header from './Header';
 import Footer from './Footer';
 import BlockSlot from '../blocks/BlockSlot';
+import { normalizeViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { ContentEditingProvider } from '@/app/components/utilities/ContentEditingContext';
 
 type Common = { children: ReactNode; rail?: ReactNode; wide?: boolean; hero?: 'overlay' };
 type ModelProps = Common & { data: PageData<BaseModel>; site?: undefined };
@@ -39,7 +41,11 @@ export default async function PageShell(props: ModelProps | SiteProps) {
   const frame = { site, brand, siteLabel };
 
   return (
-    <>
+    <ContentEditingProvider
+      objectId={props.data?.model?.data?.id ?? site.root.id}
+      viewStatus={normalizeViewStatus(props.data?.siteData?.viewStatus ?? site.viewStatus)}
+      lockedBy={props.data?.model?.data?.sys?.lockedBy}
+    >
       <link rel="stylesheet" href={brand.fontsHref} precedence="default" />
       {settings.header.enabled && <Header {...frame} header={settings.header} />}
       {props.data && <BlockSlot data={props.data} area="headers" />}
@@ -59,6 +65,6 @@ export default async function PageShell(props: ModelProps | SiteProps) {
       </main>
       {props.data && <BlockSlot data={props.data} area="footers" />}
       {settings.footer.enabled && <Footer {...frame} footer={settings.footer} />}
-    </>
+    </ContentEditingProvider>
   );
 }

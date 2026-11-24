@@ -17,6 +17,7 @@
 @import "./_v2/brands/sportsarena/tokens.css";
 @import "./_v2/brands/nextfrontier/tokens.css";
 @import "./_v2/styles/v2.css";
+@import "./components/liveblogSkeleton.css";
 
 @custom-variant dark (&:is(.dark *));
 

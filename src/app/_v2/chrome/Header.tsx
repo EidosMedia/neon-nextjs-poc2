@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { cookies, headers } from 'next/headers';
-import type { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
+import { normalizeViewStatus, ViewStatus, type Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import type { Brand } from '../brands/registry';
 import type { FooterSettings, HeaderSettings } from '../lib/settings';
-import AccountLink from './AccountLink';
+import HeaderActions from './HeaderActions';
 import MenuToggle from './MenuToggle';
 import Nav from './Nav';
 import SearchIcon from './SearchIcon';
+import SiteMark from './SiteMark';
 import { getDrawerLinks, getFullLinks, getMainLinks } from './navLinks';
 
 export type SiteFrameProps = {
@@ -18,12 +19,12 @@ export type SiteFrameProps = {
   siteLabel?: string;
 };
 
-import { initials } from './initials';
-
 export default async function Header({ site, header, brand, siteLabel }: Omit<SiteFrameProps, 'footer'>) {
   const label = siteLabel || site.siteName || site.root?.name || '';
-  const pathname = (await headers()).get('x-neon-pathname');
-  const webauth = (await cookies()).get('webauth')?.value;
+  const requestHeaders = await headers();
+  const pathname = requestHeaders.get('x-neon-pathname');
+  const preview = normalizeViewStatus(requestHeaders.get('x-neon-view-status')) === ViewStatus.PREVIEW;
+  const authenticated = Boolean((await cookies()).get('webauth')?.value);
   const mainLinks = getMainLinks(site);
   const fullLinks = getFullLinks(site);
   const drawerLinks = getDrawerLinks(site);
@@ -33,11 +34,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
 
   const wordmark = (
     <Link href="/" className="v2-header__wordmark" aria-label={`${label} home`}>
-      {brand.header !== 'globe' && (
-        <span className="v2-header__disc" aria-hidden="true">
-          {brand.header === 'arena' ? initials(label) : ''}
-        </span>
-      )}
+      <SiteMark key={site.logoUrl || ''} logoUrl={site.logoUrl} label={label} showInitials={brand.header === 'arena'} />
       <span className="v2-header__name">{label}</span>
     </Link>
   );
@@ -51,21 +48,13 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
 
   const actions = showActions && (
     <div className="v2-header__actions">
-      <Link href="/login" className="v2-header__subscribe">
-        Subscribe
-      </Link>
-      <AccountLink webauth={webauth} />
+      <HeaderActions authenticated={authenticated} preview={preview} />
     </div>
   );
 
   // Bottom of the mobile drawer: same Subscribe and account entries as the header.
   const drawerActions = showActions && (
-    <>
-      <Link href="/login" className="v2-drawer__subscribe">
-        Subscribe
-      </Link>
-      <AccountLink webauth={webauth} />
-    </>
+    <HeaderActions authenticated={authenticated} preview={preview} drawer />
   );
 
   return (
@@ -93,7 +82,7 @@ export default async function Header({ site, header, brand, siteLabel }: Omit<Si
             {showNav && <Nav links={mainLinks} moreLinks={fullLinks} pathname={pathname} />}
             {search}
             {actions}
-            {showNav && <MenuToggle items={drawerLinks} pathname={pathname} className="v2-menutoggle--mobile" actions={drawerActions} />}
+            {showNav && <MenuToggle items={fullLinks} drawerItems={drawerLinks} pathname={pathname} actions={drawerActions} iconOnly />}
           </div>
         )}
         {brand.header === 'frontier' && (

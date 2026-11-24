@@ -4,8 +4,11 @@
   .root[data-theme="sportsarena"][data-engine="v2"] {
     --v2-mega-columns: 5;
   }
+  .root[data-theme="sportsarena"] .v2-header__pill {
+    background: var(--v2-surface);
+  }
   .root[data-theme="sportsarena"] .v2-mega {
-    background: #F3F7FB;
+    background: var(--v2-surface);
     border: 0;
   }
   .root[data-theme="sportsarena"] .v2-mega__heading,
@@ -21,17 +24,17 @@
     display: inline-block;
     padding: 4px 14px;
     border-radius: 20px;
-    background: #004E98;
+    background: var(--v2-brand);
     font-size: 15px;
   }
   .root[data-theme="sportsarena"] .v2-header .v2-mega .v2-mega__heading-link {
-    color: #FFFFFF;
+    color: var(--v2-on-brand);
   }
   .root[data-theme="sportsarena"] .v2-mega__group--active .v2-mega__heading-link {
-    outline: 2px solid #F8D3AF;
+    outline: 2px solid var(--v2-accent);
     outline-offset: 2px;
   }
-  /* Drawer: full blue, sub-sections as outline pills. */
+  /* Drawer: full red, sub-sections as outline pills. */
   .root[data-theme="sportsarena"] .v2-drawer {
     border-right: 0;
   }
@@ -75,8 +78,8 @@
     font-weight: 600;
   }
   .root[data-theme="sportsarena"] .v2-tabs__tab--active {
-    background: #004E98;
-    color: #FFFFFF;
+    background: var(--v2-brand);
+    color: var(--v2-on-brand);
     box-shadow: none;
   }
   .root[data-theme="sportsarena"] .v2-login {
@@ -85,5 +88,29 @@
   .root[data-theme="sportsarena"] .v2-login__title,
   .root[data-theme="sportsarena"] .v2-tabs__select {
     font-family: var(--v2-font-heading);
+  }
+  .root[data-theme="sportsarena"] .v2-field__error::before {
+    content: "!";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    color: var(--v2-on-brand);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .root[data-theme="sportsarena"] .v2-home-hero--overlay .v2-comp__lead .v2-item {
+    background: var(--arena-hero-placeholder);
+  }
+  .root[data-theme="sportsarena"] .v2-home-hero--overlay .v2-comp__lead .v2-item__body {
+    background: linear-gradient(transparent, rgb(59 21 25 / 0.62));
+  }
+  .root[data-theme="sportsarena"] .v2-leaf__text a:hover {
+    color: var(--arena-primary-600);
+  }
+  .root[data-theme="sportsarena"] .v2-item--highlight .v2-item__kicker {
+    color: var(--arena-primary-600);
   }
 }

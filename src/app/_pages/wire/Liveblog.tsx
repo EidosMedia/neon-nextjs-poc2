@@ -10,6 +10,7 @@ import Footer from './Footer';
 import { resolveServerComponent } from '@/services/uiComponentsServerLoader';
 import { headers } from 'next/headers';
 import { getAuthOptions } from '@/utilities/security';
+import { getCachedTimestamp } from '@/lib/clock';
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -20,7 +21,6 @@ const Liveblog = async ({ data }: PageProps) => {
 
   const articleData = data.model.data;
   const category = articleData?.sys?.type ?? articleData?.attributes?.section ?? '';
-  const slug = articleData?.sys?.id ?? '—';
 
   const textContent = findElementsInContentJson(['text'], articleData.files.content.data)[0];
 
@@ -56,7 +56,7 @@ const Liveblog = async ({ data }: PageProps) => {
       }),
   );
 
-  const now = new Date();
+  const now = new Date(await getCachedTimestamp());
   const utcString = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   return (
@@ -111,10 +111,6 @@ const Liveblog = async ({ data }: PageProps) => {
               <div className="wire-meta-row">
                 <span className="wire-meta-key">type</span>
                 <span className="wire-meta-val">LIVEBLOG</span>
-              </div>
-              <div className="wire-meta-row">
-                <span className="wire-meta-key">id</span>
-                <span className="wire-meta-val">{String(slug).slice(0, 12)}…</span>
               </div>
               <div className="wire-meta-row">
                 <span className="wire-meta-key">section</span>

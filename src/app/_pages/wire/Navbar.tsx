@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { headers, cookies } from 'next/headers';
 import { Search } from 'lucide-react';
 import LoginButton from '../../components/LoginButton';
+import { getCachedTimestamp } from '@/lib/clock';
 
 export default async function Navbar({
  data }: { data: Partial<PageData<BaseModel>> }) {
@@ -24,7 +25,7 @@ export default async function Navbar({
   const cookieStore = await cookies();
   const webauth = cookieStore.get('webauth')?.value;
 
-  const now = new Date();
+  const now = new Date(await getCachedTimestamp());
   const utcString = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
   return (

@@ -29,7 +29,7 @@ export default function GalleryItem({ node, view, viewStatus, headingLevel }: Pr
         <>
           <Media url={f.imageUrl} ratio="16-9" />
           <div className="v2-item__body">
-            <Kicker text={f.kicker} />
+            <Kicker text={f.kicker} paywallLevel={node.pubInfo?.paywallLevel} />
             {Title({ level: headingLevel, className: 'v2-item__title' })}
             {view.showCaptions && Summary({ className: 'v2-item__summary' })}
           </div>

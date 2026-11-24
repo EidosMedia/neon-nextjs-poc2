@@ -1,5 +1,8 @@
 import { PageData, WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { siteThemeOf } from '@/lib/accessories/defaultThemeAccessories';
+import { isLegacyTheme } from '@/app/themeKeys';
+import { renderV2NewsletterWebpage, sportsArenaNewsletterPalette } from '@/app/_v2/lib/newsletterHtml';
+import { getCachedTimestamp } from '@/lib/clock';
 
 /**
  * Hand-extracted palette per theme, mirroring the CSS custom properties each
@@ -18,6 +21,10 @@ type NewsletterThemePalette = {
   bodyFont: string;
 };
 
+type NewsletterItem = WebpageNodeModel & {
+  links: { system: { teaserPicture?: { dynamicCropsResourceUrls?: Record<string, string> }[] } };
+};
+
 const NEWSLETTER_THEME_STYLES: Record<string, NewsletterThemePalette> = {
   default: {
     bg: '#ffffff',
@@ -28,20 +35,20 @@ const NEWSLETTER_THEME_STYLES: Record<string, NewsletterThemePalette> = {
     bodyFont: "'Georgia', serif",
   },
   nextfrontier: {
-    bg: '#ffffff',
-    text: '#1a1a1a',
-    muted: '#6b6b6b',
-    accent: '#0050FF',
-    headlineFont: "'Epilogue', system-ui, sans-serif",
-    bodyFont: "'Inter', system-ui, sans-serif",
+    bg: '#1D1930',
+    text: '#F2F6FF',
+    muted: '#D3D8E6',
+    accent: '#FEF445',
+    headlineFont: "'Abril Fatface', Georgia, serif",
+    bodyFont: "'Noto Sans', system-ui, sans-serif",
   },
   sportsarena: {
-    bg: '#0d0d0d',
-    text: '#f0f0f0',
-    muted: '#888888',
-    accent: '#e31837',
-    headlineFont: "'Barlow Condensed', system-ui, sans-serif",
-    bodyFont: "'Inter', system-ui, sans-serif",
+    bg: sportsArenaNewsletterPalette.background,
+    text: sportsArenaNewsletterPalette.text,
+    muted: sportsArenaNewsletterPalette.muted,
+    accent: sportsArenaNewsletterPalette.brand,
+    headlineFont: sportsArenaNewsletterPalette.heading,
+    bodyFont: sportsArenaNewsletterPalette.body,
   },
   'business-globe': {
     bg: '#FFF1E5',
@@ -93,16 +100,17 @@ const getThemePalette = (theme: string): NewsletterThemePalette =>
  * (lines 11-23): prefer the teaser picture's "Wide_large" crop, falling back to
  * the main picture's. May be undefined — callers must handle a missing image.
  */
-const getTeaserImageUrl = (linkedObject: any): string | undefined =>
+const getTeaserImageUrl = (linkedObject: NewsletterItem): string | undefined =>
   linkedObject?.links?.system?.teaserPicture?.[0]?.dynamicCropsResourceUrls?.['Wide_large'] ??
-  linkedObject?.links?.system?.mainPicture?.[0]?.dynamicCropsResourceUrls?.['Wide_large'];
+  linkedObject?.links?.system?.mainPicture?.[0]?.dynamicCropsResourceUrls?.['Wide_large'] ??
+  linkedObject?.mainPicture;
 
 /**
  * Mirrors the link resolution in ArticleOrganism
  * (src/app/components/base/Organism/ArticleOrganism/index.tsx): `linkedObject.url`,
  * with a safe fallback for the rare case it's missing.
  */
-const getTeaserLinkUrl = (linkedObject: any): string => linkedObject?.url ?? '#';
+const getTeaserLinkUrl = (linkedObject: NewsletterItem): string => linkedObject?.url ?? '#';
 
 const escapeHtml = (value: string): string =>
   value
@@ -117,7 +125,7 @@ const escapeHtml = (value: string): string =>
  * Table-based layout + inline styles only — no flex/grid/class/var(--), so the
  * markup renders correctly in mail clients that strip <style> blocks.
  */
-const renderTeaserRow = (linkedObject: any, palette: NewsletterThemePalette): string => {
+const renderTeaserRow = (linkedObject: NewsletterItem, palette: NewsletterThemePalette): string => {
   const title = linkedObject?.title ?? '';
   const summary = linkedObject?.summary ?? '';
   const imageUrl = getTeaserImageUrl(linkedObject);
@@ -163,13 +171,13 @@ const renderTeaserRow = (linkedObject: any, palette: NewsletterThemePalette): st
 /**
  * Date/issue header shown under the masthead, e.g. "Thursday, June 12, 2026".
  */
-const renderDateLine = (palette: NewsletterThemePalette): string => {
+const renderDateLine = (palette: NewsletterThemePalette, now: Date): string => {
   const dateLabel = new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(new Date());
+  }).format(now);
 
   return `
         <tr>
@@ -211,7 +219,7 @@ const renderSectionHeader = (label: string, palette: NewsletterThemePalette): st
  * a smaller title and short summary, instead of the full image+title+summary
  * stack used by `renderTeaserRow`.
  */
-const renderCompactTeaserRow = (linkedObject: any, palette: NewsletterThemePalette): string => {
+const renderCompactTeaserRow = (linkedObject: NewsletterItem, palette: NewsletterThemePalette): string => {
   const title = linkedObject?.title ?? '';
   const summary = linkedObject?.summary ?? '';
   const imageUrl = getTeaserImageUrl(linkedObject);
@@ -260,6 +268,7 @@ const renderCompactTeaserRow = (linkedObject: any, palette: NewsletterThemePalet
  */
 export async function renderNewsletterFragment(data: PageData<WebpageModel>): Promise<string> {
   const theme = siteThemeOf(data.siteNode);
+  if (!isLegacyTheme(theme)) return renderV2NewsletterWebpage(data);
   const palette = getThemePalette(theme);
 
   const siteName = data.siteData?.siteName || data.siteNode?.name;
@@ -294,7 +303,8 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
 
   const teaserRows = topStoriesSection + moreHeadlinesSection;
 
-  const year = new Date().getFullYear();
+  const now = new Date(await getCachedTimestamp());
+  const year = now.getFullYear();
 
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background: ${palette.bg};">
       <tr>
@@ -307,7 +317,7 @@ export async function renderNewsletterFragment(data: PageData<WebpageModel>): Pr
                 </span>
               </td>
             </tr>
-            ${renderDateLine(palette)}
+            ${renderDateLine(palette, now)}
             ${renderIntroBlock(palette)}
             ${teaserRows}
             <tr>
@@ -344,11 +354,14 @@ export async function renderNewsletterHtml(data: PageData<WebpageModel>): Promis
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      @media only screen and (max-width: 620px) {
+      @media only screen and (max-width: ${isLegacyTheme(theme) ? 620 : 660}px) {
         #neon-newsletter-table {
           width: 100% !important;
         }
       }
+      ${isLegacyTheme(theme) ? '' : `@media only screen and (max-width: 480px) {
+        .neon-newsletter-card { display: block !important; width: 100% !important; }
+      }`}
     </style>
   </head>
   <body style="margin: 0; padding: 0; background: ${palette.bg};">

@@ -64,7 +64,7 @@ and brand modules only; page structure is shared.
    schemes). Modules must not touch the Neon block model directly; `lib/blocks.ts` is the only
    module that knows it.
 6. **Accessories (optional).** By default the brand uses the shared `src/app/_v2/accessories.json`.
-   If it needs its own definitions, put a complete document (same format, `"version": "2.0"`) at
+   If it needs its own definitions, put a complete document (same format, `"version": "1.0"`) at
    `src/app/_v2/brands/<key>/accessories.json` and register it with a static import in
    `BRAND_ACCESSORIES` in `src/app/_v2/brands/accessories.ts`. The override replaces the shared
    document for that theme (no merging). `src/test/accessories-registry.test.ts` fails when an

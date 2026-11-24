@@ -1,26 +1,17 @@
 import { PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { WebpageModel, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
-import { cacheLife } from 'next/cache';
+import { getCachedTimestamp } from '@/lib/clock';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ArticleOrganism from './components/ArticleOrganism';
-
-async function getCachedTimestamp(): Promise<number> {
-  'use cache';
-  cacheLife('hours');
-  return Date.now();
-}
 
 type PageProps = {
   data: PageData<WebpageModel>;
 };
 
 function getTag(item: WebpageNodeModel): string {
-  const overhead = (item as any)?.attributes?.overhead as string | undefined;
-  if (overhead) return overhead;
-  const url = (item as any)?.url ?? '';
-  return (url.split('/')[1] ?? '').toUpperCase();
+  return ((item as any)?.attributes?.overhead as string | undefined) ?? '';
 }
 
 function getTitle(item: WebpageNodeModel): string {

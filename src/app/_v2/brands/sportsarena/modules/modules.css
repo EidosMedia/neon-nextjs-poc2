@@ -14,7 +14,7 @@
   .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-breaking__label {
     font-family: var(--v2-font-heading);
     letter-spacing: 0.06em;
-    color: var(--v2-live);
+    color: var(--v2-on-accent);
   }
   .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-breaking__headline {
     font-weight: 700;
@@ -22,11 +22,13 @@
   }
   .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-results {
     padding-block: var(--v2-space-4);
+    background: var(--v2-brand);
+    color: var(--v2-on-brand);
   }
   .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-results__title {
     font-family: var(--v2-font-heading);
     font-size: var(--v2-fs-h3);
-    color: var(--v2-brand-strong);
+    color: var(--v2-on-brand);
     margin: 0 0 var(--v2-space-2);
   }
   .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-results__row {
@@ -39,6 +41,7 @@
   }
   .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match {
     background: var(--v2-surface);
+    color: var(--v2-text);
     border-radius: var(--v2-radius-card);
     padding: var(--v2-space-2);
     text-align: center;
@@ -59,6 +62,10 @@
     margin: var(--v2-space-1) 0;
     font-family: var(--v2-font-heading);
     color: var(--v2-brand-strong);
+  }
+  .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match__status--live {
+    color: var(--v2-live);
+    font-weight: 700;
   }
   .root[data-engine="v2"][data-theme="sportsarena"] .v2-mod-match__score {
     background: var(--v2-brand);

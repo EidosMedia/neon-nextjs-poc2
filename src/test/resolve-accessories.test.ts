@@ -50,6 +50,16 @@ const pageContext: AccessoryContext = {
 };
 
 describe('resolveAccessoryValues', () => {
+  test('matches qualified stored types against the corresponding subtype, but not another base type', () => {
+    const context: AccessoryContext = { theme: 'default', type: 'longform', baseType: 'article', level: 'page' };
+    const stored: AccessorySet = {
+      theme: 'default', type: 'article/longform',
+      items: { shape: { version: '1.0', values: { bold: true } } },
+    };
+    expect(resolveAccessoryValues(definitions, stored, context)?.shape.bold).toBe(true);
+    expect(resolveAccessoryValues(definitions, { ...stored, type: 'other/longform' }, context)?.shape.bold).toBe(false);
+  });
+
   test('uses matching defaults and valid stored overrides', () => {
     const stored: AccessorySet = {
       theme: 'default',

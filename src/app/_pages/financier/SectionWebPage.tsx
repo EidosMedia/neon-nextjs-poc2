@@ -5,6 +5,8 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import ArticleOrganism from './components/ArticleOrganism';
 import ArticleOverlay from '../../components/base/ArticleOverlay';
+import EmptySection from '../../components/EmptySection';
+import { sectionHasObjects } from '@/utilities/sectionRecirculation';
 
 type PageProps = {
   data: PageData<WebpageModel>;
@@ -82,6 +84,8 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
 
       <div className="w-full max-w-[1300px] mx-auto px-4 py-6">
 
+        {!sectionHasObjects(data) ? <EmptySection data={data} /> : (
+        <>
         {/* ── Row 1: 3-col category grid ─────────────────────────────── */}
         <div className="financier-category-grid">
           <CategoryColumn data={data} zone={{ label: 'Top Stories', items: mainItems }} />
@@ -93,6 +97,8 @@ const SectionWebPage: React.FC<PageProps> = async ({ data }) => {
         <div className="financier-category-row-wide">
           <CategoryColumn data={data} zone={{ label: 'More', items: insight2Items }} wide />
         </div>
+        </>
+        )}
 
       </div>
 

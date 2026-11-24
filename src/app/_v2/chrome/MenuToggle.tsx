@@ -151,6 +151,7 @@ function Tree({ links, parent, depth, isOpen, toggle, onNavigate, pathname }: Tr
 export default function MenuToggle({
   items,
   label = 'Menu',
+  iconOnly = false,
   className,
   pathname = null,
   drawerItems,
@@ -162,6 +163,7 @@ export default function MenuToggle({
   /** Tree for the mobile drawer, where the inline navigation is hidden. */
   drawerItems?: MenuLink[];
   label?: string;
+  iconOnly?: boolean;
   className?: string;
   pathname?: string | null;
   /** Shown at the bottom of the mobile drawer (Subscribe, Login). */
@@ -192,7 +194,8 @@ export default function MenuToggle({
   };
 
   const openMenu = () => {
-    const desktop = variant === 'auto' && window.matchMedia(DESKTOP_QUERY).matches;
+    const view = buttonRef.current?.ownerDocument.defaultView ?? window;
+    const desktop = variant === 'auto' && view.matchMedia(DESKTOP_QUERY).matches;
     setMode(desktop ? 'mega' : 'drawer');
     if (desktop) setMegaTop(headerBottom());
     // One open branch per level: only the path to the current page starts open.
@@ -207,28 +210,30 @@ export default function MenuToggle({
 
   useEffect(() => {
     if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const doc = buttonRef.current?.ownerDocument ?? document;
+    const previous = doc.body.style.overflow;
+    doc.body.style.overflow = 'hidden';
     const panel = panelRef.current;
     const first =
       panel?.querySelector<HTMLElement>('[aria-current="page"]') ??
       panel?.querySelector<HTMLElement>('.v2-drawer__filter, [data-menu-nav], .v2-mega a');
     first?.focus();
     return () => {
-      document.body.style.overflow = previous;
+      doc.body.style.overflow = previous;
     };
   }, [open]);
 
   // The panel follows the header on resize; crossing the breakpoint closes the menu.
   useLayoutEffect(() => {
     if (!open || variant === 'drawer') return;
-    const media = window.matchMedia(DESKTOP_QUERY);
+    const view = buttonRef.current?.ownerDocument.defaultView ?? window;
+    const media = view.matchMedia(DESKTOP_QUERY);
     const onResize = () => {
       if ((media.matches ? 'mega' : 'drawer') !== mode) setOpen(false);
       else if (mode === 'mega') setMegaTop(headerBottom());
     };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    view.addEventListener('resize', onResize);
+    return () => view.removeEventListener('resize', onResize);
   }, [open, mode, variant]);
 
   const isOpen = (key: string) => filtering || expanded.has(key);
@@ -246,13 +251,13 @@ export default function MenuToggle({
       return;
     }
     if (event.key === 'Tab') {
-      const focusables = Array.from(panel.querySelectorAll<HTMLElement>('a[href], button, input'));
+      const focusables = Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not(:disabled), input:not(:disabled)'));
       const firstEl = focusables[0];
       const lastEl = focusables[focusables.length - 1];
-      if (event.shiftKey && document.activeElement === firstEl) {
+      if (event.shiftKey && panel.ownerDocument.activeElement === firstEl) {
         event.preventDefault();
         lastEl?.focus();
-      } else if (!event.shiftKey && document.activeElement === lastEl) {
+      } else if (!event.shiftKey && panel.ownerDocument.activeElement === lastEl) {
         event.preventDefault();
         firstEl?.focus();
       }
@@ -329,7 +334,7 @@ export default function MenuToggle({
         onClick={() => (open ? close(false) : openMenu())}
       >
         <span className="v2-menutoggle__icon" aria-hidden="true" />
-        <span>{label}</span>
+        <span className={iconOnly ? 'v2-visually-hidden' : undefined}>{label}</span>
       </button>
       {open && (
         <>

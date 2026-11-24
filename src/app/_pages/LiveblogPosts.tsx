@@ -3,16 +3,12 @@ import React from 'react';
 import { PageData } from '@/neon-frontoffice-ts-sdk/src';
 import { ArticleModel } from '@/types/models';
 import { renderContent } from '@/utilities/content';
-import _ from 'lodash';
+import { useLiveblogPosts } from '@/hooks/useLiveblogPosts';
+import { initialPostsFromModel } from '@/app/_v2/liveblog/posts';
+import LiveblogPostsStatus from '@/app/components/LiveblogPostsStatus';
 import { Bookmark, CircleDot, Link2, Share } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Button } from '../components/baseComponents/button';
-
-type LiveblogPost = {
-  id: string;
-  content: any;
-  publicationTime: string;
-};
 
 type PageProps = {
   data: PageData<ArticleModel>;
@@ -23,48 +19,9 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
     console.log('[NEON] mount: default/LiveblogPosts');
   }, []);
 
-  const lastLoadedPostId = useRef<string>(null);
-
-  const initialLiveblogPosts = Array.isArray(data.model.children)
-    ? data.model.children.map(postId => {
-        lastLoadedPostId.current = postId;
-        return {
-          id: postId,
-          content: data.model.nodes[postId].files.content.data,
-          publicationTime: data.model.nodes[postId].sys.postEventTime,
-        };
-      })
-    : [];
-
-  const [liveblogPosts, setLiveblogPosts] = useState<LiveblogPost[]>(initialLiveblogPosts);
-
-  const liveblogId = data.model.data.id;
-
-  useEffect(() => {
-    const getLiveblogPosts = async () => {
-      const response = await fetch(`/api/liveblogs/${liveblogId}`, { cache: 'no-store' });
-      const liveblogPostsResp = await response.json();
-      setLiveblogPosts(oldResults =>
-        _.uniqBy([...liveblogPostsResp, ...oldResults], 'id').map(post => {
-          return {
-            id: post.id,
-            content: post.content || post.files?.content?.data,
-            publicationTime: post.sys?.postEventTime,
-          };
-        }),
-      );
-    };
-
-    // Fetch immediately on mount
-    getLiveblogPosts();
-
-    // Then set up interval for subsequent fetches
-    const interval = setInterval(() => getLiveblogPosts(), 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [liveblogId]);
+  const { posts: liveblogPosts, isLoading, error } = useLiveblogPosts(
+    data.model.data.id, initialPostsFromModel(data.model),
+  );
 
   const topDivRef = useRef<HTMLDivElement>(null);
 
@@ -75,7 +32,9 @@ const LiveblogPosts: React.FC<PageProps> = ({ data }) => {
         <span className="subhead1 pt-[3px]">Live blog</span>
       </div>
       <div className="flex flex-col gap-6">
-        {liveblogPosts.length > 0 ? (
+        {isLoading || (error && liveblogPosts.length === 0) ? (
+          <LiveblogPostsStatus loading={isLoading} variant="feed" />
+        ) : liveblogPosts.length > 0 ? (
           [...liveblogPosts]
             .sort((a, b) => new Date(b.publicationTime).getTime() - new Date(a.publicationTime).getTime())
             .map(data => (

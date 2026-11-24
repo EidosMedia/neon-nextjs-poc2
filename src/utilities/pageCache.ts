@@ -105,6 +105,21 @@ export async function fetchPageDataCached(
     }
   }
 
+  // Content blocks: each block linked to the page (its items are tagged when the block is cached)
+  const blockLinks = data?.model?.data?.links?.blocklink;
+  if (blockLinks && typeof blockLinks === 'object') {
+    for (const zone of Object.values(blockLinks)) {
+      if (Array.isArray(zone)) {
+        for (const link of zone as Array<{ targetId?: string }>) {
+          if (link?.targetId) {
+            cacheTag(`neon:node:${link.targetId}`);
+            taggedIds.push(link.targetId);
+          }
+        }
+      }
+    }
+  }
+
   // Section / list pages: children node IDs
   const children: unknown = data?.model?.data?.children;
   if (Array.isArray(children)) {

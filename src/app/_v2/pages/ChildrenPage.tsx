@@ -1,12 +1,17 @@
 import type { BaseModel, PageData, WebpageNodeModel } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import PageShell from '../chrome/PageShell';
 import ZoneRenderer from '../zones/ZoneRenderer';
+import EmptySection from '@/app/components/EmptySection';
+import { sectionHasObjects } from '@/utilities/sectionRecirculation';
 
 type PageProps = { data: PageData<BaseModel> };
 
 function ChildrenPage(props: PageProps) {
   const { data } = props;
   const children = data.model.data.children ?? [];
+  if (data.model.data.sys?.baseType === 'section' && !sectionHasObjects(data)) {
+    return <PageShell data={data}><EmptySection data={data} v2 /></PageShell>;
+  }
   const items = children
     .map((id) => data.model.nodes[id] as unknown as WebpageNodeModel | undefined)
     .filter((n): n is WebpageNodeModel => Boolean(n));

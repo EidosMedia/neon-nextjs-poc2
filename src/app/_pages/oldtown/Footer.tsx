@@ -1,6 +1,7 @@
 import React from 'react';
 import { BaseModel, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon } from 'lucide-react';
+import { getCurrentYear } from '@/lib/clock';
 
 const FOOTER_COLUMNS = [
   {
@@ -28,6 +29,7 @@ const FOOTER_COLUMNS = [
 export default async function Footer({
  data }: { data: Partial<PageData<BaseModel>> }) {
   console.log('[NEON] render: oldtown/Footer');
+  const year = await getCurrentYear();
   const siteName = data.siteData?.siteName || data.siteNode?.name;
   if (!siteName) throw new Error('Site node data is missing');
 
@@ -109,7 +111,7 @@ export default async function Footer({
 
         {/* Legal */}
         <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 footer-legal text-center">
-          <a href="#">© {new Date().getFullYear()} The Oldtown Tribune</a>
+          <a href="#">© {year} The Oldtown Tribune</a>
           <span>·</span>
           <a href="#">NYTCo</a>
           <span>·</span>
