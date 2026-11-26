@@ -10,28 +10,27 @@
  * The result is cached with a long max-age.
  */
 
-const BASE_URL = process.env.BASE_NEON_FO_URL!;
-const BUNDLE_URL = `${BASE_URL}/shared/uicomponents/editor.js`;
-const RELATIVE_RE = /(?:from|import)\s*["'](\.\/[^"']+)["']/g;
-const NAMED_RE = /import\s*\{([^}]*)\}\s*from\s*["']@eidosmedia\/react-marvin-components["']/g;
+import { handleServicesError } from '@/services/utils';
 
 async function collectTexts(): Promise<string[]> {
   const visited = new Set<string>();
   const texts: string[] = [];
+  const baseUrl = 'https://uicomponents.invalid/';
 
-  async function visit(url: string) {
-    if (visited.has(url)) return;
-    visited.add(url);
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return;
+  async function visit(path: string) {
+    if (visited.has(path)) return;
+    visited.add(path);
+    const res = await connection.fetchUiComponent(path);
+    if (!res.ok) throw new Error(`Failed to fetch UI component bundle: ${res.status}`);
     const text = await res.text();
     texts.push(text);
     for (const m of text.matchAll(/(?:from|import)\s*["'](\.\/[^"']+)["']/g)) {
-      await visit(new URL(m[1], url).toString());
+      const url = new URL(m[1], new URL(path, baseUrl));
+      await visit(url.pathname.slice(1));
     }
   }
 
-  await visit(BUNDLE_URL);
+  await visit('editor.js');
   return texts;
 }
 
@@ -40,7 +39,13 @@ let _cached: Response | null = null;
 export async function GET() {
   if (_cached) return _cached.clone();
 
-  const texts = await collectTexts();
+  let texts: string[];
+  try {
+    texts = await collectTexts();
+  } catch (error) {
+    console.error('[uicomponents] Marvin shim bundle fetch failed:', error);
+    return handleServicesError(error);
+  }
   const names = new Set<string>();
 
   for (const text of texts) {

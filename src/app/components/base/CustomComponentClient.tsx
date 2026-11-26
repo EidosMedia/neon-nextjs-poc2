@@ -102,6 +102,7 @@ export default function CustomComponent({ nodeType, componentname, content, mode
       let manifest: Record<string, string[]>;
       try {
         const r = await fetch('/shared/uicomponents/manifest.json');
+        if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
         const json = (await r.json()) as { categories: Record<string, string[]> };
         manifest = json.categories;
       } catch (err) {

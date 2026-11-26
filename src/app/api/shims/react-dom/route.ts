@@ -7,7 +7,10 @@
 
 import * as ReactDOMModule from 'react-dom';
 
-const names = Object.keys(ReactDOMModule).filter(k => k !== 'default');
+const names = [...new Set([
+  ...Object.keys(ReactDOMModule).filter(k => k !== 'default'),
+  'createPortal', 'flushSync', 'requestFormReset', 'unstable_batchedUpdates', 'useFormState', 'useFormStatus',
+])];
 
 const body = [
   `const _r = globalThis.__shim_react_dom;`,

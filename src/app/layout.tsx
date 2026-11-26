@@ -36,11 +36,11 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               imports: {
-                react: '/api/shims/react',
+                react: '/api/shims/react?v=2',
                 'react/jsx-runtime': '/api/shims/react-jsx-runtime',
-                'react-dom': '/api/shims/react-dom',
+                'react-dom': '/api/shims/react-dom?v=2',
                 'react-dom/client': '/api/shims/react-dom-client',
-                '@eidosmedia/react-marvin-components': '/api/shims/marvin',
+                '@eidosmedia/react-marvin-components': '/api/shims/marvin?v=2',
               },
             }),
           }}

@@ -4,13 +4,18 @@
  * Returns a JavaScript ES module that re-exports all React named exports from
  * the `globalThis.__shim_react` instance set by ReactShimExposer.
  *
- * The export list is derived at module-init time from the installed `react`
- * package, so it always matches the version Next.js is using.
+ * The server's React export list omits client APIs, so include those explicitly.
  */
 
 import * as ReactModule from 'react';
 
-const names = Object.keys(ReactModule).filter(k => k !== 'default');
+const names = [...new Set([
+  ...Object.keys(ReactModule).filter(k => k !== 'default'),
+  'Component', 'PureComponent', 'act', 'createContext', 'startTransition', 'unstable_useCacheRefresh',
+  'useActionState', 'useContext', 'useDeferredValue', 'useEffect', 'useImperativeHandle',
+  'useInsertionEffect', 'useLayoutEffect', 'useOptimistic', 'useReducer', 'useRef',
+  'useState', 'useSyncExternalStore', 'useTransition',
+])];
 
 const body = [
   `const _r = globalThis.__shim_react;`,
