@@ -431,6 +431,10 @@ selection does not check whether `editorialauth` is present. Do not assume that 
 editorial request bypasses the cache or that authenticated LIVE responses are isolated
 without verifying the deployed cache-key behavior.
 
+For LIVE requests, expected unavailable statuses (401/403/404/410) are retried outside the
+cache boundary so the page can render its not-found UI and newly available content is not
+masked by a cached failure. Next.js can return HTTP 200 when that UI is streamed.
+
 The page and metadata entry points explicitly await Next.js `connection()` before SDK work to
 exclude request-time clocks and logging from prerendering. Upstream page failures other than
 401/403/404/410 propagate to the error boundary, rather than being rendered as missing content.

@@ -11,6 +11,10 @@ export type CachedPageResult = {
   redirectLocation?: string;
 };
 
+export function isUnavailablePageStatus(status: unknown): boolean {
+  return typeof status === 'number' && [401, 403, 404, 410].includes(status);
+}
+
 /**
  * Non-cached fetch — used for preview / editorial (viewStatus !== 'live').
  * Never writes to the Next.js data cache.
@@ -50,16 +54,35 @@ export async function fetchPageDataCached(
   siteName: string,
   auth: AuthContext,
 ): Promise<CachedPageResult> {
+  const result = await fetchPageDataCachedEntry(url, siteName, auth);
+  // Retry outside the cache boundary to preserve the SDK status and avoid stale missing pages.
+  return 'retryDirect' in result ? fetchPageDataDirect(url, auth) : result;
+}
+
+async function fetchPageDataCachedEntry(
+  url: string,
+  siteName: string,
+  auth: AuthContext,
+): Promise<CachedPageResult | { retryDirect: true }> {
   'use cache';
+
+  // Inner fetch bypasses the HTTP cache — the outer 'use cache' owns persistence
+  let response: Response;
+  try {
+    response = await connection.makePageRequest(url, auth, {
+      redirect: 'manual',
+      cache: 'no-store',
+    });
+  } catch (error) {
+    if (error && typeof error === 'object' && 'status' in error && isUnavailablePageStatus(error.status)) {
+      cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+      return { retryDirect: true };
+    }
+    throw error;
+  }
 
   // Live content only — long-lived, demand-invalidated via revalidateTag
   cacheLife('hours');
-
-  // Inner fetch bypasses the HTTP cache — the outer 'use cache' owns persistence
-  const response: Response = await connection.makePageRequest(url, auth, {
-    redirect: 'manual',
-    cache: 'no-store',
-  });
 
   // Redirects: return the location without caching page content
   if (response.status > 300 && response.status < 400) {

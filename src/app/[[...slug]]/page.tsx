@@ -12,7 +12,7 @@ import LegacyIsland from '../_v2/ui/LegacyIsland';
 import { canShowStyleGuide } from '../_v2/ui/gate';
 import * as DefaultPages from '../_v2';
 import ContentBlockPage from '../_pages/ContentBlockPage';
-import { fetchPageDataCached, fetchPageDataDirect, type CachedPageResult } from '@/utilities/pageCache';
+import { fetchPageDataCached, fetchPageDataDirect, isUnavailablePageStatus, type CachedPageResult } from '@/utilities/pageCache';
 import type { Site } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import { createElement } from 'react';
 import { normalizeViewStatus, toSiteViewStatus, ViewStatus } from '@eidosmedia/neon-frontoffice-ts-sdk';
@@ -122,14 +122,13 @@ export default async function Page({
   try {
     result = isLiveView ? await fetchPageDataCached(url, siteName ?? '', auth) : await fetchPageDataDirect(url, auth);
   } catch (error) {
-    if (error && typeof error === 'object' && 'status' in error
-      && [401, 403, 404, 410].includes(Number(error.status))) {
+    if (error && typeof error === 'object' && 'status' in error && isUnavailablePageStatus(error.status)) {
       notFound();
     }
     throw error;
   }
 
-  if (!result) {
+  if (!result || isUnavailablePageStatus(result.status)) {
     notFound();
   }
 
@@ -256,6 +255,9 @@ export async function generateMetadata({
 
     return { title: 'Error', description: 'Failed to generate metadata.' };
   } catch (error) {
+    if (error && typeof error === 'object' && 'status' in error && isUnavailablePageStatus(error.status)) {
+      return { title: 'Page not found' };
+    }
     console.warn('Error generating metadata:', error);
     return {
       title: 'Error',

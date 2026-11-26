@@ -80,6 +80,10 @@ requests (any other `viewStatus`) go through `fetchPageDataDirect`, which always
 fresh from Neon with `cache: 'no-store'` and never writes to the Next.js data cache.
 This ensures editors never see stale cached content.
 
+For LIVE requests, expected unavailable statuses (401/403/404/410) are retried outside the
+cache boundary. The not-found UI is rendered without a cached failure masking newly available
+content. Next.js can return HTTP 200 when the not-found UI is streamed.
+
 ### Logging
 
 Every cache-build event is logged by the `neon-fo:page-cache` pino child logger:
