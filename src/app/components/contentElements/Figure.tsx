@@ -23,9 +23,33 @@ const getRasterUrl = (data: ContentElement, format: string): string | undefined 
   return imageElements[0]?.attributes?.src; // fallback to first available
 };
 
-const getSvgUrl = (data: ContentElement): string | undefined => {
-  const element = data.elements.find(elem => elem.nodeType === 'graphic');
-  return element?.attributes.fileref;
+const getGraphic = (data: ContentElement): ContentElement | undefined =>
+  data.elements.find(elem => elem.nodeType === 'graphic');
+
+const getSvgUrl = (data: ContentElement): string | undefined => getGraphic(data)?.attributes?.fileref;
+
+type GraphicCrop = { imageWidth: number; imageHeight: number; width: number; height: number; transform: string };
+
+const TRANSFORM_FUNCTION = /^(matrix|translate|scale|rotate|skewX|skewY)\(\s*-?[\d.]+(?:[\s,]+-?[\d.]+)*\s*\)$/;
+
+/**
+ * The editor stores a graphic crop as `tmx` ("imageW imageH containerW containerH") plus an `xtransform`
+ * list of transform functions, e.g. "translate(-557 -638) scale(3.02 3.02)", that places the image inside
+ * the container. The delivery layer does not crop graphics, so the crop is applied here.
+ */
+export const getGraphicCrop = (graphic: ContentElement | undefined): GraphicCrop | null => {
+  const tmx = graphic?.attributes?.tmx;
+  const xtransform = graphic?.attributes?.xtransform;
+  if (!tmx || !xtransform) return null;
+
+  const [imageWidth, imageHeight, width, height] = tmx.trim().split(/\s+/).map(Number);
+  if (![imageWidth, imageHeight, width, height].every(n => Number.isFinite(n) && n > 0)) return null;
+
+  const functions = xtransform.trim().match(/[a-zA-Z]+\([^)]*\)/g);
+  if (!functions || functions.join('').length < xtransform.replace(/\s+/g, '').length) return null;
+  if (!functions.every(fn => TRANSFORM_FUNCTION.test(fn.trim()))) return null;
+
+  return { imageWidth, imageHeight, width, height, transform: functions.join(' ') };
 };
 
 const getDimensionsFromUrl = (url: string): { width: number; height: number } | null => {
@@ -39,7 +63,30 @@ const getDimensionsFromUrl = (url: string): { width: number; height: number } | 
 };
 
 const Figure: React.FC<FigureProps> = ({ data, alt, format }) => {
-  const imageUrl = getSvgUrl(data) || getRasterUrl(data, format);
+  const graphicUrl = getSvgUrl(data);
+  const crop = graphicUrl ? getGraphicCrop(getGraphic(data)) : null;
+
+  if (graphicUrl && crop) {
+    return (
+      <svg
+        viewBox={`0 0 ${crop.width} ${crop.height}`}
+        width={crop.width}
+        style={{ maxWidth: '100%', height: 'auto' }}
+        role="img"
+        aria-label={alt}
+        data-testid="cropped-graphic"
+      >
+        <image
+          href={graphicUrl}
+          width={crop.imageWidth}
+          height={crop.imageHeight}
+          transform={crop.transform}
+        />
+      </svg>
+    );
+  }
+
+  const imageUrl = graphicUrl || getRasterUrl(data, format);
   const dimensions = imageUrl && getDimensionsFromUrl(imageUrl);
 
   return (
