@@ -91,6 +91,25 @@ capability overview in the Neon technical documentation's `front-end-poc` sectio
     only module that knows the block model (assumed `model.data.links.pagelink.<area>`; the body
     contract is still undefined in Neon). `BlockSlot` renders a brand module (by block `sys.type`), or a
     webpage-like block through `ZoneRenderer`, or a dashed placeholder in PREVIEW; nothing in LIVE.
+14. Authors (biographies). An Author is a node of base type `author`; its delivered node carries
+  `attributes.author` (`kind`, `name`, `nickName` rich text, ordered `contacts` of `label`/`icon`/`uri`) and
+  a story carries its resolved Authors in `attributes.linkedAuthors` (`id`, `name`, `nickName`, `url`);
+  the Author URL is the virtual page `/<prefix>/<shortid>/<slug>` that Neon owns.
+  `src/lib/authors.ts` is the only module that knows this contract.
+  - `author-component` in a story body (`align` left|center|right, `look` simple|summary, `contacts`
+    on|off, read from its `author-component-params`; defaults left, simple, off) is rendered inline by
+    `AuthorComponent` (`src/app/_v2/leaves/AuthorComponent.tsx`) from the node that `prepareBody`
+    prefetches by the `href`. The nickname, when present, is the text of the anchor to the author page; the
+    `summary` look adds the node summary as a citation. An empty component or an Author that is not
+    delivered renders nothing.
+  - `story-component-params` `authors` (`on` | `off` | `name-right`, default `off`) shows the linked Authors of the
+    embedded story next to it (`EmbeddedAuthors`), outside the link of the item.
+  - The author page (`sys.baseType` `author`) is `AuthorPage`: the Author is the first child of the page
+    model, followed by the content that mentions it; a legacy page of a free text author has no Author
+    node and lists the content only.
+  - Contact icons are the SVGs of the `contacts` set at `/shared/uicomponents/icons/contacts/<name>.svg`
+    (proxy of the uicomponents service), rendered 14x14. Only `https`, `mailto` and `tel` contact URIs
+    become links. The nickname goes through `sanitizeZoneSummary`, never as raw HTML.
 
 ## Project Layout
 

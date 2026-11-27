@@ -172,7 +172,8 @@ export default async function Page({
         : resolveBaseTypeKey(baseType);
   const PageComponent =
     resolvePageComponent(componentKey, theme) ??
-    (componentKey === 'ArticleGallery' ? resolvePageComponent('Article', theme) : undefined);
+    (componentKey === 'ArticleGallery' ? resolvePageComponent('Article', theme) : undefined) ??
+    (componentKey === 'AuthorPage' ? DefaultPages.AuthorPage : undefined);
 
   return (
     <div className="root" data-theme={resolveRenderTheme(theme)} data-engine={isV2Theme(resolveRenderTheme(theme)) ? 'v2' : undefined}>
@@ -200,6 +201,7 @@ function resolveBaseTypeKey(baseType: string): string {
     site: 'DefaultLanding',
     liveblog: 'Liveblog',
     article: 'Article',
+    author: 'AuthorPage',
   };
   return map[baseType] ?? 'Article';
 }

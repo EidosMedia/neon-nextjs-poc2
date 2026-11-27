@@ -281,4 +281,24 @@
   .root[data-engine="v2"] .v2-feed__content img { max-width: 100%; height: auto; }
   .root[data-engine="v2"] .v2-feed__empty { color: var(--v2-text-muted); }
   .root[data-engine="v2"] .v2-feed__foot { display: flex; justify-content: center; margin-top: var(--v2-space-4); }
+
+  /* ---------- Authors (NEON-2778) ---------- */
+  .root[data-engine="v2"] .v2-author { margin: var(--v2-space-3) 0; padding-block: var(--v2-space-2); border-block: 1px solid var(--v2-border, currentColor); }
+  .root[data-engine="v2"] .v2-author--left { text-align: left; }
+  .root[data-engine="v2"] .v2-author--center { text-align: center; }
+  .root[data-engine="v2"] .v2-author--right { text-align: right; }
+  .root[data-engine="v2"] .v2-author__name { font-family: var(--v2-font-heading); font-weight: 700; color: var(--v2-link); }
+  .root[data-engine="v2"] .v2-author__summary { margin: var(--v2-space-1) 0 0; font-style: italic; color: var(--v2-text-muted); }
+  .root[data-engine="v2"] .v2-author__contacts { display: flex; flex-wrap: wrap; gap: var(--v2-space-1) var(--v2-space-2); margin: var(--v2-space-1) 0 0; padding: 0; list-style: none; }
+  .root[data-engine="v2"] .v2-author--center .v2-author__contacts { justify-content: center; }
+  .root[data-engine="v2"] .v2-author--right .v2-author__contacts { justify-content: flex-end; }
+  .root[data-engine="v2"] .v2-author__contacts a { display: inline-flex; align-items: center; gap: 6px; font-size: var(--v2-fs-meta, 0.875rem); color: var(--v2-text-muted); }
+  .root[data-engine="v2"] .v2-author__icon { width: 14px; height: 14px; flex: none; }
+  .root[data-engine="v2"] .v2-embedded-authors { margin: var(--v2-space-1) 0 0; font-size: var(--v2-fs-meta, 0.875rem); color: var(--v2-text-muted); }
+  .root[data-engine="v2"] .v2-embedded-authors--right { text-align: right; }
+  .root[data-engine="v2"] .v2-author-page__head { margin-block: var(--v2-space-4); }
+  .root[data-engine="v2"] .v2-author-page__name { margin: 0 0 var(--v2-space-1); font-family: var(--v2-font-heading); }
+  .root[data-engine="v2"] .v2-author-page__nick,
+  .root[data-engine="v2"] .v2-author-page__summary { margin: 0 0 var(--v2-space-1); color: var(--v2-text-muted); }
+  .root[data-engine="v2"] .v2-author-page__empty { color: var(--v2-text-muted); }
 }

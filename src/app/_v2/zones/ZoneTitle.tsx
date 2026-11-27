@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import type { SummaryInline, ZoneHeadContent } from '@/lib/accessories/zoneHeadTypes';
 
-function renderInline(nodes: SummaryInline[]): ReactNode {
+export function renderInline(nodes: SummaryInline[]): ReactNode {
   return nodes.map((node, index) => {
     switch (node.kind) {
       case 'text':

@@ -1,10 +1,27 @@
 import Figure from '@/app/components/contentElements/Figure';
 import { ContentElement, PageData } from '@eidosmedia/neon-frontoffice-ts-sdk';
 import Link from 'next/link';
-import { JSX, ReactNode } from 'react';
+import { Fragment, JSX, ReactNode } from 'react';
 import { ArticleModel } from '@/types/models';
 import ContentEditable from '@/app/components/utilities/ContentEditable';
 import CustomComponent from '@/app/components/base/CustomComponentClient';
+import { AuthorComponent, EmbeddedAuthors } from '@/app/_v2/leaves/AuthorComponent';
+import type { AuthorNodeModel } from '@/lib/authors';
+
+/** The `entry` values of the `*-params` child of a component node, on top of the attributes of the node. */
+function collectComponentParams(content: ContentElement): Record<string, string> {
+  const raw: Record<string, string> = { ...content.attributes };
+  for (const child of content.elements ?? []) {
+    if (child.nodeType.endsWith('-params')) {
+      for (const entry of child.elements ?? []) {
+        if (entry.nodeType === 'entry' && entry.attributes?.key) {
+          raw[entry.attributes.key] = entry.attributes.value ?? '';
+        }
+      }
+    }
+  }
+  return raw;
+}
 
 /**
  * Recursively collects all `*-component` nodes from a content tree.
@@ -453,17 +470,26 @@ export const renderContent = (
         const isNavigable = content.nodeType === 'story-component' || content.nodeType === 'liveblog-component';
         const itemHref = content.attributes?.href ?? null;
 
+        const params = collectComponentParams(content);
+
+        // NEON-2778: an author component renders the delivered Author inline; one without href (a template
+        // placeholder) or whose Author is not published has no node and renders nothing.
+        if (content.nodeType === 'author-component') {
+          return <AuthorComponent key={key} attributes={params} model={model as AuthorNodeModel | undefined} />;
+        }
+        // NEON-2778: the `authors` flag of a story embedding (on | off | name-right) shows the Authors of the item.
+        const withAuthors = (element: ReactNode): ReactNode =>
+          content.nodeType === 'story-component' ? (
+            <Fragment key={key}>
+              {element}
+              <EmbeddedAuthors mode={params.authors} model={model as AuthorNodeModel | undefined} />
+            </Fragment>
+          ) : (
+            element
+          );
+
         if (Resolved) {
-          const raw = { ...content.attributes };
-          for (const child of content.elements ?? []) {
-            if (child.nodeType.endsWith('-params')) {
-              for (const entry of child.elements ?? []) {
-                if (entry.nodeType === 'entry' && entry.attributes?.key) {
-                  raw[entry.attributes.key] = entry.attributes.value ?? '';
-                }
-              }
-            }
-          }
+          const raw = params;
           const attrs: Record<string, string | number | boolean> = {};
           for (const [k, v] of Object.entries(raw)) {
             if (v === 'true') attrs[k] = true;
@@ -481,12 +507,14 @@ export const renderContent = (
               {...(model !== undefined ? { model } : {})}
             />
           );
-          return isNavigable && itemHref ? (
-            <Link key={key} href={itemHref}>
-              {resolved}
-            </Link>
-          ) : (
-            resolved
+          return withAuthors(
+            isNavigable && itemHref ? (
+              <Link key={key} href={itemHref}>
+                {resolved}
+              </Link>
+            ) : (
+              resolved
+            ),
           );
         }
         const customComponent = (
@@ -498,12 +526,14 @@ export const renderContent = (
             model={model}
           />
         );
-        return isNavigable && itemHref ? (
-          <Link key={key} href={itemHref}>
-            {customComponent}
-          </Link>
-        ) : (
-          customComponent
+        return withAuthors(
+          isNavigable && itemHref ? (
+            <Link key={key} href={itemHref}>
+              {customComponent}
+            </Link>
+          ) : (
+            customComponent
+          ),
         );
       }
       const CustomElement = content?.nodeType as keyof JSX.IntrinsicElements; // resolving the element name from the template as default
